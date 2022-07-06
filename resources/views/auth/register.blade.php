@@ -59,6 +59,18 @@
                                         <input id="email" name="email" class="form-control" type="email" required="" placeholder="Email Id">
                                     </div>
                                 </div>
+                            {{-- Mobile No --}}
+                                <div class="form-group mb-3 row">
+                                    <div class="col-12">
+                                        <input id="mobile_no" name="mobile_no" class="form-control" type="number" required="" placeholder="Mobile Number">
+                                    </div>
+                                </div>
+                            {{-- Date of Birth --}}
+                                <div class="form-group mb-3 row">
+                                    <div class="col-12">
+                                        <input id="dob" name="dob" class="form-control" type="date" required="">
+                                    </div>
+                                </div>
                             {{-- Password --}}
                                 <div class="form-group mb-3 row">
                                     <div class="col-12">

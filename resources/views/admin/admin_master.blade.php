@@ -27,7 +27,7 @@
         <link href="{{asset('backend/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{asset('backend/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
-
+        @livewireStyles
     </head>
 
     <body data-topbar="dark">
@@ -96,6 +96,7 @@
 
         <!-- App js -->
         <script src="{{asset('backend/assets/js/app.js')}}"></script>
+        @livewireScripts
     </body>
 
 </html>
