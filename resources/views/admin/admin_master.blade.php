@@ -42,7 +42,7 @@
             @include('admin.body.header')
 
             <!-- ========== Left Sidebar Start ========== -->
-           @include('admin.body.sidebar' )
+            @include('admin.body.sidebar' )
             <!-- Left Sidebar End -->
 
 
