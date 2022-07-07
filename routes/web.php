@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::controller(AdminController::class)->group(function(){
  Route::get('/admin/logout', 'destroy')->name('admin.logout');
  Route::get('/admin/profile_view', 'ProfileView')->middleware(['auth'])->name('admin.profile_view');
+ Route::get('/admin/change_password', 'ChangePassword')->middleware(['auth'])->name('change_password');
 });
 
 

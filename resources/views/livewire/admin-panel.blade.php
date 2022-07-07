@@ -44,11 +44,15 @@
                                 <div>
                                     <form wire:submit.prevent="UpdateProfile()">
                                         @csrf
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><strong>Username  : {{$profiledata->username}}</strong> </li>
+                                        </ul>
                                     {{-- Name --}}
                                     <div class="row mb-3">
                                         <label for="name" class="col-sm-3 col-form-label">Name </label>
                                         <div class="col-sm-9">
                                             <input class="form-control" type="text"  wire:model="name"placeholder="Name" id="name">
+                                            <span class="error">@error('name'){{$message}}@enderror</span>
                                         </div>
                                     </div>
 
@@ -57,6 +61,7 @@
                                         <label for="email" class="col-sm-3 col-form-label">Email</label>
                                         <div class="col-sm-9">
                                             <input class="form-control" type="text"  wire:model="email"placeholder="Name" id="email">
+                                            <span class="error">@error('email'){{$message}}@enderror</span>
                                         </div>
                                     </div>
                                     {{-- Mobile Number --}}
@@ -64,6 +69,7 @@
                                         <label for="mobile_no" class="col-sm-3 col-form-label">Mobile No</label>
                                         <div class="col-sm-9">
                                             <input class="form-control" type="number"  wire:model="mobile_no"placeholder="Mobile Number" id="mobile_no">
+                                            <span class="error">@error('mobile_no'){{$message}}@enderror</span>
                                         </div>
                                     </div>
                                     {{-- DOB --}}
@@ -71,13 +77,15 @@
                                         <label for="dob" class="col-sm-3 col-form-label">Date of Birth</label>
                                         <div class="col-sm-9">
                                             <input class="form-control" type="date"  wire:model="dob"placeholder="Name" id="dob">
+                                            <span class="error">@error('dob'){{$message}}@enderror</span>
                                         </div>
                                     </div>
                                     {{-- Address --}}
                                     <div class="row mb-3">
-                                        <label for="dob" class="col-sm-3 col-form-label">Address</label>
+                                        <label for="address" class="col-sm-3 col-form-label">Address</label>
                                         <div class="col-sm-9">
                                             <textarea class="form-control" type="number"  wire:model="address" id="dob"></textarea>
+                                            <span class="error">@error('address'){{$message}}@enderror</span>
                                         </div>
                                     </div>
                                     {{-- Profile Image --}}

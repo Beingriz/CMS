@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class AdminController extends Controller
 {
     public function destroy(Request $request)
@@ -15,8 +16,11 @@ class AdminController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
-        return redirect('/login');
+        $notification = array(
+            'message'=>'You have been logged out Successfully',
+            'alert-type' =>'success'
+        );
+        return redirect('/login')->with($notification);
     } //End Destroy Function
 
     public function ProfileView()
@@ -24,5 +28,9 @@ class AdminController extends Controller
         $id = Auth::user()->id;
         $profiledata = User::find($id);
         return view('admin.profile.profile_view',compact('profiledata'));
+    }
+    public function ChangePassword()
+    {
+        return view('admin.profile.change_password');
     }
 }

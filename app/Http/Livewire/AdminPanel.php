@@ -19,7 +19,28 @@ class AdminPanel extends Component
     public $ProfileView =1, $ProfileEdit = 0;
 
     public $profiledata;
-    public $name,$email,$dob,$mobile_no,$address,$profile_image,$old_profile_image;
+    public $name,$email,$dob,$mobile_no,$address,$username,$profile_image,$old_profile_image;
+
+
+    protected $rules = [
+        'name' =>'required',
+        'dob' =>'required',
+        'mobile_no' =>'required | Min:10',
+        'address' =>'required',
+        'username' =>'required | unique:users',
+    ];
+    protected $messages = [
+       'name.required' => 'Please Enter Admin Name',
+       'dob.required' => 'Please Select Date of Birth',
+       'mobile_no.required' => 'Mobile Number Can'."'".'t Be Empty',
+       'address.required' => 'Update Address',
+       'username.required' => 'Enter Unique Username',
+
+   ];
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function EditProfile()
     {
@@ -35,10 +56,7 @@ class AdminPanel extends Component
             $this->dob = $key['dob'];
             $this->address = $key['address'];
             $this->old_profile_image = $key['profile_image'];
-
         }
-
-
     }
     public function Back()
     {
@@ -53,6 +71,12 @@ class AdminPanel extends Component
     }
     public function UpdateProfile()
     {
+        $this->validate([
+            'name'=>'required',
+            'mobile_no'=>'required',
+            'dob'=>'required',
+            'address'=>'required']);
+
         $id = Auth::user()->id;
         $data = array();
 
@@ -72,8 +96,23 @@ class AdminPanel extends Component
             $data['profile_image'] = $this->profile_image->storePubliclyAs('Uploads/Admin/Profile/'.$this->name,$filename,'public');
         } // New Profile Image Uploaded Successfully
 
-        DB::table('users')->where('id',$id)->update($data);
-        return redirect()->route('admin.profile_view');
+        $update = DB::table('users')->where('id',$id)->update($data);
+        if($update >0 )
+        {
+            $notification = array(
+                'message'=>'Admin Profile Updated',
+                'alert-type' =>'success'
+            );
+        }
+        else
+        {
+            $notification = array(
+                'message'=>'No Changes have been done!',
+                'alert-type' =>'info'
+            );
+        }
+
+        return redirect()->route('admin.profile_view')->with($notification);
     }
     public function render()
     {
