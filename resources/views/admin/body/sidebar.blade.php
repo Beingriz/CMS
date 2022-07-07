@@ -5,7 +5,7 @@
         <!-- User details -->
         <div class="user-profile text-center mt-3">
             <div class="">
-                <img src="assets/images/users/avatar-1.jpg" alt="" class="avatar-md rounded-circle">
+                <img src="{{asset('storage/'.Auth::user()->profile_image)}}" alt="" class="avatar-md rounded-circle">
             </div>
             <div class="mt-3">
                 <h4 class="font-size-16 mb-1">{{Auth::user()->name}}</h4>
@@ -20,94 +20,88 @@
                 <li class="menu-title">Menu</li>
 
                 <li>
-                    <a href="index.html" class="waves-effect">
+                    <a href="{{route('dashboard')}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i><span class="badge rounded-pill bg-success float-end">3</span>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="calendar.html" class=" waves-effect">
-                        <i class="ri-calendar-2-line"></i>
-                        <span>Calendar</span>
+                    <a href="#" class=" waves-effect">
+                        <i class="ri-table-2"></i>
+                        <span>Application</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-mail-send-line"></i>
-                        <span>Email</span>
+                        <span>Service</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="email-inbox.html">Inbox</a></li>
-                        <li><a href="email-read.html">Read Email</a></li>
+                        <li><a href="#">New Service</a></li>
+                        <li><a href="#">Bookmark</a></li>
+                        <li><a href="#">Documents</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Slide Images</a></li>
+                        <li><a href="#">Payment Mode</a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-layout-3-line"></i>
-                        <span>Layouts</span>
+                        <span>Ledger</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="true">
                         <li>
-                            <a href="javascript: void(0);" class="has-arrow">Vertical</a>
+                            <a href="javascript: void(0);" class="has-arrow">Credit</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="layouts-dark-sidebar.html">Dark Sidebar</a></li>
-                                <li><a href="layouts-compact-sidebar.html">Compact Sidebar</a></li>
-                                <li><a href="layouts-icon-sidebar.html">Icon Sidebar</a></li>
-                                <li><a href="layouts-boxed.html">Boxed Layout</a></li>
-                                <li><a href="layouts-preloader.html">Preloader</a></li>
-                                <li><a href="layouts-colored-sidebar.html">Colored Sidebar</a></li>
+                                <li><a href="layouts-dark-sidebar.html">New Entry</a></li>
+                                <li><a href="layouts-compact-sidebar.html">Source</a></li>
+                                <li><a href="layouts-compact-sidebar.html">Report</a></li>
                             </ul>
                         </li>
 
                         <li>
-                            <a href="javascript: void(0);" class="has-arrow">Horizontal</a>
+                            <a href="javascript: void(0);" class="has-arrow">Debit</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="layouts-horizontal.html">Horizontal</a></li>
-                                <li><a href="layouts-hori-topbar-light.html">Topbar light</a></li>
-                                <li><a href="layouts-hori-boxed-width.html">Boxed width</a></li>
-                                <li><a href="layouts-hori-preloader.html">Preloader</a></li>
-                                <li><a href="layouts-hori-colored-header.html">Colored Header</a></li>
+                                <li><a href="layouts-horizontal.html">New Entry</a></li>
+                                <li><a href="layouts-hori-topbar-light.html">Source</a></li>
+                                <li><a href="layouts-hori-boxed-width.html">Refort</a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
 
-                <li class="menu-title">Pages</li>
+                <li class="menu-title">Report</li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-account-circle-line"></i>
-                        <span>Authentication</span>
+                        <span>Clients</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="auth-login.html">Login</a></li>
-                        <li><a href="auth-register.html">Register</a></li>
-                        <li><a href="auth-recoverpw.html">Recover Password</a></li>
-                        <li><a href="auth-lock-screen.html">Lock Screen</a></li>
+                        <li><a href="#">New Clients</a></li>
+                        <li><a href="#">Old Clients</a></li>
+                        <li><a href="#">Repeated Clients</a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-profile-line"></i>
-                        <span>Utility</span>
+                        <span>Applications</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="pages-starter.html">Starter Page</a></li>
-                        <li><a href="pages-timeline.html">Timeline</a></li>
-                        <li><a href="pages-directory.html">Directory</a></li>
-                        <li><a href="pages-invoice.html">Invoice</a></li>
-                        <li><a href="pages-404.html">Error 404</a></li>
-                        <li><a href="pages-500.html">Error 500</a></li>
+                        <li><a href="#">Aadhar</a></li>
+                        {{-- load all services --}}
                     </ul>
                 </li>
 
-                <li class="menu-title">Components</li>
+  <li class="menu-title">Components</li>
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-pencil-ruler-2-line"></i>
                         <span>UI Elements</span>
@@ -130,9 +124,9 @@
                         <li><a href="ui-general.html">General</a></li>
 
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-vip-crown-2-line"></i>
                         <span>Advanced UI</span>
@@ -145,9 +139,9 @@
                         <li><a href="advance-rating.html">Rating</a></li>
                         <li><a href="advance-notifications.html">Notifications</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="waves-effect">
                         <i class="ri-eraser-fill"></i>
                         <span class="badge rounded-pill bg-danger float-end">8</span>
@@ -163,9 +157,9 @@
                         <li><a href="form-wizard.html">Form Wizard</a></li>
                         <li><a href="form-mask.html">Form Mask</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-table-2"></i>
                         <span>Tables</span>
@@ -176,9 +170,9 @@
                         <li><a href="tables-responsive.html">Responsive Table</a></li>
                         <li><a href="tables-editable.html">Editable Table</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-bar-chart-line"></i>
                         <span>Charts</span>
@@ -190,9 +184,9 @@
                         <li><a href="charts-knob.html">Jquery Knob Charts</a></li>
                         <li><a href="charts-sparkline.html">Sparkline Charts</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-brush-line"></i>
                         <span>Icons</span>
@@ -203,9 +197,9 @@
                         <li><a href="icons-dripicons.html">Dripicons</a></li>
                         <li><a href="icons-fontawesome.html">Font awesome 5</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-map-pin-line"></i>
                         <span>Maps</span>
@@ -214,9 +208,9 @@
                         <li><a href="maps-google.html">Google Maps</a></li>
                         <li><a href="maps-vector.html">Vector Maps</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-share-line"></i>
                         <span>Multi Level</span>
@@ -230,7 +224,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
 
             </ul>
         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -43,6 +44,12 @@ class AdminPanel extends Component
     {
         $this->ProfileView=1;
         $this->ProfileEdit=0;
+        $this->name= NUll;
+        $this->email= NUll;
+        $this->mobile_no= NUll;
+        $this->dob= NUll;
+        $this->address= NUll;
+
     }
     public function UpdateProfile()
     {
@@ -55,15 +62,18 @@ class AdminPanel extends Component
         $data['dob'] = $this->dob;
         $data['address'] = $this->address;
 
-        if($this->profile_image!=NULL)
+        if(!is_NUll($this->profile_image)) // if New Profile Images is Selected-- Uploading file
         {
-            $filename = date('YmdHi').$this->profile_image->getClientOriginalName();
-            $data['profile_image'] = '/storage/app/'.$this->profile_image->storeAs('Admin/Profile',$filename);
-        }
+            if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
+                {
+                    unlink(storage_path('app/public/'.$this->old_profile_image)); // Deleting Existing File
+                }
+            $filename = date('Ymd').'_'.$this->profile_image->getClientOriginalName();
+            $data['profile_image'] = $this->profile_image->storePubliclyAs('Uploads/Admin/Profile/'.$this->name,$filename,'public');
+        } // New Profile Image Uploaded Successfully
+
         DB::table('users')->where('id',$id)->update($data);
         return redirect()->route('admin.profile_view');
-
-
     }
     public function render()
     {

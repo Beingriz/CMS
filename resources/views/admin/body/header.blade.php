@@ -5,19 +5,19 @@
             <div class="navbar-brand-box">
                 <a href="index.html" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="{{asset('backend/assets/images/logo-sm.png')}}" alt="logo-sm" height="22">
+                        <img src="{{asset('backend/assets/images/dclogo.png')}}" alt="logo-sm" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{asset('backend/assets/images/logo-dark.png')}}" alt="logo-dark" height="20">
+                        <img src="{{asset('backend/assets/images/dclogo.png')}}" alt="logo-dark" height="20">
                     </span>
                 </a>
 
-                <a href="index.html" class="logo logo-light">
+                <a href="{{route('dashboard')}}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{asset('backend/assets/images/dc-logo.png')}}" alt="logo-sm-light" height="22">
+                        <img src="{{asset('logo/dclogo.png')}}" alt="logo-sm-light" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{asset('backend/assets/images/dc-logo.png')}}" alt="logo-light" height="20">
+                        <img src="{{asset('logo/dclogo.png')}}" alt="logo-light" height="70" width="90">
                     </span>
                 </a>
             </div>
@@ -33,7 +33,7 @@
                     <span class="ri-search-line"></span>
                 </div>
             </form>
-
+            {{-- Bookmark Menu Start --}}
             <div class="dropdown dropdown-mega d-none d-lg-block ms-2">
                 <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
                     Bookmarks
@@ -164,16 +164,20 @@
 
                 </div>
             </div>
+             {{-- Bookmark Menu End --}}
         </div>
 
         <div class="d-flex">
 
+            {{-- Full Screen Button Start--}}
             <div class="dropdown d-none d-lg-inline-block ms-1">
                 <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
                     <i class="ri-fullscreen-line"></i>
                 </button>
             </div>
+            {{-- Full Screen Button End--}}
 
+             {{-- Notification Button Start--}}
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                       data-bs-toggle="dropdown" aria-expanded="false">
@@ -262,11 +266,13 @@
                     </div>
                 </div>
             </div>
+            {{-- Notification Button End--}}
 
+             {{-- Profile Button Start--}}
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{asset('backend/assets/images/users/avatar-1.jpg')}}"
+                    <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}"
                         alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1">{{Auth::user()->name}}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
@@ -281,13 +287,7 @@
                     <a class="dropdown-item text-danger" href="{{ route('admin.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>
-
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
-                    <i class="ri-settings-2-line"></i>
-                </button>
-            </div>
-
+             {{-- Profile Button End--}}
         </div>
     </div>
 </header>

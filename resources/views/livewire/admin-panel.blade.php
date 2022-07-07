@@ -1,14 +1,20 @@
 <div>
-    <div class="page-content mt-0">
-        <div class="container-fluid">
-            @if($ProfileView == 1)
-            <div class="col-md-6 col-xl-3">
+    @if($ProfileView == 1)
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Profile Details</h4>
 
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{$profiledata->username}}</a></li>
+                        <li class="breadcrumb-item active">Profile</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="my-1 mt-0">{{$profiledata->name}} Profile</h4>
                         <center>
-                            <img class="rounded-circle avatar-xl" src="{{$profiledata->profile_image}}" alt="Card image cap">
+                            <img class="rounded avatar-lg" src="{{asset('/storage/'.$profiledata->profile_image)}}" alt="Card image cap">
                         </center>
                     </div>
                     <ul class="list-group list-group-flush">
@@ -94,7 +100,7 @@
                                     <div class="row mb-3">
                                         <label for="profile_image" class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">
-                                            <img class=" rounded avatar-lg" src="{{ $old_profile_image }}" alt="" />
+                                            <img class=" rounded avatar-lg" src="{{asset('storage/'.$old_profile_image) }}" alt="" />
                                             </div>
                                     </div>
                                     @endif
@@ -118,5 +124,5 @@
                 @endif
 
             </div>
-        </div>
-    </div></div>
+</div>
+
