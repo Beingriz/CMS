@@ -25,10 +25,11 @@
         <!-- Icons Css -->
         <link href="{{asset('backend/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
+        @livewireStyles
         <link href="{{asset('backend/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
 
-        @livewireStyles
+
     </head>
 
     <body data-topbar="dark">
@@ -98,7 +99,7 @@
         <!-- App js -->
         <script src="{{asset('backend/assets/js/app.js')}}"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+        @livewireScripts
 <script>
  @if(Session::has('message'))
  var type = "{{ Session::get('alert-type','info') }}"
@@ -121,7 +122,7 @@
  }
  @endif
 </script>
-        @livewireScripts
+
     </body>
 
 </html>

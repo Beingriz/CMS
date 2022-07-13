@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HomeSlide;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+
+    public function HomeIndex()
+    {
+        $data = HomeSlide::find(1);
+        return view('user.index',compact('data'));
+    }
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
