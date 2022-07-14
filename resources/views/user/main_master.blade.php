@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Cyberpe</title>
+        <title>Digital Cyber</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -19,13 +19,20 @@
         <link rel="stylesheet" href="{{asset('frontend/assets/css/default.css')}}">
         <link rel="stylesheet" href="{{asset('frontend/assets/css/style.css')}}">
         <link rel="stylesheet" href="{{asset('frontend/assets/css/responsive.css')}}">
+        <link href="{{ URL::asset('/public/Bootstrap/css/style.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('/public/Bootstrap/css/600.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href=" {{ URL::asset('/public/Bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{{ URL::asset('/public/Bootstrap/css/mdb.min.css') }}" rel="stylesheet">
     </head>
     <body>
 
         <!-- preloader-start -->
-        <div id="preloader">
+        {{-- <div id="preloader">
             <div class="rasalina-spin-box"></div>
-        </div>
+        </div> --}}
         <!-- preloader-end -->
 
 		<!-- Scroll-top -->

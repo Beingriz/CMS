@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Home\HomeSlideController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -35,6 +37,40 @@ Route::controller(HomeSlideController::class)->group(function(){
 
 });
 
+// Application  Routes start
+Route::controller(ApplicationController::class)->group(function(){
+    Route::get('app_home', 'Home')->middleware(['auth'])->name('AppDashboard');
+
+
+});
+Route::get('new_temp', [ApplicationController::class,'Temp']);
+Route::get('app_form', [ApplicationController::class,'index']);
+Route::get('app_home', [ApplicationController::class,'Dashboard']);
+Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
+Route::get('app_form', [ApplicationController::class,'List']);
+Route::post('save_application', [SaveApplicaton::class,'Save']);
+Route::get('/edit_app/{id}', [ApplicationController::class,'Edit']);
+Route::get('download_ack/{file}', [ApplicationController::class,'Download_Ack']);
+Route::get('download_doc/{file}', [ApplicationController::class,'Download_Doc']);
+Route::get('download_docs/{files}', [ApplicationController::class,'Download_Files']);
+Route::get('download_pay/{file}', [ApplicationController::class,'Download_Pay']);
+Route::post('update_app/{id}', [ApplicationController::class,'Update']);
+Route::get('/selected_date_app/{date}', [ApplicationController::class,'SelectedDateList']);
+Route::get('/previous_day_app', [ApplicationController::class,'PreviousDay']);
+Route::get('/open_app/{id}', [ApplicationController::class,'Open_Application']);
+Route::get('/update_open_app/{id}', [ApplicationController::class,'Update_Application']);
+Route::get('/delete_app/{id}', [ApplicationController::class,'Delete']);
+Route::get('/delete_app_per/{id}', [ApplicationController::class,'DeletePermanently']);
+Route::get('/view_recycle_bin', [ApplicationController::class,'ViewRecycleBin']);
+Route::get('/restore_app/{id}', [ApplicationController::class,'Restore']);
+Route::get('balance_list', [ApplicationController::class,'BalanceList']);
+Route::get('app_status_list/{service}', [ApplicationController::class,'AppStatusList']);
+Route::get('selected_ser_bal_lis/{value}', [ApplicationController::class,'Selected_Ser_Balance_List']);
+Route::get('/print_ack/{id}', [ApplicationController::class,'PrintAck']);
+Route::get('bookmarks', [ApplicationController::class,'Bookmarks']);
+Route::get('statusmodule', [ApplicationController::class,'StatusModule']);
+Route::get('signup', [SignupController::class,'index']);
+Route::post('signup', [SignupController::class,'Save']);
 
 Route::get('/dashboard', function () {
     return view('admin.index');

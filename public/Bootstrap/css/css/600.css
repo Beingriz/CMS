@@ -1,0 +1,505 @@
+/* This style will apply for phone screen  */
+
+@media screen and (max-width: 600px) {
+    input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+    input[type=submit] {
+        width: auto;
+        padding: 10px;
+        margin: 10px;
+    }
+    label {
+        font-size: 13px;
+        margin-left: 9px;
+    }
+    .span {
+        padding: 5px;
+        font-style: initial;
+        color: black;
+        margin: 2px;
+    }
+    body {
+        margin: 0.5px;
+        padding: 1px;
+    }
+    .company-name {
+        margin: 0px;
+        padding: 0px;
+        font-family: sans-serif;
+        align-content: center;
+    }
+    .company-name>h3 {
+        padding: 5px;
+        font-size: small;
+    }
+    .company-name>h6 {
+        font-size: small;
+        font-family: sans-serif;
+        font-style: italic;
+    }
+    .nav-bar {
+        position: relative;
+        margin: 3px;
+        width: auto;
+        height: auto;
+    }
+    .logo>h3 {
+        font-size: 1px;
+    }
+    .logo>img {
+        width: 25px;
+        height: 25px;
+    }
+    .user-image>img {
+        justify-content: center;
+        text-align: right;
+        width: 100%;
+        height: 100%;
+        border-radius: 40px;
+        border: 1px solid;
+        margin-right: -16px;
+    }
+    .break {
+        display: none;
+    }
+    .content {
+        width: 99%;
+        padding: 0px;
+        margin: 0px;
+    }
+    .menu-visible {
+        transition: all 0.7s ease-in-out;
+        display: block;
+        width: auto;
+        height: 100%;
+    }
+    .sub-nav-menu {
+        margin: auto;
+        margin-top: 0px;
+    }
+    .sub-nav-menu>ul>li>a {
+        font-size: 14px;
+    }
+    .span {
+        padding: 2px;
+    }
+    /* user index page design  */
+    .slider {
+        height: 200px;
+    }
+    .slide-image {
+        height: 200px;
+    }
+    .products {
+        display: block;
+    }
+    .dashboard {
+        /* display: inline-block;   */
+        /* border: 1px solid rgb(87, 87, 61); */
+        border-radius: 5px;
+    }
+    .income {
+        width: auto;
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        height: auto;
+        background-color: white;
+        box-shadow: 0 0 5px black;
+    }
+    .data-form {
+        width: auto;
+        margin: 5px;
+        height: auto;
+        box-shadow: 0px 1px 9px #9c9c9c;
+        border-radius: 1%;
+    }
+    .data-table {
+        width: initial
+    }
+    .data-table-header>img {
+        height: auto;
+    }
+    .table-content {
+        width: 200px;
+        padding: 0px;
+        margin: 0px;
+        font-size: 15px;
+    }
+    .error {
+        font-size: 6px;
+    }
+    .product {
+        width: 100%;
+        height: auto;
+        padding: 4px;
+        margin: auto;
+        margin-bottom: 10px;
+        margin-right: -8px;
+        margin-top: 2px;
+        box-shadow: 0 0 5px black;
+    }
+    .section {
+        width: 46.9%;
+        height: 110px;
+        padding: 1px;
+        display: inline-block;
+        margin-bottom: 10px;
+        box-shadow: 0 0 5px black;
+    }
+    .sec-header {
+        display: inline-block;
+        width: 100%;
+    }
+    .sec-footer {
+        font-size: 10px;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+    .sec-icon {
+        width: 30%;
+        height: 44px;
+        margin-left: 62px;
+        margin-top: 3px;
+        margin-bottom: 0px;
+    }
+    .sec-icon>img {
+        width: 100%;
+        height: 100%;
+    }
+    .sec-info {
+        padding: 0px;
+        width: 100%;
+    }
+    .form-data-buttons {
+        text-align: left;
+        padding: 0px;
+        margin: 0px;
+        font-size: 0px;
+    }
+    .sec-heading {
+        font-size: 12px;
+        margin-bottom: -9px;
+        margin-top: 2px;
+    }
+    .sec-content {
+        font-size: 13px;
+    }
+    .pdct-desc {
+        height: auto;
+    }
+    .pdct-details {
+        text-align: justify;
+        padding: 6px;
+        font-weight: normal;
+        display: block;
+    }
+    .pdct-title {
+        padding: 10px;
+        font-size: 18px;
+        font-variant-caps: petite-caps;
+    }
+    .pdct-image {
+        /* width: 100%; */
+        padding: -1px;
+        /* margin: 0px; */
+        height: 150px;
+    }
+    .pdct-image>img {
+        width: 100%;
+        border-radius: 0px;
+        padding: 0px;
+        height: 100%;
+        box-shadow: 0 0 4px black;
+    }
+    .pdct-btn a {
+        padding: 10px;
+        margin: 10px;
+    }
+    .border {
+        display: block;
+        box-shadow: 0px 0px 0px 0px;
+        border: none;
+        margin: -6px;
+    }
+    .container-fluid {
+        padding: 0px;
+    }
+    .btn-sm {
+        padding: 6px;
+        margin-left: 15px;
+    }
+    .layout {
+        display: block;
+    }
+    .left-menu {
+        display: none;
+    }
+    .right-menu {
+        width: 99%;
+        display: block;
+        box-shadow: inset 0 0 0px #697672;
+    }
+    .right-menu-section {
+        width: 272px;
+        margin: auto;
+        margin-top: 10px;
+    }
+    .right-menu-sec-heading {
+        padding: 2px;
+        margin: 2px;
+    }
+    .right-menu-sec-heading>p {
+        font-size: 12px;
+    }
+    .right-menu-sec-data>p {
+        font-size: 12px;
+        padding: 7px;
+    }
+    .form-data-container {
+        display: block;
+    }
+    .form-data {
+        width: 100%;
+    }
+    .btn.btn-sm.btn-rounded {
+        border-radius: 4px;
+        padding: 4px;
+    }
+    table {
+        width: 100%;
+        border: 1px solid rgb(233, 233, 233);
+        padding: 0px;
+        font-family: monospace;
+    }
+    .hide {
+        display: none;
+        width: 10%;
+    }
+    .button {
+        border: 3;
+        -webkit-box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+        padding: 0px;
+        font-size: 10px;
+        margin: 0px;
+        line-height: -3.5;
+    }
+    table>thead>tr>th {
+        padding: 8px;
+        padding-left: 3px;
+        font-size: 10px;
+        text-align: center;
+    }
+    table>tbody>tr>td {
+        padding: 5px;
+        border: 1px solid rgb(233, 233, 233);
+        text-align: center;
+        font-size: 10px;
+    }
+    .videos {
+        margin: auto;
+        display: inline-block;
+        width: 100%;
+    }
+    .product-view {
+        max-width: 99%;
+        padding: 2px;
+    }
+    .pdct-view-image {
+        max-width: 99%;
+        height: 100%;
+    }
+    .signup {
+        max-width: 100%;
+        margin-top: 1px;
+        padding: 1px;
+        margin: 1px;
+    }
+    .signup-header {
+        padding: 5px;
+        max-width: 98%;
+    }
+    .heading {
+        font-size: 16px;
+    }
+    .heading>img {
+        width: 65px;
+        height: 60px;
+    }
+    .form-heading {
+        font-size: 15px;
+    }
+    .header-image {
+        height: 35px;
+        width: 60px;
+        margin: 0px;
+        padding: 0px;
+    }
+    .desc {
+        font-size: 16px;
+        color: mediumslateblue;
+    }
+    .dynamic-text {
+        font-size: 18px;
+        color: deeppink;
+    }
+    .info-text {
+        font-size: 10px;
+    }
+    span.important {
+        margin: 5px 0px 0px 5px;
+    }
+    .video {
+        width: 99%;
+        height: auto;
+        margin-top: 10px;
+    }
+    .video video {
+        width: 100%;
+        height: auto;
+        border-radius: 2px;
+        box-shadow: 1px 1px 5px 0px black;
+    }
+    .col-25 {
+        display: flex;
+        width: 25%;
+    }
+    .col-45 {
+        width: 45%;
+        display: flex;
+        margin-left: -20px;
+        padding: 5px;
+        margin-right: 0px;
+    }
+    .col-55 {
+        display: flex;
+        width: 61%;
+        padding: 0px;
+    }
+    .col-75 {
+        width: 73.8%;
+        margin-left: 30px;
+    }
+    .map {
+        max-width: 97%;
+        border-radius: 5px;
+        height: 200px;
+    }
+    .map iframe {
+        width: 100%;
+        height: 100%;
+    }
+    .feedback {
+        max-width: 99%;
+        margin: auto;
+        padding: 0px;
+    }
+    .footer-container {
+        display: inline-block;
+        padding: 0px;
+        width: auto;
+    }
+    .footer-links>ul>li>a {
+        font-size: 12px;
+    }
+    footer-link {
+        margin: 0px;
+    }
+}
+
+@media screen and (max-width: 690px) {
+    .container-fluid {
+        padding: 0px;
+    }
+    .left-menu {
+        width: 35%;
+    }
+    .middle-container {
+        width: auto;
+    }
+    p.heading {
+        font-size: 15px;
+    }
+    .right-menu-sec-heading {
+        padding: 7px;
+    }
+    .left-menu-sec-heading>p {
+        font-size: 10px;
+        padding: 0px;
+        margin: -1px;
+    }
+    .right-menu-sec-heading>p {
+        font-size: 10px;
+        padding: 0px;
+        margin: -1px;
+    }
+    .left-menu-sec-heading>img {
+        width: 20px;
+        height: 20px;
+        margin: -2px;
+        padding: 3px;
+    }
+    .left-menu-link {
+        font-size: 11px;
+    }
+    .right-menu-sec-data>p {
+        font-size: 12px;
+        padding: 7px;
+    }
+    .left-menu-sec-heading {
+        border-radius: 0px 10px;
+    }
+    .righ-menu-sec-heading {
+        border-radius: 0px 10px;
+    }
+    label {
+        font-size: 11px;
+    }
+    .col-25 {
+        width: 55%;
+    }
+    .col-45 {
+        margin: 0px -2px 0px -12px;
+    }
+    .col-55 {
+        width: 58%;
+        padding: 0px 0px 0px 0px;
+    }
+    .form-data-container {
+        display: block;
+    }
+    .form-data {
+        width: 100%;
+    }
+    .break {
+        display: none;
+    }
+    span.error {
+        font-size: 10px;
+    }
+    .insight-container {
+        display: block;
+    }
+    table {
+        width: 100%;
+        border: 1px solid rgb(233, 233, 233);
+        padding: 0px;
+        font-family: monospace;
+    }
+    table>thead>tr>th {
+        padding: 8px;
+        padding-left: 3px;
+        font-size: 10px;
+        text-align: center;
+    }
+    table>tbody>tr>td {
+        padding: 5px;
+        border: 1px solid rgb(233, 233, 233);
+        text-align: center;
+        font-size: 10px;
+    }
+}

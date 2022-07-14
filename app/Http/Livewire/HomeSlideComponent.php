@@ -55,25 +55,15 @@ class HomeSlideComponent extends Component
     }
     public function UpdateSlide($id)
     {
-
-        if(!is_NUll($this->slide_image)) // if New Profile Images is Selected-- Uploading file
+        $image = $this->StoreImage();
+        if(!is_Null($image))
         {
-
-            $this->validate();
-            if (Storage::disk('public')->exists($this->old_slide_image)) // Check for existing File
-                {
-                    unlink(storage_path('app/public/'.$this->old_slide_image)); // Deleting Existing File
-                }
-            $img = Image::make($this->slide_image)->resize(632,825)->save('Uploads/Home_slide/');
-
-            $filename = date('Ymd').'_'.$this->slide_image->getClientOriginalName();
-
-            // $save_url  = $this->slide_image->storePubliclyAs('Uploads/Home_slide/',$img,'public'); // New Profile Image Uploaded Successfully
             $data = array();
             $data['title'] = $this->title;
             $data['short_desc'] = $this->short_desc;
             $data['video_url'] = $this->video_url;
-            $data['slide_image'] =$img;
+            $data['slide_image'] =$image;
+
             $udpate = DB::table('home_slides')->where('id',$id)->update($data);
             $this->ResetFields();
             $notification = array(
@@ -81,13 +71,12 @@ class HomeSlideComponent extends Component
                     'alert-type' =>'success'
                     );
             return redirect()->route('home_slide')->with($notification);
-
         }
         else
         {
 
             $this->validate(['title'=>'required', 'short_desc'=>'required',
-        'video_url'=>'required']);
+            'video_url'=>'required']);
 
             $data = array();
             $data['title'] = $this->title;
@@ -100,10 +89,29 @@ class HomeSlideComponent extends Component
             'alert-type' =>'success'
             );
             return redirect()->route('home_slide')->with($notification);
-
         }
-        }
+    }
 
+    public function StoreImage()
+    {
+        if(!$this->slide_image)
+        {
+            return null;
+        }
+        else
+        {
+            $name = date('Ymd').'_'.$this->slide_image->getClientOriginalName();
+            $name = 'Uploads/Home_Slide/'. $name;
+            $image = Image::make($this->slide_image)->resize(632,825)->encode('jpg');
+            Storage::disk('public')->delete($this->old_slide_image);
+            Storage::disk('public')->put($name,$image);
+            return $name;
+        }
+    }
+    public function getImagePathAttribute()
+    {
+        return storage::disck('public')->url($this->slide_image);
+    }
     public function render()
     {
         $id = Auth::user()->id;

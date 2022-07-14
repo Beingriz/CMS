@@ -27,7 +27,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class=" waves-effect">
+                    <a href="{{url('app_home')}}" class=" waves-effect">
                         <i class="ri-table-2"></i>
                         <span>Application</span>
                     </a>
