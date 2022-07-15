@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Home\HomeSlideController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +40,8 @@ Route::controller(HomeSlideController::class)->group(function(){
 // Application  Routes start
 Route::controller(ApplicationController::class)->group(function(){
     Route::get('app_home', 'Home')->middleware(['auth'])->name('AppDashboard');
+    Route::get('app_home', 'Dashboard')->middleware(['auth'])->name('Dashboard');
+    Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->middleware(['auth'])->name('DynamicDashboard');
 
 
 });

@@ -126,8 +126,14 @@ class DynamicDashboard extends Component
 
        DB::update('update digital_cyber_db set Application_Type = ? where Id = ?', [$utype,$Id]);
        session()->flash('SuccessMsg', 'The Service Type has been Changed From '.$ptype. ' to ' .$utype.' Successfully');
+
+       $notification = array(
+        'message'=>'The Service Type has been Changed From '.$ptype. ' to ' .$utype.' Successfully',
+        'alert-type' =>'success'
+       );
+
        $this->count=0;
-        return redirect('../dynamic_dashboard/'.$this->MainServiceId);
+        return redirect()->route('DynamicDashboard')->with($notification);
 
 
     }

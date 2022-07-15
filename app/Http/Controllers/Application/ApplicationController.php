@@ -1,23 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Application;
 
+use App\Http\Controllers\Controller;
 use App\Models\Application;
-use App\Models\Bookmarks;
 use App\Models\DocumentFiles;
-use App\Models\MainServices;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\SubServices;
+use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\RightInsightTrait;
-use App\Models\PaymentMode;
-use App\Models\Status;
-use App\Models\SubServices;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
-use DateTime;
 
 class ApplicationController extends Controller
 {
@@ -87,10 +81,6 @@ class ApplicationController extends Controller
             }
 
         }
-
-
-
-
         // Code for insight Data Records are fetched from RightInsight Trait
         return view('Application\app_dashboard',['total_applicaiton'=>$this->applications_served,'total_amount'=>$total_amount,'Mainservices'=>$this->MainServices,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'new_clients'=>$this->new_clients,'previous_day_new_clients'=>$this->previous_day_new_clients,'bookmarks'=>$this->bookmarks,]);
     }
@@ -118,88 +108,87 @@ class ApplicationController extends Controller
        ]);
 
     }
+    public function Edit($Id)
+    {
 
-public function Edit($Id)
-{
+        return view('Application\edit_app',['application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'sl_no'=>$this->sl_no, 'n'=>$this->n,'daily_applications'=>$this->daily_applications,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'Id'=>$Id]);
+    }
+    public function Download_Ack($Id)
+    {
+        $fetch = Application::wherekey($Id)->get();
+        foreach ($fetch as $key)
+        {
+            $file = $key['Ack_File'];
 
-    return view('Application\edit_app',['application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'sl_no'=>$this->sl_no, 'n'=>$this->n,'daily_applications'=>$this->daily_applications,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'Id'=>$Id]);
-}
-public function Download_Ack($Id)
-{
-    $fetch = Application::wherekey($Id)->get();
-    foreach ($fetch as $key)
-    {
-        $file = $key['Ack_File'];
+        }
+        if (Storage::exists($file))
+        {
+            $file = 'storage/app/'.$file;
+            return response()->download($file);
+        }
+        else
+        {
+            return redirect('/open_app/'.$Id)->with('Error','Acknowledgement Not Available!');
 
+        }
     }
-    if (Storage::exists($file))
+    public function Download_Doc($Id)
     {
-        $file = 'storage/app/'.$file;
-        return response()->download($file);
-    }
-    else
-    {
-        return redirect('/open_app/'.$Id)->with('Error','Acknowledgement Not Available!');
+        $fetch = Application::wherekey($Id)->get();
+        foreach ($fetch as $key)
+        {
+            $file = $key['Doc_File'];
+        }
+        if (Storage::exists($file))
+        {
+            $file = 'storage/app/'.$file;
+            return response()->download($file);
+        }
+        else
+        {
+            return redirect('/open_app/'.$Id)->with('Error','Document File Not Available!');
 
+        }
     }
-}
-public function Download_Doc($Id)
-{
-    $fetch = Application::wherekey($Id)->get();
-    foreach ($fetch as $key)
+    public function Download_Files($Doc_Id)
     {
-        $file = $key['Doc_File'];
-    }
-    if (Storage::exists($file))
-    {
-        $file = 'storage/app/'.$file;
-        return response()->download($file);
-    }
-    else
-    {
-        return redirect('/open_app/'.$Id)->with('Error','Document File Not Available!');
 
-    }
-}
-public function Download_Files($Doc_Id)
-{
+        $fetch = DocumentFiles::wherekey($Doc_Id)->get();
+        foreach ($fetch as $key)
+        {
+            $file = $key['Document_Path'];
+            $Id = $key['App_Id'];
+        }
+        if (Storage::exists($file))
+        {
+            $file = 'storage/app/'.$file;
+            return response()->download($file);
+        }
+        else
+        {
+            return redirect('/edit_app/'.$Id)->with('Error','Document File Not Available!');
 
-    $fetch = DocumentFiles::wherekey($Doc_Id)->get();
-    foreach ($fetch as $key)
-    {
-        $file = $key['Document_Path'];
-        $Id = $key['App_Id'];
+        }
     }
-    if (Storage::exists($file))
+    public function Download_Pay($Id)
     {
-        $file = 'storage/app/'.$file;
-        return response()->download($file);
-    }
-    else
-    {
-        return redirect('/edit_app/'.$Id)->with('Error','Document File Not Available!');
+        $fetch = Application::wherekey($Id)->get();
+        foreach ($fetch as $key)
+        {
+            $file = $key['Payment_Receipt'];
+        }
+        if (Storage::exists($file))
+        {
+            $file = 'storage/app/'.$file;
+            return response()->download($file);
+        }
+        else
+        {
+            return redirect('/open_app/'.$Id)->with('Error','Payment File Not Available!');
 
+        }
     }
-}
-public function Download_Pay($Id)
-{
-    $fetch = Application::wherekey($Id)->get();
-    foreach ($fetch as $key)
-    {
-        $file = $key['Payment_Receipt'];
-    }
-    if (Storage::exists($file))
-    {
-        $file = 'storage/app/'.$file;
-        return response()->download($file);
-    }
-    else
-    {
-        return redirect('/open_app/'.$Id)->with('Error','Payment File Not Available!');
-
-    }
-}
-public function Update(Request $request, $Id)
+    public function Update(Request $request, $Id)
     {
 
         $rule = ['Name'=>'required', 'Mobile_No'=>['required', 'min:10'],'Application_Type'=>'required','DOB'=>'required','Total_Amount'=>'required','Amount_Paid'=>'required','Balance'=>'required','Payment_Mode'=>'required'];
@@ -533,19 +522,5 @@ public function Update(Request $request, $Id)
         }
         return view('Application\recycle_bin',['recycle_data'=>$recycle_data, 'count'=>$sl_no, 'sl_no'=>$sl_no, 'n'=>$n, 'total'=>$total]);
     }
- public function PrintAck($id)
- {
-    $Print_data = ['Name'=>'Md Rizwan', 'id'=>$id];
-    $pdf = PDF::loadview('Application\print_ack',$Print_data)->download($id.'.pdf');
-    $type = '.pdf';
-    return response()
-            ->view('Application\print_ack', $Print_data)
-            ->header('Content-Type', $type);
-
- }
- public function Print()
- {
-     return view('Application\print_ack');
- }
 
 }

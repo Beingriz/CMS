@@ -1,5 +1,5 @@
 <header id="page-topbar">
-    <div class="navbar-header">
+    <div class="navbar-header" margin-bottom = "-40px">
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
