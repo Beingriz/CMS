@@ -21,7 +21,6 @@
         <div class="page-title-right">
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a href="{{url('home_dashboard')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('admin_home')}}">Admin</a></li>
                 <li class="breadcrumb-item"><a href="{{url('app_form')}}">New Application</a></li>
             </ol>
         </div>
@@ -38,7 +37,6 @@
                                     @if (($service->Temp_Count)>=1)
                                     <p  class="text-muted mb-0 font-size-16">Pending : <span class="badge bg-warning">{{$service->Temp_Count}}</span></p>
                                     @else
-                                    <p class="text-muted mb-0">Pending : <span class="badge bg-info">0</span></p>
                                     @endif
                                     <p class="text-muted mb-0 font-size-16"><span class="text-info fw-bold font-size-17 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$service->Total_Amount}}</span> Total Revenue</p>
 
