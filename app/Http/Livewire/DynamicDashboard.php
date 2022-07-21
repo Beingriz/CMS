@@ -24,7 +24,7 @@ class DynamicDashboard extends Component
    public  $Sub_Serv_Name;
    public  $Serv_Name;
    public  $status_count;
-   public  $StatusDetails;
+   protected  $StatusDetails=[];
    public  $n=1;
    public  $count;
    public  $temp_count=0;
@@ -69,8 +69,6 @@ class DynamicDashboard extends Component
 
             }
         }
-
-
         $this->count=0;
         $this->temp_count=1;
 
@@ -79,11 +77,11 @@ class DynamicDashboard extends Component
     public function ShowDetails($name)
     {
         $No = 'No';
-        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',$name],['Recycle_Bin',$No]])->get();
+        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',$name],['Recycle_Bin',$No]])->Paginate(10);
         $this->StatusDetails = $fetch_details;
         $this->count = count($fetch_details);
         $this->status_name = $name;
-
+        $this->resetPage();
 
     }
     public function UpdateStatus($Id,$pstatus,$ustatus)
@@ -156,10 +154,9 @@ class DynamicDashboard extends Component
 
         $bookmarks = Bookmark::Where('Relation',$this->Serv_Name)->orderby('Name','asc')->get();
 
-
         return view('livewire.dynamic-dashboard',[
            'status'=>$this->status, 'ServName'=>$this->Serv_Name,'bookmarks'=>$bookmarks,
-           'SubServices'=>$this->SubServices, 'StatusDetails'=> $this->StatusDetails , 'n'=>$this->n
+           'SubServices'=>$this->SubServices, 'n'=>$this->n, 'StatusDetails' =>$this->StatusDetails
        ]);
    }
 

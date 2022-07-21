@@ -48,7 +48,7 @@ Route::controller(ApplicationController::class)->group(function(){
 Route::get('new_temp', [ApplicationController::class,'Temp']);
 Route::get('app_form', [ApplicationController::class,'index']);
 Route::get('app_home', [ApplicationController::class,'Dashboard']);
-Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
+// Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
 Route::get('app_form', [ApplicationController::class,'List']);
 Route::post('save_application', [SaveApplicaton::class,'Save']);
 Route::get('/edit_app/{id}', [ApplicationController::class,'Edit']);

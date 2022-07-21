@@ -102,7 +102,7 @@ class HomeSlideComponent extends Component
         {
             $name = date('Ymd').'_'.$this->slide_image->getClientOriginalName();
             $name = 'Uploads/Home_Slide/'. $name;
-            $image = Image::make($this->slide_image)->resize(632,825)->encode('jpg');
+            $image = Image::make($this->slide_image)->resize(636,825)->encode('jpg');
             Storage::disk('public')->delete($this->old_slide_image);
             Storage::disk('public')->put($name,$image);
             return $name;

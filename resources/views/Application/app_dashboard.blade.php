@@ -32,19 +32,21 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-truncate text-primary font-size-20 mb-2">{{$service->Name}}
+                                <div class="flex-grow-1 align-items-center">
+                                    <h5 class="text-truncate font-size-20 mb-2">{{$service->Name}} </h5>
+
                                     @if (($service->Temp_Count)>=1)
-                                    <h5 class="me-2">Pending : <span class="badge bg-info">{{$service->Temp_Count}}</span></h5>
+                                    <p  class="text-muted mb-0 font-size-16">Pending : <span class="badge bg-warning">{{$service->Temp_Count}}</span></p>
                                     @else
-                                    <h5 class="mb-2">0</h5>
+                                    <p class="text-muted mb-0">Pending : <span class="badge bg-info">0</span></p>
                                     @endif
-                                    <p class="text-muted mb-0"><span class="text-success fw-bold font-size-17 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$service->Total_Amount}}</span>Total Revenue</p>
+                                    <p class="text-muted mb-0 font-size-16"><span class="text-info fw-bold font-size-17 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$service->Total_Amount}}</span> Total Revenue</p>
+
+                                    <p class="text-muted mb-0 font-size-16">Total Applications <span class="text-success fw-bold font-size-17 me-2"><i class="ri-arrow-right-up-line me-1  align-middle"></i>{{$service->Total_Count}}</span></p>
                                 </div>
 
                                 <div>
-                                    <img src="{{$service->Thumbnail}}"  class="rounded-circle avatar-md">
-                                    <p class="text-muted mb-0"><span class="text-dark fw-bold font-size-15 me-2"><i class="dripicons-folder"></i>App : {{$service->Total_Count}}</span>
+                                    <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($service->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$service->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
                                 </div>
 
                             </div>
@@ -53,62 +55,18 @@
                 </a>
             @endforeach
         </div>
+        <div class="bookmark-container">
+            <div class="data-table-header">
+                <p class="heading">Bookmarks </p>
+            </div>
+            @foreach($bookmarks as $bookmark)
+            <a href="{{ $bookmark->Hyperlink }}" target="_blank" class="bookmark">
+                <img class="b-img" src="{{(!empty($bookmark->Thumbnail))?url('storage/Bookmarks/Thumbnail/'.$bookmark->Thumbnail):url('storage/no_image.jpg')}}" alt="Bookmark Icon">
+                <p class="b-name" >{{$bookmark->Name}}</p>
+            </a>
+            @endforeach
+        </div>
 
-
-                    <div class="row"></div>
-                    {{-- Applicaiton Insight --}}
-                    <div class="dashboard-insight">
-                        <div class="right-menu-section">
-                            <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                            <div class="sec-data">
-                                <p class="section-heading">Prime Service</p>
-                                <p class="section-value">Service Name</p>
-                                <p class="section-pre-values">Application Count </p>
-                            </div>
-                        </div>
-                        <div class="right-menu-section">
-                            <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                            <div class="sec-data">
-                                <p class="section-heading">Montly Revenue</p>
-                                <p class="section-value">Total Amount</p>
-                                <p class="section-pre-values">Balance Due</p>
-                            </div>
-                        </div>
-                        <div class="right-menu-section">
-                            <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                            <div class="sec-data">
-                                <p class="section-heading">Delivered</p>
-                                <p class="section-value">Total</p>
-                                <p class="section-pre-values">This Month</p>
-                            </div>
-                        </div>
-                        <div class="right-menu-section">
-                            <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                            <div class="sec-data">
-                                <p class="section-heading">Pending</p>
-                                <p class="section-value">Total </p>
-                                <p class="section-pre-values">This Month</span></p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row"></div>
-                     {{-- Application Book Marks BookMarks --}}
-
-                     <div class="border">
-                        <div class="bookmark-container">
-                            <div class="data-table-header">
-                                <p class="heading">Bookmarks </p>
-                            </div>
-                            @foreach($bookmarks as $bookmark)
-                            <a href="{{ $bookmark->Hyperlink }}" target="_blank" class="bookmark">
-                                <img class="b-img" src="./{{$bookmark->Thumbnail}}" alt="Bookmark Icon">
-                                <p class="b-name" >{{$bookmark->Name}}</p>
-                            </a>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
     </div>
+</div>
 @endsection
