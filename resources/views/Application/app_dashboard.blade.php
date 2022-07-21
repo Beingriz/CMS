@@ -21,7 +21,7 @@
         <div class="page-title-right">
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a href="{{url('home_dashboard')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('app_form')}}">New Application</a></li>
+                <li class="breadcrumb-item"><a href="{{route('new_application')}}">New Application</a></li>
             </ol>
         </div>
 

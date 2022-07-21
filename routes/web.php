@@ -42,6 +42,7 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('app_home', 'Home')->middleware(['auth'])->name('AppDashboard');
     Route::get('app_home', 'Dashboard')->middleware(['auth'])->name('Dashboard');
     Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->middleware(['auth'])->name('DynamicDashboard');
+    Route::get('newapplication', 'index')->middleware(['auth'])->name('new_application');
 
 
 });

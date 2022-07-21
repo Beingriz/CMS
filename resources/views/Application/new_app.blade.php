@@ -1,12 +1,8 @@
-@extends('Layouts.main')
-@section('content')
+@extends('admin.admin_master')
+@section('admin');
 
-<!DOCTYPE html>
-<html lang="en">
+<div class="page-content" style="margin-top: -45px">
 
-<head>
-</head>
-<body>
     <div class="container=fluid top">
         <section class="work-area">
             <div class="sub-nav-menu">
@@ -18,7 +14,6 @@
             </div>
             <div class="pages">
                 <div class="layout">
-                    @include('Layouts.left_menu')
 
                     <!-- Middle Container Section -->
                     <div class="middle-container">
@@ -27,13 +22,14 @@
 
                     </div>
                     <!-- Right Menu Insight Section -->
-                    @include('Layouts.right_insight')
+
 
                 </div>
             </div>
         </section>
     </div>
-</body>
+</div>
+
 
 </html>
 
