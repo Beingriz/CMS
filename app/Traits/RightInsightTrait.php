@@ -137,6 +137,7 @@ trait RightInsightTrait
         }
         $this->new_clients = count($this->new_user);
         $this->previous_day_new_clients = count($this->previous_day_new_user);
+        $this->status_list = Status::all();
     }
 
 }

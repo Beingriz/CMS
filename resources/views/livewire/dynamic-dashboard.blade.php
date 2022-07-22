@@ -4,6 +4,14 @@
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0">{{$ServName}}  Dashboard</h4>
 
+                @if (session('SuccessMsg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('SuccessMsg')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
@@ -27,9 +35,6 @@
         <p class="heading"> {{$ServName}}  Dashboard</p>
     </div>{{-- End of Header --}}
 
-            @if (session('SuccessMsg'))
-                <span class="dynamic-success">{{session('SuccessMsg')}}</span>
-            @endif
 
 
     <div class="row"> {{-- Start of Services Row --}}
@@ -79,7 +84,10 @@
 
                                 <div class="flex-grow-1">
                                     <h5 class="mt-0 font-size-18 mb-1">{{$item->Status}}</h5>
+                                    @if ($item->Temp_Count > 0)
                                     <p class="text-muted font-size-14">Applications <span class="badge rounded-pill bg-danger font-size-14" >{{$item->Temp_Count}}</span></p>
+                                    @endif
+
 
                                 </div>
                             </div>

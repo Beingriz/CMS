@@ -28,7 +28,7 @@ class SaveApplicationForm extends Component
     public $Total_Amount,$Amount_Paid,$Balance;
     public $PaymentMode;
     public $Received_Date,$Mobile_Num;
-    public $Ack_File,$Doc_File,$Payment_Receipt ;
+    public $Ack_File,$Doc_File,$Payment_Receipt,$Status , $Client_Type;
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
     public $main_service;
@@ -601,12 +601,13 @@ class SaveApplicationForm extends Component
                 $daily_applications = Application::Where('Received_Date',$this->today)->filter($this->filterby)->paginate($this->paginate);
             }
             $this->ApplicationType = SubServices::where('Service_Id',$this->ApplicationId)->get();
+
         return view('livewire.save-application-form',[
             'today'=>$this->today,'payment_mode'=>$this->payment_mode,
             'daily_total'=>$this->daily_total,'daily_applications'=>$daily_applications,
             'main_service'=>$this->main_service, 'sl_no'=>$this->sl_no, 'n'=>$this->n,
             'sub_service'=>$this->sub_service,'Application'=>$this->Application,
-            'user_type'=>$this->user_type,
+            'user_type'=>$this->user_type,'status_list'=>$this->status_list,
         ]);
     }
 }

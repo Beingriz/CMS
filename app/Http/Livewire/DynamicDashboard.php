@@ -115,6 +115,7 @@ class DynamicDashboard extends Component
                 }
             }
         }
+
         return redirect('../dynamic_dashboard/'.$this->MainServiceId);
 
 

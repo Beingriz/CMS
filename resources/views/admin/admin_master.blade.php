@@ -123,6 +123,14 @@
         <script src="{{asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
         <script src="{{asset('backend/assets/js/pages/datatables.init.js')}}"></script>
+        <!-- twitter-bootstrap-wizard js -->
+        <script src="{{asset('backend/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js')}}"></script>
+
+        <script src="{{asset('backend/assets/libs/twitter-bootstrap-wizard/prettify.js')}}"></script>
+
+        <!-- form wizard init -->
+        <script src="{{asset('backend/assets/js/pages/form-wizard.init.js')}}"></script>
+
     </body>
 
 </html>
