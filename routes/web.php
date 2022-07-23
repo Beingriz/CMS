@@ -39,16 +39,14 @@ Route::controller(HomeSlideController::class)->group(function(){
 
 // Application  Routes start
 Route::controller(ApplicationController::class)->group(function(){
-    Route::get('app_home', 'Home')->middleware(['auth'])->name('AppDashboard');
+    Route::get('app_home', 'Home')->middleware(['auth'])->name('App_Dashboard');
     Route::get('app_home', 'Dashboard')->middleware(['auth'])->name('Dashboard');
     Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->middleware(['auth'])->name('DynamicDashboard');
-    Route::get('newapplication', 'index')->middleware(['auth'])->name('new_application');
+    Route::get('new/application', 'index')->middleware(['auth'])->name('new_application');
 
 
 });
 Route::get('new_temp', [ApplicationController::class,'Temp']);
-Route::get('app_form', [ApplicationController::class,'index']);
-Route::get('app_home', [ApplicationController::class,'Dashboard']);
 // Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
 Route::get('app_form', [ApplicationController::class,'List']);
 Route::post('save_application', [SaveApplicaton::class,'Save']);

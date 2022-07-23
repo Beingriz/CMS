@@ -11,6 +11,18 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
+                @if (session('SuccessUpdate'))
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{session('SuccessUpdate')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('Error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{session('Error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
 
                 <div class="page-title-right">
@@ -23,9 +35,19 @@
             </div>
         </div>
     </div>{{-- End of Row --}}
+    @if ($Open ==1)
+    <div class="row">
+        <h5 class="font-size-14 mb-3">Profile Details Available</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <p class="text-muted">View Profile</p>
+                <input type="checkbox" id="switch1" switch="none" wire:model.lazy="Profile_Show">
+                <label for="switch1" data-on-label="Yes" data-off-label="No"></label>
 
+            </div>
+        </div>
+    @endif
 
-    @if ($Open ==1) {{-- Existing Client Profile Section --}}
+    @if ($Profile_Show == 1) {{-- Existing Client Profile Section --}}
         <div class="row no-gutters align-items-center">
             <div class="col-lg-12">
                <div class="card">
@@ -68,32 +90,7 @@
         </div>
     @endif {{-- End of Client Profile Section --}}
 <!-- --------------------------------------------------------------------------------------------- -->
-<div> {{--Error Msg --}}
-                            @if (session('SuccessUpdate'))
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>{{session('SuccessUpdate')}}</strong>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            @endif
-                            @if (session('Error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>{{session('Error')}}</strong>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            @endif
-                            @if (session('SuccessMsg'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>{{session('SuccessMsg')}}</strong>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            @endif
-                        </div>
+
 <div class="col-lg-8">
     <div class="card">
         <div class="card-body">
@@ -128,9 +125,9 @@
                     </li>
                 </ul>
 
-                <div id="bar" class="progress mt-4">
+                {{-- <div id="bar" class="progress mt-4">
                     <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: 25%;"></div>
-                </div>
+                </div> --}}
                 <div class="tab-content twitter-bs-wizard-tab-content">
                     <div class="tab-pane active" id="progress-applicant-details" wire:ignore.self>
                         <form>
@@ -139,7 +136,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label" for="progress-basicpill-firstname-input">Name </label>
-                                        <input type="text" class="form-control" id="progress-basicpill-firstname-input" wire:model.lazy="Name">
+                                        <input type="text" class="form-control" placeholder="Applicant Name" id="progress-basicpill-firstname-input" wire:model.lazy="Name">
                                         @error('Name') <span class="error">{{ $message }}</span> @enderror
 
                                     </div>
@@ -147,7 +144,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                     <label class="form-label" for="progress-basicpill-phoneno-input">Phone No</label>
-                                        <input type="number" class="form-control" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" onkeydown="mobile(this)">
+                                        <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" onkeydown="mobile(this)">
                                         @error('Mobile_No') <span class="error">{{ $message }}</span> @enderror
                                         @if(!is_null($user_type))
                                         <span class="success">{{$user_type}}</span>
@@ -160,7 +157,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label" for="progress-basicpill-dob-input">Date of Birth</label>
-                                        <input type="date" class="form-control" id="progress-basicpill-dob-input" wire:model.lazy="Dob">
+                                        <input type="date" class="form-control" placeholder="Date of Birth "id="progress-basicpill-dob-input" wire:model.lazy="Dob">
                                         @error('Dob') <span class="error">{{ $message }}</span> @enderror
 
                                     </div>
@@ -177,24 +174,40 @@
                                     </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="progress-basicpill-profileimage-input">Profile Image</label>
-                                        <input type="file" class="form-control" id="progress-basicpill-profileimage-input" wire:model="Client_Image" >
+                                <h5 class="font-size-14 mb-3">Profile Update</h5>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <p class="text-muted">Do you want to update Profile Image?</p>
+                                        <input type="checkbox" id="switch3" switch="none" wire:model.lazy="Profile_Update">
+                                        <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
 
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="progress-basicpill-profileimage-input">Profile View</label>
-                                        <div wire:loading wire:target="Client_Image">Uploading Profile Image...</div>
-                                        @if (!is_null($Client_Image))
-                                           <img class="rounded avatar-md" src="{{ $Client_Image->temporaryUrl() }}" alt="Client_Image" />
-                                        @endif
+                                @if ($Profile_Update == 1)
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-profileimage-input">Profile Image</label>
+                                                <input type="file" class="form-control" id="progress-basicpill-profileimage-input" wire:model="Client_Image" >
 
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-profileimage-input">Profile View</label>
+                                                <div wire:loading wire:target="Client_Image">Uploading Profile Image...</div>
+                                                @if (!is_null($Client_Image))
+                                                <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
+                                                @elseif(!is_Null($Old_Profile_Image))
+                                                <img class="rounded avatar-md" src="{{$Old_Profile_Image }}" alt="Client_Image" />
+                                                @else
+                                                <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                                                @endif
+
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                @endif
+
                         </form>
                     </div>
                     <div class="tab-pane" id="progress-service-details" wire:ignore.self>
@@ -233,7 +246,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label" for="progress-basicpill-ackno-input">Acknowledgment No. </label>
-                                        <input type="text" class="form-control" id="progress-basicpill-ackno-input" wire:model.lazy = "Ack_No">
+                                        <input type="text" class="form-control" placeholder="Acknowledgment No"id="progress-basicpill-ackno-input" wire:model.lazy = "Ack_No">
                                         @error('Ack_No') <span class="error">{{ $message }}</span> @enderror
 
                                     </div>
@@ -242,7 +255,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label" for="progress-basicpill-docno-input">Document No.</label>
-                                        <input type="text" class="form-control" id="progress-basicpill-docno-input" wire:model.lazy = "Document_No" >
+                                        <input type="text" class="form-control"  placeholder="Document No"id="progress-basicpill-docno-input" wire:model.lazy = "Document_No" >
                                         @error('Document_No') <span class="error">{{ $message }}</span> @enderror
 
                                     </div>
@@ -334,7 +347,7 @@
                                             <select class="form-select" wire:model="PaymentMode">
                                                 <option selected="">Select Payment Mode</option>
                                                 @foreach ($payment_mode as $payment_mode)
-                                                <option value="{{ $payment_mode ->Payment_Mode }} ">
+                                                <option value="{{ $payment_mode ->Payment_Mode }}">
                                                     {{ $payment_mode ->Payment_Mode }}</option>
                                                 @endforeach
                                             </select>
@@ -342,15 +355,17 @@
 
                                         </div>
                                     </div>
-                                    @if ($PaymentMode !== 'Cash' && $PaymentMode =='' )
+                                    @if (!is_Null($PaymentMode) && $PaymentMode != 'Cash')
+
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="progress-basicpill-ackfile-input">Acknowledgment File</label>
+                                            <label class="form-label" for="progress-basicpill-ackfile-input">Payment Receipt</label>
                                             <input type="file" class="form-control" id="progress-basicpill-ackfile-input" wire:model="Payment_Receipt"  accept="image/jpeg, image/png">
                                             <span class="error">@error('Payment_Receipt'){{$message}}@enderror</span>
 
                                         </div>
                                     </div>
+
                                     @endif
                                 </div>
                             </form>
@@ -360,75 +375,200 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="text-center">
-                                    <div class="mb-4">
-                                        <i class="mdi mdi-check-circle-outline text-success display-4"></i>
+                                    <div class="mb-1">
+                                        <div class="spinner-border text-success m-1" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
                                     </div>
                                     <div>
-                                        <h5>Confirm Detail</h5>
+                                        <h5>Preview Detail</h5>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                <div class="table-responsive">
-                                    <table class="table mb-0">
-
-                                        <thead class="table-light">
-                                            <tr>
-                                                <td>Verify Details</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th class="table-light">Name</th>
-                                                <td>{{$Name}}</td>
-                                                <th class="table-light">Mobile Number</th>
-                                                <td>{{$Mobile_No}}</td>
-                                                <th class="table-light">DOB</th>
-                                                <td>{{$Dob}}</td>
-
-                                            </tr>
-                                            <tr>
-                                                <th class="table-light">Client Type</th>
-                                                <td>{{$Client_Type}}</td>
-                                                <th class="table-light">Service Name</th>
-                                                <td>{{$MainSelected}}</td>
-                                                <th class="table-light">Service Type</th>
-                                                <td>{{$SubSelected}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th class="table-light">Ack No</th>
-                                                <td>{{$Ack_No}}</td>
-                                                <th class="table-light">Documnet No</th>
-                                                <td>{{$Document_No}}</td>
-                                                <th class="table-light">Status</th>
-                                                <td>{{$Status}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th class="table-light">Total Amount</th>
-                                                <td>{{$Total_Amount}}</td>
-                                                <th class="table-light">Paid Amount</th>
-                                                <td>{{$Amount_Paid}}</td>
-                                                <th class="table-light">Balance</th>
-                                                <td>{{$Balance}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-12">
-                                <div>
-                                    <div class="text-center">
-                                    <a href="#" wire:click.prevent="submit()" class="btn btn-success waves-effect waves-light">
-                                                <i class="ri-check-line align-middle me-2"></i> Submit Applicaiton</a>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-
                         </div>
+                        <div class="row">
+                            <div class="col-lg-4 d-flex">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"> Name</li>
+                                    <li class="list-group-item"> Mobile No</li>
+                                    <li class="list-group-item"> DOB</li>
+                                    <li class="list-group-item"> Client Type</li>
+                                    <li class="list-group-item"> Profile</li>
+
+                                </ul>
+
+
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        @if(empty($Name))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Name}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Name))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Mobile_No}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Name))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Dob}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Name))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Client_Type}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Client_Image))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
+
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 d-flex">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"> Service</li>
+                                    <li class="list-group-item"> Category</li>
+                                    <li class="list-group-item"> Acknowledgment No</li>
+                                    <li class="list-group-item"> Document No</li>
+
+                                </ul>
+
+
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        @if(empty($MainSelected))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$ServiceName}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($SubSelected))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$SubSelected}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Ack_No))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Ack_No}}</strong>
+
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Document_No))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Document_No}}</strong>
+
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 d-flex">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"> Received Date</li>
+                                    <li class="list-group-item"> Status No</li>
+                                    <li class="list-group-item"> Total Amount</li>
+                                    <li class="list-group-item"> Amount Paid</li>
+                                    <li class="list-group-item"> Balance</li>
+                                    <li class="list-group-item"> Payment Mode</li>
+
+                                </ul>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        @if(empty($Received_Date))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Received_Date}}</strong>
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Status))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Status}}</strong>
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Total_Amount))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Total_Amount}}</strong>
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Amount_Paid))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Amount_Paid}}</strong>
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($Balance))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$Balance}}</strong>
+                                        @endif
+                                    </li>
+                                    <li class="list-group-item">
+                                        @if(empty($PaymentMode))
+                                        <strong class="text-danger">Field is Empty</strong></li>
+                                        @else
+                                        <strong class="text-primary">{{$PaymentMode}}</strong>
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+
+
+                                <div class="row">
+                                <h5 class="font-size-14 mb-3">Preview Confirmation</h5>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <p class="text-muted">Are you sure you want to submit Form?</p>
+                                        <input type="checkbox" id="switch2" switch="none" wire:model.lazy="Confirmation">
+                                        <label for="switch2" data-on-label="Yes" data-off-label="No"></label>
+                                        @if($Confirmation==1)
+                                        <p><i class="mdi mdi-check-circle-outline text-success font-size-20 display-4"></i></p>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if ($Confirmation==1)
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="text-center">
+                                            <a href="#" wire:click.prevent="submit()" class="btn btn-success waves-effect waves-light"><i class="ri-check-line align-middle me-2"></i> Submit Applicaiton</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                @endif
+
                     </div>
                 </div>
                 <ul class="pager wizard twitter-bs-wizard-pager-link">
@@ -440,22 +580,7 @@
     </div>
 </div>
 <!-- --------------------------------------------------------------------------------------------- -->
-            <form wire:submit.prevent="submit">
-                @csrf
-                <div class="form-data-container">
 
-
-                </div>
-                    <div class="form-data-buttons"><!-- Submitt Buttom -->
-                        <div class="row">
-                            <div class="col-100">
-                                <button type="submit" value="submit" name="submit"
-                                    class="btn btn-primary btn-rounded btn-sm">Save Application</button>
-                                <a href="{{url("app_home")}}" class="btn btn-rounded btn-sm">Cancel</a>
-                            </div>
-                        </div>
-                    </div>
-            </form>
     @if (count($daily_applications)>0)
         <div class="table-container">
             <div class="form-header">

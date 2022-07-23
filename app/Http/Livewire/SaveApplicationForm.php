@@ -25,9 +25,9 @@ class SaveApplicationForm extends Component
     public $Dob;
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
-    public $Total_Amount,$Amount_Paid,$Balance;
+    public $Total_Amount,$Amount_Paid,$Balance,$ServiceName, $Profile_Show=0,$Profile_Update;
     public $PaymentMode;
-    public $Received_Date,$Mobile_Num;
+    public $Received_Date,$Mobile_Num,$Confirmation;
     public $Ack_File,$Doc_File,$Payment_Receipt,$Status , $Client_Type;
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
@@ -79,6 +79,10 @@ class SaveApplicationForm extends Component
 
 
     }
+    public function Validation()
+    {
+        $this->validate(['Name'=>'required']);
+    }
 
     public function submit()
     {
@@ -89,6 +93,7 @@ class SaveApplicationForm extends Component
         foreach($service as $name)
         {
             $service = $name['Name'];
+            $this->ServiceName = $service;
         }
         $exist = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
         $client_Id=NULL;
@@ -601,6 +606,12 @@ class SaveApplicationForm extends Component
                 $daily_applications = Application::Where('Received_Date',$this->today)->filter($this->filterby)->paginate($this->paginate);
             }
             $this->ApplicationType = SubServices::where('Service_Id',$this->ApplicationId)->get();
+            $service = Service_List::Where('Id',$this->MainSelected)->get();
+            foreach($service as $name)
+            {
+                $service = $name['Name'];
+                $this->ServiceName = $service;
+            }
 
         return view('livewire.save-application-form',[
             'today'=>$this->today,'payment_mode'=>$this->payment_mode,
