@@ -30,7 +30,7 @@
 
                 </div>
             </div>
-            @endif {{-- End of Profile View --}}
+    @endif {{-- End of Profile View --}}
 
 
             @if($ProfileEdit == 1)

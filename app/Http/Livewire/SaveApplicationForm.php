@@ -208,7 +208,7 @@ class SaveApplicationForm extends Component
                     $save_balance->Description = $Description;
                     $save_balance->save(); // Balance Ledger Entry Saved
                     session()->flash('SuccessMsg','Application Saved Successfully!, Balance Ledger Updated');
-                    return redirect('../app_form');
+                    return redirect()->route('new_application');
                 }
             else
             {
@@ -263,8 +263,7 @@ class SaveApplicationForm extends Component
                 $save_credit->Attachment = $this->PaymentFile;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg','Application Saved Successfully!!');
-
-                return redirect('../app_form');
+                return redirect()->route('new_application');
             }
         }
         else // For Unregistered or New Clients
@@ -341,7 +340,7 @@ class SaveApplicationForm extends Component
                 $save_balance->Description = $Description;
                 $save_balance->save(); // Balance Ledger Entry Saved
                 session()->flash('SuccessMsg','Client Registered! Application Saved Successfully!, Balance Ledgere Updated!');
-                return redirect('../app_form');
+                return redirect()->route('new_application');
             }
             else
             {
@@ -397,7 +396,7 @@ class SaveApplicationForm extends Component
                 $save_credit->Attachment = $this->PaymentFile;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg','Client Registered! Application Saved Successfully!,');
-                return redirect('../app_form');
+                return redirect()->route('new_application');
 
             }
         }
