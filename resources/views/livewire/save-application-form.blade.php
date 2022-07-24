@@ -37,19 +37,22 @@
     </div>{{-- End of Row --}}
     @if ($Open ==1)
     <div class="row">
-        <h5 class="font-size-14 mb-3">Profile Details Available</h5>
+        <div class="col-lg-6">
+            <h5 class="font-size-14 mb-3">Options</h5>
             <div class="d-flex flex-wrap gap-2">
-                <p class="text-muted">View Profile</p>
-                <input type="checkbox" id="switch1" switch="none" wire:model.lazy="Profile_Show">
-                <label for="switch1" data-on-label="Yes" data-off-label="No"></label>
-
+                <p class="text-muted"> Show Profile</p>
+                <input type="checkbox" id="profile" switch="primary" wire:model.lazy="Profile_Show">
+                <label for="profile" data-on-label="Yes" data-off-label="No" ></label>
+                <p class="text-muted"> Show Records</p>
+                <input type="checkbox" id="records" switch="success"  wire:model.lazy="Records_Show">
+                <label for="records" data-on-label="Yes" data-off-label="No" ></label>
             </div>
         </div>
+    </div>
     @endif
-
 <!-- --------------------------------------------------------------------------------------------- -->
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-7">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Application ID:  {{$App_Id}}</h4>
@@ -90,14 +93,6 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="progress-basicpill-firstname-input">Name </label>
-                                            <input type="text" class="form-control" placeholder="Applicant Name" id="progress-basicpill-firstname-input" wire:model.lazy="Name">
-                                            @error('Name') <span class="text-danger">{{ $message }}</span> @enderror
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
                                         <label class="form-label" for="progress-basicpill-phoneno-input">Phone No</label>
                                             <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" onkeydown="mobile(this)">
                                             @error('Mobile_No') <span class="text-danger">{{ $message }}</span> @enderror
@@ -107,8 +102,37 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="progress-basicpill-firstname-input">Name </label>
+                                            <input type="text" class="form-control" placeholder="Applicant Name" id="progress-basicpill-firstname-input" wire:model.lazy="Name">
+                                            @error('Name') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="RelativeName">Relative Name </label>
+                                            <input type="text" class="form-control" placeholder="Relative Name" id="RelativeName" wire:model.lazy="RelativeName">
+                                            @error('RelativeName') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="progress-basicpill-firstname-input">Gender </label>
+                                            <select class="form-select" wire:model.lazy="Gender">
+                                                <option selected="">Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                            @error('Gender') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                        </div>
+                                    </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label class="form-label" for="progress-basicpill-dob-input">Date of Birth</label>
@@ -117,6 +141,10 @@
 
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+
                                     <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label>Client Type</label>
@@ -534,18 +562,25 @@
     </div>
 <!-- --------------------------------------------------------------------------------------------- -->
     @if($Profile_Show == 1)
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-4"><strong class="text-success">{{$C_Name}}</strong>  Profile </h4>
-                    <center>
-                    @if (!empty($Client_Image))
-                    <img class="rounded avatar-lg"  src="{{$Client_Image->temporaryUrl() }}" alt="Client Profile">
-                    @else
-                    <img class="rounded avatar-lg" src="{{ (!empty($Old_Profile_Image))?url($Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
-                    @endif
-                    </center>
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong class="text-info">{{$C_Name}}</strong>  Profile </h4>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+                            <p class="card-text"><small class="text-muted">Profile Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        @if (!empty($Client_Image))
+                        <img class="rounded-circle avatar-lg"  src="{{$Client_Image->temporaryUrl() }}" alt="Client Profile">
+                        @else
+                        <img class="rounded-circle avatar-lg" src="{{ (!empty($Old_Profile_Image))?url($Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
+                        @endif
+                    </div>
                 </div>
+                <div class="row no-gutters align-items-center">
                 <div class="col-lg-12 d-flex">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"> Client ID :</li>
@@ -602,10 +637,78 @@
                         </li>
                     </ul>
                 </div>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <a href="#" class="btn btn-primary waves-effect waves-light" id="update">Update Profile</a>
+                </div>
+
             </div>
         </div>
     @endif {{-- End of Profile View --}}
+
+    @if($Records_Show == 1)
+        <div class="col-lg-5">
+            <div class="card">
+               <div class="row no-gutters align-items-center">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Previous {{$AppliedServices->total()}}  Records </h5>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+                            <p class="card-text"><small class="text-muted">Profile Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        @if (!empty($Client_Image))
+                    <img class="rounded-circle avatar-lg"  src="{{$Client_Image->temporaryUrl() }}" alt="Client Profile">
+                    @else
+                    <img class="rounded-circle avatar-lg" src="{{ (!empty($Old_Profile_Image))?url($Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
+                    @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12" >
+                        <table class="table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Service</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($AppliedServices as $key)
+                                <tr>
+                                    <td>{{$n++}}</td>
+                                    <td>{{$key->Received_Date}}</td>
+                                    <td>{{$key->Name}}</td>
+                                    <td>{{$key->Application , $key->Application_Type}}</td>
+                                    <td><a href="#" class="btn btn-sm btn-primary font-size-15" id="open"><i class="mdi mdi-book-open-page-variant" ></i></a></td>
+
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                               <p class="text-muted">Showing {{count($AppliedServices)}} of {{$AppliedServices->total()}} entries</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class=" pagination pagination-rounded float-end" >
+                                    {{$AppliedServices->links()}}
+                                </span>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+
+        </div>
+        </div>
+    @endif
+
 </div>
 
     @if (count($daily_applications)>0)

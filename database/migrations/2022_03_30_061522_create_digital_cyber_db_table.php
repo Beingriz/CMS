@@ -18,6 +18,7 @@ class CreateDigitalCyberDbTable extends Migration
             $table->string('Client_Id', 50);
             $table->date('Received_Date');
             $table->string('Name', 200);
+            $table->string('Gender', 255)->nullable();
             $table->string('Relative_Name', 50)->nullable();
             $table->date('Dob');
             $table->string('Mobile_No', 200);

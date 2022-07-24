@@ -15,18 +15,24 @@ use App\Models\MainServices;
 use App\Models\SubServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class SaveApplicationForm extends Component
 {
     use RightInsightTrait;
     use WithFileUploads;
+    protected $paginationTheme = 'bootstrap';
+    use WithPagination;
+
+
+
     public $App_Id;
     public $Name;
     public $Dob;
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
-    public $Total_Amount,$Amount_Paid,$Balance,$ServiceName, $Profile_Show=0,$Profile_Update;
-    public $PaymentMode;
+    public $Total_Amount,$Amount_Paid,$Balance,$ServiceName, $Profile_Show=0,$Profile_Update,$Records_Show=0;
+    public $PaymentMode,$Gender,$RelativeName;
     public $Received_Date,$Mobile_Num,$Confirmation;
     public $Ack_File,$Doc_File,$Payment_Receipt,$Status , $Client_Type;
     public $SubSelected ;
@@ -48,6 +54,7 @@ class SaveApplicationForm extends Component
 
     protected $rules = [
          'Name' =>'required',
+         'Gender' =>'required',
          'Dob' =>'required',
          'MainSelected' =>'required',
          'SubSelected' =>'required',
@@ -58,6 +65,7 @@ class SaveApplicationForm extends Component
      ];
      protected $messages = [
         'name.required' => 'Applicant Name Cannot be Empty',
+        'Gender.required' => 'Please Select Gender',
         'dob.required' => 'Please Select Date of Birth',
         'MainSelected.required' => 'Please Select Application',
         'SubSelected.required' => 'Please Select Sub Category',
@@ -150,6 +158,8 @@ class SaveApplicationForm extends Component
                     $app_field->Application = $service;
                     $app_field->Application_Type = $this->SubSelected;
                     $app_field->Name = $this->Name;
+                    $app_field->Gender = $this->Gender;
+                    $app_field->Relative_Name = $this->RelativeName;
                     $app_field->Mobile_No =  $this->Mobile_No;
                     $app_field->DOB = $this->Dob;
                     $app_field->Applied_Date = NULL;
@@ -580,8 +590,9 @@ class SaveApplicationForm extends Component
                             $this->C_Ctype = $key['Client_Type'];
                         }
                     }
-                $Mobile_No = Application::Where('Mobile_No',$this->Mobile_No)->get();
-                $count = count($Mobile_No);
+                $AppliedServices = Application::Where('Mobile_No',$this->Mobile_No)->get();
+                $count = count($AppliedServices);
+
                 $this->Open = 1;
                 $this->Client_Type = 'Old Client';
                 $this->Name = $this->C_Name;
@@ -629,13 +640,15 @@ class SaveApplicationForm extends Component
                 $this->ServiceName = $service;
             }
             $this->Bal = ($this->Total_Amount - $this->Amount_Paid);
+            $AppliedServices = Application::Where('Mobile_No',$this->Mobile_No)->paginate(3);
+
 
         return view('livewire.save-application-form',[
             'today'=>$this->today,'payment_mode'=>$this->payment_mode,
             'daily_total'=>$this->daily_total,'daily_applications'=>$daily_applications,
             'main_service'=>$this->main_service, 'sl_no'=>$this->sl_no, 'n'=>$this->n,
             'sub_service'=>$this->sub_service,'Application'=>$this->Application,
-            'user_type'=>$this->user_type,'status_list'=>$this->status_list,
+            'user_type'=>$this->user_type,'status_list'=>$this->status_list, 'AppliedServices'=>$AppliedServices,
         ]);
     }
 }
