@@ -14,8 +14,11 @@ use App\Models\Application;
 use App\Models\MainServices;
 use App\Models\SubServices;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Intervention\Image\Facades\Image;
+
 
 class SaveApplicationForm extends Component
 {
@@ -49,7 +52,7 @@ class SaveApplicationForm extends Component
     public $Edit_Window =0;
     public $PaymentFile, $AckFile,$DocFile =0;
 
-    public $Yes ='off',$Client_Image,$Old_Profile_Image, $C_Id, $C_Name, $C_Dob, $C_Mob,$Open=0;
+    public $Yes ='off',$Client_Image,$Old_Profile_Image, $C_Id, $C_Name,$C_RName,$C_Gender,$C_Email, $C_Dob, $C_Mob,$Open=0;
 
 
     protected $rules = [
@@ -110,6 +113,12 @@ class SaveApplicationForm extends Component
             $client_Id = $key['Id'];
             $dob = $key['DOB'];
             $name = $key['Name'];
+            $relative_name = $key['Relative_Name'];
+            $gender = $key['Gender'];
+            $mobile = $key['Mobile'];
+            $email = $key['Email_Id'];
+            $address = $key['Address'];
+            $client_type = $key['Cliednt_Type'];
             $profileimage = $key['Profile_Image'];
 
         }
@@ -137,18 +146,26 @@ class SaveApplicationForm extends Component
         {
             $this->PaymentFile = 'Not Available';
         }
+        if($this->Profile_Update==1)
+        {
+            if(!empty($this->Client_Image))
+            {
+                $filename = $name.date('Ymd').'_'.$this->Client_Image->getClientOriginalName();
+                $filename = 'Client_DB/'.$this->Name.' '.time().'/Profile Photo'.$filename;
+                Storage::disk('public')->delete($profileimage);
+                $image = Image::make($this->Client_Image)->encode('jpg');
+                Storage::disk('public')->put($filename,$image);
+                $Client_Image = $filename;
+            }
+            else
+            {
+                $Client_Image = 'Not Available';
+            }
+        }
 
-        if(!empty($this->Client_Image))
-        {
-            $Client_Image = 'storage/app/'.$this->Client_Image->storeAs('Client_DB/'.$this->Name.' '.time().'/'.$service.'/'.trim($this->SubSelected).'/Applicant Photo', $this->Name.' '.$this->today.$time.'.jpeg');
-        }
-        else
-        {
-            $Client_Image = 'Not Available';
-        }
+
         if(sizeof($exist)>0) // For Registered Users
         {
-
             if($this->Balance>0)
             {
                     $app_field = new Application;
@@ -168,7 +185,7 @@ class SaveApplicationForm extends Component
                     $app_field->Balance =  $this->Balance;
                     $app_field->Payment_Mode= $this->PaymentMode;
                     $app_field->Payment_Receipt= $this->PaymentFile;
-                    $app_field->Status="Received";
+                    $app_field->Status= $this->Status;
                     $app_field->Ack_No= $this->Ack_No;
                     $app_field->Ack_File= $this->AckFile;
                     $app_field->Document_No= $this->Document_No;
@@ -192,15 +209,27 @@ class SaveApplicationForm extends Component
                     $save_credit->Attachment = $this->PaymentFile;
                     $save_credit->save(); //Credit Ledger Entry Saved
 
-                    if($dob == NULL )
+                    if($dob == NULL)
                     {
                         DB::update('update client_register set DOB=? where Id = ?', [$this->Dob,$client_Id]);
-
                     }
-                    elseif($profileimage == 'Not Available')
+                    if($gender == NULL )
+                    {
+                        DB::update('update client_register set Gender=? where Id = ?', [$this->Gender,$client_Id]);
+                    }
+                    if($relative_name == NULL)
+                    {
+                        DB::update('update client_register set Relative_Name=? where Id = ?', [$this->RelativeName,$client_Id]);
+                    }
+                    if($client_type == NULL)
+                    {
+                        DB::update('update client_register set Client_Type=? where Id = ?', [$this->Client_Type,$client_Id]);
+                    }
+                    if($this->Profile_Update == 1)
                     {
                         DB::update('update client_register set Profile_Image=? where Id = ?', [$Client_Image,$client_Id]);
                     }
+
 
                     $save_balance = new BalanceLedger;
                     $save_balance->Id = $this->App_Id;
@@ -286,13 +315,14 @@ class SaveApplicationForm extends Component
                 $user_data = new ClientRegister;
                 $user_data->Id= $client_Id;
                 $user_data->Name = $this->Name;
+                $user_data->Relative_Name = $this->RelativeName;
+                $user_data->Gender = $this->Gender;
                 $user_data->Mobile_No = $this->Mobile_No;
                 $user_data->Email_Id = $this->Name.'@gmail.com';
                 $user_data->DOB = $this->Dob;
                 $user_data->Address = "Chikkabasthi";
                 $user_data->Profile_Image = $Client_Image;
-                $user_data->Client_Type = "Old Client";
-                $user_data->Registered_On = $this->today;
+                $user_data->Client_Type = $this->Client_Type;
                 $user_data->save(); // Client Registered
 
                 $app_field = new Application;
@@ -302,6 +332,8 @@ class SaveApplicationForm extends Component
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
                 $app_field->Name = $this->Name;
+                $app_field->Relative_Name = $this->RelativeName;
+                $app_field->Gender = $this->Gender;
                 $app_field->Mobile_No =  $this->Mobile_No;
                 $app_field->DOB = $this->Dob;
                 $app_field->Applied_Date = NULL;
@@ -310,7 +342,7 @@ class SaveApplicationForm extends Component
                 $app_field->Balance =  $this->Balance;
                 $app_field->Payment_Mode= $this->PaymentMode;
                 $app_field->Payment_Receipt= $this->PaymentFile;
-                $app_field->Status="Received";
+                $app_field->Status= $this->Status;
                 $app_field->Ack_No= $this->Ack_No;
                 $app_field->Ack_File= $this->AckFile;
                 $app_field->Document_No= $this->Document_No;
@@ -358,13 +390,14 @@ class SaveApplicationForm extends Component
                 $user_data = new ClientRegister;
                 $user_data->Id= $client_Id;
                 $user_data->Name = $this->Name;
+                $user_data->Relative_Name = $this->RelativeName;
+                $user_data->Gender = $this->Gender;
                 $user_data->Mobile_No = $this->Mobile_No;
                 $user_data->Email_Id = $this->Name.'@gmail.com';
                 $user_data->DOB = $this->Dob;
                 $user_data->Address = "Chikkabasthi";
                 $user_data->Profile_Image = $Client_Image;
-                $user_data->Client_Type = "Old Client";
-                $user_data->Registered_On = $this->today;
+                $user_data->Client_Type = $this->Client_Type;
                 $user_data->save(); // Client Registered
 
                 $app_field = new Application;
@@ -374,6 +407,8 @@ class SaveApplicationForm extends Component
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
                 $app_field->Name = $this->Name;
+                $app_field->Relative_Name = $this->RelativeName;
+                $app_field->Gender = $this->Gender;
                 $app_field->Mobile_No =  $this->Mobile_No;
                 $app_field->DOB = $this->Dob;
                 $app_field->Applied_Date = NULL;
@@ -382,7 +417,7 @@ class SaveApplicationForm extends Component
                 $app_field->Balance =  $this->Balance;
                 $app_field->Payment_Mode= $this->PaymentMode;
                 $app_field->Payment_Receipt= $this->PaymentFile;
-                $app_field->Status="Received";
+                $app_field->Status= $this->Status;
                 $app_field->Ack_No= $this->Ack_No;
                 $app_field->Ack_File= $this->AckFile;
                 $app_field->Document_No= $this->Document_No;
@@ -585,6 +620,9 @@ class SaveApplicationForm extends Component
                             $this->C_Id = $key['Id'];
                             $this->Old_Profile_Image = $key['Profile_Image'];
                             $this->C_Name = $key['Name'];
+                            $this->C_RName = $key['Relative_Name'];
+                            $this->C_Gender = $key['Gender'];
+                            $this->C_Email = $key['Email'];
                             $this->C_Mob = $key['Mobile_No'];
                             $this->C_Address = $key['Address'];
                             $this->C_Ctype = $key['Client_Type'];
@@ -594,9 +632,11 @@ class SaveApplicationForm extends Component
                 $count = count($AppliedServices);
 
                 $this->Open = 1;
-                $this->Client_Type = 'Old Client';
-                $this->Name = $this->C_Name;
-                $this->Dob = $this->C_Dob;
+                // $this->Client_Type = 'Old Client';
+                // $this->Name = $this->C_Name;
+                // $this->RelativeName = $this->C_RName;
+                // $this->Gender = $this->C_Gender;
+                // $this->Dob = $this->C_Dob;
                 $this->user_type = "Registered User!! Availed ".$count." Services";
             }
             else
@@ -640,7 +680,8 @@ class SaveApplicationForm extends Component
                 $this->ServiceName = $service;
             }
             $this->Bal = ($this->Total_Amount - $this->Amount_Paid);
-            $AppliedServices = Application::Where('Mobile_No',$this->Mobile_No)->paginate(3);
+            $AppliedServices = Application::latest()
+                                            ->Where('Mobile_No',$this->Mobile_No)->paginate(5);
 
 
         return view('livewire.save-application-form',[

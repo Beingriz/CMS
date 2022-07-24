@@ -181,7 +181,7 @@
                                                     @if (!is_null($Client_Image))
                                                     <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
                                                     @elseif(!is_Null($Old_Profile_Image))
-                                                    <img class="rounded avatar-md" src="{{$Old_Profile_Image }}" alt="Client_Image" />
+                                                    <img class="rounded avatar-md" src="../{{$Old_Profile_Image }}" alt="Client_Image" />
                                                     @else
                                                     <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
                                                     @endif
@@ -585,7 +585,10 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"> Client ID :</li>
                         <li class="list-group-item"> Name :</li>
+                        <li class="list-group-item"> Relative Name :</li>
+                        <li class="list-group-item"> Gender :</li>
                         <li class="list-group-item"> Mobile No :</li>
+                        <li class="list-group-item"> Email ID :</li>
                         <li class="list-group-item"> DOB :</li>
                         <li class="list-group-item"> Client Type :</li>
                         <li class="list-group-item"> Address: </li>
@@ -608,10 +611,33 @@
 
                         </li>
                         <li class="list-group-item">
-                            @if (!$C_Name)
+                            @if (!$C_RName)
+                            <strong class="text-danger">Not Available</strong>
+                            @else
+                            <strong class="text-primary">{{$C_RName}}</strong>
+                            @endif
+
+                        </li>
+                        <li class="list-group-item">
+                            @if (!$C_Gender)
+                            <strong class="text-danger">Not Available</strong>
+                            @else
+                            <strong class="text-primary">{{$C_Gender}}</strong>
+                            @endif
+
+                        </li>
+                        <li class="list-group-item">
+                            @if (!$C_Mob)
                             <strong class="text-danger">Not Available</strong>
                             @else
                             <strong class="text-primary">{{$C_Mob}}</strong>
+                            @endif
+                        </li>
+                        <li class="list-group-item">
+                            @if (!$C_Email)
+                            <strong class="text-danger">Not Available</strong>
+                            @else
+                            <strong class="text-primary">{{$C_Email}}</strong>
                             @endif
                         </li>
                         <li class="list-group-item">
@@ -665,8 +691,8 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12" >
-                        <table class="table">
-                            <thead class="table-light">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid" aria-describedby="datatable_info">
+                        <thead class="table-light">
                                 <tr>
                                     <th>#</th>
                                     <th>Date</th>
@@ -678,7 +704,7 @@
                             <tbody>
                                 @foreach ($AppliedServices as $key)
                                 <tr>
-                                    <td>{{$n++}}</td>
+                                    <td>{{$AppliedServices->firstItem()+$loop->index}}</td>
                                     <td>{{$key->Received_Date}}</td>
                                     <td>{{$key->Name}}</td>
                                     <td>{{$key->Application , $key->Application_Type}}</td>
@@ -698,13 +724,8 @@
                                 </span>
                             </div>
                         </div>
-
-
-
                     </div>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
-
         </div>
         </div>
     @endif

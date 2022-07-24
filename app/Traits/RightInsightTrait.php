@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientRegistration;
 use App\Models\Application;
 use App\Models\Bookmark;
 use App\Models\Bookmarks;
+use App\Models\ClientRegister;
 use App\Models\CreditLedger;
 use App\Models\CreditSource;
 use App\Models\CreditSources;
@@ -87,8 +88,7 @@ trait RightInsightTrait
         $this->previous_sum=0.00;
         $this->balance_due_sum=0.00;
         $this->previous_bal_sum=0.00;
-        $this->new_user = DB::table('client_register')->where('Registered_On',$this->today)->get();
-        $this->previous_day_new_user = DB::table('client_register')->where('Registered_On',$this->previous_day)->get();
+
         $this->credit_source = CreditSource::orderby('Name')->get();
         $this->debit_source = DebitSource::orderby('Name')->get();
         $Id =  "DCA".date("Y") .date("m").mt_rand(100, 999);
@@ -135,8 +135,7 @@ trait RightInsightTrait
                 $this->previous_bal_sum += $key['Balance'];
             }
         }
-        $this->new_clients = count($this->new_user);
-        $this->previous_day_new_clients = count($this->previous_day_new_user);
+
         $this->status_list = Status::all();
     }
 
