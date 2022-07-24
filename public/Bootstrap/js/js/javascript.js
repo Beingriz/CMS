@@ -58,37 +58,16 @@ function myamt() {
 }
 
 
-var myIndex = 0;
-carousel();
 
-function carousel() {
-    var i;
-    var x = document.getElementsByClassName("mySlides");
-    for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-    }
-    myIndex++;
-    if (myIndex > x.length) {
-        myIndex = 1
-    }
-    x[myIndex - 1].style.display = "block";
-    setTimeout(carousel, 2500); // Change image every 2 seconds
-}
 
-function upperCaseF(a) {
-    setTimeout(function() {
-        a.value = a.value.toUpperCase();
-    }, 1);
-}
+function Balance() {
+    var total_amount = document.getElementById('Total_Amount');
+    var amount_paid = document.getElementById('Amount_Paid');
+    var balanace = document.getElementById('Balance');
 
-function balance() {
-    var total = document.getElementById("amount");
-    var paid = document.getElementById("paid");
-    var bal = document.getElementById("bal");
-
-    var bala
-    bala = (total.value - paid.value);
-    bal.value = bala;
+    var Bal
+    Bal = (total_amount.value - amount_paid.value);
+    balanace.value = Bal;
 }
 
 function mobile(a) {

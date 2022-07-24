@@ -37,7 +37,7 @@ class SaveApplicationForm extends Component
     public $user_type = NULL;
     public $Checked = [];
     public $paginate = 10;
-    public $filterby;
+    public $filterby ,$Bal=0;
     public $collection;
     public $Select_Date,$Daily_Income=0;
     public $Edit_Window =0;
@@ -408,6 +408,18 @@ class SaveApplicationForm extends Component
         $this->Ack_No = ucwords($this->Ack_No);
         $this->Document_No = ucwords($this->Document_No);
     }
+    public function ResetFields()
+    {
+        $this->Name = NULL;
+        $this->Mobile_No = NULL;
+        $this->Dob = NULL;
+        $this->Client_Type = NULL;
+        $this->Total_Amount = 0;
+        $this->Amount_Paid = 0;
+        $this->Status = 'Received';
+        $this->Ack_No = 'Not Available';
+        $this->Document_No = 'Not Available';
+    }
 
     public function Edit($Client_Id)
     {
@@ -538,6 +550,8 @@ class SaveApplicationForm extends Component
 
        }
    }
+
+
     public function render()
     {
         $this->Capitalize();
@@ -569,6 +583,9 @@ class SaveApplicationForm extends Component
                 $Mobile_No = Application::Where('Mobile_No',$this->Mobile_No)->get();
                 $count = count($Mobile_No);
                 $this->Open = 1;
+                $this->Client_Type = 'Old Client';
+                $this->Name = $this->C_Name;
+                $this->Dob = $this->C_Dob;
                 $this->user_type = "Registered User!! Availed ".$count." Services";
             }
             else
@@ -611,6 +628,7 @@ class SaveApplicationForm extends Component
                 $service = $name['Name'];
                 $this->ServiceName = $service;
             }
+            $this->Bal = ($this->Total_Amount - $this->Amount_Paid);
 
         return view('livewire.save-application-form',[
             'today'=>$this->today,'payment_mode'=>$this->payment_mode,

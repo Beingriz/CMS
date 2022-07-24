@@ -184,7 +184,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label>Service</label>
+                                        <label>Service Category</label>
                                         <select class="form-select" wire:model.lazy="SubSelected">
                                             <option selected="">Select Service</option>
                                             @foreach ($sub_service as $service)
@@ -271,31 +271,28 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                    <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <div class="mb-3">
-                                                <label class="form-label" for="progress-basicpill-totalamount-input">Total Amount</label>
-                                                <input type="number" class="form-control" id="total"  wire:model.lazy="Total_Amount">
+                                                <label class="form-label" for="Total_Amount">Total Amount</label>
+                                                <input type="number"  name="Total_Amount" class="form-control" id="Total_Amount" wire:model.lazy="Total_Amount">
                                                 @error('Total_Amount') <span class="text-danger">{{ $message }}</span> @enderror
 
                                             </div>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <div class="mb-3">
-                                                <label class="form-label" for="progress-basicpill-amountpaid-input">Amount paidr</label>
-                                                <input type="number" class="form-control" id="paid"  onblur="balance()" wire:model.lazy="Amount_Paid">
+                                                <label class="form-label"  for="Amount_Paid">Amount paid</label>
+                                                <input type="number" name="Amount_Paid" class="form-control" id="Amount_Paid"  onblur="Balance()" wire:model.lazy="Amount_Paid">
                                                 @error('Amount_Paid') <span class="text-danger">{{ $message }}</span> @enderror
 
                                             </div>
                                         </div>
-
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <div class="mb-3">
-                                                <label class="form-label" for="progress-basicpill-balance-input">Balance</label>
-                                                <input type="number" class="form-control" id="bal" readonly>
+                                                <label class="form-label" for="Balance">Balance</label>
+                                                <input type="number" name="Balance" class="form-control" wire:model="Bal" id="Balance" readonly>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label>Payment Mode</label>
@@ -482,10 +479,10 @@
                                             @endif
                                         </li>
                                         <li class="list-group-item">
-                                            @if(empty($Balance))
+                                            @if(empty($Bal))
                                             <strong class="text-danger">Field is Empty</strong></li>
                                             @else
-                                            <strong class="text-primary">{{$Balance}}</strong>
+                                            <strong class="text-primary">{{$Bal}}</strong>
                                             @endif
                                         </li>
                                         <li class="list-group-item">
