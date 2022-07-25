@@ -40,7 +40,7 @@ class SaveApplicationForm extends Component
     public $Ack_File,$Doc_File,$Payment_Receipt,$Status , $Client_Type;
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
-    public $main_service;
+    public $main_service,$Applicant_Image;
     public $sub_service = [];
     public $Mobile_No = NULL;
     public $user_type = NULL;
@@ -122,6 +122,19 @@ class SaveApplicationForm extends Component
             $profileimage = $key['Profile_Image'];
 
         }
+        if(!empty($this->Applicant_Image))
+        {
+            $filename = $this->Name.'_'.$client_Id.'.'.$this->Applicant_Image->getClientOriginalExtension();
+
+            $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/Photo/'.$filename;
+            $file = Image::make($this->Applicant_Image)->encode('jpg');
+            Storage::disk('public')->put($url,$file);
+            $Applicant_Image = $url;
+        }
+        else
+        {
+            $Applicant_Image = 'Not Available';
+        }
         if(!empty($this->Ack_File))
         {
             $this->AckFile = $this->Ack_File->storeAs('Client_DB/'.$this->Name.' '.$client_Id.'/'.$service.'/'.trim($this->SubSelected).'/Ack Files', 'Ack '.$this->Ack_No.' '.$this->today.$time.'.pdf');
@@ -191,7 +204,7 @@ class SaveApplicationForm extends Component
                     $app_field->Document_No= $this->Document_No;
                     $app_field->Doc_File= $this->DocFile;
                     $app_field->Delivered_Date= NULL;
-                    $app_field->Profile_Image= $Client_Image;
+                    $app_field->Applicant_Image= $Applicant_Image;
                     $app_field->save(); // Application Form Saved
 
                     $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
@@ -273,18 +286,28 @@ class SaveApplicationForm extends Component
                 $app_field->Document_No= $this->Document_No;
                 $app_field->Doc_File= $this->DocFile;
                 $app_field->Delivered_Date= NULL;
-                $app_field->Profile_Image= $Client_Image;
+                $app_field->Applicant_Image= $Applicant_Image;
                 $app_field->save(); // Application Form Saved
 
-                if($dob == NULL )
+                if($dob == NULL)
                 {
                     DB::update('update client_register set DOB=? where Id = ?', [$this->Dob,$client_Id]);
-
                 }
-                elseif($profileimage == 'Not Available')
+                if($gender == NULL )
                 {
-                    DB::update('update client_register set Profile_Image = ? where Id = ?', [$Client_Image,$client_Id]);
-
+                    DB::update('update client_register set Gender=? where Id = ?', [$this->Gender,$client_Id]);
+                }
+                if($relative_name == NULL)
+                {
+                    DB::update('update client_register set Relative_Name=? where Id = ?', [$this->RelativeName,$client_Id]);
+                }
+                if($client_type == NULL)
+                {
+                    DB::update('update client_register set Client_Type=? where Id = ?', [$this->Client_Type,$client_Id]);
+                }
+                if($this->Profile_Update == 1)
+                {
+                    DB::update('update client_register set Profile_Image=? where Id = ?', [$Client_Image,$client_Id]);
                 }
 
                 $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
@@ -348,7 +371,7 @@ class SaveApplicationForm extends Component
                 $app_field->Document_No= $this->Document_No;
                 $app_field->Doc_File= $this->DocFile;
                 $app_field->Delivered_Date= NULL;
-                $app_field->Profile_Image= $Client_Image;
+                $app_field->Applicant_Image= $Applicant_Image;
                 $app_field->save(); // Application Form Saved
 
                 $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
@@ -423,7 +446,7 @@ class SaveApplicationForm extends Component
                 $app_field->Document_No= $this->Document_No;
                 $app_field->Doc_File= $this->DocFile;
                 $app_field->Delivered_Date= NULL;
-                $app_field->Profile_Image= $Client_Image;
+                $app_field->Applicant_Image= $Applicant_Image;
                 $app_field->save(); // Application Form Saved
 
                 $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
@@ -450,6 +473,7 @@ class SaveApplicationForm extends Component
     public function Capitalize()
     {
         $this->Name = ucwords($this->Name);
+        $this->RelativeName = ucwords($this->RelativeName);
         $this->Ack_No = ucwords($this->Ack_No);
         $this->Document_No = ucwords($this->Document_No);
     }

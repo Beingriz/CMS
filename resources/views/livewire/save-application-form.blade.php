@@ -155,6 +155,25 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                            <div class="col-lg-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="Applicant_Image">Applicant Image</label>
+                                                    <input type="file" class="form-control" id="Applicant_Image" wire:model="Applicant_Image" >
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="Applicant_Image_View">Photo</label>
+                                                    <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
+                                                    @if (!is_null($Applicant_Image))
+                                                    <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
+                                                    @else
+                                                    <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                                                    @endif
+                                                </div>
+                                            </div>
+
                                 </div>
                                 <div class="row">
                                     <h5 class="font-size-14 mb-3">Profile Update</h5>
@@ -733,7 +752,8 @@
 </div>
 
     @if (count($daily_applications)>0)
-        <div class="col-lg-8">
+    <div class="row">
+        <div class="col-lg-7">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Application List</h4>
@@ -749,41 +769,44 @@
                     <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <div class="row">
-                                <div class="col-lg-6 d-flex">
+
+                                <div class="d-flex flex-wrap gap-2">
                                     @if ($Checked)
-                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupVerticalDrop2" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Cheched ({{count($Checked)}}) <i class="mdi mdi-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2" style="">
-                                                    <a class="dropdown-item" title="Multiple Delete" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
-                                                </div>
+                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroupVerticalDrop2" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Cheched ({{count($Checked)}}) <i class="mdi mdi-chevron-down"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2" style="">
+                                                <a class="dropdown-item" title="Multiple Delete" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
                                             </div>
                                         </div>
+                                    </div>
                                     @endif
-
-                                        <div class="dataTables_length float-lg-right " >
-                                            <label>Show
-                                                <select name="datatable_length"  wire:model="paginate" aria-controls="datatable" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
-                                                    <option value="10">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select> entries</label>
-                                        </div>
-                                        <div class="dataTables_filter float-lg-right ">
-                                            <label class="form-label" for="paginate">Sort</label>
-                                            <input  type="text"  wire:model="filterby" class="form-control form-control-sm" placeholder="Filter">
-                                        </div>
-                                        <div class="dataTables_filter float-end">
-                                            <label class="form-label" for="paginate">Date</label>
-                                            <input type="date" id="date" name="Select_Date" wire:model="Select_Date" class="form-control form-control-sm"/>
-                                        </div>
+                                    <div class="col-sm-2">
+                                        <label class="form-label" for="paginate">Show Pages</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <select name="datatable_length"  wire:model="paginate" aria-controls="datatable" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label class="form-label" for="paginate">Filter Records</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input  type="text"  wire:model="filterby" class="form-control form-control-sm" placeholder="Filter">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label class="form-label" for="paginate">Search By Date</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="date" id="date" name="Select_Date" wire:model="Select_Date" class="form-control form-control-sm"/>
                                     </div>
                                 </div>
-
                         </tr>
                         <tr>
                             <th>SL. No</th>
@@ -833,6 +856,7 @@
             </div>
             </div>
         </div>
+    </div>
     @endif {{-- End of Profile View --}}
 
 
