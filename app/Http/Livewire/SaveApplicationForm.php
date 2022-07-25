@@ -128,6 +128,7 @@ class SaveApplicationForm extends Component
 
             $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/Photo/'.$filename;
             $file = Image::make($this->Applicant_Image)->encode('jpg');
+            // $file = $this->Applicant_Image;
             Storage::disk('public')->put($url,$file);
             $Applicant_Image = $url;
         }
