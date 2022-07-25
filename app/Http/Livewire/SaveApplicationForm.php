@@ -134,9 +134,8 @@ class SaveApplicationForm extends Component
         if(!empty($this->Applicant_Image))
         {
             $filename = $this->Name.'_'.$client_Id.'.'.$this->Applicant_Image->getClientOriginalExtension();
-            $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/Photo/'.$filename;
+            $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/'.$filename;
             $file = Image::make($this->Applicant_Image)->encode('jpg');
-            // $file = $this->Applicant_Image;
             Storage::disk('public')->put($url,$file);
             $Applicant_Image = $url;
         }
@@ -147,8 +146,8 @@ class SaveApplicationForm extends Component
         if(!empty($this->Ack_File))
         {
             $extension = $this->Ack_File->getClientOriginalExtension();
-            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/';
-            $filename = 'Ack_'.$this->Ack_No.'_'.$time.'.'.$extension;
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
+            $filename = 'AF_'.$this->Ack_No.'_'.$time.'.'.$extension;
             $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
             $this->Ack_File = $url;
         }
@@ -158,19 +157,27 @@ class SaveApplicationForm extends Component
         }
         if(!empty($this->Doc_File))
         {
-            $this->DocFile = $this->Doc_File->storeAs('Client_DB/'.$this->Name.' '.$client_Id.'/'.$service.'/'.trim($this->SubSelected).'/Document Files', ' Doc '.$this->Document_No.' '.$this->today.$time.'.pdf');
+            $extension = $this->Doc_File->getClientOriginalExtension();
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
+            $filename = 'DF_'.$this->Doc_File.'_'.$time.'.'.$extension;
+            $url = $this->Doc_File->storePubliclyAs($path,$filename,'public');
+            $this->Doc_File = $url;
         }
         else
         {
-            $this->DocFile = 'Not Available';
+            $this->Doc_File = 'Not Available';
         }
         if(!empty($this->Payment_Receipt))
         {
-            $this->PaymentFile = $this->Payment_Receipt->storeAs('Client_DB/'.$this->Name.' '.$client_Id.'/'.$service.'/'.trim($this->SubSelected).'/Payment Receipts', 'Pay '.$this->PaymentMode.' '.$this->today.$time.'.pdf');
+            $extension = $this->Payment_Receipt->getClientOriginalExtension();
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
+            $filename = 'PR_'.$this->Payment_Receipt.'_'.$time.'.'.$extension;
+            $url = $this->Payment_Receipt->storePubliclyAs($path,$filename,'public');
+            $this->Payment_Receipt = $url;
         }
         else
         {
-            $this->PaymentFile = 'Not Available';
+            $this->Payment_Receipt = 'Not Available';
         }
         if($this->Profile_Update==1)
         {
@@ -217,12 +224,12 @@ class SaveApplicationForm extends Component
                     $app_field->Amount_Paid =  $this->Amount_Paid;
                     $app_field->Balance =  $this->Balance;
                     $app_field->Payment_Mode= $this->PaymentMode;
-                    $app_field->Payment_Receipt= $this->PaymentFile;
+                    $app_field->Payment_Receipt= $this->Payment_Receipt;
                     $app_field->Status= $this->Status;
                     $app_field->Ack_No= $this->Ack_No;
                     $app_field->Ack_File= $this->Ack_File;
                     $app_field->Document_No= $this->Document_No;
-                    $app_field->Doc_File= $this->DocFile;
+                    $app_field->Doc_File= $this->Doc_File;
                     $app_field->Delivered_Date= NULL;
                     $app_field->Applicant_Image= $Applicant_Image;
                     $app_field->save(); // Application Form Saved
@@ -299,12 +306,12 @@ class SaveApplicationForm extends Component
                 $app_field->Amount_Paid =  $this->Amount_Paid;
                 $app_field->Balance =  $this->Balance;
                 $app_field->Payment_Mode= $this->PaymentMode;
-                $app_field->Payment_Receipt= $this->PaymentFile;
+                $app_field->Payment_Receipt= $this->Payment_Receipt;
                 $app_field->Status="Received";
                 $app_field->Ack_No= $this->Ack_No;
                 $app_field->Ack_File= $this->Ack_File;
                 $app_field->Document_No= $this->Document_No;
-                $app_field->Doc_File= $this->DocFile;
+                $app_field->Doc_File= $this->Doc_File;
                 $app_field->Delivered_Date= NULL;
                 $app_field->Applicant_Image= $Applicant_Image;
                 $app_field->save(); // Application Form Saved
@@ -384,12 +391,12 @@ class SaveApplicationForm extends Component
                 $app_field->Amount_Paid =  $this->Amount_Paid;
                 $app_field->Balance =  $this->Balance;
                 $app_field->Payment_Mode= $this->PaymentMode;
-                $app_field->Payment_Receipt= $this->PaymentFile;
+                $app_field->Payment_Receipt= $this->Payment_Receipt;
                 $app_field->Status= $this->Status;
                 $app_field->Ack_No= $this->Ack_No;
                 $app_field->Ack_File= $this->Ack_File;
                 $app_field->Document_No= $this->Document_No;
-                $app_field->Doc_File= $this->DocFile;
+                $app_field->Doc_File= $this->Doc_File;
                 $app_field->Delivered_Date= NULL;
                 $app_field->Applicant_Image= $Applicant_Image;
                 $app_field->save(); // Application Form Saved
@@ -459,12 +466,12 @@ class SaveApplicationForm extends Component
                 $app_field->Amount_Paid =  $this->Amount_Paid;
                 $app_field->Balance =  $this->Balance;
                 $app_field->Payment_Mode= $this->PaymentMode;
-                $app_field->Payment_Receipt= $this->PaymentFile;
+                $app_field->Payment_Receipt= $this->Payment_Receipt;
                 $app_field->Status= $this->Status;
                 $app_field->Ack_No= $this->Ack_No;
                 $app_field->Ack_File= $this->Ack_File;
                 $app_field->Document_No= $this->Document_No;
-                $app_field->Doc_File= $this->DocFile;
+                $app_field->Doc_File= $this->Doc_File;
                 $app_field->Delivered_Date= NULL;
                 $app_field->Applicant_Image= $Applicant_Image;
                 $app_field->save(); // Application Form Saved
