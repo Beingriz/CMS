@@ -108,24 +108,32 @@ class SaveApplicationForm extends Component
         }
         $exist = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
         $client_Id=NULL;
-        foreach($exist as $key)
+        if(count($exist)>0)
         {
-            $client_Id = $key['Id'];
-            $dob = $key['DOB'];
-            $name = $key['Name'];
-            $relative_name = $key['Relative_Name'];
-            $gender = $key['Gender'];
-            $mobile = $key['Mobile'];
-            $email = $key['Email_Id'];
-            $address = $key['Address'];
-            $client_type = $key['Cliednt_Type'];
-            $profileimage = $key['Profile_Image'];
+            foreach($exist as $key)
+            {
+                $client_Id = $key['Id'];
+                $dob = $key['DOB'];
+                $name = $key['Name'];
+                $relative_name = $key['Relative_Name'];
+                $gender = $key['Gender'];
+                $mobile = $key['Mobile'];
+                $email = $key['Email_Id'];
+                $address = $key['Address'];
+                $client_type = $key['Cliednt_Type'];
+                $profileimage = $key['Profile_Image'];
 
+            }
         }
+        else
+        {
+            $client_Id='DC'.time();
+            $name = $this->Name;
+        }
+
         if(!empty($this->Applicant_Image))
         {
             $filename = $this->Name.'_'.$client_Id.'.'.$this->Applicant_Image->getClientOriginalExtension();
-
             $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/Photo/'.$filename;
             $file = Image::make($this->Applicant_Image)->encode('jpg');
             // $file = $this->Applicant_Image;
@@ -139,7 +147,10 @@ class SaveApplicationForm extends Component
         if(!empty($this->Ack_File))
         {
             $extension = $this->Ack_File->getClientOriginalExtension();
-            $this->AckFile = $this->Ack_File->storePubliclyAs('Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/', 'Ack_'.$this->Ack_No.'_'.$time.'.'.$extension);
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/';
+            $filename = 'Ack_'.$this->Ack_No.'_'.$time.'.'.$extension;
+            $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
+            $this->Ack_File = $url;
         }
         else
         {
@@ -170,12 +181,19 @@ class SaveApplicationForm extends Component
                 Storage::disk('public')->delete($profileimage);
                 $image = Image::make($this->Client_Image)->encode('jpg');
                 Storage::disk('public')->put($filename,$image);
-                $Client_Image = $filename;
+                $this->Client_Image = $filename;
+
             }
             else
             {
                 $Client_Image = 'Not Available';
+
             }
+        }
+        else
+        {
+            $Client_Image = 'Not Available';
+
         }
 
 
@@ -202,7 +220,7 @@ class SaveApplicationForm extends Component
                     $app_field->Payment_Receipt= $this->PaymentFile;
                     $app_field->Status= $this->Status;
                     $app_field->Ack_No= $this->Ack_No;
-                    $app_field->Ack_File= $this->AckFile;
+                    $app_field->Ack_File= $this->Ack_File;
                     $app_field->Document_No= $this->Document_No;
                     $app_field->Doc_File= $this->DocFile;
                     $app_field->Delivered_Date= NULL;
@@ -284,7 +302,7 @@ class SaveApplicationForm extends Component
                 $app_field->Payment_Receipt= $this->PaymentFile;
                 $app_field->Status="Received";
                 $app_field->Ack_No= $this->Ack_No;
-                $app_field->Ack_File= $this->AckFile;
+                $app_field->Ack_File= $this->Ack_File;
                 $app_field->Document_No= $this->Document_No;
                 $app_field->Doc_File= $this->DocFile;
                 $app_field->Delivered_Date= NULL;
@@ -369,7 +387,7 @@ class SaveApplicationForm extends Component
                 $app_field->Payment_Receipt= $this->PaymentFile;
                 $app_field->Status= $this->Status;
                 $app_field->Ack_No= $this->Ack_No;
-                $app_field->Ack_File= $this->AckFile;
+                $app_field->Ack_File= $this->Ack_File;
                 $app_field->Document_No= $this->Document_No;
                 $app_field->Doc_File= $this->DocFile;
                 $app_field->Delivered_Date= NULL;
@@ -444,7 +462,7 @@ class SaveApplicationForm extends Component
                 $app_field->Payment_Receipt= $this->PaymentFile;
                 $app_field->Status= $this->Status;
                 $app_field->Ack_No= $this->Ack_No;
-                $app_field->Ack_File= $this->AckFile;
+                $app_field->Ack_File= $this->Ack_File;
                 $app_field->Document_No= $this->Document_No;
                 $app_field->Doc_File= $this->DocFile;
                 $app_field->Delivered_Date= NULL;
