@@ -138,7 +138,8 @@ class SaveApplicationForm extends Component
         }
         if(!empty($this->Ack_File))
         {
-            $this->AckFile = $this->Ack_File->storeAs('Client_DB/'.$this->Name.' '.$client_Id.'/'.$service.'/'.trim($this->SubSelected).'/Ack Files', 'Ack '.$this->Ack_No.' '.$this->today.$time.'.pdf');
+            $extension = $this->Ack_File->getClientOriginalExtension();
+            $this->AckFile = $this->Ack_File->storePubliclyAs('Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/', 'Ack_'.$this->Ack_No.'_'.$time.'.'.$extension);
         }
         else
         {
