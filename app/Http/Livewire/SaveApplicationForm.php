@@ -37,7 +37,7 @@ class SaveApplicationForm extends Component
     public $Total_Amount,$Amount_Paid,$Balance,$ServiceName, $Profile_Show=0,$Profile_Update,$Records_Show=0;
     public $PaymentMode,$Gender,$RelativeName;
     public $Received_Date,$Mobile_Num,$Confirmation;
-    public $Ack_File,$Doc_File,$Payment_Receipt,$Status , $Client_Type;
+    public $Ack_File,$Doc_File,$Payment_Receipt=NULL,$Status , $Client_Type;
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
     public $main_service,$Applicant_Image;
@@ -141,13 +141,13 @@ class SaveApplicationForm extends Component
         }
         else
         {
-            $Applicant_Image = 'Not Available';
+            $Applicant_Image = 'storage/no_image.jpg';
         }
         if(!empty($this->Ack_File))
         {
             $extension = $this->Ack_File->getClientOriginalExtension();
             $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
-            $filename = 'AF_'.$this->Ack_No.'_'.$time.'.'.$extension;
+            $filename = 'AF_'.$this->Ack_No.'_'.time().'.'.$extension;
             $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
             $this->Ack_File = $url;
         }
@@ -159,7 +159,7 @@ class SaveApplicationForm extends Component
         {
             $extension = $this->Doc_File->getClientOriginalExtension();
             $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
-            $filename = 'DF_'.$this->Doc_File.'_'.$time.'.'.$extension;
+            $filename = 'DF_'.$this->Document_No.'_'.time().'.'.$extension;
             $url = $this->Doc_File->storePubliclyAs($path,$filename,'public');
             $this->Doc_File = $url;
         }
@@ -171,7 +171,7 @@ class SaveApplicationForm extends Component
         {
             $extension = $this->Payment_Receipt->getClientOriginalExtension();
             $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
-            $filename = 'PR_'.$this->Payment_Receipt.'_'.$time.'.'.$extension;
+            $filename = 'PR_'.$this->PaymentMode.'_'.time().'.'.$extension;
             $url = $this->Payment_Receipt->storePubliclyAs($path,$filename,'public');
             $this->Payment_Receipt = $url;
         }
@@ -193,13 +193,13 @@ class SaveApplicationForm extends Component
             }
             else
             {
-                $Client_Image = 'Not Available';
+                $Client_Image = 'storage/no_image.jpg';
 
             }
         }
         else
         {
-            $Client_Image = 'Not Available';
+            $Client_Image =  $Applicant_Image;
 
         }
 
@@ -246,7 +246,7 @@ class SaveApplicationForm extends Component
                     $save_credit->Balance = $this->Balance;
                     $save_credit->Description = $Description;
                     $save_credit->Payment_Mode = $this->PaymentMode;
-                    $save_credit->Attachment = $this->PaymentFile;
+                    $save_credit->Attachment = $this->Payment_Receipt;
                     $save_credit->save(); //Credit Ledger Entry Saved
 
                     if($dob == NULL)
@@ -283,7 +283,7 @@ class SaveApplicationForm extends Component
                     $save_balance->Amount_Paid = $this->Amount_Paid;
                     $save_balance->Balance = $this->Balance;
                     $save_balance->Payment_Mode =$this->PaymentMode;
-                    $save_balance->Attachment = $this->PaymentFile;
+                    $save_balance->Attachment = $this->Payment_Receipt;
                     $save_balance->Description = $Description;
                     $save_balance->save(); // Balance Ledger Entry Saved
                     session()->flash('SuccessMsg','Application Saved Successfully!, Balance Ledger Updated');
@@ -349,7 +349,7 @@ class SaveApplicationForm extends Component
                 $save_credit->Balance = $this->Balance;
                 $save_credit->Description = $Description;
                 $save_credit->Payment_Mode = $this->PaymentMode;
-                $save_credit->Attachment = $this->PaymentFile;
+                $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg','Application Saved Successfully!!');
                 return redirect()->route('new_application');
@@ -413,7 +413,7 @@ class SaveApplicationForm extends Component
                 $save_credit->Balance = $this->Balance;
                 $save_credit->Description = $Description;
                 $save_credit->Payment_Mode = $this->PaymentMode;
-                $save_credit->Attachment = $this->PaymentFile;
+                $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
 
                 $save_balance = new BalanceLedger;
@@ -428,7 +428,7 @@ class SaveApplicationForm extends Component
                 $save_balance->Amount_Paid = $this->Amount_Paid;
                 $save_balance->Balance = $this->Balance;
                 $save_balance->Payment_Mode =$this->PaymentMode;
-                $save_balance->Attachment = $this->PaymentFile;
+                $save_balance->Attachment = $this->Payment_Receipt;
                 $save_balance->Description = $Description;
                 $save_balance->save(); // Balance Ledger Entry Saved
                 session()->flash('SuccessMsg','Client Registered! Application Saved Successfully!, Balance Ledgere Updated!');
@@ -488,7 +488,7 @@ class SaveApplicationForm extends Component
                 $save_credit->Balance = $this->Balance;
                 $save_credit->Description = $Description;
                 $save_credit->Payment_Mode = $this->PaymentMode;
-                $save_credit->Attachment = $this->PaymentFile;
+                $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg','Client Registered! Application Saved Successfully!,');
                 return redirect()->route('new_application');

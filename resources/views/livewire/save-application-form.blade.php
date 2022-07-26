@@ -595,7 +595,7 @@
                         @if (!empty($Client_Image))
                         <img class="rounded-circle avatar-lg"  src="{{$Client_Image->temporaryUrl() }}" alt="Client Profile">
                         @else
-                        <img class="rounded-circle avatar-lg" src="{{ (!empty($Old_Profile_Image))?url($Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
+                        <img class="rounded-circle avatar-lg" src="{{ (!empty($Old_Profile_Image))?url('storage/'.$Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
                         @endif
                     </div>
                 </div>
@@ -704,7 +704,7 @@
                         @if (!empty($Client_Image))
                     <img class="rounded-circle avatar-lg"  src="{{$Client_Image->temporaryUrl() }}" alt="Client Profile">
                     @else
-                    <img class="rounded-circle avatar-lg" src="{{ (!empty($Old_Profile_Image))?url($Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
+                    <img class="rounded-circle avatar-lg" src="{{ (!empty($Old_Profile_Image))?url('storage/'.$Old_Profile_Image):url('storage/no_image.jpg')}} " alt="Card image cap">
                     @endif
                     </div>
                 </div>
