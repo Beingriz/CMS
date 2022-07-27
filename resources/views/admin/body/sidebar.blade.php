@@ -39,12 +39,13 @@
                         <span>Service</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#">New Service</a></li>
-                        <li><a href="#">Bookmark</a></li>
-                        <li><a href="#">Documents</a></li>
-                        <li><a href="#">Status</a></li>
-                        <li><a href="#">Slide Images</a></li>
-                        <li><a href="#">Payment Mode</a></li>
+                        <li><a href="{{route('new_application')}}">New Application</a></li>
+                        <li><a href="{{route('new_application')}}">Update</a></li>
+                        <li><a href="{{route('new_application')}}">Balance</a></li>
+                        <li><a href="{{route('new_application')}}">Reports</a></li>
+                        <li><a href="{{route('new_application')}}">Filter</a></li>
+                        <li><a href="{{route('new_application')}}">Delete</a></li>
+
                     </ul>
                 </li>
 

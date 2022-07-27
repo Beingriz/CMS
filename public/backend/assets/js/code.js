@@ -68,20 +68,20 @@ $(function() {
 
         Swal.fire({
             title: 'Are you sure?',
-            text: "Update This Profile?",
+            text: "you want to Edit This Record?",
             icon: 'success',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes,  it!'
+            confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = link
-                Swal.fire(
-                    'Updated!',
-                    'Your file has been Updated.',
-                    'success'
-                )
+                    // Swal.fire(
+                    //     'Updated!',
+                    //     'Your Record has been Updated.',
+                    //     'success'
+                    // )
             }
         })
 

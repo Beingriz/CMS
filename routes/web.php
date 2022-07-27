@@ -43,6 +43,7 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('app_home', 'Dashboard')->middleware(['auth'])->name('Dashboard');
     Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->middleware(['auth'])->name('DynamicDashboard');
     Route::get('new/application', 'index')->middleware(['auth'])->name('new_application');
+    Route::get('edit/application/{id}', 'Edit')->middleware(['auth'])->name('edit_application');
 
 
 });

@@ -1,505 +1,742 @@
-<div>
-    <div class="form-container">
-        <div class="form-header">
+<div>{{--Livewire Edit Application by Id   --}}
 
-            <!-- <img src="img/income.png" alt="Application_image" class="header-image"> -->
-        <p class="heading">Application Details of <span>{{$Name}}, ID: {{$Client_Id}}</span> </p>
-        </div>
-        @if (session('SuccessUpdate'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessUpdate')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('Error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('Error')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('SuccessMsg'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessMsg')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        <div class="insight-container">
-
-            <a href="#" class="right-menu-section" wire:click.prevent="ShowApplicatins('{{$Mobile_No}}')">
-                <img src="\digital/cyber/photo_gallery\customer-insight.png" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Applied Services</p>
-                    <p class="section-value">Total {{$count_app}} Services</p>
-                    <p class="section-pre-values">Deleted {{$app_deleted}} Applications</p>
+    <div class="row">{{-- Messags / Notification Row--}}
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Application Details of <span class="text-primary">{{$Name}}</span> </h4>
+                @if (session('SuccessMsg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('SuccessMsg')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('SuccessUpdate'))
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{session('SuccessUpdate')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('Error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{session('Error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('new_application')}}">Application</a></li>
+                        <li class="breadcrumb-item active">Update</li>
+                        <li class="breadcrumb-item active">ID: {{$Client_Id}}</li>
+                    </ol>
                 </div>
-            </a>
 
-            <div class="right-menu-section">
-                <img src="\digital/cyber/photo_gallery\customer-insight-2.png" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Applications Deliverd</p>
-                    <p class="section-value">Delivered : {{$app_delivered}}</p>
-                    <p class="section-pre-values">Pending {{$app_pending}}</p>
-                </div>
-            </div>
-
-            <div class="right-menu-section">
-                <img src="../storage/app/{{$Profile_Image}}" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Revenue Earned</p>
-                    <p class="section-value">Payble &#x20B9; {{$total}}/-</p>
-                    <p class="section-pre-values">Paid <span> &#x20B9;{{$paid}}</span> Balance <span> &#x20B9;{{$balance}}</span></p>
-                    <p class="section-pre-values"></p>
-                </div>
             </div>
         </div>
-        <div class="form-data-container">
-            <div class="form-data">
+    </div>{{-- End of Row --}}
 
-                <form action=""  wire:submit.prevent="Update('{{$Id}}')">
-                    @csrf
-                     <!-- Cleint Id  -->
-                  <div class="row">
-                    <div class="col-45">
-                        <label class="label" for="Cleint_Id">Client ID</label>
+    <div class="row"> {{-- Start of Services Row --}}
+        <a href="#" class="col-xl-3 col-md-10" wire:click.prevent="ShowApplicatins('{{$Mobile_No}}')">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
 
-                    </div>
-                    <div class="col-55">
-                        <label class="imp-label" for="Cleint_Id">{{$Client_Id}}</label>
+                        {{-- <div class="avatar-sm">
+                            <span class="avatar-title bg-light text-primary rounded-3">
+                                <i class="fas fa-edit"></i></i>
+                            </span>
+                        </div> --}}
+                        <div class="flex-grow-1 align-items-center">
+                            <h5 class="text-truncate text-primary font-size-20 mb-2">Applied Services</h5>
+                            <div class="col-8">
+                                <div class="text-center mt-8">
+                                    <h5>Applied {{$count_app}}</h5>
+                                    <p class="mb-2 text-truncate">Deleted {{$app_deleted}} Applications</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image"> --}}
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+
                     </div>
                 </div>
-                    <!-- Customer Id  -->
-                    <div class="row">
-                        <div class="col-45">
-                            <label class="label" for="Customer_ID">Application ID</label>
+            </div>
+        </a>
 
-                        </div>
-                        <div class="col-55">
-                            <label class="imp-label" for="Customer_ID">{{$App_Id}}</label>
-                        </div>
-                    </div>
+        <a href="#" class="col-xl-3 col-md-10" >
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
 
-                    <!-- Application Type -->
-                    <div class="row">
-                        <div class="col-45">
-                            <label class="label" for="Application">Application</label>
-                        </div>
-                        <div class="col-55">
-                        <div class="md-form">
-                            <select class="form-control" id="Application" name="Application" wire:model = "MainService">
-                                <option value="{{$Application}}" selected>{{$Application}}</option>
-                                @foreach($MainServices as $Service)
-                                <option value="{{ $Service->Id }}">
-                                    {{ $Service->Name}}</option>
-                                @endforeach
-                            </select>
-                            <span class="error">@error('MainService'){{$message}}@enderror</span>
-                        </div>
-                        </div>
-                    </div>
-                    <!-- Application Type -->
-                    <div class="row">
-                        <div class="col-45">
-                            <label class="label" for="Application">Application</label>
-                        </div>
-                        <div class="col-55">
-                        <div class="md-form">
-                            <select class="form-control" id="Application" name="Application" wire:model = "SubService">
-                                <option value="{{$Application_Type}}" selected>{{$Application_Type}}</option>
-                                @foreach($SubServices as $service)
-                                <option value="{{ $service->Name }}">{{ $service->Name}}</option>
-                                @endforeach
-                            </select>
-                            <span class="error">@error('SubService'){{$message}}@enderror</span>
-                        </div>
-                        </div>
-                    </div>
-                    <!-- Name -->
-                    <div class="row">
-                        <div class="col-45">
-                            <label class="label" for="Name">Name</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="text" id="Name" name="Name" class="form-control"
-                                wire:model.lazy = "Name"   />
-                                <span class="error">@error('Name'){{$message}}@enderror</span>
+                        {{-- <div class="avatar-sm">
+                            <span class="avatar-title bg-light text-primary rounded-3">
+                                <i class="fas fa-edit"></i></i>
+                            </span>
+                        </div> --}}
+                        <div class="flex-grow-1 align-items-center">
+                            <h5 class="text-truncate text-warning font-size-20 mb-2">Applications Deliverd</h5>
+                            <div class="col-8">
+                                <div class="text-center mt-8">
+                                    <h5>Delivered : {{$app_delivered}}</h5>
+                                    <p class="mb-2 text-truncate">Pending {{$app_pending}}</p>
+                                </div>
                             </div>
                         </div>
+
+                        {{-- <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image"> --}}
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+
                     </div>
-                    <!-- Mobile No -->
-                    <div class="row">
-                        <!-- Material input -->
-                        <div class="col-45">
-                            <label for="Mobile_No">Mobile_No</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="number" id="Mobile_No" name="Mobile_No" class="form-control"
-                                wire:model = "Mobile_No" >
-                                <span class="error">@error('Mobile_No'){{$message}}@enderror</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="col-xl-3 col-md-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+
+                        {{-- <div class="avatar-sm">
+                            <span class="avatar-title bg-light text-primary rounded-3">
+                                <i class="fas fa-edit"></i></i>
+                            </span>
+                        </div> --}}
+                        <div class="flex-grow-1 align-items-center">
+                            <h5 class="text-truncate text-info font-size-20 mb-2">Revenue Earned</h5>
+                            <div class="col-8">
+                                <div class="text-center mt-8">
+                                    <h5>Payble &#x20B9; {{$total}}/-</h5>
+                                    <p class="mb-2 text-truncate">Balance <span> &#x20B9;{{$balance}}</span></p></p>
+                                </div>
                             </div>
                         </div>
+
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/Admin/Services/Thumbnail'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+
                     </div>
-                    <!-- DOB -->
-                    <div class="row">
-                        <!-- Material input -->
-                        <div class="col-45">
-                            <label for="DOB">DOB</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="date" id="DOB" name="DOB" class="form-control"  wire:model = "Dob" >
-                                <span class="error">@error('Dob'){{$message}}@enderror</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="col-xl-3 col-md-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+
+                        {{-- <div class="avatar-sm">
+                            <span class="avatar-title bg-light text-primary rounded-3">
+                                <i class="fas fa-edit"></i></i>
+                            </span>
+                        </div> --}}
+                        <div class="flex-grow-1 align-items-center">
+                            <h5 class="text-truncate text-danger font-size-20 mb-2">Balance Due</h5>
+                            <div class="col-8">
+                                <div class="text-center mt-8">
+                                    <h5>Payble &#x20B9; {{$total}}/-</h5>
+                                    <p class="mb-2 text-truncate">Balance <span> &#x20B9;{{$balance}}</span></p></p>
+                                </div>
                             </div>
                         </div>
+
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/Admin/Services/Thumbnail'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+
                     </div>
-                    <!-- Ack No -->
-                    <div class="row">
-                        <!-- Material input -->
-                        <div class="col-45">
-                            <label for="Ack_No">Ack_No</label> </span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="text" id="Ack_No" name="Ack_No" class="form-control"
-                                wire:model.lazy = "Ack_No" >
-                                @if ($Ack!='Not Available')
-                                    <a href="{{ url('download_ack') }}/{{$Id}}">Dowload Ack</a>
+                </div>
+            </div>
+        </a>
+
+
+    </div> {{-- End of Row --}}
+{{-- -------------------------------------------------------------------------------------------------------}}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between">
+                    <h3 class="card-title mb-4">Application ID:  {{$Client_Id}}</h3>
+                    <h3 class="card-title mb-4">Mr / Mrs :  {{$Name}}</h3>
+                </div>
+                <div class="card-body">
+
+
+                    <div id="progrss-wizard" class="twitter-bs-wizard">
+                        <ul class="twitter-bs-wizard-nav nav-justified nav nav-pills">
+                            <li class="nav-item" wire:ignore>
+                                <a href="#progress-applicant-details" class="nav-link active" data-toggle="tab">
+                                    <span class="step-number">01</span>
+                                    <span class="step-title">Applicant Details</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" wire:ignore>
+                                <a href="#progress-service-details" class="nav-link" data-toggle="tab">
+                                    <span class="step-number">02</span>
+                                    <span class="step-title">Service Details</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item" wire:ignore>
+                                <a href="#progress-payment-detail" class="nav-link" data-toggle="tab">
+                                    <span class="step-number">03</span>
+                                    <span class="step-title">Payment Details</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" wire:ignore>
+                                <a href="#progress-confirm-detail" class="nav-link" data-toggle="tab">
+                                    <span class="step-number">04</span>
+                                    <span class="step-title">Confirm Detail</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content twitter-bs-wizard-tab-content">
+                            <div class="tab-pane active" id="progress-applicant-details" wire:ignore.self>
+                                <form>
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                            <label class="form-label" for="progress-basicpill-phoneno-input">Phone No</label>
+                                                <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" onkeydown="mobile(this)">
+                                                @error('Mobile_No') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-firstname-input">Name </label>
+                                                <input type="text" class="form-control" placeholder="Applicant Name" id="progress-basicpill-firstname-input" wire:model.lazy="Name">
+                                                @error('Name') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="RelativeName">Relative Name </label>
+                                                <input type="text" class="form-control" placeholder="Relative Name" id="RelativeName" wire:model.lazy="RelativeName">
+                                                @error('RelativeName') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-firstname-input">Gender </label>
+                                                <select class="form-select" wire:model.lazy="Gender">
+                                                    <option selected="">Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                                @error('Gender') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-dob-input">Date of Birth</label>
+                                                <input type="date" class="form-control" placeholder="Date of Birth "id="progress-basicpill-dob-input" wire:model.lazy="Dob">
+                                                @error('Dob') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label>Client Type</label>
+                                                    <select class="form-select" wire:model.lazy="Client_Type">
+                                                        <option selected="">Select Client Type</option>
+                                                        <option value="New Client">New Client</option>
+                                                        <option value="Old Client">Old Client</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                                <div class="col-lg-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="Applicant_Image">Applicant Image</label>
+                                                        <input type="file" class="form-control" id="Applicant_Image" wire:model="Applicant_Image" >
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="Applicant_Image_View">Photo</label>
+                                                        <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
+                                                        @if (!is_null($Applicant_Image))
+                                                        <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
+                                                        @else
+                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <h5 class="font-size-14 mb-3">Profile Update</h5>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <p class="text-muted">Do you want to update Profile Image?</p>
+                                                <input type="checkbox" id="switch3" switch="none" wire:model.lazy="Profile_Update">
+                                                <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
+
+                                            </div>
+                                        </div>
+                                        @if ($Profile_Update == 1)
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="progress-basicpill-profileimage-input">Profile Image</label>
+                                                        <input type="file" class="form-control" id="progress-basicpill-profileimage-input" wire:model="Client_Image" >
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="progress-basicpill-profileimage-input">Profile View</label>
+                                                        <div wire:loading wire:target="Client_Image">Uploading Profile Image...</div>
+                                                        @if (!is_null($Client_Image))
+                                                        <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
+                                                        @elseif(!is_Null($Profile_Image))
+                                                        <img class="rounded avatar-md" src="../{{$Profile_Image }}" alt="Client_Image" />
+                                                        @else
+                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                                                        @endif
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                </form>
+                            </div>
+                            <div class="tab-pane" id="progress-service-details" wire:ignore.self>
+                                <div>
+                                <form>
+                                    <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label>Service</label>
+                                            <select class="form-select"  wire:model.lazy="MainService">
+                                                <option value="{{$Application}}" selected>{{$Application}}</option>
+                                                @foreach($MainServices as $Service)
+                                                <option value="{{ $Service->Id }}">
+                                                    {{ $Service->Name}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('MainService') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label>Service Category</label>
+                                            <select class="form-select" wire:model.lazy="SubService">
+                                                <option value="{{$Application_Type}}" selected>{{$Application_Type}}</option>
+                                                @foreach($SubServices as $service)
+                                                <option value="{{ $service->Name }}">{{ $service->Name}}</option>
+                                                @endforeach
+                                            </select>
+
+                                            @error('SubSelected') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-ackno-input">Acknowledgment No. </label>
+                                                <input type="text" class="form-control" placeholder="Acknowledgment No"id="progress-basicpill-ackno-input" wire:model.lazy = "Ack_No">
+                                                @error('Ack_No') <span class="text-danger">{{ $message }}</span> @enderror
+                                                @if ($Ack!='Not Available')
+                                                <a href="{{ url('download_ack') }}/{{$Id}}">Dowload Ack</a>
+                                            @endif
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-docno-input">Document No.</label>
+                                                <input type="text" class="form-control"  placeholder="Document No"id="progress-basicpill-docno-input" wire:model.lazy = "Document_No" >
+                                                @error('Document_No') <span class="text-danger">{{ $message }}</span> @enderror
+                                                @if ($Doc!='Not Available')
+                                                <a href="{{ url('download_doc') }}/{{$Id}}">Dowload Ack</a>
+                                            @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        @if ($Ack_No !='Not Available' )
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-ackfile-input">Acknowledgment File</label>
+                                                <input type="file" class="form-control" id="progress-basicpill-ackfile-input" wire:model="Ack_File" >
+                                                @error('Ack_File') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        @if ($Document_No!='Not Available')
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="progress-basicpill-docfile-input">Document File</label>
+                                                <input type="file" class="form-control" id="progress-basicpill-docfile-input"  wire:model="Doc_File">
+                                                @error('Doc_File') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="progress-payment-detail" wire:ignore.self>
+                                <div>
+                                    <form>
+                                        <div class="row">
+
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="progress-basicpill-receiveddate-input">Received Date</label>
+                                                    <input type="date" class="form-control" id="progress-basicpill-receiveddate-input" wire:model="Received_Date">
+                                                    @error('Received_Date') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label>Current Status</label>
+                                                    <select class="form-select" wire:model.lazy="Status">
+                                                        <option selected="">Select Status</option>
+                                                        @foreach ($status_list as $status)
+                                                            <option value="{{ $status->Status }} ">
+                                                                {{ $status->Status }}</option>
+                                                            @endforeach
+                                                    </select>
+                                                    @error('Status') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="Total_Amount">Total Amount</label>
+                                                    <input type="number"  name="Total_Amount" class="form-control" id="Total_Amount" wire:model.lazy="Total_Amount">
+                                                    @error('Total_Amount') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="mb-3">
+                                                    <label class="form-label"  for="Amount_Paid">Amount paid</label>
+                                                    <input type="number" name="Amount_Paid" class="form-control" id="Amount_Paid"  onblur="Balance()" wire:model.lazy="Amount_Paid">
+                                                    @error('Amount_Paid') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="Balance">Balance</label>
+                                                    <input type="number" name="Balance" class="form-control" wire:model="Bal" id="Balance" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label>Payment Mode</label>
+                                                    <select class="form-select" wire:model="PaymentMode">
+                                                        <option selected="">Select Payment Mode</option>
+                                                        @foreach ($payment_mode as $payment_mode)
+                                                        <option value="{{ $payment_mode ->Payment_Mode }}">
+                                                            {{ $payment_mode ->Payment_Mode }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('PaymentMode') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                            @if (!is_Null($PaymentMode) && $PaymentMode != 'Cash')
+
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="progress-basicpill-ackfile-input">Payment Receipt</label>
+                                                    <input type="file" class="form-control" id="progress-basicpill-ackfile-input" wire:model="Payment_Receipt"  accept="image/jpeg, image/png">
+                                                    <span class="text-danger">@error('Payment_Receipt'){{$message}}@enderror</span>
+
+                                                </div>
+                                            </div>
+
+                                            @endif
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="progress-confirm-detail" wire:ignore.self>
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-6">
+                                        <div class="text-center">
+                                            <div class="mb-1">
+                                                <div class="spinner-border text-info m-1" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5>Preview Detail</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 d-flex">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"> Name</li>
+                                            <li class="list-group-item"> Mobile No</li>
+                                            <li class="list-group-item"> DOB</li>
+                                            <li class="list-group-item"> Client Type</li>
+                                            <li class="list-group-item"> Profile</li>
+
+                                        </ul>
+
+
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                @if(empty($Name))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Name}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Name))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Mobile_No}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Name))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Dob}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Name))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Client_Type}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Client_Image))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
+
+                                                @endif
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-4 d-flex">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"> Service</li>
+                                            <li class="list-group-item"> Category</li>
+                                            <li class="list-group-item"> Acknowledgment No</li>
+                                            <li class="list-group-item"> Document No</li>
+
+                                        </ul>
+
+
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                @if(empty($MainSelected))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$ServiceName}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($SubSelected))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$SubSelected}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Ack_No))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Ack_No}}</strong>
+
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Document_No))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Document_No}}</strong>
+
+                                                @endif
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="col-lg-4 d-flex">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"> Received Date</li>
+                                            <li class="list-group-item"> Status No</li>
+                                            <li class="list-group-item"> Total Amount</li>
+                                            <li class="list-group-item"> Amount Paid</li>
+                                            <li class="list-group-item"> Balance</li>
+                                            <li class="list-group-item"> Payment Mode</li>
+
+                                        </ul>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                @if(empty($Received_Date))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Received_Date}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Status))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Status}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Total_Amount))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Total_Amount}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Amount_Paid))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Amount_Paid}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Bal))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Bal}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($PaymentMode))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$PaymentMode}}</strong>
+                                                @endif
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h5 class="font-size-14 mb-3">Preview Confirmation</h5>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <p class="text-muted">Are you sure you want to submit Form?</p>
+                                            <input type="checkbox" id="switch2" switch="none" wire:model.lazy="Confirmation">
+                                            <label for="switch2" data-on-label="Yes" data-off-label="No"></label>
+                                            @if($Confirmation==1)
+                                            <p><i class="mdi mdi-check-circle-outline text-success font-size-20 display-4"></i></p>
+                                            @endif
+                                        </div>
+                                </div>
+                                @if ($Confirmation==1)
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="text-center">
+                                            <a href="#" wire:submit.prevent="Update('{{$Id}}')" class="btn btn-success waves-effect waves-light"><i class="ri-check-line align-middle me-2"></i> Update </a>
+                                            <a href="{{route('new_application')}}" class="btn btn-light waves-effect waves-light">Cancel</a>
+
+                                        </div>
+
+                                    </div>
+                                </div>
                                 @endif
                             </div>
                         </div>
+                        <ul class="pager wizard twitter-bs-wizard-pager-link">
+                            <li class="previous disabled"><a href="javascript: void(0);">Previous</a></li>
+                            <li class="next"><a href="javascript: void(0);">Next</a></li>
+                        </ul>
                     </div>
-                    @if ($Ack_No !='Not Available' )
-                    <div class="row"> {{--Ack File--}}
-                        <div class="col-45">
-                            <label for="Thumbnail">Upload Ack File</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="file" id="Ack_File" wire:model="Ack_File" name="Ack_File" class="form-control" accept="application/pdf">
-                                <span class="error">@error('Ack_File'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-
-
-                <!-- Document No -->
-                <div class="row">
-                    <!-- Material input -->
-                    <div class="col-45">
-                        <label for="Document_No">Document_No</label>
-                    </div>
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input type="text" id="Document_No" name="Document_No" class="form-control"
-                            wire:model.lazy = "Document_No" >
-                            @if ($Doc!='Not Available')
-                                    <a href="{{ url('download_doc') }}/{{$Id}}">Dowload Ack</a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                @if ($Document_No!='Not Available')
-                <div class="row"> {{--Document File--}}
-                    <div class="col-45">
-                        <label for="Doc_File">Upload Doc File</label> <span class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input type="file" id="Doc_File" wire:model="Doc_File" name="Doc_File" class="form-control" accept="application/pdf">
-                            <span class="error">@error('Doc_File'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                </div>
-                @endif
-                <div class="row">
-                    <div class="col-45">
-                        <label for="Document_Name">Do you Have Profile Image?</label>
-                    </div>
-                    <div class="col-20">
-                        <!-- Default radio -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" wire:model="Pro_Yes" value="on" />
-                            <label class="form-check-label" for="flexRadioDefault1"> Yes </label>
-                        </div>
-                     </div>
-                     <div class="col-20">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"  wire:model="Pro_Yes" value="off" checked />
-                            <label class="form-check-label" for="flexRadioDefault2"> No</label>
-                        </div>
-                    </div>
-                </div>
-                @if ($Pro_Yes == 'on')
-
-                <div class="row"> {{--Upload File--}}
-                    <div class="col-45">
-                        <label for="Profile_Image">Profile Image </label> <span class="important">*</span>
-                    </div>
-
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input class="form-control " id="formFileSm" type="file"  wire:model="Profile_Image"  name="Document_Name" placeholder="Pdf"
-                            accept="image/jpeg, image/png, />
-                            <span class="error">@error('Profile_Image'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-
-                </div>
-                @endif
-
-            </div>
-            <div class="form-data">
-                    @if ($Pro_Yes == 'on')
-                    <div wire:loading wire:target="Profile_Image">Uploading Profile Image...</div>
-                        @if (!is_null($Profile_Image))
-                        <div class="row">
-                            <div class="col-100">
-                                <img class="profile_image" src="{{ $Profile_Image->temporaryUrl() }}"" alt="Thumbnail" />
-                            </div>
-                        </div>
-                        @endif
-                    @endif
-                <!-- Received Date -->
-                <div class="row">
-                    <!-- Material input -->
-                    <div class="col-45">
-                        <label for="Received_Date">Received Date</label> <span class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input type="date" id="Received_Date" name="Received_Date" class="form-control"  wire:model = "Received_Date" >
-                            <span class="error">@error('Received_Date'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Applied Date -->
-                <div class="row">
-                    <!-- Applied_Date -->
-                    <div class="col-45">
-                        <label for="Applied_Date">Applied Date</label> <span class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input type="date" id="Applied_Date" name="Applied_Date" class="form-control"  wire:model = "Applied_Date" >
-                            <span class="error">@error('Applied_Date'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Status List -->
-                <div class="row">
-                    <div class="col-45">
-                        <label class="label" for="Payment_Mode">Status</label> <span
-                            class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <select class="form-control" id="Status" name="Status" wire:model="Status">
-                            <option  value="{{$Status}}">{{$Status}}</option>
-                            @foreach ($StatusList as $Status)
-                            <option value="{{ $Status->Status }}">{{ $Status->Status }}</option>
-                            @endforeach
-                        </select>
-                        <span class="error">@error('Status'){{$message}}@enderror</span>
-                    </div>
-                </div>
-
-                <div class="row"> {{--Total_Amount--}}
-                    <div class="col-45">
-                        <label for="Total_Amount">Total Amount</label> <span class="important">*</span>
-                    </div>
-                    <div class="col-20">
-                        <div class="md-form">
-                            <input type="number" id="amount" wire:model="Total_Amount"  name="Total_Amount" class="form-control" placeholder="Total" pattern="[0-9]" readonly>
-                            <span class="error">@error('Total_Amount'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    <div class="col-20">
-                        <div class="md-form">
-                            <input type="number" id="paid"  wire:model="Amount_Paid"  name="Amount_Paid" class="form-control" placeholder="Paid" pattern="[0-9]" onblur="balance()">
-                        </div>
-                    </div>
-                    <div class="col-20">
-                        <div class="md-form">
-                            <input type="number" id="bal" name="Balance" class="form-control"
-                            wire:model = "Balance"  pattern="[0-9]" readonly>
-                            <span class="error">@error('Balance'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Payment Mode -->
-                <div class="row">
-                    <div class="col-45">
-                        <label class="label" for="Payment_Mode">Payment</label> <span
-                            class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <select class="form-control" id="PaymentMode" name="PaymentMode" wire:model="PaymentModes">
-                            <option  value="{{$PaymentMode}}">{{$PaymentMode}}</option>
-                            @foreach ($Payment_Modes as $payment_mode)
-                            <option value="{{ $payment_mode->Payment_Mode }}">{{ $payment_mode->Payment_Mode }}</option>
-                            @endforeach
-                        </select>
-                        @if ($Pay!='Not Available')
-                        <a href="{{ url('download_pay') }}/{{$Id}}">Dowload Ack</a>
-                        @endif
-                        <span class="error">@error('Payment_Mode'){{$message}}@enderror</span>
-                    </div>
-                </div>
-                @if ($PaymentModes!='Cash')
-                <div class="row"> {{--Payment_Receipt File--}}
-                    <div class="col-45">
-                        <label for="Payment_Receipt">Upload Payment Recipt</label> <span class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input type="file" id="Payment_Receipt" wire:model="Payment_Receipt" name="Payment_Receipt" class="form-control" accept="image/jpeg, image/png>
-                            <span class="error">@error('Payment_Receipt'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                </div>
-                @endif
-                <!-- Updated Date -->
-                <div class="row">
-                    <!-- Material input -->
-                    <div class="col-45">
-                        <label for="Updated_Date">Updated Date</label> <span class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <div class="md-form">
-                            <input type="date" id="Updated_Date" name="Updated_Date" class="form-control"  wire:model = "Updated_Date" >
-                            <span class="error">@error('Updated_Date'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-45">
-                        <label for="Document_Name">Do you want to Upload Files?</label>
-                    </div>
-                    <div class="col-20">
-                        <!-- Default radio -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" wire:model="Doc_Yes" value="on" />
-                            <label class="form-check-label" for="flexRadioDefault1"> Yes </label>
-                        </div>
-                     </div>
-                     <div class="col-20">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"  wire:model="Doc_Yes" value="off" checked />
-                            <label class="form-check-label" for="flexRadioDefault2"> No</label>
-                        </div>
-                    </div>
-                </div>
-                @if ($Doc_Yes == 'on')
-
-                <div class="row"> {{--Upload File--}}
-                    <div class="col-45">
-                        <label for="Document_Name">Upload File </label> <span class="important">*</span>
-                    </div>
-
-                    <div class="col-41">
-                        <div class="md-form">
-                            <input type="text" name="Doc_Name" id="" placeholder="Document Name" class="form-control form-control-sm" required wire:model="Doc_Name">
-                            <input class="form-control form-control-sm width-40" id="formFileSm" type="file"  wire:model="Document_Name"  name="Document_Name" placeholder="Pdf"
-                            accept="image/jpeg, image/png, application/pdf"/>
-                            <span class="error">@error('Document_Name'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    <div class="col-0">
-                        <div class="md-form">
-                            <a href="#" wire:click.prevent="AddNewText({{$i}})" name="add"
-                            class="btn btn-primary btn-rounded btn-sm">Add</a>
-                        </div>
-                    </div>
-
-                </div>
-                @foreach ($NewTextBox as $item => $value)
-                    <div class="row"> {{--Thumbnail--}}
-                        <div class="col-45">
-                            <label for="Doc_Names">Upload File : {{$n++}} </label> <span class="important">*</span>
-                        </div>
-                        <div class="col-45">
-                            <div class="md-form">
-                                <input type="text" name="Doc_Names" id="Doc_Names" placeholder="Document Name" class="form-control form-control-sm " wire:model="Doc_Names.{{$value}}" required>
-                                <input type="file"  wire:model="Document_Files.{{$value}}"  name="Document_Files"  id="Document_Files" class="form-control form-control-sm width-40"   accept="image/jpeg, image/png, application/pdf">
-                                <span class="error">@error('Document_Files'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-                        <div class="col-0">
-                            <div class="md-form">
-                                <a href="#" wire:click.prevent="Remove('{{$value}}')" name="add"
-                                class="btn btn-danger btn-rounded btn-sm">x</a>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                    @endif
-            </div>
-        </div>
-        <div class="form-data-buttons">
-            <!-- Submitt Buttom -->
-            <div class="row">
-                <div class="col-100">
-                    <button type="submit" value="submit" name="submit"
-                    class="btn btn-success btn-rounded btn-sm">Update</button>
-                    <a href="{{url("open_app")}}/{{$App_Id}}" class="btn btn-secondary btn-rounded btn-sm ">Back</a>
-
-                    <a href="{{url("app_home")}}" class="btn btn-rounded btn-sm">Cancel</a>
                 </div>
             </div>
         </div>
-        </form>
-        <!-- Right Section -->
-
-
-    <!-- Table List Code  -->
-
     </div>
-    @if (count($Doc_Files)>0)
-        <div class="table-container width-50" >
-                        <div class="table-information">
-                <span class="info-text">Available Documents </span>
+{{-- ------------------------------------------------------------------------------------------------------}}
+    <div class="row">
+        @if (count($Doc_Files)>0) {{--Document List Table  --}}
+            <div class="col-lg-7">
+                <div class="card">
+                    <h5 class="card-header">Available Documents </h5>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Total Credit as on
+                            @if (empty($Select_Date)) {{ \Carbon\Carbon::parse($today)->format('d-M-Y'); }} is &#x20B9 {{$Daily_Income}} @endif
+                            @if (!empty($Select_Date))
+                                {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y'); }}
+                                <strong>
+                                    {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
+                                </strong>
+                                {{$Daily_Income}}
+                            @endif
+                        </h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th >Sl.No</th>
+                                    <th>Name</th>
+                                    <th>Download</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($Doc_Files as $File)
+                                <tr>
+                                        <td >{{ $n++ }}</td>
+                                        <td>{{ $File->Document_Name }}</td>
+                                        <td>
+                                            <a class="btn btn-success btn-sm "
+                                                onclick="confirm('Are You Sure!? You Want to Download this file?')||event.stopImmediatePropagation()" href='{{ url('download_docs') }}/{{$File->Id}}'>Download</a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-info btn-sm  "
+                                                onclick="confirm('Are You Sure!? You Want to Delete this file?')||event.stopImmediatePropagation()"  wire:click.prevent="Delete_Doc('{{$File->Id}}')" >Delete</a>
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        </div>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th >Sl.No</th>
-                        <th>Name</th>
-                        <th>Download</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($Doc_Files as $File)
-                  <tr>
-                        <td >{{ $n++ }}</td>
-                        <td>{{ $File->Document_Name }}</td>
-                        <td>
-                            <a class="btn btn-success btn-sm "
-                                onclick="confirm('Are You Sure!? You Want to Download this file?')||event.stopImmediatePropagation()" href='{{ url('download_docs') }}/{{$File->Id}}'>Download</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-info btn-sm  "
-                                onclick="confirm('Are You Sure!? You Want to Delete this file?')||event.stopImmediatePropagation()"  wire:click.prevent="Delete_Doc('{{$File->Id}}')" >Delete</a>
-                        </td>
+        @endif {{-- End of Table --}}
+    </div>
+{{-- ------------------------------------------------------------------------------------------------------}}
 
-                    </tr>
+</div> {{--End of Livewire   --}}
 
-                    @endforeach
-                </tbody>
-            </table>
-            <span>
-            </span>
-        </div>
-    @endif
-</div>

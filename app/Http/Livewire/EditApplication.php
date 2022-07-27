@@ -22,13 +22,13 @@ class EditApplication extends Component
     protected $paginationTheme = 'bootstrap';
     public $Client_Id,$Id,$App_Id;
     public $Name;
-    public $Dob;
+    public $Dob,$Applicant_Image,$Profile_Update,$main_service=[],$sub_service=[],$status_list=[];
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
     public $Total_Amount;
     public $Amount_Paid;
     public $Balance;
-    public $PaymentMode, $PaymentModes;
+    public $PaymentMode, $PaymentModes,$payment_mode=[],$Client_Type,$Confirmation,$Client_Image,$Old_Profile_Image;
     public $Received_Date,$Applied_Date,$Updated_Date ;
     public $SubServices,$SubService ;
     public $MainServices,$MainService ;

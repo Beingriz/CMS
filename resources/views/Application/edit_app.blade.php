@@ -1,48 +1,11 @@
-@extends('Layouts.main')
-@section('content')
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.admin_master')
+@section('admin');
 
-<head>
-</head>
-
-<body>
-    <div class="container-fluid top">
-        <section class="work-area">
-            <div class="sub-nav-menu">
-                <ul>
-                    <li><a href="{{ url('') }}">Dashboard</a></li><span class="span">|</span>
-                </ul>
-            </div>
-            <div class="pages">
-                <div class="layout">
-                    <!-- Left Menu Section -->
-                @include('Layouts.left_menu')
-                <!-- Middle Container Section -->
-                <div class="middle-container">
-
-                    @livewire('edit-application', ['Id' => $Id])
-
-                </div>
-
-                <!-- Right Menu for Insight Data -->
-                @include('Layouts.right_insight')
-                </div>
-                </div>
-        </section>
+<div class="page-content" style="margin-top: -45px">
+    <div class="container=fluid">
+        @livewire('edit-application', ['Id' => $Id])
     </div>
-</body>
-
-
-</html>
-
-
-
-
-
-
-
-
-
+</div>
 
 @endsection
+

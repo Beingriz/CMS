@@ -111,7 +111,7 @@ class ApplicationController extends Controller
     public function Edit($Id)
     {
 
-        return view('Application\edit_app',['application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'sl_no'=>$this->sl_no, 'n'=>$this->n,'daily_applications'=>$this->daily_applications,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'Id'=>$Id]);
+        return view('Application.edit_app',['application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'sl_no'=>$this->sl_no, 'n'=>$this->n,'daily_applications'=>$this->daily_applications,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'Id'=>$Id]);
     }
     public function Download_Ack($Id)
     {
