@@ -28,6 +28,32 @@ $(function() {
     });
 
 });
+// Download
+$(function() {
+    $(document).on('click', '#download', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "you want to download this?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Download'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = link
+
+            }
+        })
+
+
+    });
+
+});
 
 // Update
 $(function() {

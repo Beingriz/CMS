@@ -19,6 +19,8 @@ class CreateDocumentFilesTable extends Migration
             $table->string('Client_Id', 200);
             $table->string('Document_Name', 200);
             $table->string('Document_Path', 2000)->default('Not Available');
+            $table->timestamps();
+
         });
     }
 

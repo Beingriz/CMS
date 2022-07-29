@@ -315,34 +315,34 @@
                                 <div>
                                 <form>
                                     <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label>Service</label>
-                                            <select class="form-select"  wire:model.lazy="MainService">
-                                                <option value="{{$Application}}" selected>{{$Application}}</option>
-                                                @foreach($MainServices as $Service)
-                                                <option value="{{ $Service->Id }}">
-                                                    {{ $Service->Name}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('MainService') <span class="text-danger">{{ $message }}</span> @enderror
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label>Service</label>
+                                                <select class="form-select"  wire:model.lazy="MainService">
+                                                    <option value="{{$Application}}" selected>{{$Application}}</option>
+                                                    @foreach($MainServices as $Service)
+                                                    <option value="{{ $Service->Id }}">
+                                                        {{ $Service->Name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('MainService') <span class="text-danger">{{ $message }}</span> @enderror
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label>Service Category</label>
-                                            <select class="form-select" wire:model.lazy="SubService">
-                                                <option value="{{$Application_Type}}" selected>{{$Application_Type}}</option>
-                                                @foreach($SubServices as $service)
-                                                <option value="{{ $service->Name }}">{{ $service->Name}}</option>
-                                                @endforeach
-                                            </select>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label>Service Category</label>
+                                                <select class="form-select" wire:model.lazy="SubService">
+                                                    <option value="{{$Application_Type}}" selected>{{$Application_Type}}</option>
+                                                    @foreach($SubServices as $service)
+                                                    <option value="{{ $service->Name }}">{{ $service->Name}}</option>
+                                                    @endforeach
+                                                </select>
 
-                                            @error('SubSelected') <span class="text-danger">{{ $message }}</span> @enderror
+                                                @error('SubSelected') <span class="text-danger">{{ $message }}</span> @enderror
 
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6">
@@ -391,8 +391,45 @@
                                         </div>
                                         @endif
                                     </div>
+                                    <div class="row">
+                                        <h5 class="font-size-14 mb-3">Upload Document Section</h5>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <p class="text-muted">Do you want to Upload Files?</p>
+                                                <input type="checkbox" id="document-upload" switch="none" wire:model.lazy="Doc_Yes">
+                                                <label for="document-upload" data-on-label="Yes" data-off-label="No"></label>
+
+                                            </div>
+                                    </div>
+                                    @if ($Doc_Yes == 1)
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="uploadfile">Upload File </label>
+                                                <a href="#" class="btn btn-sm btn-success font-size-15 float-end" wire:click.prevent="AddNewText({{$i}})" name="add" ><i class="ri-folder-add-fill"></i></a>
+                                                <input type="text" class="form-control"  name="Doc_Name" id="Doc_Name" wire:model.lazy="Doc_Name" placeholder="Document Name">
+                                                <input type="file" class="form-control"  name="Document_Name" id="uploadfile" wire:model.lazy="Document_Name" accept="image/jpeg, image/png, application/pdf">
+                                                @error('Doc_Name') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @foreach ($NewTextBox as $item => $value)
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="uploadfile">Upload File:{{$n++}} </label>
+                                                <!-- <i class="mdi mdi-delete-alert-outline"></i> -->
+                                                <a href="#" class="btn btn-sm btn-danger font-size-15 float-end" wire:click.prevent="Remove('{{$value}}')" name="add"><i class="mdi mdi-delete-alert-outline"></i></a>
+                                                <input type="text" class="form-control" name="Doc_Names" placeholder="Document Name"id="Doc_Names" wire:model.lazy="Doc_Names.{{$value}}" required>
+                                                    <input type="file" class="form-control"  name="Document_Files"  id="Document_Files" wire:model="Document_Files.{{$value}}"  accept="image/jpeg, image/png, application/pdf">
+                                                    @error('Document_Files') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                        @endforeach
+                                    @endif
+                                    </div>
                                 </form>
-                                </div>
                             </div>
                             <div class="tab-pane" id="progress-payment-detail" wire:ignore.self>
                                 <div>
@@ -442,17 +479,17 @@
                                             <div class="col-lg-2">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="Balance">Balance</label>
-                                                    <input type="number" name="Balance" class="form-control" wire:model="Bal" id="Balance" readonly>
+                                                    <input type="number" name="Balance" class="form-control" wire:model="Balance" id="Balance" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label>Payment Mode</label>
-                                                    <select class="form-select" wire:model="PaymentMode">
+                                                    <select class="form-select" wire:model.lazy="PaymentMode">
                                                         <option selected="">Select Payment Mode</option>
-                                                        @foreach ($payment_mode as $payment_mode)
-                                                        <option value="{{ $payment_mode ->Payment_Mode }}">
-                                                            {{ $payment_mode ->Payment_Mode }}</option>
+                                                        @foreach ($payment_mode as $payment)
+                                                        <option value="{{ $payment->Payment_Mode }}">
+                                                            {{ $payment->Payment_Mode }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('PaymentMode') <span class="text-danger">{{ $message }}</span> @enderror
@@ -663,7 +700,7 @@
                                     <div class="col-xl-12">
 
                                         <div class="text-center">
-                                            <a href="#" wire:submit.prevent="Update('{{$Id}}')" class="btn btn-success waves-effect waves-light"><i class="ri-check-line align-middle me-2"></i> Update </a>
+                                            <a href="" wire:click.prevent="Update('{{$Id}}')" class="btn btn-success waves-effect waves-light"><i class="ri-check-line align-middle me-2"></i> Update </a>
                                             <a href="{{route('new_application')}}" class="btn btn-light waves-effect waves-light">Cancel</a>
 
                                         </div>
@@ -718,7 +755,7 @@
                                         <td>{{ $File->Document_Name }}</td>
                                         <td>
                                             <a class="btn btn-success btn-sm "
-                                                onclick="confirm('Are You Sure!? You Want to Download this file?')||event.stopImmediatePropagation()" href='{{ url('download_docs') }}/{{$File->Id}}'>Download</a>
+                                                href="" wire:click.prevent="DownloadDocuments('{{$File->Id}}')">Download</a>
                                         </td>
                                         <td>
                                             <a class="btn btn-info btn-sm  "

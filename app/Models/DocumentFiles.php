@@ -9,5 +9,4 @@ class DocumentFiles extends Model
 {
     use HasFactory;
     public $table = 'document_files';
-    public $timestamps = false;
 }

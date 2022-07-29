@@ -163,21 +163,22 @@ public function Download_Doc($Id)
 }
 public function Download_Files($Doc_Id)
 {
-
+    dd($Doc_Id);
     $fetch = DocumentFiles::wherekey($Doc_Id)->get();
     foreach ($fetch as $key)
     {
         $file = $key['Document_Path'];
         $Id = $key['App_Id'];
     }
-    if (Storage::exists($file))
+    if (Storage::exists('storage/app/public/'.$file))
     {
+        dd($file);
         $file = 'storage/app/'.$file;
         return response()->download($file);
     }
     else
     {
-        return redirect('/edit_app/'.$Id)->with('Error','Document File Not Available!');
+        return redirect()->route('edit_applicaiton',$Id)->with('Error','Document Filedsasdasdsada');
 
     }
 }
@@ -533,16 +534,16 @@ public function Update(Request $request, $Id)
         }
         return view('Application\recycle_bin',['recycle_data'=>$recycle_data, 'count'=>$sl_no, 'sl_no'=>$sl_no, 'n'=>$n, 'total'=>$total]);
     }
- public function PrintAck($id)
- {
-    $Print_data = ['Name'=>'Md Rizwan', 'id'=>$id];
-    $pdf = PDF::loadview('Application\print_ack',$Print_data)->download($id.'.pdf');
-    $type = '.pdf';
-    return response()
-            ->view('Application\print_ack', $Print_data)
-            ->header('Content-Type', $type);
+//  public function PrintAck($id)
+//  {
+//     $Print_data = ['Name'=>'Md Rizwan', 'id'=>$id];
+//     $pdf = PDF::loadview('Application\print_ack',$Print_data)->download($id.'.pdf');
+//     $type = '.pdf';
+//     return response()
+//             ->view('Application\print_ack', $Print_data)
+//             ->header('Content-Type', $type);
 
- }
+//  }
  public function Print()
  {
      return view('Application\print_ack');
