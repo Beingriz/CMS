@@ -43,7 +43,7 @@ class SaveApplicationForm extends Component
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
     public $main_service,$Applicant_Image,$lastRecTime;
-    public $sub_service = [];
+    public $sub_service = [],$old_Applicant_Image,$clear_button='Disable';
     public $Mobile_No = NULL;
     public $user_type = NULL;
     public $Checked = [];
@@ -61,6 +61,7 @@ class SaveApplicationForm extends Component
          'Name' =>'required',
          'Gender' =>'required',
          'Dob' =>'required',
+         'Client_Type' =>'required',
          'MainSelected' =>'required',
          'SubSelected' =>'required',
          'Mobile_No' =>'required | Min:10 | Max:10 ',
@@ -71,6 +72,7 @@ class SaveApplicationForm extends Component
      protected $messages = [
         'name.required' => 'Applicant Name Cannot be Empty',
         'Gender.required' => 'Please Select Gender',
+        'Client_Type.required' => 'Please Select Clinet',
         'dob.required' => 'Please Select Date of Birth',
         'MainSelected.required' => 'Please Select Application',
         'SubSelected.required' => 'Please Select Sub Category',
@@ -663,13 +665,43 @@ class SaveApplicationForm extends Component
    }
    public function LatestUpdate()
    {
-        // $latest_app = Application::orderBy('created_at','DESC')->first()->get();
-        // foreach($latest_app as $key)
-        // {
-        //     $this->lastRecTime = $key['created_at'];
-        // }
-        $this->lastRecTime = Application::latest()->first();
-
+        $latest_app = Application::latest()->first();
+        dd($latest_app);
+        $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+   }
+   public function Autofill()
+   {
+        $this->clear_button = 'Enable';
+        $Mobile_No = NULL;
+        $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
+        if(sizeof($Mobile_No)==1)
+        {
+            $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
+            if(sizeof($Mobile_No)==1)
+            {
+                foreach($Mobile_No as $key)
+                    {
+                        $this->Dob = $key['DOB'];
+                        $this->C_Id = $key['Id'];
+                        $this->old_Applicant_Image = $key['Profile_Image'];
+                        $this->Name = $key['Name'];
+                        $this->RelativeName = $key['Relative_Name'];
+                        $this->Gender = $key['Gender'];
+                        $this->Mobile_No = $key['Mobile_No'];
+                        $this->Client_Type = $key['Client_Type'];
+                    }
+                }
+            }
+   }
+   public function Clear()
+   {
+        $this->Dob = NULL;
+        $this->old_Applicant_Image = 'Not Available';
+        $this->Name = NULL;
+        $this->RelativeName = NULL;
+        $this->Gender = NULL;
+        $this->Client_Type = NULL;
+        $this->clear_button = 'Disable';
    }
     public function render()
     {

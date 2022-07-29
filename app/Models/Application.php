@@ -9,8 +9,7 @@ class Application extends Model
 {
     use HasFactory;
     public $table="digital_cyber_db";
-    public $timestamps= false;
-
+    protected $guarded;
     public function scopeFilter($query, $key)
     {
         $key = "%$key%";

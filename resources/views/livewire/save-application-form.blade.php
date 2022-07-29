@@ -55,8 +55,20 @@
     <div class="row"> {{-- Form,Profile,Records Panel Row --}}
         <div class="col-lg-7">
             <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between">
+                    <h2 class="card-title mb-4">Application ID:  {{$App_Id}}</h2>
+                    @if ($Open ==1)
+                    <h3 class="card-title mb-4">Client : {{$C_Name}}</h3>
+                    @endif
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Application ID:  {{$App_Id}}</h4>
+                    @if ($Open==1)
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <a href="{{route('new_application')}}"><i class="ri-refresh-line"></i> Refresh
+                        </div></a>
+                    @endif
+
+
 
                     <div id="progrss-wizard" class="twitter-bs-wizard">
                         <ul class="twitter-bs-wizard-nav nav-justified nav nav-pills">
@@ -99,6 +111,17 @@
                                                 @error('Mobile_No') <span class="text-danger">{{ $message }}</span> @enderror
                                                 @if(!is_null($user_type))
                                                 <span class="text-primary">{{$user_type}}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                @if($Open==1)
+                                                <span><a href="#" class="btn btn-info btn-sm btn-rounded" wire:click="Autofill()">Autofill Details</a></span>
+                                                @endif
+                                                @if ($clear_button =='Enable')
+                                                <span><a href="#" class="btn btn-warning btn-sm btn-rounded" wire:click="Clear()">Clear Fields</a></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -169,6 +192,10 @@
                                                         <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
                                                         @if (!is_null($Applicant_Image))
                                                         <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
+                                                        @elseif((!is_Null($old_Applicant_Image)) && ($old_Applicant_Image=='Not Available'))
+                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="Applicant_Image" />
+                                                        @elseif(!is_Null($old_Applicant_Image))
+                                                        <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image) }}" alt="Applicant_Image" />
                                                         @else
                                                         <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
                                                         @endif
@@ -200,8 +227,10 @@
                                                         <div wire:loading wire:target="Client_Image">Uploading Profile Image...</div>
                                                         @if (!is_null($Client_Image))
                                                         <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
+                                                        @elseif((!is_Null($Old_Profile_Image)) && ($Old_Profile_Image == 'Not Available'))
+                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}} alt="Client_Image" />
                                                         @elseif(!is_Null($Old_Profile_Image))
-                                                        <img class="rounded avatar-md" src="../{{$Old_Profile_Image }}" alt="Client_Image" />
+                                                        <img class="rounded avatar-md" src="{{asset('storage/'.$Old_Profile_Image) }}" alt="Client_Image" />
                                                         @else
                                                         <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
                                                         @endif
@@ -733,7 +762,9 @@
                                         <td>{{$key->Received_Date}}</td>
                                         <td>{{$key->Name}}</td>
                                         <td>{{$key->Application , $key->Application_Type}}</td>
-                                        <td><a href="#" class="btn btn-sm btn-primary font-size-15" id="open"><i class="mdi mdi-book-open-page-variant" ></i></a></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary font-size-15" id="open"><i class="mdi mdi-book-open-page-variant" ></i></a>
+                                        </td>
 
                                     </tr>
                                     @endforeach
@@ -762,6 +793,7 @@
 
                 <div class="col-lg-7">
                     <div class="card">
+
                         <h5 class="card-header">Application List</h5>
                         <div class="card-body">
                             <h5 class="card-title">
@@ -884,7 +916,7 @@
                             </div>
                             </div>
 
-                            <p class="card-text"><small class="text-muted">Last Entry at {{ \Carbon\Carbon::parse($lastRecTime['created_at'])->diffForHumans() }}   </small></p>
+                            <p class="card-text"><small class="text-muted">Last Entry at {{$lastRecTime  }}   </small></p>
 
 
                         </div>
