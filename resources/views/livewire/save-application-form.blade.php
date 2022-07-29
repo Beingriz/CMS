@@ -17,12 +17,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                @if (session('Error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{session('Error')}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+
 
 
                 <div class="page-title-right">
@@ -107,7 +102,7 @@
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                             <label class="form-label" for="progress-basicpill-phoneno-input">Phone No</label>
-                                                <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" onkeydown="mobile(this)">
+                                                <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.600ms="Mobile_No">
                                                 @error('Mobile_No') <span class="text-danger">{{ $message }}</span> @enderror
                                                 @if(!is_null($user_type))
                                                 <span class="text-primary">{{$user_type}}</span>
@@ -618,12 +613,14 @@
         @if($Profile_Show == 1)
             <div class="col-lg-5">
                 <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"><strong class="text-info">{{$C_Name}}</strong>  Profile </h4>
+                    </div>
                     <div class="row no-gutters align-items-center">
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title"><strong class="text-info">{{$C_Name}}</strong>  Profile </h4>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-                                <p class="card-text"><small class="text-muted">Profile Last updated 3 mins ago</small></p>
+                                <p class="card-text">{{$C_Name}} Registered {{$profileCreated}}</p>
+                                <p class="card-text"><small class="text-muted">Profile Last updated {{$lastProfUpdate}}</small></p>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -727,12 +724,15 @@
         @if($Records_Show == 1)
             <div class="col-lg-5">
                 <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Previous {{$AppliedServices->total()}}  Records for {{$C_Mob}} of {{$C_Name}}</h5>
+                    </div>
                 <div class="row no-gutters align-items-center">
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">Previous {{$AppliedServices->total()}}  Records </h5>
+
                                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-                                <p class="card-text"><small class="text-muted">Profile Last updated 3 mins ago</small></p>
+                                <p class="card-text"><small class="text-muted">Last Application Applied  {{$lastMobRecTime}}</small></p>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -791,7 +791,7 @@
     <div class="row"> {{-- Daily Transaction Display Panel --}}
         @if (count($daily_applications)>0)
 
-                <div class="col-lg-7">
+                <div class="col-lg-12">
                     <div class="card">
 
                         <h5 class="card-header">Application List</h5>
@@ -807,7 +807,12 @@
                                     {{$Daily_Income}}
                                 @endif
                             </h5>
-
+                            @if (session('Error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{session('Error')}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                 <thead class="table-light">

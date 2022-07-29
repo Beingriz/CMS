@@ -47,7 +47,7 @@ class SaveApplicationForm extends Component
     public $Mobile_No = NULL;
     public $user_type = NULL;
     public $Checked = [];
-    public $paginate = 10;
+    public $paginate = 05;
     public $filterby ,$Bal=0;
     public $collection;
     public $Select_Date,$Daily_Income=0;
@@ -665,9 +665,30 @@ class SaveApplicationForm extends Component
    }
    public function LatestUpdate()
    {
-        $latest_app = Application::latest()->first();
-        dd($latest_app);
+        $latest_app = Application::latest('created_at')->first();
         $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+
+        $applied = Application::Where('Mobile_No',$this->Mobile_No)->get();
+        if(count($applied)>0)
+        {
+            if(!empty($this->Mobile_No))
+            {
+                $latest_mob_app = Application::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
+                $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
+            }
+        }
+        $profile = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
+        if(count($profile)>0)
+        {
+            if(!empty($this->Mobile_No))
+            {
+                $profile_created = ClientRegister::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
+                $latest_profile_update = ClientRegister::where('Mobile_No',$this->Mobile_No)->latest('updated_at')->first();
+                $this->profileCreated =  Carbon::parse($profile_created['created_at'])->diffForHumans();
+                $this->lastProfUpdate =  Carbon::parse($latest_profile_update['updated_at'])->diffForHumans();
+            }
+        }
+
    }
    public function Autofill()
    {
@@ -703,6 +724,11 @@ class SaveApplicationForm extends Component
         $this->Client_Type = NULL;
         $this->clear_button = 'Disable';
    }
+   public function ResetDefaults()
+   {
+        $this->Open = 0;
+        $this->Clear();
+   }
     public function render()
     {
         $this->LatestUpdate();
@@ -717,7 +743,7 @@ class SaveApplicationForm extends Component
 
             $Mobile_No = NULL;
             $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
-            if(sizeof($Mobile_No)==1)
+            if(sizeof($Mobile_No)==1) //for Registered Clients
             {
                 $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
                 if(sizeof($Mobile_No)==1)
@@ -738,32 +764,29 @@ class SaveApplicationForm extends Component
                     }
                 $AppliedServices = Application::Where('Mobile_No',$this->Mobile_No)->get();
                 $count = count($AppliedServices);
-
                 $this->Open = 1;
-                // $this->Client_Type = 'Old Client';
-                // $this->Name = $this->C_Name;
-                // $this->RelativeName = $this->C_RName;
-                // $this->Gender = $this->C_Gender;
-                // $this->Dob = $this->C_Dob;
                 $this->user_type = "Registered User!! Availed ".$count." Services";
             }
-            else
+            else // for Unregistered clients
             {
                 $Mobile_No = Application::Where('Mobile_No',$this->Mobile_No)->get();
                 if(sizeof($Mobile_No)>0)
                 {
-
                     $count = count($Mobile_No);
                     $this->user_type = "Unregistered User!! Availed ".$count."Services ";
-
                 }
                 else
                 {
+                    $this->Open = 0;
+                    $this->Profile_Show = 0;
+                    $this->Records_Show = 0;
                     $this->user_type = "New Client";
                 }
             }
-            if(!is_null($this->Select_Date))
+
+            if(!is_null($this->Select_Date)) //Report on form page for Searh by Date
             {
+                $date = Carbon::parse($this->Select_Date)->format('d-M-Y');
                 $daily_applications = Application::Where('Received_Date',$this->Select_Date)->filter($this->filterby)->paginate($this->paginate);
                 $this->Daily_Income = 0;
                 foreach($daily_applications as $key)
@@ -772,7 +795,7 @@ class SaveApplicationForm extends Component
                 }
                 if(sizeof($daily_applications)==0)
                 {
-                    session()->flash('Error','Sorry!! No Record Available for '.$this->Select_Date);
+                    session()->flash('Error','Sorry!! No Record Available for '.$date);
                     $daily_applications = Application::Where('Received_Date',$this->today)->filter($this->filterby)->paginate($this->paginate);
                 }
             }
@@ -780,6 +803,8 @@ class SaveApplicationForm extends Component
             {
                 $daily_applications = Application::Where('Received_Date',$this->today)->filter($this->filterby)->paginate($this->paginate);
             }
+
+
             $this->ApplicationType = SubServices::where('Service_Id',$this->ApplicationId)->get();
             $service = Service_List::Where('Id',$this->MainSelected)->get();
             foreach($service as $name)
@@ -787,10 +812,14 @@ class SaveApplicationForm extends Component
                 $service = $name['Name'];
                 $this->ServiceName = $service;
             }
-            $this->Bal = ($this->Total_Amount - $this->Amount_Paid);
+            $this->Bal = (intval($this->Total_Amount) - intval($this->Amount_Paid));
             $AppliedServices = Application::latest()
-                                            ->Where('Mobile_No',$this->Mobile_No)->paginate(5);
-
+                                            ->Where('Mobile_No',$this->Mobile_No)->paginate(8);
+            $this->status_list = DB::table('status')
+                                ->Where('Relation',$this->ServiceName)
+                                ->orWhere('Relation','General')
+                                ->orderBy('Orderby', 'asc')
+                                ->get();
 
         return view('livewire.save-application-form',[
             'today'=>$this->today,'payment_mode'=>$this->payment_mode,
