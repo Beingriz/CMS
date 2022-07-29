@@ -233,7 +233,7 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label>Service Category</label>
-                                            <select class="form-select" wire:model.lazy="SubSelected">
+                                            <select class="form-select" wire:model="SubSelected" wire:click="UnitPrice()">
                                                 <option selected="">Select Service</option>
                                                 @foreach ($sub_service as $service)
                                                     <option value="{{ $service->Name }} ">
@@ -309,7 +309,7 @@
                                                     <select class="form-select" wire:model.lazy="Status">
                                                         <option selected="">Select Status</option>
                                                         @foreach ($status_list as $status)
-                                                            <option value="{{ $status->Status }} ">
+                                                            <option value="{{ $status->Status }}">
                                                                 {{ $status->Status }}</option>
                                                             @endforeach
                                                     </select>
@@ -324,6 +324,11 @@
                                                     <label class="form-label" for="Total_Amount">Total Amount</label>
                                                     <input type="number"  name="Total_Amount" class="form-control" id="Total_Amount" wire:model.lazy="Total_Amount">
                                                     @error('Total_Amount') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                    @if ($Service_Fee>=1)
+                                                    <p class="text_muted">Service Fee {{$Service_Fee}}</p>
+                                                    @endif
+
 
                                                 </div>
                                             </div>
@@ -878,7 +883,10 @@
                                 </div>
                             </div>
                             </div>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+
+                            <p class="card-text"><small class="text-muted">Last Entry at {{ \Carbon\Carbon::parse($lastRecTime['created_at'])->diffForHumans() }}   </small></p>
+
+
                         </div>
                     </div>
                 </div>

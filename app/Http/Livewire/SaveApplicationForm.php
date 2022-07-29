@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Carbon;
 
 
 class SaveApplicationForm extends Component
@@ -34,13 +35,14 @@ class SaveApplicationForm extends Component
     public $Dob;
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
-    public $Total_Amount,$Amount_Paid,$Balance,$ServiceName, $Profile_Show=0,$Profile_Update,$Records_Show=0;
-    public $PaymentMode,$Gender,$RelativeName;
+    public $Total_Amount = 0 ,$Amount_Paid = 0 ,$Balance = 0;
+    public $ServiceName, $Profile_Show=0,$Profile_Update,$Records_Show=0;
+    public $PaymentMode='Cash',$Gender,$RelativeName,$Service_Fee=NULL;
     public $Received_Date,$Mobile_Num,$Confirmation;
-    public $Ack_File,$Doc_File,$Payment_Receipt=NULL,$Status , $Client_Type;
+    public $Ack_File,$Doc_File,$Payment_Receipt=NULL,$Status='Received', $Client_Type;
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
-    public $main_service,$Applicant_Image;
+    public $main_service,$Applicant_Image,$lastRecTime;
     public $sub_service = [];
     public $Mobile_No = NULL;
     public $user_type = NULL;
@@ -61,7 +63,7 @@ class SaveApplicationForm extends Component
          'Dob' =>'required',
          'MainSelected' =>'required',
          'SubSelected' =>'required',
-         'Mobile_No' =>'required | Min:10',
+         'Mobile_No' =>'required | Min:10 | Max:10 ',
          'Total_Amount' =>'required',
          'Amount_Paid' =>'required',
          'PaymentMode' =>'required',
@@ -647,10 +649,33 @@ class SaveApplicationForm extends Component
        }
    }
 
+   public function UnitPrice()
+   {
+        $main_id = $this->MainSelected;
+        $serv_name = $this->SubSelected;
+        $unitprice = SubServices::where([['Service_Id','=',$main_id],['Name','=',$serv_name]])->get();
+        foreach($unitprice as $key)
+        {
+            $this->Total_Amount = $key['Unit_Price'];
+            $this->Service_Fee = $key['Service_Fee'];
+        }
 
+   }
+   public function LatestUpdate()
+   {
+        // $latest_app = Application::orderBy('created_at','DESC')->first()->get();
+        // foreach($latest_app as $key)
+        // {
+        //     $this->lastRecTime = $key['created_at'];
+        // }
+        $this->lastRecTime = Application::latest()->first();
+
+   }
     public function render()
     {
+        $this->LatestUpdate();
         $this->Capitalize();
+
 
         $this->main_service = MainServices::orderby('Name')->get();
             if(!empty($this->MainSelected))
@@ -740,7 +765,7 @@ class SaveApplicationForm extends Component
             'daily_total'=>$this->daily_total,'daily_applications'=>$daily_applications,
             'main_service'=>$this->main_service, 'sl_no'=>$this->sl_no, 'n'=>$this->n,
             'sub_service'=>$this->sub_service,'Application'=>$this->Application,
-            'user_type'=>$this->user_type,'status_list'=>$this->status_list, 'AppliedServices'=>$AppliedServices,
+            'user_type'=>$this->user_type,'status_list'=>$this->status_list, 'AppliedServices'=>$AppliedServices,'lastRecTime'=>$this->lastRecTime
         ]);
     }
 }
