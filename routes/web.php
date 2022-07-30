@@ -45,6 +45,7 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('new/application', 'index')->middleware(['auth'])->name('new_application');
     Route::get('edit/application/{id}', 'Edit')->middleware(['auth'])->name('edit_application');
     Route::get('download/docs/{id}', 'Download_Files')->middleware(['auth'])->name('download_documents');
+    Route::get('delete/docs/{id}', 'Delete_File')->middleware(['auth'])->name('delete_document');
 
 
 });

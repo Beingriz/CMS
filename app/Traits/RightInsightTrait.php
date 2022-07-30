@@ -24,6 +24,7 @@ trait RightInsightTrait
 
     private $daily_applications;
     private $payment_mode;
+    private $ForceDelete='Disable';
     private $application_type;
     private $status_list;
     private $applications_served;

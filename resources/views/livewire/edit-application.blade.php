@@ -149,10 +149,11 @@
     </div> {{-- End of Row --}}
 {{-- -------------------------------------------------------------------------------------------------------}}
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <div class="card">
                 <div class="card-header d-sm-flex align-items-center justify-content-between">
                     <h3 class="card-title mb-4">Application ID:  {{$Client_Id}}</h3>
+                    <h4 class="card-title mb-6">Update Section</h4>
                     <h3 class="card-title mb-4">Mr / Mrs :  {{$Name}}</h3>
                 </div>
                 <div class="card-body">
@@ -243,72 +244,27 @@
                                     </div>
 
                                     <div class="row">
-
-                                        <div class="col-lg-6">
-                                                <div class="mb-3">
-                                                    <label>Client Type</label>
-                                                    <select class="form-select" wire:model.lazy="Client_Type">
-                                                        <option selected="">Select Client Type</option>
-                                                        <option value="New Client">New Client</option>
-                                                        <option value="Old Client">Old Client</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                                <div class="col-lg-3">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="Applicant_Image">Applicant Image</label>
-                                                        <input type="file" class="form-control" id="Applicant_Image" wire:model="Applicant_Image" >
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="Applicant_Image_View">Photo</label>
-                                                        <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
-                                                        @if (!is_null($Applicant_Image))
-                                                        <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
-                                                        @else
-                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
-                                                        @endif
-                                                    </div>
-                                                </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <h5 class="font-size-14 mb-3">Profile Update</h5>
-                                            <div class="d-flex flex-wrap gap-2">
-                                                <p class="text-muted">Do you want to update Profile Image?</p>
-                                                <input type="checkbox" id="switch3" switch="none" wire:model.lazy="Profile_Update">
-                                                <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
-
+                                        <div class="col-lg-3">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="Applicant_Image">Applicant Image</label>
+                                                <input type="file" class="form-control" id="Applicant_Image" wire:model="Applicant_Image" accept="image/jpeg, image/png">
                                             </div>
                                         </div>
-                                        @if ($Profile_Update == 1)
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="progress-basicpill-profileimage-input">Profile Image</label>
-                                                        <input type="file" class="form-control" id="progress-basicpill-profileimage-input" wire:model="Client_Image" >
+                                        <div class="col-lg-3">
+                                            <div class="mb-3">
 
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="progress-basicpill-profileimage-input">Profile View</label>
-                                                        <div wire:loading wire:target="Client_Image">Uploading Profile Image...</div>
-                                                        @if (!is_null($Client_Image))
-                                                        <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
-                                                        @elseif(!is_Null($Profile_Image))
-                                                        <img class="rounded avatar-md" src="../{{$Profile_Image }}" alt="Client_Image" />
-                                                        @else
-                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
-                                                        @endif
-
-                                                    </div>
-                                                </div>
+                                                <label class="form-label" for="Applicant_Image_View">Photo</label>
+                                                <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
+                                                @if (!is_null($Applicant_Image))
+                                                <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
+                                                @elseif(!empty($old_Applicant_Image))
+                                                <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="no_image" />
+                                                @else
+                                                <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                                                @endif
                                             </div>
-                                        @endif
-
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                             <div class="tab-pane" id="progress-service-details" wire:ignore.self>
@@ -533,12 +489,9 @@
                                             <li class="list-group-item"> Name</li>
                                             <li class="list-group-item"> Mobile No</li>
                                             <li class="list-group-item"> DOB</li>
-                                            <li class="list-group-item"> Client Type</li>
-                                            <li class="list-group-item"> Profile</li>
+                                            <li class="list-group-item"> Photo</li>
 
                                         </ul>
-
-
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
                                                 @if(empty($Name))
@@ -564,20 +517,14 @@
 
                                                 @endif
                                             </li>
-                                            <li class="list-group-item">
-                                                @if(empty($Name))
-                                                <strong class="text-danger">Field is Empty</strong></li>
-                                                @else
-                                                <strong class="text-primary">{{$Client_Type}}</strong>
 
-                                                @endif
-                                            </li>
                                             <li class="list-group-item">
-                                                @if(empty($Client_Image))
-                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @if(!empty($old_Applicant_Image))
+                                                    <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage" />
+                                                @elseif(!empty($Applicant_Image))
+                                                    <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="ApplicantImage" />
                                                 @else
-                                                <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="Client_Image" />
-
+                                                    <strong class="text-danger">Field is Empty</strong></li>
                                                 @endif
                                             </li>
                                         </ul>
@@ -594,19 +541,21 @@
 
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
-                                                @if(empty($MainSelected))
-                                                <strong class="text-danger">Field is Empty</strong></li>
-                                                @else
+                                                @if(!empty($MainSelected))
                                                 <strong class="text-primary">{{$ServiceName}}</strong>
-
+                                                @elseif(!empty($Application))
+                                                <strong class="text-primary">{{$Application}}</strong>
+                                                @else
+                                                <strong class="text-danger">Field is Empty</strong></li>
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
-                                                @if(empty($SubSelected))
-                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @if(!empty($SubSelected))
+                                                <strong class="text-primary">{{$SubSelected}}</strong></li>
+                                                @elseif(!empty($Application_Type))
+                                                <strong class="text-primary">{{$Application_Type}}</strong>
                                                 @else
-                                                <strong class="text-primary">{{$SubSelected}}</strong>
-
+                                                <strong class="text-danger">Field is Empty</strong></li>
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
@@ -668,10 +617,10 @@
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
-                                                @if(empty($Bal))
+                                                @if(empty($Balance))
                                                 <strong class="text-danger">Field is Empty</strong></li>
                                                 @else
-                                                <strong class="text-primary">{{$Bal}}</strong>
+                                                <strong class="text-primary">{{$Balance}}</strong>
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
@@ -718,26 +667,13 @@
                 </div>
             </div>
         </div>
-    </div>
+
 {{-- ------------------------------------------------------------------------------------------------------}}
-    <div class="row">
         @if (count($Doc_Files)>0) {{--Document List Table  --}}
-            <div class="col-lg-7">
+            <div class="col-lg-5">
                 <div class="card">
                     <h5 class="card-header">Available Documents </h5>
                     <div class="card-body">
-                        <h5 class="card-title">
-                            Total Credit as on
-                            @if (empty($Select_Date)) {{ \Carbon\Carbon::parse($today)->format('d-M-Y'); }} is &#x20B9 {{$Daily_Income}} @endif
-                            @if (!empty($Select_Date))
-                                {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y'); }}
-                                <strong>
-                                    {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
-                                </strong>
-                                {{$Daily_Income}}
-                            @endif
-                        </h5>
-
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                             <thead class="table-light">
@@ -754,12 +690,15 @@
                                         <td >{{ $n++ }}</td>
                                         <td>{{ $File->Document_Name }}</td>
                                         <td>
-                                            <a class="btn btn-success btn-sm "
-                                                href="" wire:click.prevent="DownloadDocuments('{{$File->Id}}')">Download</a>
+                                            <a class="btn btn-primary font-size-20" id="download"
+                                                href="{{route('download_documents',$File->Id)}}"><i class=" ri-file-download-line"></i></a>
                                         </td>
                                         <td>
-                                            <a class="btn btn-info btn-sm  "
-                                                onclick="confirm('Are You Sure!? You Want to Delete this file?')||event.stopImmediatePropagation()"  wire:click.prevent="Delete_Doc('{{$File->Id}}')" >Delete</a>
+                                            <a class="btn btn-danger font-size-20" id="deletefile"
+                                                href="{{route('delete_document',$File->Id)}}"><i class=" ri-delete-bin-6-line"></i></a>
+                                                @if ($FDelete == 'Enable')
+                                                    <a href="">ForceDelete</a>
+                                                @endif
                                         </td>
 
                                     </tr>

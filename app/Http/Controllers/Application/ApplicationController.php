@@ -111,7 +111,7 @@ class ApplicationController extends Controller
     public function Edit($Id)
     {
 
-        return view('Application.edit_app',['application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'sl_no'=>$this->sl_no, 'n'=>$this->n,'daily_applications'=>$this->daily_applications,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'Id'=>$Id]);
+        return view('Application.edit_app',['application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'sl_no'=>$this->sl_no, 'n'=>$this->n,'daily_applications'=>$this->daily_applications,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'Id'=>$Id,'ForceDelete'=>$this->ForceDelete]);
     }
     public function Download_Ack($Id)
     {
@@ -185,6 +185,31 @@ class ApplicationController extends Controller
         else
         {
             return redirect('/open_app/'.$Id)->with('Error','Payment File Not Available!');
+
+        }
+    }
+    public function Delete_File($Id)
+    {
+        $check = DocumentFiles::wherekey($Id)->get();
+        foreach($check as $key)
+        {
+            $name = $key['Document_Name'];
+            $file = $key['Document_Path'];
+        }
+        if(Storage::disk('public')->exists('storage/'.$file))
+        {
+            unlink($file);
+            DocumentFiles::wherekey($Id)->delete();
+            session()->flash('SuccessMsg',$name.' File Deleted Successfully');
+        }
+        else
+        {
+            $this->ForceDelete = 'Enable';
+
+            session()->flash('Error',$name.' File Not Exist');
+
+            return redirect()->back();
+            dd($this->ForceDelete);
 
         }
     }

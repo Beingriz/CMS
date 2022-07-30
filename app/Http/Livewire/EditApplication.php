@@ -29,7 +29,7 @@ class EditApplication extends Component
     public $Amount_Paid;
     public $Balance;
     public $PaymentMode, $PaymentModes,$Client_Type,$Confirmation,$Client_Image,$Old_Profile_Image;
-    public $Received_Date,$Applied_Date,$Updated_Date ;
+    public $Received_Date,$Applied_Date,$Updated_Date,$old_Applicant_Image ;
     public $ServiceName,$SubService ;
     public $MainService,$MainServices ;
     public $Application;
@@ -43,6 +43,7 @@ class EditApplication extends Component
     public $show_app=[];
     public $Ack,$Doc,$Pay;
     public $Ack_Path,$Doc_Path,$Payment_Path,$Profile_Image,$RelativeName,$Gender;
+    public $FDelete ;
 
 
     public $i=1,$Pro_Yes='off' ;
@@ -61,7 +62,6 @@ class EditApplication extends Component
         'Name' =>'required',
         'RelativeName' =>'required',
         'Gender' =>'required',
-        'Client_Type' =>'required',
         'Dob' =>'required',
         'Mobile_No' =>'required | Min:10',
         'Total_Amount' =>'required',
@@ -80,12 +80,13 @@ class EditApplication extends Component
        'PaymentMode.required' => 'Please Select Payment Mode',
 
    ];
-    public function mount($Id)
+    public function mount($Id,$ForceDelete)
     {
         $this->today = today();
         $this->Updated_Date = date("Y-m-d");
         $this->PaymentModes = "Cash";
         $this->Id = $Id;
+        $this->FDelete = $ForceDelete;
 
         $fetch = Application::Wherekey($Id)->get();
         foreach($fetch as $key)
@@ -95,9 +96,7 @@ class EditApplication extends Component
             $this->Name = $key['Name'];
             $this->RelativeName = $key['Relative_Name'];
             $this->Gender = $key['Gender'];
-            $this->Client_Type = $key['Client_Type'];
             $this->Application = $key['Application'];
-            $this->MainService = $key['Application'];
             $this->Application_Type = $key['Application_Type'];
             $this->SubService = $key['Application_Type'];
             $this->Dob = $key['Dob'];
@@ -118,7 +117,7 @@ class EditApplication extends Component
             $this->Ack = $key['Ack_File'];
             $this->Doc = $key['Doc_File'];
             $this->Pay = $key['Payment_Receipt'];
-            $this->Profile_Image = $key['Profile_Image'];
+            $this->old_Applicant_Image = $key['Applicant_Image'];
         }
         if(empty($this->Applied_Date))
         {
@@ -149,6 +148,30 @@ class EditApplication extends Component
             array_pop($this->Doc_Names);
         }
     }
+    public function ApplicantImage($Id)
+    {
+        $fetch = Application::Wherekey($Id)->get();
+        foreach($fetch as $field)
+        {
+            $this->Client_Id = $field['Client_Id'];
+            $name = $field['Name'];
+            $client_Id = $field['Client_Id'];
+            $old_Ack_File = $field['Ack_File'];
+            $old_Doc_File = $field['Doc_File'];
+            $old_Pay_File = $field['Payment_Receipt'];
+            $Applicant_Image = $field['Profile_Image'];
+        }
+        if(!empty($this->Applicant_Image))
+        {
+            $this->Applicant_Image = $Applicant_Image;
+            dd($this->Applicant_Image);
+
+        }
+        else
+        {
+            dd('must upload');
+        }
+    }
 
     public function Update($Id)
     {
@@ -165,6 +188,7 @@ class EditApplication extends Component
             $old_Doc_File = $field['Doc_File'];
             $old_Pay_File = $field['Payment_Receipt'];
         }
+        $this->ApplicantImage($Id);
         $this->validate();
         if(!is_null($this->MainService))
         {
