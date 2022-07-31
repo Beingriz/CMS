@@ -84,13 +84,12 @@ class EditApplication extends Component
        'PaymentMode.required' => 'Please Select Payment Mode',
 
    ];
-    public function mount($Id,$ForceDelete)
+    public function mount($Id)
     {
         $this->today = today();
         $this->Updated_Date = date("Y-m-d");
         $this->PaymentModes = "Cash";
         $this->Id = $Id;
-        $this->FDelete = $ForceDelete;
 
         $fetch = Application::Wherekey($Id)->get();
         foreach($fetch as $key)

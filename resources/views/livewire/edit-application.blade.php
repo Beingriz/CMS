@@ -660,7 +660,7 @@
                                 <div class="row">
                                     <h5 class="font-size-14 mb-3">Preview Confirmation</h5>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <p class="text-muted">Are you sure you want to submit Form?</p>
+                                            <p class="text-muted">Are you sure you want to Update?</p>
                                             <input type="checkbox" id="switch2" switch="none" wire:model.lazy="Confirmation">
                                             <label for="switch2" data-on-label="Yes" data-off-label="No"></label>
                                             @if($Confirmation==1)

@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use PDF;
 
 class ApplicationController extends Controller
 {
@@ -208,21 +207,13 @@ class ApplicationController extends Controller
         }
         else
         {
-            $this->ForceDelete = 'Enable';
-
             session()->flash('Error',$name.' File Not Exist');
-
             return redirect()->back();
-            dd($this->ForceDelete);
+
 
         }
     }
-    public function pdfStream($Id){
-        $file = DocumentFiles::find($Id);
-        $data["info"] = $file;
-        $pdf = PDF ::loadView('whateveryourviewname', $data);
-        return $pdf->stream('whateveryourviewname.pdf');
-      }
+
     public function Update(Request $request, $Id)
     {
 
