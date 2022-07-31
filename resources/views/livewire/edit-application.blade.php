@@ -225,9 +225,13 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="progress-basicpill-firstname-input">Gender </label>
                                                 <select class="form-select" wire:model.lazy="Gender">
+                                                    @if (!empty($Gender))
+                                                    <option value="{{$Gender}}">{{$Gender}}</option>
+                                                    @else
                                                     <option selected="">Select Gender</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
+                                                    @endif
                                                 </select>
                                                 @error('Gender') <span class="text-danger">{{ $message }}</span> @enderror
 
@@ -482,6 +486,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @error('Name') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Mobile_No') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Dob') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('RelativeName') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Gender') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('MainService') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('SubService') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Total_Amount') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Amount_Paid') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Balance') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Status') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Received_Date') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('PaymentMode') <span class="text-danger">{{ $message }}</span> @enderror
+
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4 d-flex">
@@ -489,44 +507,50 @@
                                             <li class="list-group-item"> Name</li>
                                             <li class="list-group-item"> Mobile No</li>
                                             <li class="list-group-item"> DOB</li>
+                                            <li class="list-group-item"> Gender</li>
                                             <li class="list-group-item"> Photo</li>
-
                                         </ul>
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
                                                 @if(empty($Name))
-                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                <strong class="text-danger">Field is Empty</strong>
                                                 @else
                                                 <strong class="text-primary">{{$Name}}</strong>
 
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
-                                                @if(empty($Name))
-                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @if(empty($Mobile_No))
+                                                <strong class="text-danger">Field is Empty</strong>
                                                 @else
                                                 <strong class="text-primary">{{$Mobile_No}}</strong>
-
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
-                                                @if(empty($Name))
-                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @if(empty($Dob))
+                                                <strong class="text-danger">Field is Empty</strong>
                                                 @else
                                                 <strong class="text-primary">{{$Dob}}</strong>
 
                                                 @endif
                                             </li>
-
+                                            <li class="list-group-item">
+                                                @if(empty($Gender))
+                                                <strong class="text-danger">Field is Empty</strong>
+                                                @else
+                                                <strong class="text-primary">{{$Gender}}</strong>
+                                                @endif
+                                            </li>
                                             <li class="list-group-item">
                                                 @if(!empty($old_Applicant_Image))
                                                     <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage" />
                                                 @elseif(!empty($Applicant_Image))
                                                     <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="ApplicantImage" />
                                                 @else
-                                                    <strong class="text-danger">Field is Empty</strong></li>
+                                                    <strong class="text-danger">Field is Empty</strong>
                                                 @endif
                                             </li>
+
                                         </ul>
                                     </div>
                                     <div class="col-lg-4 d-flex">
@@ -687,26 +711,33 @@
                             <tbody>
                                 @foreach($Doc_Files as $File)
                                 <tr>
-                                        <td >{{ $n++ }}</td>
+                                        <td >{{$Doc_Files->firstItem()+$loop->index}}</td>
                                         <td>{{ $File->Document_Name }}</td>
                                         <td>
-                                            <a class="btn btn-primary font-size-20" id="download"
-                                                href="{{route('download_documents',$File->Id)}}"><i class=" ri-file-download-line"></i></a>
+                                            <a class="btn btn-light font-size-20" id="download"
+                                                href="{{route('download_documents',$File->Id)}}"><i class="mdi mdi-download"></i></a>
+
                                         </td>
                                         <td>
-                                            <a class="btn btn-danger font-size-20" id="deletefile"
+                                            <a class="btn btn-danger font-size-15" id="deletefile"
                                                 href="{{route('delete_document',$File->Id)}}"><i class=" ri-delete-bin-6-line"></i></a>
-                                                @if ($FDelete == 'Enable')
-                                                    <a href="">ForceDelete</a>
-                                                @endif
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                            <p class="text-muted">Showing {{count($Doc_Files)}} of {{$Doc_Files->total()}} entries</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class=" pagination pagination-rounded float-end" >
+                                    {{$Doc_Files->links()}}
+                                </span>
+                            </div>
                         </div>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        </div>
+                        <p class="card-text"><small class="text-muted">Last File Uploaded  {{$created}}</small></p>
                     </div>
                 </div>
             </div>

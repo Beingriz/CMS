@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class ApplicationController extends Controller
 {
@@ -196,11 +197,14 @@ class ApplicationController extends Controller
             $name = $key['Document_Name'];
             $file = $key['Document_Path'];
         }
-        if(Storage::disk('public')->exists('storage/'.$file))
+        // dd($file);
+        if (Storage::disk('public')->exists($file))
         {
-            unlink($file);
+            // dd('found file');
+            unlink('storage/'.$file);
             DocumentFiles::wherekey($Id)->delete();
             session()->flash('SuccessMsg',$name.' File Deleted Successfully');
+            return redirect()->back();
         }
         else
         {
@@ -213,6 +217,12 @@ class ApplicationController extends Controller
 
         }
     }
+    public function pdfStream($Id){
+        $file = DocumentFiles::find($Id);
+        $data["info"] = $file;
+        $pdf = PDF ::loadView('whateveryourviewname', $data);
+        return $pdf->stream('whateveryourviewname.pdf');
+      }
     public function Update(Request $request, $Id)
     {
 

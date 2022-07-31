@@ -127,7 +127,7 @@
         <script src="{{asset('backend/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js')}}"></script>
 
         <script src="{{asset('backend/assets/libs/twitter-bootstrap-wizard/prettify.js')}}"></script>
-
+        <script src="{{asset('backend/assets/js/pages/materialdesign.init.js')}}"></script>
         <!-- form wizard init -->
         <script src="{{asset('backend/assets/js/pages/form-wizard.init.js')}}"></script>
 

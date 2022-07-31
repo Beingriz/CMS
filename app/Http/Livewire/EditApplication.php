@@ -9,6 +9,7 @@ use App\Models\PaymentMode;
 use App\Models\Status;
 use App\Models\SubServices;
 use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -43,7 +44,7 @@ class EditApplication extends Component
     public $show_app=[];
     public $Ack,$Doc,$Pay;
     public $Ack_Path,$Doc_Path,$Payment_Path,$Profile_Image,$RelativeName,$Gender;
-    public $FDelete ;
+    public $created,$updated ;
 
 
     public $i=1,$Pro_Yes='off' ;
@@ -53,7 +54,6 @@ class EditApplication extends Component
     public $Document_Files=[];
     public $Doc_Names=[];
     public $NewTextBox = [];
-    public $Doc_Files;
     public $label=[];
 
 
@@ -68,11 +68,15 @@ class EditApplication extends Component
         'Amount_Paid' =>'required',
         'PaymentMode' =>'required',
         'Applied_Date' =>'required',
+        'MainService' =>'required',
+        'SubService' =>'required',
     ];
     protected $messages = [
        'name.required' => 'Applicant Name Cannot be Empty',
        'RelativeName.required' => 'Enter Relative Name',
        'Gender.required' => 'Please Select Gender',
+       'MainService.required' => 'Please Select Service',
+       'SubService.required' => 'Please Select Service Category',
        'dob.required' => 'Please Select Date of Birth',
        'Mobile_No.required' => 'Mobile Number Cannot Be Empty',
        'total_amount.required' => 'Enter Total Amount',
@@ -188,7 +192,7 @@ class EditApplication extends Component
             $old_Doc_File = $field['Doc_File'];
             $old_Pay_File = $field['Payment_Receipt'];
         }
-        $this->ApplicantImage($Id);
+        // $this->ApplicantImage($Id);
         $this->validate();
         if(!is_null($this->MainService))
         {
@@ -225,7 +229,7 @@ class EditApplication extends Component
             else
             {
                 $extension = $this->Ack_File->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = 'AF_'.$this->Ack_No.'_'.time().'.'.$extension;
                 $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
                 $this->Ack_Path = $url;
@@ -257,7 +261,7 @@ class EditApplication extends Component
             else
             {
                 $extension = $this->Doc_File->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = 'DF_'.$this->Document_No.'_'.time().'.'.$extension;
                 $url = $this->Doc_File->storePubliclyAs($path,$filename,'public');
                 $this->Doc_Path = $url;
@@ -289,7 +293,7 @@ class EditApplication extends Component
             else
             {
                 $extension = $this->Payment_Receipt->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = 'PR_'.$this->PaymentMode.'_'.time().'.'.$extension;
                 $url = $this->Payment_Receipt->storePubliclyAs($path,$filename,'public');
                 $this->Payment_Path = $url;
@@ -308,6 +312,7 @@ class EditApplication extends Component
         $update_data = array();
         $update_data['Name']=$this->Name;
         $update_data['Relative_Name']=$this->RelativeName;
+        $update_data['Gender']=$this->Gender;
         $update_data['Mobile_No']=$this->Mobile_No;
         $update_data['Application']=$this->ServiceName;
         $update_data['Application_Type']=$this->SubService;
@@ -337,10 +342,9 @@ class EditApplication extends Component
                 foreach($this->Document_Files as $Docs => $Path)
                 {
                     $this->n++;
-                    // $file = $Path->storeAs('Client_DB/'.$this->Name.' '.$this->Client_Id.'/'.trim($this->Application).'/'.trim($this->Application_Type).'/Document Files', $this->Name.' '.$this->Doc_Names[$Docs].' '.$Id.' '.$today.$time.'.pdf');
                     $extension = $Path->getClientOriginalExtension();
-                    $directory = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
-                    $filename = 'Document '.$this->Name.' '.$this->Doc_Names[$Docs].'_'.time().'.'.$extension;
+                    $directory = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                    $filename = $this->Name.' '.$this->Doc_Names[$Docs].'_'.time().'.'.$extension;
                     $url = $Path->storePubliclyAs($directory,$filename,'public');
                     $file = $url;
 
@@ -355,8 +359,8 @@ class EditApplication extends Component
                 }
 
                 $extension =  $this->Document_Name->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
-                $filename = 'Documents '.$this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $filename = $this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
                 $url = $this->Document_Name->storePubliclyAs($path,$filename,'public');
                 $file = $url;
 
@@ -372,8 +376,8 @@ class EditApplication extends Component
             elseif(!empty($this->Document_Name))
             {
                 $extension =  $this->Document_Name->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/';
-                $filename = 'Documents '.$this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $filename = $this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
                 $url = $this->Document_Name->storePubliclyAs($path,$filename,'public');
                 $file = $url;
 
@@ -444,30 +448,19 @@ class EditApplication extends Component
             session()->flash('Error', 'File Not Available');
         }
     }
-    public function DownloadDocuments($Doc_Id)
+    public function LastUpdateTime()
     {
 
-        $fetch = DocumentFiles::wherekey($Doc_Id)->get();
-        foreach ($fetch as $key)
-        {
-            $file = $key['Document_Path'];
-            $Id = $key['App_Id'];
-        }
-        if (Storage::disk('public')->exists('storage/'.$file ))
-        {
-            dd($file);
-            $file = 'storage/app/'.$file;
-            return response()->download($file);
-        }
-        else
-        {
-            return redirect()->route('edit_application',$Id)->with('Error','Document Filedsasdasdsada');
+        $latest_doc = DocumentFiles::latest('created_at')->first();
+        $this->created = Carbon::parse($latest_doc['created_at'] , $latest_doc['updated_at'])->diffForHumans();
+        $this->updated = Carbon::parse($latest_doc['updated_at'])->diffForHumans();
 
-        }
     }
     public function render()
     {
         $this->Capitalize();
+        $this->LastUpdateTime();
+
         $this->MainServices = MainServices::all();
         if(!is_null($this->MainService))
         {
@@ -502,7 +495,7 @@ class EditApplication extends Component
                 $this->balance =  $amt['Balance'];
             }
         }
-        $this->status_list = DB::table('status')
+        $status_list = DB::table('status')
         ->Where('Relation',$this->ServiceName)
         ->orWhere('Relation','General')
         ->orderBy('Orderby', 'asc')
@@ -510,7 +503,8 @@ class EditApplication extends Component
         $payment_mode = PaymentMode::all();
         $this->Balance = (intval($this->Total_Amount) - intval($this->Amount_Paid));
 
-        $this->Doc_Files = DocumentFiles::Where([['App_Id',$this->Id],['Client_Id',$this->Client_Id]])->get();
-        return view('livewire.edit-application',['payment_mode'=>$payment_mode,'StatusList'=>$this->status_list]);
+        $Doc_Files = DocumentFiles::Where([['App_Id',$this->Id],['Client_Id',$this->Client_Id]])->paginate(5);
+        return view('livewire.edit-application',compact('payment_mode','status_list','Doc_Files'));
     }
+
 }
