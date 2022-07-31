@@ -22,7 +22,7 @@ class EditApplication extends Component
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     public $Client_Id,$Id,$App_Id;
-    public $Name;
+    public $Name, $Checked = [];
     public $Dob,$Applicant_Image,$Profile_Update,$main_service=[],$sub_service=[];
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
@@ -39,12 +39,12 @@ class EditApplication extends Component
     public $Status,$Ack_File,$Doc_File,$Payment_Receipt;
     public $Registered,$count_app=0, $app_count,$app_pending,$app_delivered,$app_deleted;
     public $total,$paid,$balance = 0,$n=1;
-    public $filterby,$show = 0 , $Checked, $collection, $no='No';
+    public $filterby,$show = 0 , $collection, $no='No';
     public $Select_Date,$Daily_Income=0;
     public $show_app=[];
     public $Ack,$Doc,$Pay;
     public $Ack_Path,$Doc_Path,$Payment_Path,$Profile_Image,$RelativeName,$Gender;
-    public $created,$updated ;
+    public $created,$updated,$AckFileDownload='Disable',$DocFileDownload='Disable',$PayFileDownload='Disable'  ;
 
 
     public $i=1,$Pro_Yes='off' ;
@@ -90,7 +90,7 @@ class EditApplication extends Component
         $this->Updated_Date = date("Y-m-d");
         $this->PaymentModes = "Cash";
         $this->Id = $Id;
-
+        $this->CheckFileExist($Id);
         $fetch = Application::Wherekey($Id)->get();
         foreach($fetch as $key)
         {
@@ -151,29 +151,26 @@ class EditApplication extends Component
             array_pop($this->Doc_Names);
         }
     }
-    public function ApplicantImage($Id)
+    public function CheckFileExist($Id)
     {
-        $fetch = Application::Wherekey($Id)->get();
-        foreach($fetch as $field)
+        $data = Application::Wherekey($Id)->get();
+        foreach($data as $key)
         {
-            $this->Client_Id = $field['Client_Id'];
-            $name = $field['Name'];
-            $client_Id = $field['Client_Id'];
-            $old_Ack_File = $field['Ack_File'];
-            $old_Doc_File = $field['Doc_File'];
-            $old_Pay_File = $field['Payment_Receipt'];
-            $Applicant_Image = $field['Profile_Image'];
+            $ack_file = $key['Ack_File'];
+            $doc_file = $key['Doc_File'];
+            $pay_file = $key['Payment_Receipt'];
         }
-        if(!empty($this->Applicant_Image))
-        {
-            $this->Applicant_Image = $Applicant_Image;
-            dd($this->Applicant_Image);
 
-        }
-        else
+        if($ack_file != 'Not Available' || $doc_file != 'Not Available'|| $pay_file != 'Not Available')
         {
-            dd('must upload');
+            Storage::disk('public')->exists($ack_file);
+            Storage::disk('public')->exists($doc_file);
+            Storage::disk('public')->exists($pay_file);
+            $this->AckFileDownload = 'Enable';
+            $this->DocFileDownload = 'Enable';
+            $this->PayFileDownload = 'Enable';
         }
+
     }
 
     public function Update($Id)
@@ -446,6 +443,10 @@ class EditApplication extends Component
         {
             session()->flash('Error', 'File Not Available');
         }
+    }
+    public function MultipleDelete()
+    {
+        dd($this->Checked);
     }
     public function LastUpdateTime()
     {

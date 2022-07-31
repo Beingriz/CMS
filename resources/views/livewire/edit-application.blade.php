@@ -196,11 +196,12 @@
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                             <label class="form-label" for="progress-basicpill-phoneno-input">Phone No</label>
-                                                <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" onkeydown="mobile(this)">
+                                                <input type="number" class="form-control" placeholder="Mobile Number" id="progress-basicpill-phoneno-input" wire:model.debounce.500ms="Mobile_No" readonly>
                                                 @error('Mobile_No') <span class="text-danger">{{ $message }}</span> @enderror
 
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6">
@@ -310,8 +311,8 @@
                                                 <label class="form-label" for="progress-basicpill-ackno-input">Acknowledgment No. </label>
                                                 <input type="text" class="form-control" placeholder="Acknowledgment No"id="progress-basicpill-ackno-input" wire:model.lazy = "Ack_No">
                                                 @error('Ack_No') <span class="text-danger">{{ $message }}</span> @enderror
-                                                @if ($Ack!='Not Available')
-                                                <a href="{{ url('download_ack') }}/{{$Id}}">Dowload Ack</a>
+                                                @if ($AckFileDownload =='Enable')
+                                                <a href="{{ route('download_ack',$Id) }}" id="download">Dowload Ack</a>
                                             @endif
 
                                             </div>
@@ -322,9 +323,9 @@
                                                 <label class="form-label" for="progress-basicpill-docno-input">Document No.</label>
                                                 <input type="text" class="form-control"  placeholder="Document No"id="progress-basicpill-docno-input" wire:model.lazy = "Document_No" >
                                                 @error('Document_No') <span class="text-danger">{{ $message }}</span> @enderror
-                                                @if ($Doc!='Not Available')
-                                                <a href="{{ url('download_doc') }}/{{$Id}}">Dowload Ack</a>
-                                            @endif
+                                                @if ($DocFileDownload =='Enable')
+                                                <a href="{{ route('download_doc',$Id) }}" id="download">Dowload Ack</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -446,13 +447,20 @@
                                                 <div class="mb-3">
                                                     <label>Payment Mode</label>
                                                     <select class="form-select" wire:model.lazy="PaymentMode">
+                                                        @if (!empty($PaymentMode))
+                                                        <option selected="">{{$PaymentMode}}</option>
+                                                        @else
                                                         <option selected="">Select Payment Mode</option>
+                                                        @endif
                                                         @foreach ($payment_mode as $payment)
                                                         <option value="{{ $payment->Payment_Mode }}">
                                                             {{ $payment->Payment_Mode }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('PaymentMode') <span class="text-danger">{{ $message }}</span> @enderror
+                                                    @if ($PayFileDownload =='Enable')
+                                                    <a href="{{ route('download_pay',$Id) }}" id="download">{{$PaymentMode}} Receipt</a>
+                                                @endif
 
                                                 </div>
                                             </div>
@@ -698,11 +706,28 @@
                 <div class="card">
                     <h5 class="card-header">Available Documents </h5>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="d-flex flex-wrap gap-2">
+                                                @if ($Checked)
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                    <div class="btn-group" role="group">
+                                                        <button id="btnGroupVerticalDrop2" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Cheched ({{count($Checked)}}) <i class="mdi mdi-chevron-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2" style="">
+                                                            <a class="dropdown-item" title="Multiple Delete" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th >Sl.No</th>
+                                    <th >Select</th>
                                     <th>Name</th>
                                     <th>Download</th>
                                     <th>Delete</th>
@@ -712,6 +737,8 @@
                                 @foreach($Doc_Files as $File)
                                 <tr>
                                         <td >{{$Doc_Files->firstItem()+$loop->index}}</td>
+                                        <td><input type="checkbox" id="checkbox" name="checkbox" value="{{$File->Id}}" wire:model="Checked"></td>
+
                                         <td>{{ $File->Document_Name }}</td>
                                         <td>
                                             <a class="btn btn-light font-size-20" id="download"

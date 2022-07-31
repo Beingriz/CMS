@@ -46,6 +46,10 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('edit/application/{id}', 'Edit')->middleware(['auth'])->name('edit_application');
     Route::get('download/docs/{id}', 'Download_Files')->middleware(['auth'])->name('download_documents');
     Route::get('delete/docs/{id}', 'Delete_File')->middleware(['auth'])->name('delete_document');
+    Route::get('download/ack/{id}', 'Download_Ack')->middleware(['auth'])->name('download_ack');
+    Route::get('download/doc/{id}', 'Download_Doc')->middleware(['auth'])->name('download_doc');
+    Route::get('download/paymentreceipt/{id}', 'Download_Pay')->middleware(['auth'])->name('download_pay');
+    Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->middleware(['auth'])->name('multiple_doc_delete');
 
 
 });

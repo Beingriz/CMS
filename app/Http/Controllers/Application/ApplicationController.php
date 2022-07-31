@@ -121,14 +121,13 @@ class ApplicationController extends Controller
             $file = $key['Ack_File'];
 
         }
-        if (Storage::exists($file))
+        if (Storage::disk('public')->exists($file))
         {
-            $file = 'storage/app/'.$file;
-            return response()->download($file);
+            return response()->download(public_path('storage/'.$file));
         }
         else
         {
-            return redirect('/open_app/'.$Id)->with('Error','Acknowledgement Not Available!');
+            return redirect()->route('edit_application',$Id)->with('Error','Acknowledgement File Not Available!');
 
         }
     }
@@ -139,15 +138,29 @@ class ApplicationController extends Controller
         {
             $file = $key['Doc_File'];
         }
-        if (Storage::exists($file))
+        if (Storage::disk('public')->exists($file))
         {
-            $file = 'storage/app/'.$file;
-            return response()->download($file);
+            return response()->download(public_path('storage/'.$file));
         }
         else
         {
-            return redirect('/open_app/'.$Id)->with('Error','Document File Not Available!');
-
+            return redirect()->route('edit_application',$Id)->with('Error','Document File Not Available!');
+        }
+    }
+    public function Download_Pay($Id)
+    {
+        $fetch = Application::wherekey($Id)->get();
+        foreach ($fetch as $key)
+        {
+            $file = $key['Payment_Receipt'];
+        }
+        if (Storage::disk('public')->exists($file))
+        {
+            return response()->download(public_path('storage/'.$file));
+        }
+        else
+        {
+            return redirect()->route('edit_application',$Id)->with('Error','Payment Receipt Not Available!');
         }
     }
     public function Download_Files($Doc_Id)
@@ -159,35 +172,18 @@ class ApplicationController extends Controller
             $file = $key['Document_Path'];
             $Id = $key['App_Id'];
         }
-        if (Storage::exists($file))
+        if (Storage::disk('public')->exists($file))
         {
-            $file = 'storage/app/'.$file;
-            return response()->download($file);
+            return response()->download(public_path('storage/'.$file));
+
         }
         else
         {
-            return redirect('/edit_app/'.$Id)->with('Error','Document File Not Available!');
+            return redirect()->route('edit_application',$Id)->with('Error','Document File Not Available!');
 
         }
     }
-    public function Download_Pay($Id)
-    {
-        $fetch = Application::wherekey($Id)->get();
-        foreach ($fetch as $key)
-        {
-            $file = $key['Payment_Receipt'];
-        }
-        if (Storage::exists($file))
-        {
-            $file = 'storage/app/'.$file;
-            return response()->download($file);
-        }
-        else
-        {
-            return redirect('/open_app/'.$Id)->with('Error','Payment File Not Available!');
 
-        }
-    }
     public function Delete_File($Id)
     {
         $check = DocumentFiles::wherekey($Id)->get();
@@ -210,6 +206,17 @@ class ApplicationController extends Controller
             session()->flash('Error',$name.' File Not Exist');
             return redirect()->back();
 
+
+        }
+    }
+    public function MultipleDocDelete(Request $req,$array)
+    {
+        dd($req);
+        $check = DocumentFiles::whereIn($array)->get();
+        dd($check);
+        foreach($check as $key)
+        {
+            $file = $key['Document_Path'];
 
         }
     }

@@ -188,7 +188,9 @@
                                                         @if (!is_null($Applicant_Image))
                                                         <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
                                                         @elseif((!is_Null($old_Applicant_Image)) && ($old_Applicant_Image=='Not Available'))
-                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="Applicant_Image" />
+                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="OldApplicant_Image" />
+                                                        @elseif(is_Null($old_Applicant_Image))
+                                                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="Old Applicant_Image" />
                                                         @elseif(!is_Null($old_Applicant_Image))
                                                         <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image) }}" alt="Applicant_Image" />
                                                         @else
