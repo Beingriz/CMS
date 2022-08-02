@@ -138,7 +138,7 @@ class SaveApplicationForm extends Component
         if(!empty($this->Applicant_Image))
         {
             $filename = $this->Name.'_'.$client_Id.'.'.$this->Applicant_Image->getClientOriginalExtension();
-            $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/'.$filename;
+            $url = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected).'/'.$filename;
             $file = Image::make($this->Applicant_Image)->encode('jpg');
             Storage::disk('public')->put($url,$file);
             $Applicant_Image = $url;
@@ -150,7 +150,7 @@ class SaveApplicationForm extends Component
         if(!empty($this->Ack_File))
         {
             $extension = $this->Ack_File->getClientOriginalExtension();
-            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
             $filename = 'AF_'.$this->Ack_No.'_'.time().'.'.$extension;
             $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
             $this->Ack_File = $url;
@@ -162,7 +162,7 @@ class SaveApplicationForm extends Component
         if(!empty($this->Doc_File))
         {
             $extension = $this->Doc_File->getClientOriginalExtension();
-            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
             $filename = 'DF_'.$this->Document_No.'_'.time().'.'.$extension;
             $url = $this->Doc_File->storePubliclyAs($path,$filename,'public');
             $this->Doc_File = $url;
@@ -174,7 +174,7 @@ class SaveApplicationForm extends Component
         if(!empty($this->Payment_Receipt))
         {
             $extension = $this->Payment_Receipt->getClientOriginalExtension();
-            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+            $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
             $filename = 'PR_'.$this->PaymentMode.'_'.time().'.'.$extension;
             $url = $this->Payment_Receipt->storePubliclyAs($path,$filename,'public');
             $this->Payment_Receipt = $url;

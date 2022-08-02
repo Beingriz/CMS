@@ -46,7 +46,7 @@
                             </span>
                         </div> --}}
                         <div class="flex-grow-1 align-items-center">
-                            <h5 class="text-truncate text-primary font-size-20 mb-2">Applied Services</h5>
+                            <h5 class="text-truncate text-primary font-size-20 mb-2">{{$Name}}</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
                                     <h5>Applied {{$count_app}}</h5>
@@ -55,8 +55,12 @@
                             </div>
                         </div>
 
-                        {{-- <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image"> --}}
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        @if(!empty($old_Applicant_Image))
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage">
+                        @else
+                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                        @endif
+
 
                     </div>
                 </div>
@@ -110,8 +114,8 @@
                                 </div>
                             </div>
                         </div>
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
 
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/Admin/Services/Thumbnail'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
 
                     </div>
                 </div>

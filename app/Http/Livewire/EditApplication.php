@@ -225,7 +225,7 @@ class EditApplication extends Component
             else
             {
                 $extension = $this->Ack_File->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = 'AF_'.$this->Ack_No.'_'.time().'.'.$extension;
                 $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
                 $this->Ack_Path = $url;
@@ -257,7 +257,7 @@ class EditApplication extends Component
             else
             {
                 $extension = $this->Doc_File->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = 'DF_'.$this->Document_No.'_'.time().'.'.$extension;
                 $url = $this->Doc_File->storePubliclyAs($path,$filename,'public');
                 $this->Doc_Path = $url;
@@ -289,7 +289,7 @@ class EditApplication extends Component
             else
             {
                 $extension = $this->Payment_Receipt->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = 'PR_'.$this->PaymentMode.'_'.time().'.'.$extension;
                 $url = $this->Payment_Receipt->storePubliclyAs($path,$filename,'public');
                 $this->Payment_Path = $url;
@@ -327,7 +327,7 @@ class EditApplication extends Component
         $update_data['Delivered_Date']=$this->Updated_Date;
         $update_App = DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($update_data);
 
-        if($this->Doc_Yes == 1 )
+        if($this->Doc_Yes == 1 ) // if more documents to upload
         {
             if(count($this->Document_Files)>0)
             {
@@ -339,7 +339,7 @@ class EditApplication extends Component
                 {
                     $this->n++;
                     $extension = $Path->getClientOriginalExtension();
-                    $directory = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                    $directory = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                     $filename = $this->Name.' '.$this->Doc_Names[$Docs].'_'.time().'.'.$extension;
                     $url = $Path->storePubliclyAs($directory,$filename,'public');
                     $file = $url;
@@ -355,7 +355,7 @@ class EditApplication extends Component
                 }
 
                 $extension =  $this->Document_Name->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = $this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
                 $url = $this->Document_Name->storePubliclyAs($path,$filename,'public');
                 $file = $url;
@@ -369,10 +369,10 @@ class EditApplication extends Component
                 $save_doc->save();
                 session()->flash('SuccessMsg', $this->n.' Documents Added to '.$this->Name.' Folder Successfully!');
             }
-            elseif(!empty($this->Document_Name))
+            elseif(!empty($this->Document_Name)) //if only 1 document to be upload
             {
                 $extension =  $this->Document_Name->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
                 $filename = $this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
                 $url = $this->Document_Name->storePubliclyAs($path,$filename,'public');
                 $file = $url;
@@ -391,7 +391,22 @@ class EditApplication extends Component
         {
             session()->flash('SuccessUpdate', 'Application Details for '.$this->Name.' is Updated Successfully');
         }
-        $update_Bal = DB::update('update balance_ledger set Name=?, Mobile_No=?, Category=?, Sub_Category=?,Total_Amount =?, Amount_Paid=?, Balance=?,Payment_Mode=?,Attachment=?, Description=? where Id = ? && Client_Id=?', [$this->Name, $this->Mobile_No,$this->Application,$this->Application_Type,$this->Total_Amount,$this->Amount_Paid,$this->Balance,$this->PaymentMode, $this->Payment_Path,$Description,$Id, $this->Client_Id]);
+
+        $bal_data = array();
+        $bal_data['Name']=$this->Name;
+        $bal_data['Mobile_No']=$this->Mobile_No;
+        $bal_data['Category']=$this->Application;
+        $bal_data['Sub_Category']=$this->Application_Type;
+        $bal_data['Sub_Category']=$this->Application_Type;
+        $bal_data['Total_Amount']=$this->Total_Amount;
+        $bal_data['Amount_Paid']=$this->Amount_Paid;
+        $bal_data['Balance']=$this->Balance;
+        $bal_data['Payment_Mode']=$this->PaymentMode;
+        $bal_data['Attachment']=$this->Payment_Path;
+        $bal_data['Description']=$Description;
+
+        $update_Bal = DB::table('balance_ledger')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($bal_data);
+
         if($update_Bal)
         {
             session()->flash('SuccessMsg', 'Balance Ledger Updated for '.$this->Name);
@@ -446,7 +461,28 @@ class EditApplication extends Component
     }
     public function MultipleDelete()
     {
-        dd($this->Checked);
+        $files  = DocumentFiles::WhereIn('Id',$this->Checked)->get();
+        foreach($files as $key)
+        {
+            $id = $key['Id'];
+            $file = $key['Document_Path'];
+            if (Storage::disk('public')->exists($file))
+            {
+                storage::disk('public')->delete($file);
+                DocumentFiles::Wherekey($id)->delete();
+            }
+            else
+            {
+                DocumentFiles::Wherekey($id)->delete();
+                return session()->flash('Error', 'File Not Found, Record Removed');
+            }
+        }
+
+            $notification = array(
+                'message'=>'No Changes have been done!',
+                'alert-type' =>'info'
+            );
+        return redirect()->route('edit_application',$this->Id)->with($notification);
     }
     public function LastUpdateTime()
     {
