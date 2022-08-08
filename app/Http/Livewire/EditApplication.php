@@ -192,8 +192,9 @@ class EditApplication extends Component
             $old_Ack_File = $field['Ack_File'];
             $old_Doc_File = $field['Doc_File'];
             $old_Pay_File = $field['Payment_Receipt'];
+            $old_App_Image = $field['Applicant_Image'];
         }
-        // $this->ApplicantImage($Id);
+
         $this->validate();
         if(!is_null($this->MainService))
         {
@@ -209,6 +210,37 @@ class EditApplication extends Component
             $this->SubSelected = $this->SubService;
         }
             // Attept to Delete the Old file Before Updating New File for Perticular Application Id
+        if(!empty($this->Applicant_Image))
+        {
+            if($old_App_Image != 'Not Available' )
+            {
+                if (Storage::disk('public')->exists($old_App_Image)) // Check for existing File
+                {
+                    unlink(storage_path('app/public/'.$old_App_Image)); // Deleting Existing File
+                    $url='Not Available';
+                    $data = array();
+
+                    $data['Applicant_Image']=$url;
+                    DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->update($data);
+                }
+                else
+                {
+                    $this->Applicant_Image = 'Not Available';
+                }
+            }
+            else
+            {
+                $extension = $this->Applicant_Image->getClientOriginalExtension();
+                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/Photo';
+                $filename = 'Profile'.$this->Name.'_'.time().'.'.$extension;
+                $url = $this->Applicant_Image->storePubliclyAs($path,$filename,'public');
+                $this->Applicant_Image = $url;
+            }
+        }
+        else
+        {
+            $this->Applicant_Image = $old_App_Image;
+        }
         if(!empty($this->Ack_File))
         {
             if($old_Ack_File != 'Not Available' )

@@ -59,7 +59,6 @@ class UpdateApplication extends Component
         $this->Registered($this->Mobile_No);
         $AppliedServices = Application::where('Mobile_No',$this->Mobile_No)->filter($this->filterby)->Paginate($this->paginate);
         $status = Status::all();
-
         return view('livewire.update-application',['AppliedServices'=>$AppliedServices,'status'=>$status]);
     }
 }

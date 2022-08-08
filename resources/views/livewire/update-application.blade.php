@@ -143,9 +143,11 @@
                                     <td>Not Available</td>
                                     @endif
                                     <td>{{$key->Status}}</td>
-
+                                    <?php
+                                    $Id = $key->Id
+                                    ?>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-book-open-page-variant" ></i></a>
+                                        <a href="{{route('edit_application',$Id)}}" class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-book-open-page-variant" ></i></a>
                                         <a href="#" class="btn btn-sm btn-danger font-size-15" id="delete"><i class="mdi mdi-delete-outline" ></i></a>
                                         <a href="#" class="btn btn-sm btn-primary font-size-15" id="open"><i class="mdi mdi-book-open-page-variant" ></i></a>
                                     </td>
