@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Sub_Services extends Model
 {
     use HasFactory;
-    public $table='services';
+    protected $guarded;
+    public $table="sub_service_list";
 }

@@ -22,21 +22,20 @@
                 <li>
                     <a href="{{route('dashboard')}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i><span class="badge rounded-pill bg-success float-end">3</span>
-                        <span>Dashboard</span>
+                        <span>Home</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{url('app_home')}}" class=" waves-effect">
                         <i class="ri-table-2"></i>
-                        <span>Application</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-mail-send-line"></i>
-                        <span>Service</span>
+                        <span>Services</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('new_application')}}">New Application</a></li>
@@ -47,7 +46,43 @@
                         <li><a href="{{route('new_application')}}">Delete</a></li>
 
                     </ul>
+                </li> --}}
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-account-circle-line"></i>
+                        <span>App Controls</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('new_application')}}">New Application</a></li>
+                        <li> <a href="{{route('update_application')}}">Update</a></li>
+                        <li> <a href="">Services</a></li>
+                        <li> <a href="">Balance</a></li>
+                        <li> <a href="">Filter</a></li>
+                        <li> <a href="">Delete</a></li>
+
+                    </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-account-circle-line"></i>
+                        <span>Admin Controls</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{url('client_registration')}}">Clinet Registration</a></li>
+                        <li> <a href="{{ url('services')}}">Services</a></li>
+                        <li><a href="{{ url('statusmodule')}}">Status</a></li>
+                        <li><a href="{{url('bookmarks')}}">Bookmark</a></li>
+                        <li> <a href="{{url('add_document')}}">Add Documents</a></li>
+                    </ul>
+                </li>
+
+
+
+
+
+
+
+
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -56,19 +91,19 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="true">
                         <li>
-                            <a href="javascript: void(0);" class="has-arrow">Credit</a>
+                            <a href="javascript: void(0);" class="has-arrow">Credit Book</a>
                             <ul class="sub-menu" aria-expanded="true">
                                 <li><a href="layouts-dark-sidebar.html">New Entry</a></li>
-                                <li><a href="layouts-compact-sidebar.html">Source</a></li>
+                                <li><a href="{{ url('add_payment')}}">Add Sources</a></li>
                                 <li><a href="layouts-compact-sidebar.html">Report</a></li>
                             </ul>
                         </li>
 
                         <li>
-                            <a href="javascript: void(0);" class="has-arrow">Debit</a>
+                            <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="layouts-horizontal.html">New Entry</a></li>
-                                <li><a href="layouts-hori-topbar-light.html">Source</a></li>
+                                <li><a href="{{ url('debit_entry') }}">New Entry</a></li>
+                                <a href="{{ url('add_payment')  }}">Add Sources</a>
                                 <li><a href="layouts-hori-boxed-width.html">Refort</a></li>
                             </ul>
                         </li>

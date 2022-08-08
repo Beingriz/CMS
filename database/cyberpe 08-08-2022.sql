@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2022 at 10:06 PM
+-- Generation Time: Aug 08, 2022 at 11:05 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -81,7 +81,8 @@ INSERT INTO `balance_ledger` (`Id`, `Client_Id`, `Date`, `Name`, `Mobile_No`, `C
 ('DCA20221658747961', 'DC1628612961', '2022-07-25', 'Sumera', '9066673291', 'Aadhar Card', 'Address Correction ', 20, 10, 10, 'Cash', 'Not Available', 'Received Rs. 10/- From  Sumera Bearing Client ID: DC1628612961 & Mobile No: 9066673291 for Aadhar Card Address Correction , on 2022-07-25 by  Cash, Total: 20, Paid: 10, Balance: 10'),
 ('DCA20221658755412', 'DC2020987678', '2022-07-25', 'Rizwan', '8951775912', 'Agreement Paper', 'House Lease Agreement ', 100, 10, 90, 'Cash', 'Not Available', 'Received Rs. 10/- From  Rizwan Bearing Client ID: DC2020987678 & Mobile No: 8951775912 for Agreement Paper House Lease Agreement , on 2022-07-25 by  Cash, Total: 100, Paid: 10, Balance: 90'),
 ('DCA20221658764947', 'DC2020987678', '2022-07-25', 'Md Rizwan', '8951775912', 'Aadhar Card', 'DOB Correction ', 100, 10, 90, 'Cash', 'Not Available', 'Received Rs. 10/- From  Md Rizwan Bearing Client ID: DC2020987678 & Mobile No: 8951775912 for Aadhar Card DOB Correction , on 2022-07-25 by  Cash, Total: 100, Paid: 10, Balance: 90'),
-('DCA20221659111025', 'DC2020987678', '2022-07-30', 'Nigar', '8951775912', 'Agreement Paper', 'Shop Renatal Agreement', 200, 125, 75, 'PayTM', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//PR_Phone Pe_1659111101.jpg', 'Updated 125/- From  Nigar Bearing Client ID: DC2020987678 & Mobile No: 8951775912for Agreement Paper,Shop Renatal Agreement, on 30-07-2022 by PayTM'),
+('DCA20221659111025', 'DC2020987678', '2022-07-30', 'Nigar', '8951775912', 'Agreement Paper', 'House Lease Agreement', 200, 125, 75, 'PayTM', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//PR_Phone Pe_1659111101.jpg', 'Updated 125/- From  Nigar Bearing Client ID: DC2020987678 & Mobile No: 8951775912for Agreement Paper,House Lease Agreement, on 31-07-2022 by PayTM'),
+('DCA20221659420348', 'DC2020746028', '2022-08-02', 'Kaleme Baig', '8892988334', 'Caste & Income', 'Muslim 2B ', 1000, 1000, 0, 'Phone Pe', 'Client_DB/Kaleme Baig_DC2020746028/Caste & Income/Muslim 2B/PR_Phone Pe_1659420749.jpg', 'Updated 1000/- From  Kaleme Baig Bearing Client ID: DC2020746028 & Mobile No: 8892988334for Caste & Income,Muslim 2B , on 02-08-2022 by Phone Pe'),
 ('WC1628783336', 'WC1628783336', '2021-08-12', 'Rizwan', 'WC1628783336', '', 'Color Xerox', 12, 1, 11, 'Cash ', './Client/Payments/Attachements/', 'Rizwan'),
 ('WC1628783854', 'WC1628783854', '2021-08-11', 'ca', 'WC1628783854', '', 'Xerox', 1000, 10, 990, 'Cash ', './Client/Payments/Attachements/', 'ca'),
 ('WC1628787180', 'WC1628787180', '2021-08-12', '125', 'WC1628787180', '', 'Aadhaar Card Download', 1400, 254, 1146, 'Cash ', './Client/Payments/Attachements/', '125'),
@@ -187,7 +188,7 @@ INSERT INTO `client_register` (`Id`, `Name`, `Relative_Name`, `Gender`, `DOB`, `
 ('DC1628614604', 'MD Rizwan', NULL, NULL, '1964-04-16', '9342404759', 'MD Rizwan@gmail.com', 'Chikkabasthi', '../Clinet/Profile_Image/img.jpg', 'Old Client', '2021-08-09 18:30:00', NULL),
 ('DC1628612961', 'Nigar', 'Md Rizwan', 'Female', '1994-12-05', '9066673291', 'Nigar@gmail.com', 'Chikkabasthi', '../Clinet/Profile_Image/img.jpg', 'Old Client', '2021-08-09 18:30:00', NULL),
 ('DC1628600580', 'Akbar', NULL, NULL, '1993-07-18', '8867770409', '', 'Chikkabashti', '', '', '2021-08-09 18:30:00', NULL),
-('DC2020746028', 'MD RIZWAN', NULL, NULL, '1993-12-09', '8892988334', '', '', '', '', '2021-08-09 18:30:00', NULL),
+('DC2020746028', 'MD RIZWAN', 'Nadeem', 'Male', '1993-12-09', '8892988334', '', '', 'Client_DB/New Applicant 1659425161/Profile PhotoMD RIZWAN20220802_Doc - Copy.jpg', 'New Client', '2021-08-09 18:30:00', NULL),
 ('DC2020987678', 'SHATAJ', 'Sasdsa', 'Male', '2022-07-21', '8951775912', '', '', '', 'New Client', '2021-08-09 18:30:00', NULL),
 ('DC2121444171', 'SHEELA', NULL, NULL, NULL, '9591058966', '', '', '', '', '2021-09-20 18:30:00', NULL),
 ('DC1632431349', 'Md Rizwan', NULL, NULL, '0004-01-18', '9951775912', 'Md Rizwan@gmail.com', 'Chikkabasthi', '../Clinet/Profile_Image/img.jpg', 'Old Client', '2021-09-22 18:30:00', NULL),
@@ -2467,7 +2468,12 @@ INSERT INTO `credit_ledger` (`Id`, `Client_Id`, `Date`, `Category`, `Sub_Categor
 ('DCA20221658747961', 'DC1628612961', '2022-07-25', 'Aadhar Card', 'Address Correction ', 20, 10, 10, 'Received Rs. 10/- From  Sumera Bearing Client ID: DC1628612961 & Mobile No: 9066673291 for Aadhar Card Address Correction , on 2022-07-25 by  Cash, Total: 20, Paid: 10, Balance: 10', 'Cash', 'Not Available'),
 ('DCA20221658755412', 'DC2020987678', '2022-07-25', 'Agreement Paper', 'House Lease Agreement ', 100, 10, 90, 'Received Rs. 10/- From  Rizwan Bearing Client ID: DC2020987678 & Mobile No: 8951775912 for Agreement Paper House Lease Agreement , on 2022-07-25 by  Cash, Total: 100, Paid: 10, Balance: 90', 'Cash', 'Not Available'),
 ('DCA20221658764947', 'DC2020987678', '2022-07-25', 'Aadhar Card', 'DOB Correction ', 100, 10, 90, 'Received Rs. 10/- From  Md Rizwan Bearing Client ID: DC2020987678 & Mobile No: 8951775912 for Aadhar Card DOB Correction , on 2022-07-25 by  Cash, Total: 100, Paid: 10, Balance: 90', 'Cash', 'Not Available'),
-('DCA20221659111025', 'DC2020987678', '2022-07-30', 'Agreement Paper', 'Shop Renatal Agreement', 200, 125, 75, 'Updated 125/- From  Nigar Bearing Client ID: DC2020987678 & Mobile No: 8951775912for Agreement Paper,Shop Renatal Agreement, on 30-07-2022 by PayTM', 'PayTM', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//PR_Phone Pe_1659111101.jpg');
+('DCA20221659111025', 'DC2020987678', '2022-07-30', 'Agreement Paper', 'House Lease Agreement', 200, 125, 75, 'Updated 125/- From  Nigar Bearing Client ID: DC2020987678 & Mobile No: 8951775912for Agreement Paper,House Lease Agreement, on 31-07-2022 by PayTM', 'PayTM', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//PR_Phone Pe_1659111101.jpg'),
+('DCA20221659249489', 'DC2020987678', '2022-07-31', 'Aadhar Card', 'DOB Correction', 200, 250, -50, 'Updated 250/- From  SHATAJ Bearing Client ID: DC2020987678 & Mobile No: 8951775912for Aadhar Card,DOB Correction, on 31-07-2022 by Phone Pe', 'Phone Pe', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction//PR_Phone Pe_1659249545.jpg');
+INSERT INTO `credit_ledger` (`Id`, `Client_Id`, `Date`, `Category`, `Sub_Category`, `Total_Amount`, `Amount_Paid`, `Balance`, `Description`, `Payment_Mode`, `Attachment`) VALUES
+('DCA20221659274055', 'DC2020987678', '2022-07-31', 'Aadhar Card', 'DOB Correction ', 200, 200, 0, 'Updated 200/- From  SHATAJ Bearing Client ID: DC2020987678 & Mobile No: 8951775912for Aadhar Card,DOB Correction , on 31-07-2022 by Google Pay', 'Google Pay', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/PR_Google Pay_1659274342.jpg'),
+('DCA20221659420348', 'DC2020746028', '2022-08-02', 'Caste & Income', 'Muslim 2B ', 1000, 1000, 0, 'Updated 1000/- From  Kaleme Baig Bearing Client ID: DC2020746028 & Mobile No: 8892988334for Caste & Income,Muslim 2B , on 02-08-2022 by Phone Pe', 'Phone Pe', 'Client_DB/Kaleme Baig_DC2020746028/Caste & Income/Muslim 2B/PR_Phone Pe_1659420749.jpg'),
+('DCA20221659425077', 'DC2020746028', '2022-08-02', 'Agreement Paper', 'House Renatal Agreement ', 200, 200, 0, 'Updated 200/- From  Salman Khan Bearing Client ID: DC2020746028 & Mobile No: 8892988334for Agreement Paper,House Renatal Agreement , on 02-08-2022 by Google Pay', 'Google Pay', 'Client_DB/MD RIZWAN_DC2020746028/New Applicant/Agreement Paper/House Renatal Agreement/PR_Google Pay_1659425161.jpg');
 
 -- --------------------------------------------------------
 
@@ -5445,7 +5451,11 @@ INSERT INTO `digital_cyber_db` (`Id`, `Client_Id`, `Received_Date`, `Name`, `Gen
 ('DCA20221658747961', 'DC1628612961', '2022-07-25', 'Sumera', 'Male', 'Sajjad', '1999-01-01', '9066673291', 'Aadhar Card', 'Address Correction ', NULL, 20, 10, 10, 'Cash', 'Not Available', 'Received ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'Client_DB/Nigar_DC1628612961/Aadhar Card/Photo/Sumera_DC1628612961.jpg', 'No', NULL, '2022-07-25 11:20:02', '2022-07-25 11:20:02'),
 ('DCA20221658755412', 'DC2020987678', '2022-07-25', 'Rizwan', 'Male', 'Khan', '2022-07-25', '8951775912', 'Agreement Paper', 'House Lease Agreement ', NULL, 100, 10, 90, 'Cash', 'Not Available', 'Received ', 'Inmhkk Sada', 'Client_DB/SHATAJ_DC2020987678/Agreement Paper/House Lease Agreement//Ack_Inmhkk Sada_1658755610.pdf', 'Not Available', 'Not Available', NULL, 'Client_DB/SHATAJ_DC2020987678/Agreement Paper/Photo/Rizwan_DC2020987678.jpg', 'No', NULL, '2022-07-25 13:26:50', '2022-07-25 13:26:50'),
 ('DCA20221658764947', 'DC2020987678', '2022-07-25', 'Md Rizwan', 'Male', 'Md Rizwan', '1993-07-18', '8951775912', 'Aadhar Card', 'DOB Correction ', NULL, 100, 10, 90, 'Cash', 'Not Available', 'Received ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Photo/Md Rizwan_DC2020987678.jpg', 'No', NULL, '2022-07-25 16:13:43', '2022-07-25 16:13:43'),
-('DCA20221659111025', 'DC2020987678', '2022-07-30', 'Nigar', 'Male', 'Sultana', '2022-07-21', '8951775912', 'Agreement Paper', 'House Lease Agreement', '2022-07-30', 200, 125, 75, 'PayTM', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//PR_Phone Pe_1659111101.jpg', 'Under Process ', 'Ack ', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//AF_Ack _1659111101.jpg', 'Akaasdk', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//DF_Akaasdk_1659111101.jpg', '2022-07-30', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction/SHATAJ_DC2020987678.jpg', 'No', NULL, '2022-07-29 18:41:41', '2022-07-29 18:41:41');
+('DCA20221659111025', 'DC2020987678', '2022-07-30', 'Nigar', 'Male', 'Sultana', '2022-07-21', '8951775912', 'Agreement Paper', 'House Lease Agreement', '2022-07-30', 200, 125, 75, 'PayTM', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//PR_Phone Pe_1659111101.jpg', 'Under Process ', 'Ack ', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//AF_Ack _1659111101.jpg', 'Akaasdk', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction//DF_Akaasdk_1659111101.jpg', '2022-07-31', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Address Correction/SHATAJ_DC2020987678.jpg', 'No', NULL, '2022-07-29 18:41:41', '2022-07-29 18:41:41'),
+('DCA20221659249489', 'DC2020987678', '2022-07-31', 'SHATAJ', 'Male', 'Final Testing', '2022-07-21', '8951775912', 'Aadhar Card', 'DOB Correction', '2022-07-31', 200, 250, -50, 'Phone Pe', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction//PR_Phone Pe_1659249545.jpg', 'Aadhar Updated ', '789456123', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction//AF_789456123_1659249545.pdf', '8456996', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction//DF_8456996_1659249545.pdf', '2022-07-31', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ_DC2020987678.jpg', 'No', NULL, '2022-07-31 09:09:05', '2022-07-31 09:09:05'),
+('DCA20221659274055', 'DC2020987678', '2022-07-31', 'SHATAJ', 'Male', 'Final Testing', '2022-07-21', '8951775912', 'Aadhar Card', 'DOB Correction ', '2022-07-31', 200, 200, 0, 'Google Pay', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/PR_Google Pay_1659274342.jpg', 'Acknowledgement  ', '45871', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/AF_45871_1659274342.pdf', '77784', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/DF_77784_1659274342.pdf', '2022-07-31', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ_DC2020987678.jpg', 'No', NULL, '2022-07-31 16:00:26', '2022-07-31 16:00:26'),
+('DCA20221659420348', 'DC2020746028', '2022-08-02', 'Kaleme Baig', 'Male', 'Nadeem', '1993-12-09', '8892988334', 'Caste & Income', 'Muslim 2B ', '2022-08-02', 1000, 1000, 0, 'Phone Pe', 'Client_DB/Kaleme Baig_DC2020746028/Caste & Income/Muslim 2B/PR_Phone Pe_1659420749.jpg', 'Delivered to Client ', 'RD003819127547', 'Client_DB/Kaleme Baig_DC2020746028/Caste & Income/Muslim 2B/AF_RD003819127547_1659420749.pdf', 'RDCRD', 'Client_DB/Kaleme Baig_DC2020746028/Caste & Income/Muslim 2B/DF_RDCRD_1659420749.pdf', '2022-08-02', 'Client_DB/MD RIZWAN_DC2020746028/Caste & Income/Muslim 2B/Kaleme Baig_DC2020746028.jpg', 'No', NULL, '2022-08-02 08:39:13', '2022-08-02 08:39:13'),
+('DCA20221659425077', 'DC2020746028', '2022-08-02', 'Salman Khan', 'Male', 'Sasla', '1993-12-09', '8892988334', 'Agreement Paper', 'House Renatal Agreement ', '2022-08-02', 200, 200, 0, 'Google Pay', 'Client_DB/MD RIZWAN_DC2020746028/New Applicant/Agreement Paper/House Renatal Agreement/PR_Google Pay_1659425161.jpg', 'Received', 'Chekck', 'Client_DB/MD RIZWAN_DC2020746028/New Applicant/Agreement Paper/House Renatal Agreement/AF_Chekck_1659425161.pdf', 'Doc', 'Client_DB/MD RIZWAN_DC2020746028/New Applicant/Agreement Paper/House Renatal Agreement/DF_Doc_1659425161.pdf', '2022-08-02', 'Client_DB/MD RIZWAN_DC2020746028/New Applicant/Agreement Paper/House Renatal Agreement/New Applicant_DC2020746028.jpg', 'No', NULL, '2022-08-02 09:56:02', '2022-08-02 09:56:02');
 
 -- --------------------------------------------------------
 
@@ -5469,12 +5479,23 @@ CREATE TABLE `document_files` (
 
 INSERT INTO `document_files` (`Id`, `App_Id`, `Client_Id`, `Document_Name`, `Document_Path`, `created_at`, `updated_at`) VALUES
 ('DOC1257', 'DCA20221659111025', 'DC2020987678', 'pan', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Name Correction/Documents Files//DocumentsSHATAJpan_1659121894.pdf', NULL, NULL),
+('DOC1258', 'DCA20221659249489', 'DC2020987678', 'Aadhar Card', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ Aadhar Card_1659251725.pdf', '2022-07-31 09:45:25', '2022-07-31 09:45:25'),
 ('DOC1278', 'DCA20221659111025', 'DC2020987678', 'Adhar ', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Name Correction/Documents Files//DocumentsSHATAJAdhar _1659121894.pdf', NULL, NULL),
 ('DOC1922', 'DCA20221659111025', 'DC2020987678', '2 ', 'Client_DB/SHATAJ_DC2020987678/Agreement Paper/Shop Renatal Agreement/Documents Files/Document Nigar 2 _1659122398.jpg', NULL, NULL),
+('DOC273', 'DCA20221659249489', 'DC2020987678', 'To Be Deleted', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ To Be Deleted_1659252186.pdf', '2022-07-31 09:53:06', '2022-07-31 09:53:06'),
+('DOC3485', 'DCA20221659425077', 'DC2020746028', 'Aadhar Card', 'Client_DB/New Applicant_DC2020746028/Agreement Paper/House Renatal Agreement/Salman Khan Aadhar Card_1659426227.jpg', '2022-08-02 10:13:47', '2022-08-02 10:13:47'),
 ('DOC3503', 'DCA20221659111025', 'DC2020987678', '3 dc', 'Client_DB/SHATAJ_DC2020987678/Agreement Paper/Shop Renatal Agreement/Documents Files/Document Nigar 3 dc_1659122398.jpg', NULL, NULL),
+('DOC4118', 'DCA20221659274055', 'DC2020987678', 'asdasdasdasd', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ asdasdasdasd_1659274342.pdf', '2022-07-31 16:02:22', '2022-07-31 16:02:22'),
+('DOC4447', 'DCA20221659249489', 'DC2020987678', 'Voter Id Card', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ Voter Id Card_1659253346.pdf', '2022-07-31 10:12:26', '2022-07-31 10:12:26'),
+('DOC5232', 'DCA20221659111025', 'DC2020987678', 'to be deleted 2', 'Client_DB/Nigar_DC2020987678/Agreement Paper/House Lease Agreement//Document Nigar to be deleted 2_1659198318.jpg', '2022-07-30 18:55:18', '2022-07-30 18:55:18'),
 ('DOC5261', 'DCA20221659111025', 'DC2020987678', '1 Doc', 'Client_DB/SHATAJ_DC2020987678/Agreement Paper/Shop Renatal Agreement/Documents Files/Documents Nigar 1 Doc_1659122398.jpg', NULL, NULL),
+('DOC6097', 'DCA20221659249489', 'DC2020987678', 'Pan Card', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ Pan Card_1659253346.pdf', '2022-07-31 10:12:26', '2022-07-31 10:12:26'),
+('DOC6266', 'DCA20221659111025', 'DC2020987678', 'To Be Deleted', 'Client_DB/Nigar_DC2020987678/Agreement Paper/House Lease Agreement//Documents Nigar To Be Deleted_1659198318.jpg', '2022-07-30 18:55:18', '2022-07-30 18:55:18'),
 ('DOC6983', 'DCA20221659111025', 'DC2020987678', '2 ', 'Client_DB/Nigar_DC2020987678/Agreement Paper/House Lease Agreement//Document Nigar 2 _1659123526.jpg', '2022-07-29 22:08:46', '2022-07-29 22:08:46'),
+('DOC7351', 'DCA20221659274055', 'DC2020987678', 'Aadhar Card', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ Aadhar Card_1659274342.pdf', '2022-07-31 16:02:22', '2022-07-31 16:02:22'),
+('DOC7922', 'DCA20221659274055', 'DC2020987678', 'To Be Deleted', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/DOB Correction/SHATAJ To Be Deleted_1659274342.pdf', '2022-07-31 16:02:22', '2022-07-31 16:02:22'),
 ('DOC821', 'DCA20221659111025', 'DC2020987678', '1 Doc', 'Client_DB/Nigar_DC2020987678/Agreement Paper/House Lease Agreement/Documents Files/Documents Nigar 1 Doc_1659123526.jpg', '2022-07-29 22:08:46', '2022-07-29 22:08:46'),
+('DOC8315', 'DCA20221659111025', 'DC2020987678', 'to be deleted3', 'Client_DB/Nigar_DC2020987678/Agreement Paper/House Lease Agreement//Document Nigar to be deleted3_1659198318.jpg', '2022-07-30 18:55:18', '2022-07-30 18:55:18'),
 ('DOC8675', 'DCA20221659111025', 'DC2020987678', 'asd', 'Client_DB/SHATAJ_DC2020987678/Aadhar Card/Name Correction/Documents Files//DocumentsSHATAJasd_1659121894.pdf', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -5893,13 +5914,13 @@ CREATE TABLE `service_list` (
 --
 
 INSERT INTO `service_list` (`Sl_No`, `Id`, `Name`, `Service_Type`, `Description`, `Details`, `Features`, `Specification`, `Order_By`, `Total_Count`, `Total_Amount`, `Temp_Count`, `Thumbnail`, `Recycle_Bin`, `updated_at`, `created_at`) VALUES
-(1, 'DCAC001', 'Aadhar Card', 'Public', 'Aadhaar number is a 12-digit random number issued by the UIDAI (“Authority”) to the residents of India after satisfying the verification process laid down by the Authority. ', 'Aadhaar number is verifiable in an online, cost-effective way. It is unique and robust enough to eliminate duplicates and fake identities and may be used as a basis/primary identifier to roll out several Government welfare schemes and programmes for effective service delivery thereby promoting transparency and good governance. This is the only program of its kind globally, wherein a state-of-the-art digital and online Id is being provided free of cost at such a large scale to people, and has the potential to change the way service delivery functions in the country.', 'Uniqueness\nThis is achieved through the process of demographic and biometric de-duplication. The de-duplication process compares the resident’s demographic and biometric information, collected during the process of enrolment, with the records in the UIDAI database to verify if the resident is already in the database or not. An individual needs to enrol for Aadhaar only once and after de-duplication only one Aadhaar shall be generated. In case, the resident enrols more than once, the subsequent enrolments will be rejected.\n\nPortability\nAadhaar gives nationwide portability as it can be authenticated anywhere on-line. This is critical as millions of Indians migrate from one state to another or from rural area to urban centres etc.\n\nRandom number\nAadhaar number is a random number devoid of any intelligence. Person willing to enrol has to provide minimal demographic along with biometric information during the enrolment process. The Aadhaar enrolment process does not capture details like caste, religion, income, health, geography, etc.', 'Aadhar Updates as Follows:\r\n1. Name \r\n2. Father Name \r\n3. Address\r\n4.Gender\r\n5. DOB\r\n\r\nUsing Valid Proof ..', 'A', 95, 21637, 22, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(6, 'DCAP006', 'Agreement Paper', 'Public', 'No Descrtiotion Available for this Product', '', '', '', 'C', 90, 18195, 18, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(1, 'DCAC001', 'Aadhar Card', 'Public', 'Aadhaar number is a 12-digit random number issued by the UIDAI (“Authority”) to the residents of India after satisfying the verification process laid down by the Authority. ', 'Aadhaar number is verifiable in an online, cost-effective way. It is unique and robust enough to eliminate duplicates and fake identities and may be used as a basis/primary identifier to roll out several Government welfare schemes and programmes for effective service delivery thereby promoting transparency and good governance. This is the only program of its kind globally, wherein a state-of-the-art digital and online Id is being provided free of cost at such a large scale to people, and has the potential to change the way service delivery functions in the country.', 'Uniqueness\nThis is achieved through the process of demographic and biometric de-duplication. The de-duplication process compares the resident’s demographic and biometric information, collected during the process of enrolment, with the records in the UIDAI database to verify if the resident is already in the database or not. An individual needs to enrol for Aadhaar only once and after de-duplication only one Aadhaar shall be generated. In case, the resident enrols more than once, the subsequent enrolments will be rejected.\n\nPortability\nAadhaar gives nationwide portability as it can be authenticated anywhere on-line. This is critical as millions of Indians migrate from one state to another or from rural area to urban centres etc.\n\nRandom number\nAadhaar number is a random number devoid of any intelligence. Person willing to enrol has to provide minimal demographic along with biometric information during the enrolment process. The Aadhaar enrolment process does not capture details like caste, religion, income, health, geography, etc.', 'Aadhar Updates as Follows:\r\n1. Name \r\n2. Father Name \r\n3. Address\r\n4.Gender\r\n5. DOB\r\n\r\nUsing Valid Proof ..', 'A', 96, 22073, 22, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(6, 'DCAP006', 'Agreement Paper', 'Public', 'No Descrtiotion Available for this Product', '', '', '', 'C', 92, 18520, 19, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (5, 'DCAPL005', 'APL Ration Card', 'Public', 'No Descrtiotion Available for this Product', '', '', '', 'B', 3, 522, 0, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (9, 'DCBA009', 'SBI Kiosk', 'Public', 'A bank is a financial institution licensed to receive deposits and make loans. Banks may also provide financial services.', 'KEY TAKEAWAYS\nA bank is a financial institution licensed to receive deposits and make loans.\nThere are several types of banks including retail, commercial, and investment banks.\nIn most countries, banks are regulated by the national government or central bank.', 'We Provide State SBI bank Services along with Kotak and Canara Bank Account Opening Facility', '', 'A', 12, 3300, 0, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (12, 'DCBC012', 'Birth Certificate', 'Public', 'A birth certificate is a vital record that documents the birth of a person. The term \"birth certificate\" can refer to original document', ' Depending on the jurisdiction, a record of birth might or might not contain verification of the event by such as a midwife or doctor.\n\nThe United Nations Sustainable Development Goal 17, an integral part of the 2030 Agenda, has a target to increase the timely availability of data regarding age, gender, race, ethnicity, and other relevant characteristics which documents like a birth certificate has the capacity to provide.[1]', '', '', 'A', 1, 1, 0, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (4, 'DCBPL004', 'BPL Ration Card', 'Public', 'No Descrtiotion Available for this Product', '', '', '', 'B', 23, 8942, 15, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(8, 'DCCI008', 'Caste & Income', 'Public', 'Caste Certificate that help you to get your reservation in government scholarships and help to study higher with your Caste', 'Know your Caste and get your Caste certificate to avail the various government reservations under state and central government schemes.', 'We at Digital Cyber Pvt Ltd, help common people to get these certificates with hassle free services and with in limited period of time', 'Genera & Tatkal Services Available to get your Certificate,', 'A', 26, 19260, 1, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(8, 'DCCI008', 'Caste & Income', 'Public', 'Caste Certificate that help you to get your reservation in government scholarships and help to study higher with your Caste', 'Know your Caste and get your Caste certificate to avail the various government reservations under state and central government schemes.', 'We at Digital Cyber Pvt Ltd, help common people to get these certificates with hassle free services and with in limited period of time', 'Genera & Tatkal Services Available to get your Certificate,', 'A', 27, 20260, 1, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (19, 'DCCV001', 'Covid-19', 'Public', 'COVID-19\nCOVID-19 is the disease caused by SARS-CoV-2, the coronavirus that emerged in December 2019.\nCOVID-19 can be severe, and has caused millions ', 'COVID-19 vaccines have been authorized for emergency use by the U.S. Food and Drug Administration, and vaccination programs are in progress across the U.S. and in many parts of the world.\nPrevention involves physical distancing, mask-wearing, hand hygiene and staying away from others if you feel sick.', 'How does the coronavirus spread?\n\nAs of now, researchers know that the coronavirus is spread through droplets and virus particles released into the air when an infected person breathes, talks, laughs, sings, coughs or sneezes. Larger droplets may fall to the ground in a few seconds, but tiny infectious particles can linger in the air and accumulate in indoor places, especially where many people are gathered and there is poor ventilation. This is why mask-wearing, hand hygiene and physical distancing are essential to preventing COVID-19.', 'How did the coronavirus start?\nThe first case of COVID-19 was reported Dec. 1, 2019, and the cause was a then-new coronavirus later named SARS-CoV-2. SARS-CoV-2 may have originated in an animal and changed (mutated) so it could cause illness in humans. In the past, several infectious disease outbreaks have been traced to viruses originating in birds, pigs, bats and other animals that mutated to become dangerous to humans. Research continues, and more study may reveal how and why the coronavirus evolved to cause pandemic disease.', 'B', 184, 14484, 124, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (7, 'DCEC007', 'Election Card', 'Public', 'Voter ID, also known as EPIC (Electors Photo Identity Card) is a photo identity card issued by the Election Commission of India.', 'The purpose of voter ID is to serve as identity proof for voters, increase efficiency and prevent impersonation and fraud during free Democracy', 'A unique Serial number\r\nPhotograph of the cardholder\r\nA hologram containing the respective state/national symbol\r\nName of cardholder\r\nfatherâ€™s Name', 'Gender\r\nCard holderâ€™s\r\nCard holderâ€™s date of Birth\r\nThe card holderâ€™s residential address and signature of the issuing authority', 'B', 680, 33500, 34, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (18, 'DCIMA001', 'IMA Claims', 'Public', 'No Descrtiotion Available for this Product', '', '', '', 'D', 0, 0, 0, NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
@@ -5923,6 +5944,7 @@ CREATE TABLE `status` (
   `Status` varchar(100) NOT NULL,
   `Total_Count` int(50) NOT NULL,
   `Relation` varchar(50) NOT NULL,
+  `Class` varchar(255) DEFAULT NULL,
   `Total_Amount` int(200) NOT NULL,
   `Temp_Count` int(50) NOT NULL,
   `Thumbnail` text DEFAULT NULL
@@ -5932,27 +5954,27 @@ CREATE TABLE `status` (
 -- Dumping data for table `status`
 --
 
-INSERT INTO `status` (`Sl_No`, `Orderby`, `Status`, `Total_Count`, `Relation`, `Total_Amount`, `Temp_Count`, `Thumbnail`) VALUES
-(1, 'A', 'Received', 295, 'General', 46652, 19, NULL),
-(2, 'B', 'Submitted', 19, 'General', 6600, 2, NULL),
-(3, 'D', 'Under Process', 82, 'General', 12915, 11, NULL),
-(4, 'N', 'ID No Alloted', 0, 'Election Card', 0, 0, NULL),
-(5, 'J', 'Pan Alloted', 22, 'Pan Card', 6550, 0, NULL),
-(6, 'C', 'Acknowledgement ', 17, 'General', 8460, 5, NULL),
-(7, 'O', 'Passport No', 0, 'Passport', 0, 0, NULL),
-(8, 'E', 'In Office', 16, 'General', 6900, 1, NULL),
-(9, 'F', 'Delivered to Client', 401, 'General', 166923, 9, NULL),
-(10, 'H', 'Rejected', 297, 'General', 15440, 0, NULL),
-(11, 'G', 'On Hold', 9, 'General', 2953, 0, NULL),
-(12, 'I', 'Returned', 3, 'General', 950, 0, NULL),
-(14, 'M', 'Accepted', 58, 'Election Card', 2650, 0, NULL),
-(15, 'P', 'Aadhar Updated', 42, 'Aadhar Card', 11010, 29, NULL),
-(18, 'K', 'BLO Appointed', 2, 'Election Card', 250, 0, NULL),
-(19, 'L', 'Field Verified', 0, 'Election Card', 0, 0, NULL),
-(25, 'R', 'Journey Completed', 0, 'Train Reservation', 0, 0, NULL),
-(26, 'S', 'Cancelled', 0, 'Train Reservation', 0, 0, NULL),
-(23, 'Q', 'Payment Success', 33, 'Covid-19', 2800, 0, NULL),
-(24, 'R', 'Aadhar Not Linked', 11, 'Covid-19', 1000, 0, NULL);
+INSERT INTO `status` (`Sl_No`, `Orderby`, `Status`, `Total_Count`, `Relation`, `Class`, `Total_Amount`, `Temp_Count`, `Thumbnail`) VALUES
+(1, 'A', 'Received', 295, 'General', 'table-info', 46652, 0, NULL),
+(2, 'B', 'Submitted', 19, 'General', 'table-prmary', 6600, 0, NULL),
+(3, 'D', 'Under Process', 82, 'General', 'table-warning', 12915, 0, NULL),
+(4, 'N', 'ID No Alloted', 0, 'Election Card', 'table-success', 0, 0, NULL),
+(5, 'J', 'Pan Alloted', 22, 'Pan Card', 'table-success', 6550, 0, NULL),
+(6, 'C', 'Acknowledgement ', 17, 'General', 'table-warning', 8460, 0, NULL),
+(7, 'O', 'Passport No', 0, 'Passport', 'table-success', 0, 0, NULL),
+(8, 'E', 'In Office', 16, 'General', 'table-success', 6900, 0, NULL),
+(9, 'F', 'Delivered to Client', 401, 'General', 'table-success', 166923, 0, NULL),
+(10, 'H', 'Rejected', 297, 'General', 'table-danger', 15440, 0, NULL),
+(11, 'G', 'On Hold', 9, 'General', 'table-warning', 2953, 0, NULL),
+(12, 'I', 'Returned', 3, 'General', 'table-danger', 950, 0, NULL),
+(14, 'M', 'Accepted', 58, 'Election Card', 'table-success', 2650, 0, NULL),
+(15, 'P', 'Aadhar Updated', 42, 'Aadhar Card', 'table-success', 11010, 0, NULL),
+(18, 'K', 'BLO Appointed', 2, 'Election Card', 'table-warning', 250, 0, NULL),
+(19, 'L', 'Field Verified', 0, 'Election Card', 'table-success', 0, 0, NULL),
+(25, 'R', 'Journey Completed', 0, 'Train Reservation', 'table-success', 0, 0, NULL),
+(26, 'S', 'Cancelled', 0, 'Train Reservation', 'table-danger', 0, 0, NULL),
+(23, 'Q', 'Payment Success', 33, 'Covid-19', 'table-success', 2800, 0, NULL),
+(24, 'R', 'Aadhar Not Linked', 11, 'Covid-19', 'table-warning', 1000, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -5983,10 +6005,10 @@ CREATE TABLE `sub_service_list` (
 INSERT INTO `sub_service_list` (`Sl_No`, `Service_Id`, `Id`, `Name`, `Service_Type`, `Description`, `Unit_Price`, `Total_Count`, `Total_Amount`, `Thumbnail`, `Recycle_Bin`, `updated_at`, `created_at`) VALUES
 (71, 'DC81PFL', 'DC41UXQ', 'New Applicaiton', 'Public', 'As a part of decentralisation through the Indian Constitutional Amendment Act 1993, the implementation of Widow Pension, which were handled by the Soc', 200, 0, NULL, NULL, 'No', '2021-10-03 00:10:22', '2021-10-03 00:10:22'),
 (1, 'DCAC001', 'DCAC01', 'Name Correction', NULL, NULL, 200, 9, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(2, 'DCAC001', 'DCAC02', 'DOB Correction', NULL, NULL, 200, 8, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(2, 'DCAC001', 'DCAC02', 'DOB Correction', NULL, NULL, 200, 10, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (3, 'DCAC001', 'DCAC03', 'Gender Correction', NULL, NULL, 200, 1, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (4, 'DCAC001', 'DCAC04', 'Father Name', NULL, NULL, 200, 1, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(5, 'DCAC001', 'DCAC05', 'Address Correction', NULL, NULL, 200, 77, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(5, 'DCAC001', 'DCAC05', 'Address Correction', NULL, NULL, 200, 76, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (6, 'DCAP006', 'DCAP01', 'House Renatal Agreement', NULL, NULL, 200, 77, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (7, 'DCAP006', 'DCAP02', 'Shop Renatal Agreement', NULL, NULL, 200, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (8, 'DCAP006', 'DCAP03', 'House Lease Agreement', NULL, NULL, 200, 11, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
@@ -6002,12 +6024,12 @@ INSERT INTO `sub_service_list` (`Sl_No`, `Service_Id`, `Id`, `Name`, `Service_Ty
 (18, 'DCBC012', 'DCBC02', 'Mother Name Correction', 'Public', 'Mother Name in Birth Certificate can be updated by providing Aadhar Card and other neccessary documents in prescribed manner for the correction', 500, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (19, 'DCBC012', 'DCBC03', 'Father Name Correction', NULL, NULL, 0, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (20, 'DCBC012', 'DCBC04', 'Child Name Correction', NULL, NULL, 0, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(21, 'DCBC012', 'DCBC05', 'Address Correction ', NULL, NULL, 0, 77, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(21, 'DCBC012', 'DCBC05', 'Address Correction ', NULL, NULL, 0, 76, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (22, 'DCBPL004', 'DCBPL01', 'New Application', NULL, NULL, 0, 15, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (23, 'DCBPL004', 'DCBPL02', 'Member Addition', NULL, NULL, 0, 9, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (24, 'DCBPL004', 'DCBPL03', 'Member Deletion', NULL, NULL, 0, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (25, 'DCBPL004', 'DCBPL04', 'Fair Shop Change', NULL, NULL, 0, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(26, 'DCBPL004', 'DCBPL05', 'Address Correction ', NULL, NULL, 0, 77, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(26, 'DCBPL004', 'DCBPL05', 'Address Correction ', NULL, NULL, 0, 76, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (27, 'DCCI008', 'DCCI01', 'Muslim 2B', NULL, NULL, 0, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (28, 'DCCI008', 'DCCI02', 'Hindu General Category', NULL, NULL, 0, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (68, 'DCCV001', 'DCCV01', 'Auto Driver', NULL, NULL, 100, 52, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),

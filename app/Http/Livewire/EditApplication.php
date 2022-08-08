@@ -163,14 +163,19 @@ class EditApplication extends Component
 
         if($ack_file != 'Not Available' || $doc_file != 'Not Available'|| $pay_file != 'Not Available')
         {
-            Storage::disk('public')->exists($ack_file);
-            Storage::disk('public')->exists($doc_file);
-            Storage::disk('public')->exists($pay_file);
-            $this->AckFileDownload = 'Enable';
-            $this->DocFileDownload = 'Enable';
-            $this->PayFileDownload = 'Enable';
+            if(Storage::disk('public')->exists($ack_file))
+            {
+                $this->AckFileDownload = 'Enable';
+            }
+            if(Storage::disk('public')->exists($doc_file))
+            {
+                $this->DocFileDownload = 'Enable';
+            }
+            if(Storage::disk('public')->exists($pay_file))
+            {
+                $this->PayFileDownload = 'Enable';
+            }
         }
-
     }
 
     public function Update($Id)

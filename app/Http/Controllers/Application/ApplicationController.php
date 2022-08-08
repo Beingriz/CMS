@@ -21,6 +21,10 @@ class ApplicationController extends Controller
     {
         return view('Application.new_app');
     }
+    public function updateApplication()
+    {
+        return view('Application.update_application');
+    }
     public function Home()
     {
 
