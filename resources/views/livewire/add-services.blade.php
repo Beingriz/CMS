@@ -1,157 +1,200 @@
 <div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Services Module</h4>
+
+                @if (session('SuccessMsg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('SuccessMsg')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('SuccessUpdate'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{session('SuccessUpdate')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('Error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{session('Error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item active">New Services</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>{{-- End of Row --}}
+
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{{url('dashboard')}}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{url('app_home')}}">Application</a></li>
+            <li class="breadcrumb-item"><a href="{{url('app_form')}}">New Application</a></li>
+        </ol>
+    </div>{{-- End of Page Tittle --}}
+
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Services Section</h4>
+                <p class="card-title-desc">Add New Services</p>
+                <div class="row mb-3">
+                    <label for="example-text-input" class="col-sm-2 col-form-label">Service Id</label>
+                    <div class="col-sm-10">
+                        <label for="example-text-input" class="col-sm-2 col-form-label">{{$Service_Id}}</label>
+                    </div>
+                </div>
+                <!-- end row -->
+                <form wire:submit.prevent="Save">
+                    @csrf
+                <div class="row mb-3">
+                    <label for="example-search-input" class="col-sm-2 col-form-label">Catogory</label>                    <div class="col-sm-10">
+                        <select class="form-control" id="Category_Type" wire:model="Category_Type" name="Category_Type">
+                            <option value="">---Select---</option>
+                            <option value="Main">Main Services</option>
+                            <option value="Sub">Sub Services</option>
+                        </select>
+                        <span class="error">@error('Category_Type'){{$message}}@enderror</span>                    </div>
+                </div>
+                <!-- end row -->
+
+                @if ($Category_Type == 'Main')
+                    <div class="row mb-3">
+                        <label for="Name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" placeholder="Bookmark Name"  wire:model="Name" id="Name">
+                            <span class="error">@error('Name'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-url-input" class="col-sm-2 col-form-label">Service Type</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="Service_Type" wire:model="Service_Type" name="Service_Type">
+                                <option value="">---Select---</option>
+                                <option value="Public">Public</option>
+                                <option value="Private">Private</option>
+                            </select>
+                            <span class="error">@error('Service_Type'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Description<</label>
+                        <div class="col-sm-10">
+                            <textarea id="Description" wire:model="Description" name="Description" class="form-control"
+                                placeholder="Service Description" rows="3" maxlength="150" resize="none"></textarea>
+                                        <span class="error">@error('Description'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Details<</label>
+                        <div class="col-sm-10">
+                            <textarea id="Details" wire:model="Details" name="Details" class="form-control"
+                                            placeholder="Details" rows="3" resize="none"></textarea>
+                                        <span class="error">@error('Details'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Features<</label>
+                        <div class="col-sm-10">
+                            <textarea id="Features" wire:model="Features" name="Features" class="form-control"
+                                placeholder="Features" rows="3" resize="none"></textarea>
+                                        <span class="error">@error('Features'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Specifications<</label>
+                        <div class="col-sm-10">
+                            <textarea id="Specification" wire:model="Specification" name="Specification" class="form-control"
+                                            placeholder="Specification" rows="3" resize="none"></textarea>
+                                        <span class="error">@error('Specification'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Order<</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="Order_By" wire:model="Order_By" name="Order_By">
+                                <option value="">---Select---</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                            <span class="error">@error('Order_By'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+                    <div wire:loading wire:target="Thumbnail">Uploading...</div>
+                        @if (!is_Null($Thumbnail))
+                            <div class="row">
+                                <div class="col-45">
+                                    <img class="col-75" src="{{ $Thumbnail->temporaryUrl() }}"" alt="Thumbnail" />
+                                </div>
+                            </div>
+
+                        @elseif(!is_Null($Old_Thumbnail))
+                        <div class="row">
+                            <div class="col-45">
+                                <img class="col-75" src="{{ url('storage/'.$Old_Thumbnail) }}"" alt="Existing Thumbnail" />
+                            </div>
+                        </div>
+                        @endif
+                    <div class="form-data-buttons"> {{--Buttons--}}
+                        <div class="row">
+                            <div class="col-100">
+                                @if ($Update==0)
+                                <button type="submit" value="submit" name="submit"
+                                class="btn btn-primary btn-rounded btn-sm">Add Service</button>
+                            @elseif($Update==1)
+                                <button type="submit" value="submit" name="submit"
+                                class="btn btn-primary btn-rounded btn-sm">Update Service</button>
+                            @endif
+                            <a href="#" wire:click.prevent="ResetFields()" class="btn btn-warning btn-rounded btn-sm">Reset</a>
+                            <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                @endif
+                @if($Category_Type == 'Sub')
+
+
+
+
+
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+
     <div class="form-container">
-        <div class="form-header">
-            <p class="heading">Credit Credit </p>
-        </div>
-        @if (session('SuccessUpdate'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessUpdate')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('Error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('Error')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('SuccessMsg'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessMsg')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        <form wire:submit.prevent="Save">
+       <form wire:submit.prevent="Save">
             @csrf
             <div class="form-data-container">
                 {{--Form Data 1--}}
                 <div class="form-data">
-                    <div class="row"> {{--Transaction ID--}}
-                        <div class="col-45">
-                            <label class="label" for="Transaction_Id">Service Id</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <label class="label" for="Transaction_Id">{{$Service_Id}}</label>
-                        </div>
-                    </div>
-                    <div class="row"> {{--Service_Type--}}
-                        <div class="col-45">
-                            <label class="label" for="Category_Type">Category Type</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <select class="form-control" id="Category_Type" wire:model="Category_Type" name="Category_Type">
-                                <option value="">---Select---</option>
-                                <option value="Main">Main Services</option>
-                                <option value="Sub">Sub Services</option>
-                            </select>
-                            <span class="error">@error('Category_Type'){{$message}}@enderror</span>
-                        </div>
-                    </div>
+
+
                     @if ($Category_Type == 'Main')
-                        <div class="row"> {{--Name--}}
-                            <div class="col-45">
-                                <label for="Amount_Paid">Name</label> <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <input type="text" id="paid" wire:model="Name" name="Name" class="form-control"
-                                        placeholder="Enter Name" >
-                                    <span class="error">@error('Name'){{$message}}@enderror</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="row"> {{--Service_Type--}}
-                            <div class="col-45">
-                                <label class="label" for="Service_Type">Service Type</label>
-                                <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <select class="form-control" id="Service_Type" wire:model="Service_Type" name="Service_Type">
-                                    <option value="">---Select---</option>
-                                    <option value="Public">Public</option>
-                                    <option value="Private">Private</option>
-                                </select>
-                                <span class="error">@error('Service_Type'){{$message}}@enderror</span>
-                            </div>
-                        </div>
 
-                        <div class="row"> {{--Description--}}
-                            <div class="col-45">
-                                <label class="label" for="Description">Description</label> <span
-                                    class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <textarea id="Description" wire:model="Description" name="Description" class="form-control"
-                                        placeholder="Service Description" rows="3" maxlength="150" resize="none"></textarea>
-                                    <span class="error">@error('Description'){{$message}}@enderror</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="row"> {{--Details--}}
-                            <div class="col-45">
-                                <label class="label" for="Details">Details</label>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <textarea id="Details" wire:model="Details" name="Details" class="form-control"
-                                        placeholder="Details" rows="3" resize="none"></textarea>
-                                    <span class="error">@error('Details'){{$message}}@enderror</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row"> {{--Features--}}
-                            <div class="col-45">
-                                <label class="label" for="Details">Features</label>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <textarea id="Features" wire:model="Features" name="Features" class="form-control"
-                                        placeholder="Features" rows="3" resize="none"></textarea>
-                                    <span class="error">@error('Features'){{$message}}@enderror</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row"> {{--Specification--}}
-                            <div class="col-45">
-                                <label class="label" for="Specification">Specification</label>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <textarea id="Specification" wire:model="Specification" name="Specification" class="form-control"
-                                        placeholder="Specification" rows="3" resize="none"></textarea>
-                                    <span class="error">@error('Specification'){{$message}}@enderror</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row"> {{--Order_By--}}
-                            <div class="col-45">
-                                <label class="label" for="Order_By">Order By</label>
-                                <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <select class="form-control" id="Order_By" wire:model="Order_By" name="Order_By">
-                                    <option value="">---Select---</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                </select>
-                                <span class="error">@error('Order_By'){{$message}}@enderror</span>
-                            </div>
-                        </div>
 
                         <div class="row"> {{--Thumbnail--}}
                             <div class="col-45">

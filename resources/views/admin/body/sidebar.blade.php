@@ -69,7 +69,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{url('client_registration')}}">Clinet Registration</a></li>
-                        <li> <a href="{{ url('services')}}">Services</a></li>
+                        <li> <a href="{{ route('add_services')}}">Services</a></li>
                         <li><a href="{{ url('statusmodule')}}">Status</a></li>
                         <li><a href="{{url('bookmarks')}}">Bookmark</a></li>
                         <li> <a href="{{url('add_document')}}">Add Documents</a></li>

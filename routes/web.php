@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
@@ -29,6 +30,7 @@ Route::controller(AdminController::class)->group(function(){
  Route::get('/admin/logout', 'destroy')->name('admin.logout');
  Route::get('/admin/profile_view', 'ProfileView')->middleware(['auth'])->name('admin.profile_view');
  Route::get('/admin/change_password', 'ChangePassword')->middleware(['auth'])->name('change_password');
+ Route::get('/add/services', 'AddServices')->middleware(['auth'])->name('add_services');
 });
 
 // Home Slide Routes
@@ -55,6 +57,9 @@ Route::controller(ApplicationController::class)->group(function(){
 
 
 });
+
+
+
 Route::get('new_temp', [ApplicationController::class,'Temp']);
 // Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
 Route::get('app_form', [ApplicationController::class,'List']);
@@ -79,6 +84,7 @@ Route::get('bookmarks', [ApplicationController::class,'Bookmarks']);
 Route::get('statusmodule', [ApplicationController::class,'StatusModule']);
 Route::get('signup', [SignupController::class,'index']);
 Route::post('signup', [SignupController::class,'Save']);
+
 
 Route::get('/dashboard', function () {
     return view('admin.index');

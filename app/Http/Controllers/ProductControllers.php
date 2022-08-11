@@ -36,7 +36,7 @@ class ProductController extends Controller
 
     public function Index()
     {
-        return view('Admin.Services.add_service',[
+        return view('admin.Services.add_service',[
             'applications_served'=>$this->applications_served,
             'previous_day_app'=>$this->previous_day_app,
             'applications_delivered'=>$this->applications_delivered,

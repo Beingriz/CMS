@@ -40,4 +40,8 @@ class AdminController extends Controller
     {
         return view('admin.profile.change_password');
     }
+    public function AddServices()
+    {
+        return view('admin.Services.add_service');
+    }
 }
