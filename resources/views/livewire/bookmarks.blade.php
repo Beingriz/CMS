@@ -1,52 +1,67 @@
 <div>
-    <div class="form-container">
-        <div class="form-header">
-            <p class="heading">Bookmark Module</p>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Bookmark</h4>
+
+                @if (session('SuccessMsg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('SuccessMsg')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('SuccessUpdate'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{session('SuccessUpdate')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('Error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{session('Error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item active">Bookmarks</li>
+                    </ol>
+                </div>
+
+            </div>
         </div>
-        @if (session('SuccessUpdate'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessUpdate')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('Error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('Error')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('SuccessMsg'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessMsg')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        <form wire:submit.prevent="Save">
-            @csrf
-            <div class="form-data-container">
-                {{--Form Data 1--}}
-                <div class="form-data">
-                    <div class="row"> {{--Transaction ID--}}
-                        <div class="col-45">
-                            <label class="label" for="Transaction_Id">Bookmark Id</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <label class="label" for="Transaction_Id">{{$Bm_Id}}</label>
+    </div>{{-- End of Row --}}
+
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{{url('dashboard')}}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{url('app_home')}}">Application</a></li>
+            <li class="breadcrumb-item"><a href="{{url('app_form')}}">New Application</a></li>
+        </ol>
+    </div>{{-- End of Page Tittle --}}
+
+{{-- ---------------------------------------------------------------------------------------------------- --}}
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"> Favourite Bookmark</h4>
+                    <p class="card-title-desc">Add New Bookmarks</p>
+                    <div class="row mb-3">
+                        <label for="example-text-input" class="col-sm-2 col-form-label">Bookmark Id</label>
+                        <div class="col-sm-10">
+                            <label for="example-text-input" class="col-sm-2 col-form-label">{{$Bm_Id}}</label>
                         </div>
                     </div>
-                    <div class="row"> {{--Bookmark For--}}
-                        <div class="col-45">
-                            <label class="label" for="Main_Services">Bookmark for</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
+                    <!-- end row -->
+                    <form wire:submit.prevent="Save">
+                        @csrf
+                    <div class="row mb-3">
+                        <label for="example-search-input" class="col-sm-2 col-form-label">Bookmark for</label>
+                        <div class="col-sm-10">
                             <select class="form-control" id="Main_Services" wire:model="Relation" name="Relation" wire:change="Change(event.target.value)">
                                 <option value="">---Select---</option>
                                 <option value="General">General</option>
@@ -55,16 +70,14 @@
                                 @endforeach
 
                             </select>
-                            <span class="error">@error('Relation'){{$message}}@enderror</span>
-                        </div>
+                            <span class="error">@error('Relation'){{$message}}@enderror</span>                    </div>
                     </div>
+                    <!-- end row -->
+
                     @if($Update == 1)
-                    <div class="row"> {{--Change Relation--}}
-                        <div class="col-45">
-                            <label class="label" for="ChangeRelation">Change Relation</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
+                    <div class="row mb-3"> {{--Change Relation--}}
+                        <label for="example-email-input" class="col-sm-2 col-form-label">Change Relation</label>
+                        <div class="col-sm-10">
                             <select class="form-control" id="ChangeRelation" wire:model="ChangeRelation" name="ChangeRelation" >
                                 <option value="">---Select---</option>
                                 @foreach ($MainServices as $item)
@@ -76,43 +89,31 @@
                         </div>
                     </div>
                     @endif
-                    <div class="row"> {{--Name--}}
-                        <div class="col-45">
-                            <label for="Amount_Paid">Name</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="text" id="paid" wire:model="Name" name="Name" class="form-control"
-                                    placeholder="Enter Name" >
-                                <span class="error">@error('Name'){{$message}}@enderror</span>
-                            </div>
+                    <div class="row mb-3">
+                        <label for="Name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" placeholder="Bookmark Name"  wire:model="Name" id="Name">
+                            <span class="error">@error('Name'){{$message}}@enderror</span>
                         </div>
                     </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-url-input" class="col-sm-2 col-form-label">URL</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" wire:model="Hyperlink" placeholder="https:/cyberpe.epizy.com" id="example-url-input">
+                            <span class="error">@error('Hyperlink'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div class="row mb-3">
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Thumbnail<</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="file" wire:model="Thumbnail" id="Thumbnail{{ $iteration }}">
+                            <span class="error">@error('Thumbnail'){{$message}}@enderror</span>
+                        </div>
+                    </div>
+                    <!-- end row -->
 
-                    <div class="row"> {{--Link--}}
-                        <div class="col-45">
-                            <label class="label" for="Hyperlink">Website Address</label> <span
-                                class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <textarea id="Hyperlink" wire:model="Hyperlink" name="Hyperlink" class="form-control"
-                                    placeholder="Website Address Bar" rows="3" maxlength="150" resize="none"></textarea>
-                                <span class="error">@error('LinHyperlinkk'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row"> {{--Thumbnail--}}
-                        <div class="col-45">
-                            <label for="Thumbnail">Thumbnail</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="file"  wire:model="Thumbnail" name="Thumbnail" class="form-control" id="Thumbnail{{ $iteration }}"  accept="image/*">
-                                <span class="error">@error('Thumbnail'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-                    </div>
                     <div wire:loading wire:target="Thumbnail">Uploading...</div>
                     @if (!is_Null($Thumbnail))
                         <div class="row">
@@ -124,7 +125,7 @@
                     @elseif(!is_Null($Old_Thumbnail))
                     <div class="row">
                         <div class="col-45">
-                            <img class="col-75" src="{{ $Old_Thumbnail}}"" alt="Existing Thumbnail" />
+                            <img class="col-75" src="{{ url('storage/'.$Old_Thumbnail) }}"" alt="Existing Thumbnail" />
                         </div>
                     </div>
                     @endif
@@ -145,46 +146,62 @@
                         </div>
                     </div>
                     </form>
-                </div>
-                <div class="form-data">
+            </div>
+            </div>
+        </div> <!-- end col -->
 
-                    @if (count($Existing_Bm)>0)
-                        <div class="row"> {{--Category List--}}
-                                <div class="md-form">
-                                    <span class="info">{{$Existing_Bm->total()}} Bookmarks Found for  </span>
-                                    <p class="heading2">{{$Relation}} Category</p>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Sl.No</th>
-                                                <th>Name</th>
-                                                <th>Thumbnail</th>
-                                                <th>Edit</th>
-                                                <th>Delete</th>
-                                            </tr>
-                                        </thead>
 
-                                        <tbody>
-                                            @foreach ($Existing_Bm as $key)
-                                            <tr>
-                                                <td style="width: 10%">{{$n++}}</td>
-                                                <td style="width: 35%">{{$key->Name}}</td>
-                                                <td style="width: 15%"><img src="{{$key->Thumbnail}}" alt="Icon"></td>
-                                                <td style="width: 10%">
-                                                    <a href="#" onclick="confirm('Do you want to Edit {{$key->Name}} Bookmark?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->BM_Id}}')" class="btn btn-sm btn-rounded" >Edit</a></td>
-                                                <td style="width: 10%">
-                                                    <a href="#" onclick="confirm('Are you sure? You want to Delete {{$key->Name}} Bookmark Permanently?')|| event.stopImmediatePropagation()" wire:click.prevent="Delete('{{$key->BM_Id}}')" class="btn btn-sm   btn-danger btn-rounded" >Delete</a>
+            @if (count($Existing_Bm)>0)
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">#{{$Existing_Bm->total()}}  Bookmarks for {{$Relation}} Category</h5>
+                    </div>
 
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    <span>{{$Existing_Bm->links()}}</span>
+                    <div class="row">
+                        <div class="col-lg-12" >
+                            <table id="datatable" class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid" aria-describedby="datatable_info">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Thumnnail</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    @foreach ($Existing_Bm as $key)
+                                    <tr>
+                                        <td>{{$Existing_Bm->firstItem()+$loop->index}}</td>
+                                        <td>{{$key->Name}}</td>
+                                        <td>
+                                            <img class="avatar-sm"  src="{{url('storage/'.$key->Thumbnail)}}" alt="Bookmark"></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary font-size-15" onclick="confirm('Do you want to Edit {{$key->Name}} Bookmark?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->BM_Id}}')"><i class="mdi mdi-circle-edit-outline" ></i></a>
+
+                                            <a href ="#"class="btn btn-sm btn-danger font-size-15"  onclick="confirm('Do you want to Delete {{$key->Name}} Bookmark?') || event.stopImmediatePropagation()" wire:click.prevent="Delete('{{$key->BM_Id}}')"  ><i class="mdi mdi-delete-alert-outline"  ></i></a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                <p class="text-muted">Showing {{count($Existing_Bm)}} of {{$Existing_Bm->total()}} entries</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class=" pagination pagination-rounded float-end" >
+                                        {{$Existing_Bm->links()}}
+                                    </span>
+
+
+                                </div>
+                                <p class="card-text"><small class="text-muted">Last Bookmarked {{$created}}</small></p>
                             </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
+            @endif
     </div>
 </div>

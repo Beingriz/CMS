@@ -51,6 +51,7 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('download/doc/{id}', 'Download_Doc')->middleware(['auth'])->name('download_doc');
     Route::get('download/paymentreceipt/{id}', 'Download_Pay')->middleware(['auth'])->name('download_pay');
     Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->middleware(['auth'])->name('multiple_doc_delete');
+    Route::get('bookmarks', 'Bookmarks')->middleware(['auth'])->name('Bookmarks');
 
 
 });

@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Bookmark;
 use App\Models\MainServices;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -15,7 +16,7 @@ class Bookmarks extends Component
     use WithPagination;
     use WithFileUploads;
     protected $paginationTheme ='Bootstrap';
-    public $Name, $Thumbnail,$Bm_Id,$Old_Thumbnail,$Relation,$Update,$n=1,$Hyperlink, $iteration, $ChangeRelation, $New_Thumbnail;
+    public $Name, $Thumbnail,$Bm_Id,$Old_Thumbnail,$Relation,$Update,$n=1,$Hyperlink, $iteration, $ChangeRelation, $New_Thumbnail, $created,$updated;
 
 
     protected $rules = [
@@ -49,7 +50,6 @@ class Bookmarks extends Component
         $this->Hyperlink = NULL;
         $this->Old_Thumbnail = NULL;
         $this->ChangeRelation = NULL;
-        $this->Relation = '---Select---';
         $this->Update=0;
     }
     public function Change($val)
@@ -64,21 +64,32 @@ class Bookmarks extends Component
     }
     public function Save()
     {
-
         $this->validate();
+        if(!empty($this->Thumbnail))
+        {
+            $extension = $this->Thumbnail->getClientOriginalExtension();
+            $path = 'Thumbnails/Bookmarks/'.$this->Name;
+            $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+            $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+            $this->Thumbnail = $url;
+        }
+        else
+        {
+            $this->Thumbnail = 'Not Available';
+        }
+
         $save_bm = new Bookmark();
         $save_bm->BM_ID = $this->Bm_Id;
         $save_bm->Name = $this->Name;
         $save_bm->Relation = $this->Relation;
         $save_bm->Hyperlink = $this->Hyperlink;
-        $save_bm->Thumbnail = 'storage/app/'. $this->Thumbnail->storeAs('Thumbnails/Bookmarks/',$this->Name.time().'.jpeg');
+        $save_bm->Thumbnail = $this->Thumbnail;
         $save_bm->save();
         session()->flash('SuccessMsg',$this->Name.'  is saved In '.$this->Relation.' Category');
         $this->ResetFields();
         $this->Relation = $this->Relation;
-
-
     }
+
     public function Edit($bm_Id)
     {
         $fetch = Bookmark::Where('BM_Id',$bm_Id)->get();
@@ -100,15 +111,23 @@ class Bookmarks extends Component
         {
             if(!is_Null($this->Old_Thumbnail))
             {
-                $Thumbnail = str_replace('storage/app/', '',$this->Old_Thumbnail);
-                if(Storage::exists($Thumbnail))
+
+                if(Storage::disk('public')->exists($this->Old_Thumbnail))
                 {
-                    unlink(storage_path('app/'.$Thumbnail));
-                    $this->New_Thumbnail = 'storage/app/'. $this->Thumbnail->storeAs('Thumbnails/Bookmarks/',$this->Name.time().'.jpeg');
+                    unlink(storage_path('app/'.$this->Old_Thumbnail));
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Bookmarks/'.$this->Name;
+                    $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
                 }
                 else
                 {
-                    $this->New_Thumbnail = 'storage/app/'. $this->Thumbnail->storeAs('Thumbnails/Bookmarks/',$this->Name.time().'.jpeg');
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Bookmarks/'.$this->Name;
+                    $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
                 }
             }
             else
@@ -122,8 +141,7 @@ class Bookmarks extends Component
         {
             if(!is_Null($this->Old_Thumbnail))
             {
-                $Thumbnail = str_replace('storage/app/', '',$this->Old_Thumbnail);
-                if(Storage::exists($Thumbnail))
+                if(Storage::disk('public')->exists($this->Old_Thumbnail))
                 {
                     $this->New_Thumbnail = $this->Old_Thumbnail;
                 }
@@ -143,7 +161,7 @@ class Bookmarks extends Component
             }
 
         }
-        if($this->ChangeRelation =="")
+        if($this->ChangeRelation == NULL)
         {
             $this->Relation = $this->Relation;
         }
@@ -151,7 +169,12 @@ class Bookmarks extends Component
         {
             $this->Relation = $this->ChangeRelation;
         }
-        $Update = DB::update('update bookmark set Name = ?, Relation = ?, Hyperlink = ?, Thumbnail = ? where BM_Id = ? ', [$this->Name,$this->Relation,$this->Hyperlink,$this->New_Thumbnail,$this->Bm_Id]);
+        $data = array();
+        $data['Name'] = $this->Name;
+        $data['Relation'] = $this->Relation;
+        $data['Hyperlink'] = $this->Hyperlink;
+        $data['Thumbnail'] = $this->New_Thumbnail;
+        $Update = DB::table('bookmark')->where('BM_Id','=',$this->Bm_Id)->Update($data);
         if($Update)
         {
             session()->flash('SuccessMsg',$this->Name.' Bookmark is Updated for '.$this->Relation);
@@ -160,8 +183,12 @@ class Bookmarks extends Component
             $this->iteration++;
             $this->Update = 0;
         }
-
-
+    }
+    public function LastUpdate()
+    {
+        $latest = Bookmark::latest('created_at')->first();
+        $this->created = Carbon::parse($latest['created_at'])->diffForHumans();
+        $this->updated = Carbon::parse($latest['updated_at'])->diffForHumans();
     }
     public function Delete($bm_Id)
     {
@@ -174,19 +201,35 @@ class Bookmarks extends Component
                 $this->Name = $item['Name'];
             }
         }
-        $path = str_replace('storage/app/', '', $this->Old_Thumbnail);
-        if (Storage::exists($path))
+        if($this->Old_Thumbnail == NULL)
         {
-            unlink(storage_path('app/'.$path));
             $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
             if($delete)
             {
-                session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
-                $this->ResetFields();
+                session()->flash('SuccessMsg',$this->Name.'  is Deleted from '.$this->Relation);
+                $this->Relation = $this->Relation;
             }
             else
             {
                 session()->flash('Error', 'Unable to Delete Bookmark');
+                $this->Relation = $this->Relation;
+            }
+        }
+        elseif(Storage::disk('public')->exists($this->Old_Thumbnail))
+        {
+            unlink(storage_path('app/'.$this->Old_Thumbnail));
+            $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
+            if($delete)
+            {
+                session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
+                $this->Relation = $this->Relation;
+            }
+            else
+            {
+                $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
+                $this->Relation = $this->Relation;
+                session()->flash('Error', 'Unable to Delete Icon / Not Available Bookmark');
+
             }
         }
         else
@@ -194,20 +237,26 @@ class Bookmarks extends Component
             $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
             if($delete)
             {
+
                 session()->flash('SuccessMsg',$this->Name.'  is Deleted from '.$this->Relation);
-                $this->ResetFields();
+                $this->Relation = $this->Relation;
+
+
             }
             else
             {
+                $this->Relation = $this->Relation;
                 session()->flash('Error', 'Unable to Delete Bookmark');
+
             }
         }
 
     }
     public function render()
     {
+        $this->LastUpdate();
         $MainServices = MainServices::all();
-        $Existing_Bm = DB::table('bookmark')->where('Relation',$this->Relation)->paginate(10);
+        $Existing_Bm = DB::table('bookmark')->where('Relation',$this->Relation)->paginate(5);
         return view('livewire.bookmarks',['MainServices'=>$MainServices,'Existing_Bm'=>$Existing_Bm]);
     }
 }
