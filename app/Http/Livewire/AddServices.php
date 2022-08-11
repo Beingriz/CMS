@@ -19,7 +19,6 @@ class AddServices extends Component
     use RightInsightTrait;
     use WithPagination;
     protected $paginationTheme='bootstrap';
-    use RightInsightTrait;
     use WithFileUploads;
     public $Service_Id,$Name , $Service_Type,$Services=[],  $Description , $Details, $Specification , $Features;
     public $Thumbnail, $Order_By , $paginate,$pos, $filterby,$Update = 0;
@@ -179,21 +178,54 @@ class AddServices extends Component
         }
         if(sizeof($exist)>0)
         {
-            if($this->Thumbnail == NULL OR empty($this->Thumbnail))
+            if($this->Thumbnail != NULL)
             {
-                $Thumbnail = $this->Old_Thumbnail;
+                if(storage::disk('public')->exists($this->Old_Thumbnail))
+                {
+                    unlink(storage_path('app/'.$this->Old_Thumbnail));
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Services/'.$this->Name;
+                    $filename = 'MS_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->Thumbnail = $url;
+                }
+                else
+                {
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Services/'.$this->Name;
+                    $filename = 'MS_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->Thumbnail = $url;
+                }
             }
-            elseif(empty($this->Old_Thumbnail))
+            elseif(!is_Null($this->Old_Thumbnail))
             {
-                $this->validate(['Thumbnail'=>'required']);
+                if(storage::disk('public')->exists($this->Old_Thumbnail))
+                {
+                    $this->Thumbnail = $this->Old_Thumbnail;
+                }
+                elseif($this->Old_Thumbnail == 'Not Available')
+                {
+                    $this->validate(['Thumbnail'=>'required']);
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Services/'.$this->Name;
+                    $filename = 'SS_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->Thumbnail = $url;
+                }
             }
-            else
-            {
-                $Thumbnail = 'storage/app/'.$this->Thumbnail->storeAs('Thumbnails/'.$this->Name.'/',$this->Name.time().'.jpeg');
-            }
-            $ser = DB::update('update sub_service_list set Name = ?,Service_Type = ?,Description = ?, Unit_Price = ?, Thumbnail = ? where Id = ?', [trim($this->Name),trim($this->Service_Type),trim($this->Description),trim($this->Unit_Price),$Thumbnail,$this->Service_Id]);
-            $app = DB::update('update digital_cyber_db set Application_Type = ? where Application_Type = ?', [trim($this->Name),$application_type]);
-             if($ser && $app)
+
+            $data = array();
+            $data['Name'] = trim($this->Name);
+            $data['Service_Type'] = trim($this->Service_Type);
+            $data['Description'] = trim($this->Description);
+            $data['Unit_Price'] =trim($this->Unit_Price);
+            $data['Thumbnail'] = $this->Thumbnail;
+            $app_data = array();
+            $app_data['Application_Type'] = trim($this->Name);
+            $ser = DB::table('sub_service_list')->where('Id','=',$this->Service_Id)->Update($data);
+            $app = DB::table('digital_cyber_db')->where('Application_Type','=',$application_type)->Update($app_data);
+            if($ser && $app)
              {
                 session()->flash('SuccessMsg', trim($this->Name).' Sub Service Details Updated Successfully!');
                 $this->Category_Type='Sub';
@@ -207,6 +239,12 @@ class AddServices extends Component
         }
         else
         {
+            $extension = $this->Thumbnail->getClientOriginalExtension();
+            $path = 'Thumbnails/Bookmarks/'.$this->Name;
+            $filename = 'SS_'.$this->Name.'_'.time().'.'.$extension;
+            $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+            $this->Thumbnail = $url;
+
             $save_service = new SubServices();
             $save_service->Service_Id = $this->Main_ServiceId;
             $save_service->Id = $this->Service_Id;
@@ -214,7 +252,7 @@ class AddServices extends Component
             $save_service->Service_Type = $this->Service_Type;
             $save_service->Description = trim($this->Description);
             $save_service->Unit_Price = trim($this->Unit_Price);
-            $save_service->Thumbnail = 'storage/app/'. $this->Thumbnail->storeAs('Thumbnails/'.$this->Name.'/',$this->Name.time().'.jpeg');
+            $save_service->Thumbnail = $this->Thumbnail;
             $save_service->save();
             session()->flash('SuccessMsg','New  Sub Service  "'.$this->Name.'"  Added Successfully!.');
             $this->ResetFields();
