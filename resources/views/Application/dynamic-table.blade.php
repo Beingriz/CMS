@@ -60,7 +60,7 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
                                             <a class="dropdown-item" title="View  Application" href='/digital/cyber/open_app/{{ $data->Id }}'>Open</a>
-                                            <a class="dropdown-item" title="Edit Application" id="update"href={{ route('edit_application',$data->Id) }}'>Edit</a>
+                                            <a class="dropdown-item" title="Edit Application" id="update"href={{ route('edit_application',$data->Id) }}>Edit</a>
                                         </div>
                                     </div>
 

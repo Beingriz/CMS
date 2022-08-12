@@ -125,15 +125,24 @@ class ApplicationController extends Controller
             $file = $key['Ack_File'];
 
         }
-        if (Storage::disk('public')->exists($file))
+        if($file!= NULL)
         {
-            return response()->download(public_path('storage/'.$file));
+            if (Storage::disk('public')->exists($file))
+            {
+                return response()->download(public_path('storage/'.$file));
+            }
+            else
+            {
+                return redirect()->route('edit_application',$Id)->with('Error','Acknowledgement File Not Available!');
+
+            }
         }
         else
         {
             return redirect()->route('edit_application',$Id)->with('Error','Acknowledgement File Not Available!');
 
         }
+
     }
     public function Download_Doc($Id)
     {
@@ -142,13 +151,21 @@ class ApplicationController extends Controller
         {
             $file = $key['Doc_File'];
         }
-        if (Storage::disk('public')->exists($file))
+        if($file!= NULL)
         {
-            return response()->download(public_path('storage/'.$file));
+            if (Storage::disk('public')->exists($file))
+            {
+                return response()->download(public_path('storage/'.$file));
+            }
+            else
+            {
+                return redirect()->route('edit_application',$Id)->with('Error','Document File Not Available!');
+            }
         }
         else
         {
             return redirect()->route('edit_application',$Id)->with('Error','Document File Not Available!');
+
         }
     }
     public function Download_Pay($Id)
@@ -158,13 +175,21 @@ class ApplicationController extends Controller
         {
             $file = $key['Payment_Receipt'];
         }
-        if (Storage::disk('public')->exists($file))
+        if($file!= NULL)
         {
-            return response()->download(public_path('storage/'.$file));
+            if (Storage::disk('public')->exists($file))
+            {
+                return response()->download(public_path('storage/'.$file));
+            }
+            else
+            {
+                return redirect()->route('edit_application',$Id)->with('Error','Payment Receipt Not Available!');
+            }
         }
         else
         {
             return redirect()->route('edit_application',$Id)->with('Error','Payment Receipt Not Available!');
+
         }
     }
     public function Download_Files($Doc_Id)

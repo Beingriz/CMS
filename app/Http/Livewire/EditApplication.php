@@ -153,9 +153,7 @@ class EditApplication extends Component
     }
     public function CheckFileExist($Id)
     {
-        dd($Id);
-        $data = Application::Where('Id',$Id)->get();
-        dd($data);
+        $data = Application::WhereKey($Id)->get();
         foreach($data as $key)
         {
             $ack_file = $key['Ack_File'];
@@ -163,21 +161,42 @@ class EditApplication extends Component
             $pay_file = $key['Payment_Receipt'];
         }
 
-        if($ack_file != 'Not Available' || $doc_file != 'Not Available'|| $pay_file != 'Not Available')
+        if($ack_file != 'Not Available')
         {
             if(Storage::disk('public')->exists($ack_file))
             {
                 $this->AckFileDownload = 'Enable';
             }
+            else
+            {
+                $this->AckFileDownload = 'Disable';
+            }
+        }
+
+        if($doc_file != 'Not Available')
+        {
             if(Storage::disk('public')->exists($doc_file))
             {
                 $this->DocFileDownload = 'Enable';
             }
+            else
+            {
+                $this->DocFileDownload = 'Disable';
+            }
+        }
+        if($pay_file != 'Not Available')
+        {
             if(Storage::disk('public')->exists($pay_file))
             {
                 $this->PayFileDownload = 'Enable';
             }
+            else
+            {
+                $this->DocFiPayFileDownloadleDownload = 'Disable';
+            }
         }
+
+
     }
 
     public function Update($Id)
@@ -245,10 +264,12 @@ class EditApplication extends Component
         }
         if(!empty($this->Ack_File))
         {
-            if($old_Ack_File != 'Not Available' )
+            if($old_Ack_File != 'Not Available'  )
             {
+                dd($old_Ack_File);
                 if (Storage::disk('public')->exists($old_Ack_File)) // Check for existing File
                 {
+
                     unlink(storage_path('app/public/'.$old_Ack_File)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();
