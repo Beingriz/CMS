@@ -153,7 +153,9 @@ class EditApplication extends Component
     }
     public function CheckFileExist($Id)
     {
-        $data = Application::Wherekey($Id)->get();
+        dd($Id);
+        $data = Application::Where('Id',$Id)->get();
+        dd($data);
         foreach($data as $key)
         {
             $ack_file = $key['Ack_File'];

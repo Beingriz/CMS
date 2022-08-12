@@ -72,7 +72,7 @@
                         <div class="row mb-3">
                             <label for="Name" class="col-sm-2 col-form-label">Name</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" placeholder="Bookmark Name"  wire:model="Name" id="Name">
+                                <input class="form-control" type="text" placeholder="Main Service Name"  wire:model="Name" id="Name">
                                 <span class="error">@error('Name'){{$message}}@enderror</span>
                             </div>
                         </div>

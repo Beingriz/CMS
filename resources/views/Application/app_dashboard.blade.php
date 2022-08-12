@@ -44,7 +44,7 @@
                                 </div>
 
                                 <div>
-                                    <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($service->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$service->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                                    <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($service->Thumbnail))?url('storage/'.$service->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
                                 </div>
 
                             </div>
