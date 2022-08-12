@@ -237,6 +237,7 @@ class EditApplication extends Component
             {
                 if (Storage::disk('public')->exists($old_App_Image)) // Check for existing File
                 {
+                    dd($old_App_Image);
                     unlink(storage_path('app/public/'.$old_App_Image)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();
@@ -385,6 +386,7 @@ class EditApplication extends Component
         $update_data['Doc_File']=$this->Doc_Path;
         $update_data['Payment_Receipt']=$this->Payment_Path;
         $update_data['Delivered_Date']=$this->Updated_Date;
+        $update_data['Applicant_Image']=$this->Applicant_Image;
         $update_App = DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($update_data);
 
         if($this->Doc_Yes == 1 ) // if more documents to upload

@@ -55,7 +55,7 @@
                             </div>
                         </div>
 
-                        @if(!empty($old_Applicant_Image))
+                        @if($old_Applicant_Image != 'Not Available')
                         <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage">
                         @else
                         <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
@@ -142,7 +142,7 @@
                             </div>
                         </div>
 
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/Admin/Services/Thumbnail'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
 
                     </div>
                 </div>
@@ -266,7 +266,7 @@
                                                 <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
                                                 @if (!is_null($Applicant_Image))
                                                 <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="Applicant_Image" />
-                                                @elseif(!empty($old_Applicant_Image))
+                                                @elseif($old_Applicant_Image!= 'Not Available')
                                                 <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="no_image" />
                                                 @else
                                                 <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
@@ -401,11 +401,19 @@
                                     <form>
                                         <div class="row">
 
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-3">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="progress-basicpill-receiveddate-input">Received Date</label>
                                                     <input type="date" class="form-control" id="progress-basicpill-receiveddate-input" wire:model="Received_Date">
                                                     @error('Received_Date') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="progress-basicpill-receiveddate-input">Updated Date</label>
+                                                    <input type="date" class="form-control" id="progress-basicpill-receiveddate-input" wire:model="Updated_Date">
+                                                    @error('Updated_Date') <span class="text-danger">{{ $message }}</span> @enderror
 
                                                 </div>
                                             </div>
@@ -554,10 +562,10 @@
                                                 @endif
                                             </li>
                                             <li class="list-group-item">
-                                                @if(!empty($old_Applicant_Image))
+                                                @if($old_Applicant_Image!= 'Not Available')
                                                     <img class="rounded avatar-md" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage" />
                                                 @elseif(!empty($Applicant_Image))
-                                                    <img class="rounded avatar-md" src="{{$Client_Image->temporaryUrl() }}" alt="ApplicantImage" />
+                                                    <img class="rounded avatar-md" src="{{$Applicant_Image->temporaryUrl() }}" alt="ApplicantImage" />
                                                 @else
                                                     <strong class="text-danger">Field is Empty</strong>
                                                 @endif

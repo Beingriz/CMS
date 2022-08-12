@@ -222,10 +222,16 @@
                         </div>
                         <div class="row mb-3">
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Unit Price</label>
-                            <div class="col-sm-10">
-                                <input type="number" id="Unit_Price" wire:model="Unit_Price" name="Name" class="form-control"
-                                    placeholder="Set Unit Price" >
+                            <div class="col-sm-3">
+                                <input type="number" id="Unit_Price" wire:model="Unit_Price" name="Unit_Price" class="form-control"
+                                    placeholder="Unit Price" >
                                             <span class="error">@error('Unit_Price'){{$message}}@enderror</span>
+                            </div>
+                            <label for="example-tel-input" class="col-sm-2 col-form-label">Service Fee</label>
+                            <div class="col-sm-2">
+                                <input type="number" id="Unit_Price" wire:model="Service_Fee" name="Service_Fee" class="form-control"
+                                    placeholder="Service Fee" >
+                                            <span class="error">@error('Service_Fee'){{$message}}@enderror</span>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -235,10 +241,11 @@
                                 <span class="error">@error('Thumbnail'){{$message}}@enderror</span>
                             </div>
                         </div>
+
                         <div wire:loading wire:target="Thumbnail">Uploading...</div>
                         <div class="row mb-3">
                             <div class="col-sm-5">
-                                @if (!is_Null($Thumbnail))
+                                @if (!empty($Thumbnail))
                                 <img class="img-thumbnail" src="{{ $Thumbnail->temporaryUrl() }}" alt="Thumbnail" />
                                 @elseif(!is_Null($Old_Thumbnail))
                                 <img class="img-thumbnail" src="{{ (!empty($Old_Thumbnail))?url('storage/'.$Old_Thumbnail):url('storage/no_image.jpg')}} "alt="Thumbnail" />

@@ -25,7 +25,7 @@
                     <tbody>
                         @foreach($StatusDetails as $data)
                         <tr>
-                            <td>{{ $StatusDetails->firstItem()+$loop->index }}</td>
+                            <td>{{ $n++ }}</td>
                             <td>{{ $data->Received_Date }}</td>
                             <td>{{ $data->Name }}</td>
                             <td>{{ $data->Mobile_No }}</td>

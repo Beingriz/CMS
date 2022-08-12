@@ -77,7 +77,7 @@ class DynamicDashboard extends Component
     public function ShowDetails($name)
     {
         $No = 'No';
-        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',$name],['Recycle_Bin',$No]])->Paginate(10);
+        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',$name],['Recycle_Bin',$No]])->get();
         $this->StatusDetails = $fetch_details;
         $this->count = count($fetch_details);
         $this->status_name = $name;
