@@ -263,7 +263,7 @@
                                     <a href="#" wire:click.prevent="SaveSubService()" class="btn btn-primary btn-rounded btn-sm">Update Sub Service</a>
                                 @endif
                                 <a href="#" wire:click.prevent="ResetFields()" class="btn btn-rounded  btn-warning btn-sm">Reset</a>
-                                <a href="{{ url('/') }}" class="btn btn-rounded btn-sm">Cancel</a>
+                                <a href="{{ route('Dashboard') }}" class="btn btn-rounded btn-light btn-sm">Home</a>
                                 </div>
                             </div>
                         </div>

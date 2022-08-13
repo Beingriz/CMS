@@ -1,10 +1,47 @@
 <div>
-    <div >
-        <div class="form-header">
-            <p class="heading">Details  for {{$search}} </p>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Details  for {{$search}} </h4>
+
+                @if (session('SuccessMsg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('SuccessMsg')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('SuccessUpdate'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{session('SuccessUpdate')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('Error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{session('Error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('new_application')}}">New Form</a></li>
+                    </ol>
+                </div>
+
+            </div>
         </div>
-
-
+    </div>{{-- End of Row --}}
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
+            <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
+            <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+        </ol>
+    </div>{{-- End of Page Tittle --}}
 
         @if (($Search_Count) ==0)
         <div class="header" style="text-align:center">
@@ -27,6 +64,45 @@
             <span class="info-text">{{$Registered_Count}} Registered Clients Available for Search Result of :</span><span class="heading"> {{$search}}</span><br>
             @endif
             <span class="heading2">Registered Client  {{($Name)}}</span>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Bordered Table</h4>
+                        <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Address</th>
+                                        <th>DOB</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Registered as $item)
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
             <table>
                 <thead>
                     <tr>
@@ -63,49 +139,114 @@
             <span class="info-text">{{$Search_Count}} Search Result Found</span>
         </div>
 
-        <div class="dashboard-insight" >
-            <div class="right-menu-section" style="width: 200px">
-                <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Services Count</p>
-                    <p class="section-value">{{$Service_Count}}</p>
-                    <p class="section-pre-values">Sevices Availed</p>
-                </div>
-            </div>
-            <div class="right-menu-section" style="width: 200px">
-                <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Penidng Applications</p>
-                    <p class="section-value">{{$Pending_App}}</p>
-                    <p class="section-pre-values">Under Process</p>
-                </div>
-            </div>
-            <div class="right-menu-section" style="width: 200px">
-                <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Delivered</p>
-                    <p class="section-value">{{$Delivered}}</p>
-                    <p class="section-pre-values">Received by Clinet</p>
-                </div>
-            </div>
+        <div class="row"> {{-- Start of Services Row --}}
+            <a href="#" class="col-xl-3 col-md-10" >
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
 
-            <div class="right-menu-section" style="width: 200px">
-                <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Revenue </p>
-                    <p class="section-value">{{$Revenue}}</p>
-                    <p class="section-pre-values">Income Received</span></p>
+                            {{-- <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-primary rounded-3">
+                                    <i class="fas fa-edit"></i></i>
+                                </span>
+                            </div> --}}
+                            <div class="flex-grow-1 align-items-center">
+                                <h5 class="text-truncate text-primary font-size-20 mb-2">Services</h5>
+                                <div class="col-8">
+                                    <div class="text-center mt-8">
+                                        <h5>Applied {{$Service_Count}}</h5>
+                                        <p class="mb-2 text-truncate">Pending {{$Pending_App}} Applications</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="right-menu-section" style="width: 200px">
-                <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                <div class="sec-data">
-                    <p class="section-heading">Balance Due</p>
-                    <p class="section-value">{{$Balance}}</p>
-                    <p class="section-pre-values">Yet to Recover</span></p>
+            </a>
+
+
+
+            <a href="#" class="col-xl-3 col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            {{-- <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-primary rounded-3">
+                                    <i class="fas fa-edit"></i></i>
+                                </span>
+                            </div> --}}
+                            <div class="flex-grow-1 align-items-center">
+                                <h5 class="text-truncate text-info font-size-20 mb-2">Delivery Report</h5>
+                                <div class="col-8">
+                                    <div class="text-center mt-8">
+                                        <h5>{{$Delivered}} Delivered</h5>
+                                        <p class="mb-2 text-truncate">{{$Pending_App}} Under Process</span></p></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+
+
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </a>
+
+            <a href="#" class="col-xl-3 col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 align-items-center">
+                                <h5 class="text-truncate text-success font-size-20 mb-2">Revenue</h5>
+                                <div class="col-8">
+                                    <div class="text-center mt-8">
+                                        <h5>Amount &#x20B9;{{$Revenue}}/-</h5>
+                                        <p class="mb-2 text-truncate text-danger">Balance <span> &#x20B9;{{$Balance}}</span></p></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ url('storage/no_image.jpg')}}" alt="Insight">
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="col-xl-3 col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            {{-- <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-primary rounded-3">
+                                    <i class="fas fa-edit"></i></i>
+                                </span>
+                            </div> --}}
+                            <div class="flex-grow-1 align-items-center">
+                                <h5 class="text-truncate text-danger font-size-20 mb-2">Balance Due</h5>
+                                <div class="col-8">
+                                    <div class="text-center mt-8">
+                                        <h5>Payble &#x20B9; {{$Balance}}/-</h5>
+                                        <p class="mb-2 text-truncate">Received <span> &#x20B9;{{$Revenue}}</span></p></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ url('storage/no_image.jpg')}}" alt="Insight">
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+
+        </div> {{-- End of Row --}}
+
+
+
 
 
 

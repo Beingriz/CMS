@@ -15,6 +15,7 @@
                             <th>Application</th>
                             <th>Service Type</th>
                             <th>Ack. No</th>
+                            <th>Doc. No</th>
                             <th>Total</th>
                             <th>Paid</th>
                             <th>Balance &#x20B9;</th>
@@ -31,21 +32,22 @@
                             <td>{{ $data->Mobile_No }}</td>
                             <td>{{ $data->Application }}</td>
                             <td>
-                                <select name="ChangeStatus" id="ChangeStatus" class="form-control-sm form-control" wire:change="UpdateServiceType('{{$data->Id}}','{{$data->Application_Type}}',$event.target.value)">
-                                    <option value="{{ $data->Application_Type }}">{{ $data->Application_Type }}</option>
+                                <select name="ChangeSType" id="ChangeSType" class="form-control-sm form-control" wire:change="UpdateServiceType('{{$data->Id}}','{{$data->Application_Type}}',$event.target.value)">
+                                    <option selected>{{ $data->Application_Type }}</option>
                                     @foreach ($SubServices as $item)
                                         <option value="{{$item->Name}}">{{$item->Name}}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>{{ $data->Ack_No }}</td>
+                            <td>{{ $data->Document_No }}</td>
                             <td>{{ $data->Total_Amount }}</td>
                             <td>{{ $data->Amount_Paid }}</td>
 
                             <td>{{ $data->Balance }}</td>
                             <td>
                                 <select name="ChangeStatus" id="ChangeStatus" class="form-control-sm form-control" wire:change="UpdateStatus('{{$data->Id}}','{{$data->Status}}',$event.target.value)">
-                                    <option value="{{ $data->Status }}">{{ $data->Status }}</option>
+                                    <option selected>{{ $data->Status }}</option>
                                     @foreach ($status as $status_list)
                                         <option value="{{$status_list->Status}}">{{$status_list->Status}}</option>
                                     @endforeach

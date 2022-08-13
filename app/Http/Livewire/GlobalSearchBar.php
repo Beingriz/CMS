@@ -8,9 +8,11 @@ use Livewire\Component;
 class GlobalSearchBar extends Component
 {
     public $Search_key;
-    public $Search ;
+    public $Search='';
+
+
     public function render()
     {
-        return view('livewire.global-search-bar',['search'=>$this->Search_key]);
+        return view('livewire.global-search-bar');
     }
 }

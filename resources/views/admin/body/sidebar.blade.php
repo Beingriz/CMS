@@ -21,15 +21,15 @@
 
                 <li>
                     <a href="{{route('dashboard')}}" class="waves-effect">
-                        <i class="ri-dashboard-line"></i><span class="badge rounded-pill bg-success float-end">3</span>
-                        <span>Home</span>
+                        <i class="ri-dashboard-line"></i>
+                        <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{url('app_home')}}" class=" waves-effect">
+                    <a href="{{route('Dashboard')}}" >
                         <i class="ri-table-2"></i>
-                        <span>Dashboard</span>
+                        <span>Home</span>
                     </a>
                 </li>
                 {{-- <li>
@@ -48,17 +48,14 @@
                     </ul>
                 </li> --}}
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-account-circle-line"></i>
+                    <a href="#" class="has-arrow waves-effect">
+                        <i class="ri-account-circle-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">2</span>
                         <span>App Controls</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('new_application')}}">New Application</a></li>
                         <li> <a href="{{route('update_application')}}">Update</a></li>
-                        <li> <a href="">Services</a></li>
-                        <li> <a href="">Balance</a></li>
-                        <li> <a href="">Filter</a></li>
-                        <li> <a href="">Delete</a></li>
+
 
                     </ul>
                 </li>

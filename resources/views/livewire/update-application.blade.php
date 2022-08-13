@@ -22,13 +22,20 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">New App.</li>
+                        <li class="breadcrumb-item active">Update</li>
                     </ol>
                 </div>
 
             </div>
         </div>
     </div>{{-- End of Row --}}
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new_application')}}">New Form</a></li>
+            <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+        </ol>
+    </div>{{-- End of Page Tittle --}}
 
     <div class="row">{{--Mobile No Field Row --}}
         <div class="col-lg-5">

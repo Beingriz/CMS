@@ -285,6 +285,11 @@ class AddServices extends Component
         }
         else
         {
+            $this->validate([
+                'Name'=>'required|unique:sub_service_list',
+                'Unit_Price'=>'required |numeric','Service_Fee'=>'required |numeric',
+                 'Thumbnail'=>'required'   ]);
+
             $extension = $this->Thumbnail->getClientOriginalExtension();
             $path = 'Thumbnails/Services/'.$this->Name;
             $filename = 'SS_'.$this->Name.'_'.time().'.'.$extension;
@@ -396,6 +401,7 @@ class AddServices extends Component
         }
         elseif($this->Category_Type == 'Sub')
         {
+            $service_id = $this->Service_Id;
             $fetch = SubServices::Wherekey($Id)->get();
             foreach($fetch as $item)
             {
@@ -409,17 +415,19 @@ class AddServices extends Component
             }
             else
             {
-                if(!empty($this->Old_Thumbnail))
+                if($this->Old_Thumbnail !='Not Available')
                 {
-                    $path = str_replace('storage/app/', '', $this->Old_Thumbnail);
-                    if (Storage::exists($path))
+                    if (Storage::disk('public')->exists($this->Old_Thumbnail))
                     {
-                        unlink(storage_path('app/'.$path));
-                        $delete_main = MainServices::Wherekey($Id)->Delete();
+                        unlink(public_path('storage/'.$this->Old_Thumbnail));
+                        $delete_main = SubServices::Wherekey($Id)->Delete();
                         if($delete_main)
                         {
-                            session()->flash('SuccessMsg',$name.' Service &  all Sub Services Deleted Successfully!');
+                            session()->flash('SuccessMsg',$name.'  Services Deleted Successfully!');
                             $this->ResetFields();
+                            $this->Category_Type='Sub';
+                            $this->Service_Id=$service_id;
+
                         }
                         else
                         {
@@ -432,11 +440,7 @@ class AddServices extends Component
                     }
                 }
 
-                $delete = SubServices::Wherekey($Id)->Delete();
-                if($delete)
-                {
-                    session()->flash('SuccessMsg', ''.$name.' Sub Service Deleted Successfully!' );
-                }
+
             }
         }
         // delete working

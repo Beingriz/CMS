@@ -54,11 +54,14 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('download/paymentreceipt/{id}', 'Download_Pay')->middleware(['auth'])->name('download_pay');
     Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->middleware(['auth'])->name('multiple_doc_delete');
     Route::get('bookmarks', 'Bookmarks')->middleware(['auth'])->name('Bookmarks');
+    Route::get('search/{key}', 'GlobalSearch')->middleware(['auth'])->name('global_search');
 
 
 });
 
 
+// Global  Search  Routes start
+Route:: get('search/{key}', [ApplicationController::class,'Search']);
 
 Route::get('new_temp', [ApplicationController::class,'Temp']);
 // Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
