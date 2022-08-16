@@ -326,37 +326,26 @@
                                         <td>{{ $data->Document_No }}</td>
                                         <td>{{ $data->Status }}</td>
                                         <td>
-                                            <div class="btn-group" role="group"
-                                                aria-label="Button group with nested dropdown">
-                                                <div class="btn-group btn-group-sm " role="group">
-                                                    <button id="btnGroupDrop2" type="button"
-                                                        class="btn btn-info dropdown-toggle" data-mdb-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        @if ($data->Registered == 'No')
-                                                        Register
+                                            <div class="btn-group" role="group">
+                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    @if ($data->Registered == 'No')
+                                                        Register <i class="mdi mdi-shield-account"></i>
                                                         @elseif($data->Registered == 'Yes')
-                                                        Edit
+                                                        Edit    <i class="mdi mdi-square-edit-outline"></i>
                                                         @endif
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-                                                        <li><a class="dropdown-item "
-                                                                href= "{{url("open_app")}}/{{ $data->Id }}"">Open</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item"
-                                                                href="{{ url("edit_app") }}/{{ $data->Id }}">Edit</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item" onclick="confirm('Are you sure you want Move  {{$data->Name}}  Application to Recycle Bin?') || event.stopImmediatePropagation()" wire:click="SingleDelete('{{$data->Id}}','{{$data->Client_Id}}')"
-                                                               >Delete</a>
-                                                        </li>
-                                                        @if ($data->Registered == 'No')
-                                                        <li><a class="dropdown-item" onclick="confirm('Are you sure you want Register. Mr /Mrs : {{$data->Name}} , for  Mobile No : {{$data->Mobile_No}} ?') || event.stopImmediatePropagation()" wire:click="Register('{{$data->Id}}')" >Register</a>
-                                                        </li>
-                                                        @endif
-                                                    </ul>
+
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+
+                                                    @if ($data->Registered == 'No')
+                                                    <li><a class="dropdown-item" title="Registration"  onclick="confirm('Are you sure you want Register. Mr /Mrs : {{$data->Name}} , for  Mobile No : {{$data->Mobile_No}} ?') || event.stopImmediatePropagation()" wire:click="Register('{{$data->Id}}')" >Register</a>
+                                                    </li>
+                                                    @endif
+                                                    <a class="dropdown-item" title="View Applicaiton" href="#">View</a>
+                                                    <a class="dropdown-item btn-primary" title="View Applicaiton" href="{{route('edit_application',$data->Id)}}">Edit</a>
                                                 </div>
                                             </div>
                                         </td>
-
                                     </tr>
 
                                     @endforeach
