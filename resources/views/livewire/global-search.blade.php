@@ -43,7 +43,7 @@
         </ol>
     </div>{{-- End of Page Tittle --}}
     <div class="row">{{-- Start of Insight Row --}}
-        <a href="#" class="col-xl-3 col-md-10" >
+        <div class="col-xl-3 col-md-10" >
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -66,8 +66,8 @@
                     </div>
                 </div>
             </div>
-        </a>
-        <a href="#" class="col-xl-3 col-md-10">
+        </div>
+        <div class="col-xl-3 col-md-10">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -92,8 +92,8 @@
                     </div>
                 </div>
             </div>
-        </a>
-        <a href="#" class="col-xl-3 col-md-10">
+        </div>
+        <div class="col-xl-3 col-md-10">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -112,8 +112,8 @@
                     </div>
                 </div>
             </div>
-        </a>
-        <a href="#" class="col-xl-3 col-md-10">
+        </div>
+        <div class="col-xl-3 col-md-10">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -138,57 +138,95 @@
                     </div>
                 </div>
             </div>
-        </a>
+        </div>
         @if (($Search_Count) == 0)
         <div class="header" style="text-align:center">
-        <span class="info-text">Sorry No Service Record Available for {{$search}}</span>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-block-helper me-2"></i>
+                Sorry No Service Record Available for {{$search}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
         <br>
         @elseif (count($Registered)==0)
         <div class="header" style="text-align:center">
-            <span class="info-text">Unregistered Client!. Please Register..</span>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-alert-outline me-2"></i>
+                Unregistered Client!. Please Register.. {{$search}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
             <br>
         @endif
 
         @if (count($Registered)>0)
             @if ($Registered_Count>1)
-            <span class="info-text">{{$Registered_Count}} Registered Clients Available for Search Result of :</span><span class="heading"> {{$search}}</span><br>
+            <p >
+                <h5 class="text-muted">{{$Registered_Count}} Registered Clients Available for Search Result of : {{$search}}</h5>
+            </p>
+
             @endif
             <div class="col-lg-12">{{-- Registered Client Table --}}
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Registered Client Details Mr / Mrs. {{($Name)}}</h4>
-                        <p class="card-title-desc">Registerd on</p>
+                        <h4 class="card-title">Registered Client Details for search result of <span class="text-primary"><strong>{{($Name)}}</strong></span> </h4>
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
 
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>ID</th>
                                         <th>Name</th>
+                                        <th>Relative_Name</th>
+                                        <th>DOB</th>
+                                        <th>Gender</th>
                                         <th>Mobile</th>
                                         <th>Address</th>
-                                        <th>DOB</th>
-                                        <th>Status</th>
+                                        <th>Profile</th>
+                                        <th>Registered</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($Registered as $item)
                                     <tr>
-                                        <td style="width:10%">{{$item['Id']}}</td>
-                                        <td style="width:20%">{{$item['Name']}}</td>
-                                        <td style="width:10%">{{$item['Mobile_No']}}</td>
-                                        <td style="width:25%">{{$item['Address']}}</td>
-                                        <td style="width:20%">{{$item['DOB']}}</td>
-                                        <td style="width:25%">{{$item['Client_Type']}}</td>
-                                        <td style="width:10%">
-                                            <a class="btn-sm btn-primary"  style = "color: white">Update</a>
+                                        <td>{{$n++}}</td>
+                                        <td>{{$item['Id']}}</td>
+                                        <td>{{$item['Name']}}</td>
+                                        @if (is_null($item['Relative_Name']))
+                                        <td>Not Available</td>
+                                        @else
+                                        <td>{{$item['Relative_Name']}}</td>
+                                        @endif
+                                        @if (is_null($item['DOB']))
+                                        <td>Not Available</td>
+                                        @else
+                                        <td>{{$item['DOB']}}</td>
+                                        @endif
+
+
+
+                                        @if (is_null($item['Gender']))
+                                        <td>Not Available</td>
+                                        @else
+                                        <td>{{$item['Gender']}}</td>
+                                        @endif
+                                        <td>{{$item['Mobile_No']}}</td>
+                                        @if (is_null($item['Address']))
+                                        <td>Not Available</td>
+                                        @else
+                                        <td>{{$item['Address']}}</td>
+                                        @endif
+                                        <td>  <img src="{{ (!empty($Old_Profile_Image))?url('storage/'.$$item['Profile_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md">
+                                        <td>{{ \Carbon\Carbon::parse($item['created_at'])->diffForHumans() }}</td>
+
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-account-arrow-left-outline" ></i></a>
                                         </td>
+
                                     </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                         </div>
@@ -200,7 +238,7 @@
     </div>
     @if ($Search_Count>0)
         <div class="header"  style="text-align: center">
-            <span class="info-text">{{$Search_Count}} Search Result Found</span>
+            <h4>{{$Search_Count}} Search Result Found</h4>
         </div>
         <div class="row">{{-- Start of Balance Details Row --}}
             @if (count($Balance_Collection)>0)
@@ -255,28 +293,24 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Bordered Table</h4>
+                        <h4 class="card-title">Search Result</h4>
                         <div class="filter-bar">
                             <div class="d-flex justify-content-between align-content-center mb-2">
                                 <div class="d-flex">
                                     <div>
                                         <div class="d-flex align-items-center ml-4">
                                             @if ($Checked)
-                                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                                <div class="btn-group btn-group-sm btn-rounded" role="group">
-                                                    <button id="btnGroupDrop1" type="button"
-                                                        class="btn btn-danger btn-sm dropdown-toggle" data-mdb-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        Cheched ({{count($Checked)}})
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                        <li><a class=" dropdown-item" onclick="confirm('Are you sure you want to Move these records to Recycle Bin?') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
-                                                        </li>
-                                                    </ul>
+                                            <div class="btn-group" role="group">
+                                                <button id="btnGroupVerticalDrop2" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Cheched ({{count($Checked)}})<i class="mdi mdi-chevron-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2">
+                                                    <li><a class="dropdown-item" onclick="confirm('Are you sure you want to Move these records to Recycle Bin?') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
+                                                    </li>
                                                 </div>
                                             </div>
-                                            <div class="row"></div>
                                             @endif
+
                                             <label for="paginate" class="text-nowrap mr-2 mb-0">Per Page</label>
                                             <select wire:model="paginate" name="paginate" id="paginate" class="form-control form-control-sm">
                                                 <option value="10">10</option>
@@ -299,7 +333,7 @@
                                 <thead>
                                     <tr>
                                         <th>Sl.No</th>
-                                        <th>Check</th>
+                                        <th>Delete</th>
                                         <th >Received</th>
                                         <th>Name</th>
                                         <th>Mobile</th>
@@ -342,7 +376,7 @@
                                                     </li>
                                                     @endif
                                                     <a class="dropdown-item" title="View Applicaiton" href="#">View</a>
-                                                    <a class="dropdown-item btn-primary" title="View Applicaiton" href="{{route('edit_application',$data->Id)}}">Edit</a>
+                                                    <a class="dropdown-item btn-primary" id="update" title="Edit Applicaiton" href="{{route('edit_application',$data->Id)}}">Edit</a>
                                                 </div>
                                             </div>
                                         </td>

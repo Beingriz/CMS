@@ -8,6 +8,7 @@ use App\Models\ClientRegister;
 use App\Models\CreditLedger;
 use App\Models\User;
 use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,11 +21,11 @@ class GlobalSearch extends Component
     protected $listeners = ['SearchResult'];
     public $search;
     public $Checked =[];
-    public $filterby;
+    public $filterby,$created,$updated;
     public $count;
     public $total;
     protected $search_data;
-    public $collection;
+    public $collection,$n=1;
     public $paginate = 10;
 
     public $Name;
@@ -203,22 +204,25 @@ class GlobalSearch extends Component
            $name = $data['Name'];
            $mobile = $data['Mobile_No'];
            $dob = $data['DOB'];
+           $relative_name = $data['Relative_Name'];
+           $gender = $data['Gender'];
        }
         // Client Registration
         $user_data = new ClientRegister;
         $user_data->Id= $client_Id;
         $user_data->Name = $name;
+        $user_data->Relative_Name = $relative_name;
+        $user_data->Gender = $gender;
+        $user_data->DOB = $dob;
         $user_data->Mobile_No =$mobile;
         $user_data->Email_Id = $name.'@gmail.com';
-        $user_data->DOB = $dob;
         $user_data->Address = "Chikkabasthi";
-        $user_data->Profile_Image = "../Clinet/Profile_Image/img.jpg";
+        $user_data->Profile_Image = "no_image.jpg";
         $user_data->Client_Type = "Old Client";
-        $user_data->Registered_On = $this->today;
         $user_data->save(); // Client Registered
         $this->render();
         session()->flash('SuccessMsg','Congratulations!!  Client Registered Successfully!, New Client Id is :'.$client_Id);
-        return redirect('../search/'.$this->search);
+        return redirect()->route('global_search',$this->search);
     }
 
     public function Show($Id)
@@ -254,10 +258,9 @@ class GlobalSearch extends Component
 
     public function render()
     {
-
         $mobile = (int)$this->search;
         $this->Registered = ClientRegister::Where('Mobile_No',$mobile)
-                                            ->orWhere([['Name',$this->search]])
+                                            ->orWhere('Name',$this->search)
                                             ->orWhere('Id',$this->search)
                                             ->get();
 
@@ -299,10 +302,16 @@ class GlobalSearch extends Component
                 {
                     $Id = $data['Id'];
                     $this->Name = $data['Name'];
+                    $Relative_Name = $data['Relative_Name'];
                     $mobile =$data['Mobile_No'];
                     $address = $data['Address'];
+                    $dob = $data['DOB'];
+                    $gender = $data['Gender'];
                     $client_type = $data['Client_Type'];
-                    $temp->push(['Id'=>$Id,'Name'=>$this->Name, 'Mobile_No'=>$mobile, 'Address'=>$address, 'Client_Type'=>$client_type, 'DOB'=>$client_type]);
+                    $created_at = $data['created_at'];
+                    $updated_at = $data['updated_at'];
+                    $profile_image = $data['Profile_Image'];
+                    $temp->push(['Id'=>$Id,'Name'=>$this->Name,'Relative_Name'=>$Relative_Name,'Gender'=>$gender, 'Mobile_No'=>$mobile, 'Address'=>$address, 'Client_Type'=>$client_type, 'DOB'=>$dob, 'created_at'=>$created_at, 'Profile_Image'=>$profile_image, 'updated_at'=>$updated_at]);
                 }
             }
             $this->Registered_Count = sizeof($temp);

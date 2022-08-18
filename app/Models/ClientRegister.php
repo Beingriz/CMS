@@ -9,6 +9,5 @@ class ClientRegister extends Model
 {
     use HasFactory;
     public $table="client_register";
-    public $timestamps=false;
 
 }
