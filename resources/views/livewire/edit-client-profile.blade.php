@@ -55,7 +55,7 @@
                             </div>
                         </div>
 
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($old_profile_image))?url('storage/'.$old_profile_image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
 
 
                     </div>
@@ -169,8 +169,16 @@
                             <div class="row mb-3">
                                 <label for="name" class="col-sm-3 col-form-label">Name </label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text"  wire:model="Name"placeholder="Name" id="name">
-                                    <span class="error">@error('name'){{$message}}@enderror</span>
+                                    <input class="form-control" type="text"  wire:model.lazy="Name"placeholder="Name" id="name">
+                                    <span class="error">@error('Name'){{$message}}@enderror</span>
+                                </div>
+                            </div>
+                            {{-- Relative Name --}}
+                            <div class="row mb-3">
+                                <label for="name" class="col-sm-3 col-form-label">Relative Name </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="text"  wire:model.lazy="Relative_Name"placeholder="Relative_Name" id="name">
+                                    <span class="error">@error('Relative_Name'){{$message}}@enderror</span>
                                 </div>
                             </div>
 
@@ -178,45 +186,58 @@
                             <div class="row mb-3">
                                 <label for="email" class="col-sm-3 col-form-label">Email</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text"  wire:model="Email"placeholder="Email" id="email">
-                                    <span class="error">@error('email'){{$message}}@enderror</span>
+                                    <input class="form-control" type="text"  wire:model.lazy="Email"placeholder="Email" id="email">
+                                    <span class="error">@error('Email'){{$message}}@enderror</span>
                                 </div>
                             </div>
                             {{-- Mobile Number --}}
                             <div class="row mb-3">
                                 <label for="mobile_no" class="col-sm-3 col-form-label">Mobile No</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="number"  wire:model="Mobile_No"placeholder="Mobile Number" id="mobile_no">
-                                    <span class="error">@error('mobile_no'){{$message}}@enderror</span>
+                                    <input class="form-control" type="number"  wire:model.lazy="Mobile_No"placeholder="Mobile Number" id="Mobile_No">
+                                    <span class="error">@error('Mobile_No'){{$message}}@enderror</span>
                                 </div>
                             </div>
                             {{-- DOB --}}
                             <div class="row mb-3">
                                 <label for="dob" class="col-sm-3 col-form-label">Date of Birth</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="date"  wire:model="dob"placeholder="Name" id="dob">
-                                    <span class="error">@error('dob'){{$message}}@enderror</span>
+                                    <input class="form-control" type="date"  wire:model="Dob" id="dob">
+                                    <span class="error">@error('Dob'){{$message}}@enderror</span>
+                                </div>
+                            </div>
+                            {{-- Gender --}}
+                            <div class="row mb-3">
+                                <label for="dob" class="col-sm-3 col-form-label">Gender</label>
+                                <div class="col-sm-9">
+                                    <select wire:model="Gender" name="Gender" id="Gender">
+                                        <option selected value="{{$Gender}}">{{$Gender}}</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span class="error">@error('Gender'){{$message}}@enderror</span>
                                 </div>
                             </div>
                             {{-- Address --}}
                             <div class="row mb-3">
                                 <label for="address" class="col-sm-3 col-form-label">Address</label>
                                 <div class="col-sm-9">
-                                    <textarea class="form-control" type="number"  wire:model="address" id="dob"></textarea>
-                                    <span class="error">@error('address'){{$message}}@enderror</span>
+                                    <textarea class="form-control" type="number" wire:model.lazy="Address" id="dob"></textarea>
+                                    <span class="error">@error('Address'){{$message}}@enderror</span>
                                 </div>
                             </div>
                             {{-- Profile Image --}}
                             <div class="row mb-3">
-                                <label for="profile_image" class="col-sm-3 col-form-label">Profile Icon</label>
+                                <label for="Profile_Image" class="col-sm-3 col-form-label">Profile Icon</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="file"  wire:model="profile_image"placeholder="Name" id="profile_image">
+                                    <input class="form-control" type="file"  wire:model="Profile_Image"placeholder="Name" id="profile_image">
                                 </div>
                             </div>
                             {{-- Preview Profile Image --}}
                             @if (!is_Null($Profile_Image))
                             <div class="row mb-3">
-                                <label for="profile_image" class="col-sm-3 col-form-label"></label>
+                                <label for="Profile_Image" class="col-sm-3 col-form-label"></label>
                                 <div class="col-sm-9">
                                     <div wire:loading wire:target="profile_image">Uploading...</div>
                                     <img class=" rounded avatar-lg" src="{{ $Profile_Image->temporaryUrl() }}" alt="" />
@@ -234,8 +255,8 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <a href="#" wire:click="UpdateProfile()" class="btn btn-info btn-rounded waves-effect waves-light">Update Profile</a>
-                                <a href="#" wire:click="Back()" class="btn btn-light btn-rounded waves-effect">Back</a>
+                                <a href="#" wire:click="UpdateProfile('{{$Client_Id}}')" class="btn btn-success btn-rounded waves-effect waves-light">Update Profile</a>
+                                <a href="#" wire:click="ResetFields('{{$Client_Id}}')" class="btn btn-light btn-rounded waves-effect">Reset</a>
                             </div>
 
 

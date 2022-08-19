@@ -310,8 +310,8 @@ class GlobalSearch extends Component
                     $client_type = $data['Client_Type'];
                     $created_at = $data['created_at'];
                     $updated_at = $data['updated_at'];
-                    $profile_image = $data['Profile_Image'];
-                    $temp->push(['Id'=>$Id,'Name'=>$this->Name,'Relative_Name'=>$Relative_Name,'Gender'=>$gender, 'Mobile_No'=>$mobile, 'Address'=>$address, 'Client_Type'=>$client_type, 'DOB'=>$dob, 'created_at'=>$created_at, 'Profile_Image'=>$profile_image, 'updated_at'=>$updated_at]);
+                    $old_profile_image = $data['Profile_Image'];
+                    $temp->push(['Id'=>$Id,'Name'=>$this->Name,'Relative_Name'=>$Relative_Name,'Gender'=>$gender, 'Mobile_No'=>$mobile, 'Address'=>$address, 'Client_Type'=>$client_type, 'DOB'=>$dob, 'created_at'=>$created_at, 'Profile_Image'=>$old_profile_image, 'updated_at'=>$updated_at]);
                 }
             }
             $this->Registered_Count = sizeof($temp);
