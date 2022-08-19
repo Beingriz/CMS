@@ -1,5 +1,5 @@
 <div>
-    <form class="app-search d-none d-lg-block" action="{{route('global_search',$Search)}}">
+    <form class="app-search d-none d-lg-block" method="GET" action="{{route('global_search',$Search)}}">
         <div class="position-relative d-flex">
             <input type="text" class="form-control" placeholder="Search..." wire:model="Search" required >
             <span class="ri-search-line"></span>

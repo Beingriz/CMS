@@ -543,6 +543,10 @@ class ApplicationController extends Controller
         return view('Application.search',['search_data'=>$search_data, 'count'=>$fetched_data_count, 'sl_no'=>$fetched_data_count, 'n'=>$this->n, 'search'=>$search,'total'=>$total,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum]);
 
     }
+    public function EditProfile($id)
+    {
+        return view('Application.edit_profile',['Id'=>$id]);
+    }
 
     public function Delete($id)
     {

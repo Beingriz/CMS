@@ -222,7 +222,7 @@
                                         <td>{{ \Carbon\Carbon::parse($item['created_at'])->diffForHumans() }}</td>
 
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-account-arrow-left-outline" ></i></a>
+                                            <a href="{{route('edit_profile',$item['Id'])}}" class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-account-arrow-left-outline" ></i></a>
                                         </td>
 
                                     </tr>
