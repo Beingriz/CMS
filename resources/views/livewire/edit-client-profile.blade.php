@@ -84,7 +84,7 @@
                         </div>
 
                         {{-- <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image"> --}}
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/delivered.png')}}" alt="Delivered">
 
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                         </div>
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/revenue_2.png')}}" alt="Generic placeholder image">
 
 
                     </div>
@@ -138,7 +138,7 @@
                             </div>
                         </div>
 
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/'.$Profile_Image):url('storage/balance.png')}}" alt="Generic placeholder image">
 
                     </div>
                 </div>

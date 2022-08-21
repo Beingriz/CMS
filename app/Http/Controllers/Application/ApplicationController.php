@@ -515,33 +515,37 @@ class ApplicationController extends Controller
         return view('Application\update_open_app',['applicant_data'=>$applicant_data,'sl_no'=>$sl_no,'n'=>$this->n,'applications_served'=>$applications_served,'previous_day_app'=>$previous_day_app,'applications_delivered'=>$applications_delivered,'previous_day_app_delivered'=>$previous_day_app_delivered, 'total_revenue'=>$sum,'previous_revenue'=>$previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'info'=>$this->info,'indi_total'=>$tot,'indi_amount'=>$amnt,'indi_bal'=>$bal,'indi_count'=>$count_app,'indi_data'=>$get_app,'indi_delivered'=>$app_delivered,'indi_pending'=>$app_pending,'application_type'=>$this->application_type,'payment_mode'=>$this->payment_mode,'id'=>$Id,'status_list'=>$this->status_list,'indi_deleted'=>$app_deleted]);
     }
 
-    public function GlobalSearch($key)
+    // public function GlobalSearch($key)
+    // {
+    //     $search = $key;
+    //     $search_data = DB::table('digital_cyber_db')
+    //                 ->where([['Mobile_No', '=', $search],['Recycle_Bin','=',$this->no]])
+    //                 ->orWhere('Name', '=', $search)
+    //                 ->orWhere('Ack_No', '=', $search)
+    //                 ->get();
+
+    //     $fetched_data_count = DB::table('digital_cyber_db')
+    //                         ->where([['Mobile_No', '=', $search],['Recycle_Bin','=',$this->no]])
+    //                         ->orWhere('Name', '=', $search)
+    //                         ->orWhere('Ack_No', '=', $search)
+    //                 ->count();
+    //     $total=0;
+    //     foreach ($search_data as $key)
+    //     {
+    //          $key  = get_object_vars($key);
+    //         {
+    //             $total += $key['Amount_Paid'];
+    //         }
+    //     }
+    //     // code for Isnight Data
+
+
+    //     return view('Application.searc',['search_data'=>$search_data, 'count'=>$fetched_data_count, 'sl_no'=>$fetched_data_count, 'n'=>$this->n, 'search'=>$search,'total'=>$total,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum]);
+
+    // }
+    public function  GlobalSearch($key)
     {
-        $search = $key;
-        $search_data = DB::table('digital_cyber_db')
-                    ->where([['Mobile_No', '=', $search],['Recycle_Bin','=',$this->no]])
-                    ->orWhere('Name', '=', $search)
-                    ->orWhere('Ack_No', '=', $search)
-                    ->get();
-
-        $fetched_data_count = DB::table('digital_cyber_db')
-                            ->where([['Mobile_No', '=', $search],['Recycle_Bin','=',$this->no]])
-                            ->orWhere('Name', '=', $search)
-                            ->orWhere('Ack_No', '=', $search)
-                    ->count();
-        $total=0;
-        foreach ($search_data as $key)
-        {
-             $key  = get_object_vars($key);
-            {
-                $total += $key['Amount_Paid'];
-            }
-        }
-        // code for Isnight Data
-
-
-        return view('Application.search',['search_data'=>$search_data, 'count'=>$fetched_data_count, 'sl_no'=>$fetched_data_count, 'n'=>$this->n, 'search'=>$search,'total'=>$total,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum]);
-
+        return view('Application.search',['search'=>$key]);
     }
     public function EditProfile($id)
     {

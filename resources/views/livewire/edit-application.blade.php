@@ -400,12 +400,19 @@
                                 <div>
                                     <form>
                                         <div class="row">
-
                                             <div class="col-lg-3">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="progress-basicpill-receiveddate-input">Received Date</label>
                                                     <input type="date" class="form-control" id="progress-basicpill-receiveddate-input" wire:model="Received_Date">
                                                     @error('Received_Date') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="progress-basicpill-receiveddate-input">Applied Date</label>
+                                                    <input type="date" class="form-control" id="progress-basicpill-receiveddate-input" wire:model="Applied_Date">
+                                                    @error('Applied_Date') <span class="text-danger">{{ $message }}</span> @enderror
 
                                                 </div>
                                             </div>
@@ -417,7 +424,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-3">
                                                 <div class="mb-3">
                                                     <label>Current Status</label>
                                                     <select class="form-select" wire:model.lazy="Status">
@@ -432,6 +439,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="col-lg-2">
                                                 <div class="mb-3">
@@ -513,6 +521,9 @@
                                     @error('Gender') <span class="text-danger">{{ $message }}</span> @enderror
                                     @error('MainService') <span class="text-danger">{{ $message }}</span> @enderror
                                     @error('SubService') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Received_Date') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Applied_Date') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('Updated_Date') <span class="text-danger">{{ $message }}</span> @enderror
                                     @error('Total_Amount') <span class="text-danger">{{ $message }}</span> @enderror
                                     @error('Amount_Paid') <span class="text-danger">{{ $message }}</span> @enderror
                                     @error('Balance') <span class="text-danger">{{ $message }}</span> @enderror
@@ -624,9 +635,11 @@
                                     <div class="col-lg-4 d-flex">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item"> Received Date</li>
+                                            <li class="list-group-item"> Applied Date</li>
+                                            <li class="list-group-item"> Updated Date</li>
                                             <li class="list-group-item"> Status No</li>
-                                            <li class="list-group-item"> Total Amount</li>
-                                            <li class="list-group-item"> Amount Paid</li>
+                                            <li class="list-group-item"> Total</li>
+                                            <li class="list-group-item"> Paid</li>
                                             <li class="list-group-item"> Balance</li>
                                             <li class="list-group-item"> Payment Mode</li>
 
@@ -637,6 +650,20 @@
                                                 <strong class="text-danger">Field is Empty</strong></li>
                                                 @else
                                                 <strong class="text-primary">{{$Received_Date}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Applied_Date))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Applied_Date}}</strong>
+                                                @endif
+                                            </li>
+                                            <li class="list-group-item">
+                                                @if(empty($Updated_Date))
+                                                <strong class="text-danger">Field is Empty</strong></li>
+                                                @else
+                                                <strong class="text-primary">{{$Updated_Date}}</strong>
                                                 @endif
                                             </li>
                                             <li class="list-group-item">

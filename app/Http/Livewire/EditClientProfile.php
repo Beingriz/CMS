@@ -16,6 +16,31 @@ class EditClientProfile extends Component
     public $profiledata, $old_profile_image,$New_Profile_Image;
 
     use WithFileUploads;
+    protected $rules = [
+        'Name' =>'required',
+        'Relative_Name' =>'required',
+        'Gender' =>'required',
+        'Dob' =>'required',
+        'Mobile_No' =>'required | Min:10',
+        'Email' =>'required| email',
+        'Address' =>'required',
+
+    ];
+    protected $messages = [
+       'Name.required' => 'Applicant Name Cannot be Empty',
+       'Relative_Name.required' => 'Enter Relative Name',
+       'Gender.required' => 'Please Select Gender',
+       'Dob.required' => 'Please Select Date of Birth',
+       'Mobile_No.required' => 'Mobile Number Cannot Be Empty',
+       'Address.required' => 'Enter Total Amount',
+       'Email.required' => 'Please Enter Email Id',
+
+   ];
+
+   public function updated($propertyName)
+   {
+       $this->validateOnly($propertyName);
+   }
     public function mount($Id)
     {
         $this->Client_Id = $Id;
@@ -45,6 +70,7 @@ class EditClientProfile extends Component
     }
     public function UpdateProfile($Id)
     {
+        $this->validate();
         if(!empty($this->Profile_Image))
         {
             if($this->old_profile_image != 'Not Available' )
@@ -85,7 +111,7 @@ class EditClientProfile extends Component
         $data['Profile_Image'] = $this->New_Profile_Image;
         $data['Email_Id'] = trim($this->Email);
         $data['DOB'] = trim($this->Dob);
-        DB::table('client_register')->where([['Id','=',$Id]])->update($data);
+        ClientRegister::Where([['Id','=',$Id]])->update($data);
         $notification = array(
             'message'=>'Profile Updated Sucessfully',
             'info-type' => 'success'

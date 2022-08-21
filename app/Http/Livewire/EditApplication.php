@@ -128,6 +128,12 @@ class EditApplication extends Component
         }
 
     }
+    public function Capitalize()
+    {
+        $this->Name = strtolower($this->Name);
+        $this->Name = ucwords($this->Name);
+        $this->RelativeName = ucwords($this->RelativeName);
+    }
 
     public function updated($propertyName)
     {
@@ -387,7 +393,7 @@ class EditApplication extends Component
         $update_data['Payment_Receipt']=$this->Payment_Path;
         $update_data['Delivered_Date']=$this->Updated_Date;
         $update_data['Applicant_Image']=$this->Applicant_Image;
-        $update_App = DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($update_data);
+        $update_App = Application::where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($update_data);
 
         if($this->Doc_Yes == 1 ) // if more documents to upload
         {
@@ -486,15 +492,7 @@ class EditApplication extends Component
         //
         // }
     }
-    public function Capitalize()
-    {
-        $this->Name = ucwords($this->Name);
-        $this->RelativeName = ucwords($this->RelativeName);
-        $this->Ack_No = ucwords($this->Ack_No);
-        $this->Document_No = ucwords($this->Document_No);
-        $this->Doc_Name = ucwords($this->Doc_Name);
 
-    }
     public function Delete_Doc($Id)
     {
         $fetch = DocumentFiles::Wherekey($Id)->get();

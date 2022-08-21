@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\BalanceLedger;
 use App\Models\ClientRegister;
 use App\Models\CreditLedger;
+use App\Models\Status;
 use App\Models\User;
 use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
@@ -26,7 +27,7 @@ class GlobalSearch extends Component
     public $total;
     protected $search_data;
     public $collection,$n=1;
-    public $paginate = 10;
+    public $paginate = 5;
 
     public $Name;
     public $Registered;
@@ -41,6 +42,7 @@ class GlobalSearch extends Component
     public $Search_Count = 0;
     public $filtered;
     public $Balance_Collection =[];
+    public $Status =NULL,$byStatus,$StatusCount;
 
     public function mount($key)
     {
@@ -217,7 +219,7 @@ class GlobalSearch extends Component
         $user_data->Mobile_No =$mobile;
         $user_data->Email_Id = $name.'@gmail.com';
         $user_data->Address = "Chikkabasthi";
-        $user_data->Profile_Image = "no_image.jpg";
+        $user_data->Profile_Image = "Not Available";
         $user_data->Client_Type = "Old Client";
         $user_data->save(); // Client Registered
         $this->render();
@@ -225,18 +227,67 @@ class GlobalSearch extends Component
         return redirect()->route('global_search',$this->search);
     }
 
-    public function Show($Id)
+    public function ApplicationsbyStatus($key = null)
     {
-        $this->search_data = Application::where([['Mobile_No', '=', $Id],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Client_Id', '=', $Id],['Recycle_Bin','=',$this->no]])
-                                 ->filter(trim($this->filterby))
+
+        $this->Status = $key;
+    }
+    public function UpdateStatus($Id, $Status)
+    {
+        $data = array();
+        $data['Status'] = $Status;
+        Application::Where('Id',$Id)->update($data);
+         $notification = array(
+            'message' =>'Status Updated Successfully',
+            'alert-type' => 'success'
+         );
+         return redirect()->route('global_search',$this->search)->with($notification);
+    }
+    public function SearchResults($key)
+    {
+        $mobile = (int)$this->search;
+        $this->Registered = ClientRegister::Where('Mobile_No',$mobile)
+                                            ->orWhere('Name',$this->search)
+                                            ->orWhere('Id',$this->search)
+                                            ->get();
+
+        $this->search_data = Application::where([['Mobile_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Name', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Ack_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Client_Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->filter(trim($this->filterby))
+                                ->when($this->Status, function($query, $status)
+                                {
+                                    return $query->where('Status',$status);
+                                })
                                 ->paginate($this->paginate);
-        $search_data = Application::where([['Mobile_No', '=', $Id],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Client_Id', '=', $Id],['Recycle_Bin','=',$this->no]])
-                                ->filter(trim($this->filterby))
-                                ->filter(trim($this->filterby))
+        $this->Search_Count = count($this->search_data );
+
+        $this->Service_Count = Application::where([['Mobile_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Name', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Ack_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Client_Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->count();
+
+        $search_data = Application::where([['Mobile_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Name', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Ack_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Client_Id', '=', $key],['Recycle_Bin','=',$this->no]])
                                 ->get();
-        $this->Service_Count = count($search_data);
+
+        $this->StatusCount = Application::where([['Mobile_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Name', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Ack_No', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->orWhere([['Client_Id', '=', $key],['Recycle_Bin','=',$this->no]])
+                                ->filter(trim($this->filterby))
+                                ->when($this->Status, function($query, $status)
+                                {
+                                    return $query->where('Status',$status);
+                                })->count();
 
         $this->Delivered =0;
         $Balance =0;
@@ -254,34 +305,16 @@ class GlobalSearch extends Component
         $this->Balance = $Balance;
         $this->Revenue = $Revenue;
         $this->Pending_App = $this->Service_Count - $this->Delivered;
+        return $this->search_data;
     }
 
     public function render()
     {
-        $mobile = (int)$this->search;
-        $this->Registered = ClientRegister::Where('Mobile_No',$mobile)
-                                            ->orWhere('Name',$this->search)
-                                            ->orWhere('Id',$this->search)
-                                            ->get();
-
-        $this->search_data = Application::where([['Mobile_No', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Name', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Id', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Ack_No', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Client_Id', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->filter(trim($this->filterby))
-                                ->paginate($this->paginate);
-        $search_data = Application::where([['Mobile_No', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Name', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Id', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Ack_No', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->orWhere([['Client_Id', '=', $this->search],['Recycle_Bin','=',$this->no]])
-                                ->filter(trim($this->filterby))
-                                ->get();
-        $this->Search_Count = count($search_data);
+        $this->SearchResults($this->search);
+        $this->resetPage();
         $temp = collect([]);
         $temp_count = [];
-        foreach($search_data as $data)
+        foreach($this->search_data as $data)
         {
             $this->filtered = ClientRegister::Where('Mobile_No',$data['Mobile_No'])->get();
             foreach($this->filtered as $found)
@@ -318,28 +351,11 @@ class GlobalSearch extends Component
             $this->Registered = $temp;
 
         }
+        $status_list = Status::all();
 
-        $this->Service_Count = count($search_data );
-
-        $this->Delivered =0;
-        $Balance =0;
-        $Revenue =0;
-        foreach($search_data as $data)
-        {
-            $status  = $data['Status'];
-            if($status == "Delivered to Client")
-            {
-                $this->Delivered += 1;
-            }
-            $Balance += $data['Balance'];
-            $Revenue += $data['Amount_Paid'];
-        }
-        $this->Balance = $Balance;
-        $this->Revenue = $Revenue;
-        $this->Pending_App = $this->Service_Count - $this->Delivered;
 
         return view('livewire.global-search', [
-            'search_data'=>$this->search_data, 'n'=>$this->n,
+            'search_data'=>$this->search_data, 'n'=>$this->n, 'status_list'=>$status_list,
         ]);
     }
 }

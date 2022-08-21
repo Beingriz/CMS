@@ -22,8 +22,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-
-
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
@@ -58,7 +56,8 @@
                             <div class="col-8">
                                 <div class="text-center mt-8">
                                     <h5>Applied {{$Service_Count}}</h5>
-                                    <p class="mb-2 text-truncate">Pending {{$Pending_App}} Applications</p>
+
+                                    <p ><a href="#" wire:click.prevent="ApplicationsbyStatus('Received')" class="mb-2 text-truncate">Pending {{$Pending_App}} Applications</a></p>
                                 </div>
                             </div>
                         </div>
@@ -81,8 +80,9 @@
                             <h5 class="text-truncate text-info font-size-20 mb-2">Delivery Report</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
-                                    <h5>{{$Delivered}} Delivered</h5>
-                                    <p class="mb-2 text-truncate">{{$Pending_App}} Under Process</span></p></p>
+                                    <h5><a href="#" wire:click.prevent="ApplicationsbyStatus('Delivered to Client')" class="mb-2 text-truncate">Delivered {{$Delivered}}</a></h5>
+
+                                    <p ><a href="#" wire:click.prevent="ApplicationsbyStatus('Received')" class="mb-2 text-truncate">Pending {{$Pending_App}} Applications</a></p>
                                 </div>
                             </div>
                         </div>
@@ -139,16 +139,8 @@
                 </div>
             </div>
         </div>
-        @if (($Search_Count) == 0)
-        <div class="header" style="text-align:center">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-block-helper me-2"></i>
-                Sorry No Service Record Available for {{$search}}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        <br>
-        @elseif (count($Registered)==0)
+
+        @if (count($Registered)==0)
         <div class="header" style="text-align:center">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <i class="mdi mdi-alert-outline me-2"></i>
@@ -160,31 +152,26 @@
         @endif
 
         @if (count($Registered)>0)
-            @if ($Registered_Count>1)
-            <p >
-                <h5 class="text-muted">{{$Registered_Count}} Registered Clients Available for Search Result of : {{$search}}</h5>
-            </p>
-
-            @endif
             <div class="col-lg-12">{{-- Registered Client Table --}}
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Registered Client Details for search result of <span class="text-primary"><strong>{{($Name)}}</strong></span> </h4>
+                        <h4 class="card-title"> {{$Registered_Count}} Registered Client Details for <span class="text-primary"><strong>{{($Name)}}</strong></span> </h4>
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
 
-                                <thead>
+                                <thead class="table-light">
                                     <tr>
                                         <th>#</th>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Relative_Name</th>
+                                        <th>Relative Name</th>
                                         <th>DOB</th>
                                         <th>Gender</th>
                                         <th>Mobile</th>
                                         <th>Address</th>
                                         <th>Profile</th>
                                         <th>Registered</th>
+                                        <th>Updated</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -204,9 +191,6 @@
                                         @else
                                         <td>{{$item['DOB']}}</td>
                                         @endif
-
-
-
                                         @if (is_null($item['Gender']))
                                         <td>Not Available</td>
                                         @else
@@ -220,6 +204,7 @@
                                         @endif
                                         <td>  <img src="{{ (!empty($item['Profile_Image']))?url('storage/'.$item['Profile_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md">
                                         <td>{{ \Carbon\Carbon::parse($item['created_at'])->diffForHumans() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item['updated_at'])->diffForHumans() }}</td>
 
                                         <td>
                                             <a href="{{route('edit_profile',$item['Id'])}}" class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-account-arrow-left-outline" ></i></a>
@@ -236,10 +221,7 @@
             </div>
             @endif
     </div>
-    @if ($Search_Count>0)
-        <div class="header"  style="text-align: center">
-            <h4>{{$Search_Count}} Search Result Found</h4>
-        </div>
+
         <div class="row">{{-- Start of Balance Details Row --}}
             @if (count($Balance_Collection)>0)
                 <div class="col-lg-6">
@@ -293,7 +275,12 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Search Result</h4>
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title">{{$Service_Count}} Search Result found. </h4>
+                            <h4 class="card-title">Status : {{ !is_null($Status) ?  $Status : 'All'}} {{$StatusCount}} </h4>
+                        </div>
+
+
                         <div class="filter-bar">
                             <div class="d-flex justify-content-between align-content-center mb-2">
                                 <div class="d-flex">
@@ -317,6 +304,15 @@
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
                                             </select>
+                                            <label for="bystatus" class="text-nowrap mr-2 mb-0">By Status</label>
+                                            <select  wire:change="ApplicationsbyStatus(event.target.value)" name="bystatus" id="bystatus" class="form-control form-control-sm">
+
+                                                <option selected="">Select Status</option>
+                                                        @foreach ($status_list as $status)
+                                                            <option value="{{ $status->Status }} ">
+                                                                {{ $status->Status }}</option>
+                                                            @endforeach
+                                            </select>
                                             <div class="row"></div>
                                             <label for="filterby" class="text-nowrap mr-2 mb-0">Sort By</label>
                                             <input  type="text"  wire:model="filterby" class="form-control form-control-sm" placeholder="Filter">
@@ -330,7 +326,7 @@
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
 
-                                <thead>
+                                <thead class="table-light">
                                     <tr>
                                         <th>Sl.No</th>
                                         <th>Delete</th>
@@ -346,7 +342,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($search_data as $data)
+                                    @forelse( $search_data as $data )
                                     <tr>
                                         <td>{{$search_data->firstItem()+$loop->index }}</td>
                                         <td><input type="checkbox" name="checked" id="checked" value="{{$data->Id}}" wire:model="Checked"></td>
@@ -358,7 +354,16 @@
                                         <td>{{$data->Application_Type}}</td>
                                         <td>{{ $data->Ack_No }}</td>
                                         <td>{{ $data->Document_No }}</td>
-                                        <td>{{ $data->Status }}</td>
+                                        <td>
+
+
+                                        <select  wire:change="UpdateStatus('{{$data->Id}}',event.target.value)" name="bystatus" id="bystatus" class="form-control form-control-sm">
+                                        <option selected="">{{ $data->Status }}</option>
+                                            @foreach ($status_list as $status)
+                                            <option value="{{ $status->Status }} ">{{ $status->Status }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -381,8 +386,14 @@
                                             </div>
                                         </td>
                                     </tr>
-
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="11">
+                                                <img class=" avatar-xl" alt="No Result" src="{{asset('storage/no_result.png')}}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                    @endforelse()
                                 </tbody>
 
                             </table>
@@ -403,7 +414,6 @@
                 </div>
             </div>
         </div>
-        @endif
 
 
 </div>
