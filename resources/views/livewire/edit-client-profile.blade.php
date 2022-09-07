@@ -35,7 +35,7 @@
     </div>{{-- End of Row --}}
 
      <div class="row"> {{-- Start of Services Row --}}
-        <a href="#" class="col-xl-3 col-md-10" wire:click.prevent="ShowApplicatins('{{$Mobile_No}}')">
+        <div href="#" class="col-xl-3 col-md-10" >
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -49,8 +49,8 @@
                             <h5 class="text-truncate text-primary font-size-20 mb-2">{{$Name}}</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
-                                    <h5>Applied {{$count_app}}</h5>
-                                    <p class="mb-2 text-truncate">Deleted {{$app_deleted}} Applications</p>
+                                    <h5>Applied {{$Total_App}}</h5>
+                                    <p class="mb-2 text-truncate">Deleted  Applications</p>
                                 </div>
                             </div>
                         </div>
@@ -61,9 +61,9 @@
                     </div>
                 </div>
             </div>
-        </a>
+        </div>
 
-        <a href="#" class="col-xl-3 col-md-10" >
+        <div href="#" class="col-xl-3 col-md-10" >
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -77,8 +77,14 @@
                             <h5 class="text-truncate text-warning font-size-20 mb-2">Applications Deliverd</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
-                                    <h5>Delivered : {{$app_delivered}}</h5>
-                                    <p class="mb-2 text-truncate">Pending {{$app_pending}}</p>
+                                    <a href="" wire:click.prevent="Show('Delivered to Client')"> <h5>Delivered : {{$App_Delivered}}</h5></a>
+
+                                    <div class="d-flex justify-content-between">
+                                        <a href="#" wire:click.prevent="Show('Received')"><p class="mb-2 text-truncate">Pending {{$Pedning_App}}</p></a>
+                                        <a href="#" wire:click.prevent="Show('All')"><p class="mb-2 text-truncate">Other {{$Rest_App}}</p></a>
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -89,7 +95,7 @@
                     </div>
                 </div>
             </div>
-        </a>
+        </div>
 
         <a href="#" class="col-xl-3 col-md-10">
             <div class="card">
@@ -105,8 +111,8 @@
                             <h5 class="text-truncate text-info font-size-20 mb-2">Revenue Earned</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
-                                    <h5>Payble &#x20B9; {{$total}}/-</h5>
-                                    <p class="mb-2 text-truncate">Balance <span> &#x20B9;{{$balance}}</span></p></p>
+                                    <h5>Payble &#x20B9; {{$Total_Rev}}/-</h5>
+                                    <p class="mb-2 text-truncate">Received <span> &#x20B9;{{$Paid}}</span></p></p>
                                 </div>
                             </div>
                         </div>
@@ -132,8 +138,8 @@
                             <h5 class="text-truncate text-danger font-size-20 mb-2">Balance Due</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
-                                    <h5>Payble &#x20B9; {{$total}}/-</h5>
-                                    <p class="mb-2 text-truncate">Balance <span> &#x20B9;{{$balance}}</span></p></p>
+                                    <h5>Payble &#x20B9; {{$Total_Rev}}/-</h5>
+                                    <p class="mb-2 text-truncate">Balance <span> &#x20B9;{{$Balance}}</span></p></p>
                                 </div>
                             </div>
                         </div>
@@ -148,10 +154,9 @@
 
     </div> {{-- End of Row --}}
 
-    <div class="col-md-12 col-xl-5">
 
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header justify-content-between d-flex">
                         <h6 class="my-1 mt-0">Edit Profile</h6>
@@ -258,16 +263,73 @@
                                 <a href="#" wire:click="UpdateProfile('{{$Client_Id}}')" class="btn btn-success btn-rounded waves-effect waves-light">Update Profile</a>
                                 <a href="#" wire:click="ResetFields('{{$Client_Id}}')" class="btn btn-light btn-rounded waves-effect">Reset</a>
                             </div>
-
-
-                        </div>
+                </div>
                     </form>
+            </div>
+
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Previous Records for {{$Name}} </h5>
+                    </div>
+                <div class="row no-gutters align-items-center">
+                        <div class="col-md-8">
+                            <div class="card-body">
+
+                                <p class="card-text">These are applications applied under the account of Mr {{$Name}} there are total {{$Total_App}}. Applications Available </p>
+                                <p class="card-text"><small class="text-muted">Last Application Applied {{$lastMobRecTime}} </small></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                        <img class="rounded-circle avatar-lg"  s src="{{ (!empty($old_profile_image))?url('storage/'.$old_profile_image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" >
+                            <table id="datatable" class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid" aria-describedby="datatable_info">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Applicant</th>
+                                    <th>Stats</th>
+                                    <th>Service</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    @foreach ($AppliedServices as $key)
+                                    <tr>
+                                        <td>{{$AppliedServices->firstItem()+$loop->index}}</td>
+                                        <td>{{$key->Received_Date}}</td>
+                                        <td>{{$key->Name}}</td>
+                                        <td>{{$key->Status}}</td>
+                                        <td>{{$key->Application , $key->Application_Type}}</td>
+                                        <td>
+                                            <a href={{route('edit_application',$key->Id)}} class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-book-open-page-variant" ></i></a>
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                <p class="text-muted">Showing {{count($AppliedServices)}} of {{$AppliedServices->total()}} entries</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class=" pagination pagination-rounded float-end" >
+                                        {{$AppliedServices->links()}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- end col -->
-
         </div>
 
-    </div>
+    <!-- end col -->
+
 </div>{{-- End of Livewire --}}

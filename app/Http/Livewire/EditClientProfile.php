@@ -4,18 +4,26 @@ namespace App\Http\Livewire;
 
 use App\Models\Application;
 use App\Models\ClientRegister;
+use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class EditClientProfile extends Component
 {
 
-    public $old_Applicant_Image,$Profile_Image,$total,$balance,$app_pending,$count_app,$Name,$app_deleted,$Mobile_No,$app_delivered,$Gender,$Relative_Name, $Don, $Address, $Client_Type,$Client_Id,$Email;
+    public $old_Applicant_Image,$Profile_Image,$Total_Rev,$Balance,$Paid,$app_pending,$Total_App,$Name,$App_Delivered,$Mobile_No,$Pedning_App,$Gender,$Relative_Name, $Don, $Address, $Client_Type,$Client_Id,$Email;
     public $profiledata, $old_profile_image,$New_Profile_Image;
+    public $status = NULL,$lastMobRecTime;
 
+    use WithPagination;
     use WithFileUploads;
+    protected $paginationTheme = 'bootstrap';
+
+    // use RightInsightTrait;
     protected $rules = [
         'Name' =>'required',
         'Relative_Name' =>'required',
@@ -46,6 +54,7 @@ class EditClientProfile extends Component
         $this->Client_Id = $Id;
         $this->Email = 'Not Available';
         $fetch = ClientRegister::where('Id',$Id)->get();
+
         foreach($fetch as $key)
         {
             $this->Name = $key['Name'];
@@ -67,6 +76,47 @@ class EditClientProfile extends Component
         $this->Email = strtolower($this->Email);
         $this->Email = str_replace(' ', '', $this->Email);
         $this->Address = ucwords($this->Address);
+    }
+    public function Insight($mobile)
+    {
+        $fetch = Application::where('Mobile_No',$mobile)->get();
+        $rev_total=0;
+        $paid=0;
+        $bal=0;
+        $pending =0;
+        $count =0;
+        $delivered =0;
+        foreach($fetch as $key)
+        {
+            $count++;
+            $rev_total += $key['Total_Amount'];
+            $paid += $key['Amount_Paid'];
+            $bal += $key['Balance'];
+            if($key['Status'] == 'Received')
+            {
+                $pending ++;
+            }
+            if($key['Status'] == 'Delivered to Client')
+            {
+                $delivered ++;
+            }
+
+        }
+        $this->Total_Rev = $rev_total;
+        $this->Balance = $bal;
+        $this->Paid = $rev_total;
+        $this->Pedning_App = $pending;
+        $this->App_Delivered = $delivered;
+        $this->Total_App = $count;
+        $this->Rest_App = $count - ($pending+$delivered);
+
+    }
+    public function Show($key)
+    {
+        $this->resetPage();
+        $this->status = $key;
+        $latest_mob_app = Application::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
+                $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
     }
     public function UpdateProfile($Id)
     {
@@ -125,7 +175,18 @@ class EditClientProfile extends Component
     }
     public function render()
     {
+        if($this->status == 'All' )
+        {
+            $Services = Application::where('Mobile_No',$this->Mobile_No)->paginate(10);
+        }
+        else
+        {
+            $Services = Application::where([['Mobile_No','=',$this->Mobile_No],['Status','=',      $this->status]])->paginate(10);
+        }
+
         $this->Capitalize();
-        return view('livewire.edit-client-profile');
+        $this->Insight($this->Mobile_No);
+
+        return view('livewire.edit-client-profile',['AppliedServices'=>$Services]);
     }
 }
