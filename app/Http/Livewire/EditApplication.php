@@ -133,6 +133,8 @@ class EditApplication extends Component
         $this->Name = strtolower($this->Name);
         $this->Name = ucwords($this->Name);
         $this->RelativeName = ucwords($this->RelativeName);
+        $this->Ack_No = ucwords($this->Ack_No);
+        $this->Document_No = ucwords($this->Document_No);
     }
 
     public function updated($propertyName)

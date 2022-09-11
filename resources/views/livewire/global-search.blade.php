@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                         </div>
-                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
+                        <img class="rounded avatar-md" src="{{asset('storage/service.jpg')}}" alt="no_image" />
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/delivered.png')}}" alt="Generic placeholder image">
 
 
                     </div>
@@ -107,7 +107,7 @@
                             </div>
                         </div>
 
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ url('storage/no_image.jpg')}}" alt="Insight">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/revenue_2.png')}}" alt="Insight">
 
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                             </div>
                         </div>
 
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ url('storage/no_image.jpg')}}" alt="Insight">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/balance.png')}}" alt="Insight">
 
                     </div>
                 </div>
@@ -202,7 +202,7 @@
                                         @else
                                         <td>{{$item['Address']}}</td>
                                         @endif
-                                        <td>  <img src="{{ (!empty($item['Profile_Image']))?url('storage/'.$item['Profile_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md">
+                                        <td>  <img src="{{ (!empty($item['Profile_Image']))?url('storage/'.$item['Profile_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md"></td>
                                         <td>{{ \Carbon\Carbon::parse($item['created_at'])->diffForHumans() }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item['updated_at'])->diffForHumans() }}</td>
 
@@ -338,6 +338,7 @@
                                         <th>Ref No</th>
                                         <th >Document</th>
                                         <th>Status</th>
+                                        <th>Profile</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -364,6 +365,8 @@
                                             @endforeach
                                         </select>
                                     </td>
+                                    <td>  <img src="{{ (!empty($data['Applicant_Image']))?url('storage/'.$data['Applicant_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md"></td>
+
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -385,6 +388,7 @@
                                                 </div>
                                             </div>
                                         </td>
+
                                     </tr>
                                     @empty
                                         <tr>

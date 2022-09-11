@@ -229,7 +229,7 @@ class GlobalSearch extends Component
 
     public function ApplicationsbyStatus($key = null)
     {
-
+        $this->resetPage();
         $this->Status = $key;
     }
     public function UpdateStatus($Id, $Status)
