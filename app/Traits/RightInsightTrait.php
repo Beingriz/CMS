@@ -45,6 +45,7 @@ trait RightInsightTrait
     private $previous_sum;
     private $balance_due_sum;
     private $previous_bal_sum;
+    private $previous_day_app_delivered;
     private $new_user;
     private $new_clients;
     private $previous_day_new_clients;

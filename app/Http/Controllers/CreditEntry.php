@@ -29,9 +29,9 @@ class Creditentry extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function Home()
     {
-        return view('DigitalLedger.CreditLedger.credit_entry',);
+        return view('DigitalLedger.CreditLedger.credit_entry');
     }
     public function AddCreditHome()
     {

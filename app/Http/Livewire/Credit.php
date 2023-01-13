@@ -27,7 +27,7 @@ class Credit extends Component
     public $Date;
     public $Unit_Price;
     public $Quantity;
-    public $Total_Amount = NULL;
+    public $Total_Amount = NULL,$Total;
     public $Amount_Paid;
     public $Balance;
     public $Description= 'Walk in Customer';

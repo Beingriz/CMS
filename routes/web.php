@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
+use App\Http\Controllers\Creditentry;
 use App\Http\Controllers\Home\HomeSlideController;
 use FontLib\Table\Type\name;
 use GuzzleHttp\Middleware;
@@ -59,7 +60,9 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('edit/profile/{id}', 'EditProfile')->middleware(['auth'])->name('edit_profile');
 });
 
-
+Route::controller(CreditEntry::class)->group(function(){
+    Route::get('Credit', 'Home')->middleware(['auth'])->name('Credit');
+});
 // Global  Search  Routes start
 // Route:: get('search/{key}', [ApplicationController::class,'Search']);
 
