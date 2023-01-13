@@ -85,19 +85,21 @@ class AdminPanel extends Component
         $data['mobile_no'] = $this->mobile_no;
         $data['dob'] = $this->dob;
         $data['address'] = $this->address;
-
         if(!is_NUll($this->profile_image)) // if New Profile Images is Selected-- Uploading file
         {
             if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
                 {
+
                     unlink(storage_path('app/public/'.$this->old_profile_image)); // Deleting Existing File
+
                 }
             $filename = date('Ymd').'_'.$this->profile_image->getClientOriginalName();
+
             $data['profile_image'] = $this->profile_image->storePubliclyAs('Uploads/Admin/Profile/'.$this->name,$filename,'public');
         } // New Profile Image Uploaded Successfully
 
         $update = DB::table('users')->where('id',$id)->update($data);
-        if($update >0 )
+        if($update > 0 )
         {
             $notification = array(
                 'message'=>'Admin Profile Updated',

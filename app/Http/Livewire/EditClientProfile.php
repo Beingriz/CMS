@@ -15,8 +15,8 @@ use Livewire\WithPagination;
 class EditClientProfile extends Component
 {
 
-    public $old_Applicant_Image,$Profile_Image,$Total_Rev,$Balance,$Paid,$app_pending,$Total_App,$Name,$App_Delivered,$Mobile_No,$Pedning_App,$Gender,$Relative_Name, $Don, $Address, $Client_Type,$Client_Id,$Email;
-    public $profiledata, $old_profile_image,$New_Profile_Image;
+    public $old_Applicant_Image,$Profile_Image,$Total_Rev,$Balance,$Paid,$app_pending,$Total_App,$Name,$App_Delivered,$Mobile_No,$Pedning_App,$Gender,$Relative_Name, $Dob, $Address, $Client_Type,$Client_Id,$Email;
+    public $profiledata, $old_profile_image,$New_Profile_Image,$Rest_App;
     public $status = NULL,$lastMobRecTime;
 
     use WithPagination;
