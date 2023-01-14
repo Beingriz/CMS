@@ -1,202 +1,188 @@
-<div>
-    <div class="form-container">
-        <div class="form-header">
-            <p class="heading">Credit Ledger {{date('Y')}}</p>
-        </div>
-        @if (session('SuccessUpdate'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessUpdate')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('Error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('Error')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('SuccessMsg'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessMsg')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        <form wire:submit.prevent="CreditEntry">
-            @csrf
-            <div class="form-data-container">
-                {{--Form Data 1--}}
-                <div class="form-data">
-                    <div class="row"> {{--Transaction ID--}}
-                        <div class="col-45">
-                            <label class="label" for="Transaction_Id">Transaction Id</label>
+<div> {{--Main Div--}}
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Credit Ledger</h4>
 
-                        </div>
-                        <div class="col-55">
-                            <label class="label" for="Transaction_Id">{{$transaction_id}}</label>
-                        </div>
+                @if (session('SuccessMsg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('SuccessMsg')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div class="row"> {{--Sources--}}
-                        <div class="col-45">
-                            <label class="label" for="Source">Category</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <select class="form-control" id="Particular" wire:model="SourceSelected" name="Particular">
-                                <option value="">---Select---</option>
-                                @foreach($credit_source as $creditsource)
-                                <option value="{{ $creditsource->Id }}">
-                                    {{ $creditsource->Name }}</option>
-                                @endforeach
-                            </select>
+                @endif
+                @if (session('SuccessUpdate'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{session('SuccessUpdate')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('Error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{session('Error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
-                            <span class="error">@error('SourceSelected'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                   @if(!empty($SourceSelected))
-                   <div class="row"> {{--Sources--}}
-                    <div class="col-45">
-                        <label class="label" for="Particular">Particular</label>
-                        <span class="important">*</span>
-                    </div>
-                    <div class="col-55">
-                        <select class="form-control" id="Particular" wire:model="SelectedSources" name="Particular">
-                            <option value="">---Select---</option>
-                            @foreach($credit_sources as $key)
-                            <option value="{{ $key->Source }}">
-                                {{ $key->Source }}</option>
-                            @endforeach
-                        </select>
 
-                        <span class="error">@error('SelectedSources'){{$message}}@enderror</span>
-                    </div>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('new_application')}}">New Form</a></li>
+                    </ol>
                 </div>
-                   @endif
 
-                    <div class="row"> {{--Date--}}
-                        <div class="col-45">
-                            <label class="label" for="date">Date</label>
+            </div>
+        </div>
+    </div>{{-- End of Row --}}
+
+
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
+            <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
+            <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+        </ol>
+    </div>{{-- End of Page Tittle --}}
+
+<div class="row">
+    <div class="col-lg-7">{{--Start of Form Column --}}
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"> Credit Ledger</h4>
+                    <p class="card-title-desc">Add New Credit Entry</p>
+                    <div class="row mb-3">
+                        <label for="example-text-input" class="col-sm-2 col-form-label">Credit Id</label>
+                        <div class="col-sm-10">
+                            <label for="example-text-input" class="col-sm-2 col-form-label">{{$transaction_id}}</label>
                         </div>
-                        <div class="col-55">
-                            <div class="md-form">
+                    </div>
+                    <form wire:submit.prevent="CreditEntry">
+                        @csrf
+                        <div class="row mb-3">
+                            <label for="example-search-input" class="col-sm-2 col-form-label">Category</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="Particular" wire:model="SourceSelected" name="Particular">
+                                    <option value="">---Select---</option>
+                                    @foreach($credit_source as $creditsource)
+                                    <option value="{{ $creditsource->Id }}">
+                                        {{ $creditsource->Name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="error">@error('SourceSelected'){{$message}}@enderror</span>                    </div>
+                        </div>
+                        @if(!empty($SourceSelected))
+                        <div class="row mb-3">
+                            <label for="example-search-input" class="col-sm-2 col-form-label">Sub Category</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="Particular" wire:model="SelectedSources" name="Particular">
+                                    <option value="">---Select---</option>
+                                    @foreach($credit_sources as $key)
+                                    <option value="{{ $key->Source }}">
+                                        {{ $key->Source }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="error">@error('SelectedSource'){{$message}}@enderror</span>                    </div>
+                        </div>
+                        @endif
+                        <div class="row mb-3">
+                            <label for="Date" class="col-sm-2 col-form-label">Date</label>
+                            <div class="col-sm-10">
                                 <input type="date" id="date" name="Date" wire:model="Date" value="{{ date('Y-m-d') }}"
                                     class="form-control" />
                                 <span class="error">@error('Date'){{$message}}@enderror</span>
-                                <!-- <div class="alert alert-warning" role="alert">
-
-                                </div> -->
                             </div>
                         </div>
-                    </div>
-                    <div class="row"> {{--Total_Amount--}}
-                        <div class="col-45">
-                            <label for="Amount_Paid">Total Amount</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-20">
-                            <div class="md-form">
+                        <div class="row mb-3">
+                            <label for="Date" class="col-sm-2 col-form-label">Payment Details</label>
+                            <div class="col-sm-2">
                                 <input type="number"  wire:model="Unit_Price"  name="Total_Amount" class="form-control"
                                     placeholder="Amount" pattern="[0-9]" readonly>
                                 <span class="error">@error('Unit_Price'){{$message}}@enderror</span>
                             </div>
-                        </div>
-                        <div class="col-20">
-                            <div class="md-form">
+                            <div class="col-sm-2">
                                 <input type="number" id=""  wire:model="Quantity"  name="Total_Amount" class="form-control"
                                     placeholder="Quantity" pattern="[0-9]">
                                 <span class="error">@error('Quantity'){{$message}}@enderror</span>
                             </div>
-                        </div>
-                        <div class="col-20">
-                            <div class="md-form">
+                            <div class="col-sm-2">
                                 <input type="number" id="amount"  value="{{$Total_Amount}}"  name="Total_Amount" class="form-control"
                                 placeholder="Total" pattern="[0-9]" readonly>
                             </div>
                         </div>
-                    </div>
-                    <div class="row"> {{--Amount_Paid--}}
-                        <div class="col-45">
-                            <label for="Amount_Paid">Paid / Bal </label> <span class="important">*</span>
-                        </div>
-                        <div class="col-27">
-                            <div class="md-form">
+                        <div class="row mb-3">
+                            <label for="Date" class="col-sm-2 col-form-label">Paid / Bal </label>
+                            <div class="col-sm-5">
                                 <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid" class="form-control"
                                     placeholder="Paid" onblur="balance()">
                                 <span class="error">@error('Amount_Paid'){{$message}}@enderror</span>
                             </div>
-                        </div>
-                        <div class="col-27">
-                            <div class="md-form">
+                            <div class="col-sm-5">
                                 <input type="number" id="bal" name="Balance" class="form-control"
-                                    placeholder="Bal" readonly>
+                                placeholder="Bal" readonly>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row"> {{--Description--}}
-                        <div class="col-45">
-                            <label class="label" for="Description">Description</label> <span
-                                class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
+                        <div class="row mb-3">
+                            <label for="Date" class="col-sm-2 col-form-label">Date</label>
+                            <div class="col-sm-10">
                                 <textarea id="Description" wire:model="Description" name="Description" class="form-control"
                                     placeholder="Credit Description" rows="3" resize="none"></textarea>
                                 <span class="error">@error('Description'){{$message}}@enderror</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="row"> {{--Payment_Mode--}}
-                        <div class="col-45">
-                            <label class="label" for="Payment_mode">Payment</label> <span
-                                class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <select class="form-control" id="Payment_mode" wire:model="Payment_Mode" name="Payment_mode" wire:change="Change($event.target.value)"">
-                                <option value="">---Select---</option>
-                                @foreach ($payment_mode as $payment_mode)
-                                <option value="{{$payment_mode->Payment_Mode}}">
-                                    {{$payment_mode->Payment_Mode}}</option>
-                                @endforeach
-                            </select>
-                            <span class="error">@error('Payment_mode'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    @if ($Payment_Mode!="Cash")
-                        <div class="row"> {{--Attachment--}}
-                            <div class="col-45">
-                                <label for="Attachment">Attachment</label>
+                        <div class="row mb-3">
+                            <label for="example-search-input" class="col-sm-2 col-form-label">Payment</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="Payment_mode" wire:model="Payment_Mode" name="Payment_mode" wire:change="Change($event.target.value)"">
+                                    <option value="">---Select---</option>
+                                    @foreach ($payment_mode as $payment_mode)
+                                    <option value="{{$payment_mode->Payment_Mode}}">
+                                        {{$payment_mode->Payment_Mode}}</option>
+                                    @endforeach
+                                </select>
+                                <span class="error">@error('Payment_mode'){{$message}}@enderror</span>
                             </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <input type="file" id="Attachment{$itteration}" wire:model="Attachment" name="Attachment" class="form-control" accept="image/*">
-                                    <span class="error">@error('Attachment'){{$message}}@enderror</span>
+                        </div>
+                        @if ($Payment_Mode!="Cash")
+                            <div class="row mb-3">
+                                <label for="example-search-input" class="col-sm-2 col-form-label">Payment</label>
+                                <div class="col-sm-10">
+                                    <div class="md-form">
+                                        <input type="file" id="Attachment{$itteration}" wire:model="Attachment" name="Attachment" class="form-control" accept="image/*">
+                                        <span class="error">@error('Attachment'){{$message}}@enderror</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                            <div wire:loading wire:target="Attachment">Uploading...</div>                            @if (!is_Null($Attachment))
+                                <div class="row">
+                                    <div class="col-45">
+                                        <img class="col-75" src="{{ $Attachment->temporaryUrl() }}"" alt="Thumbnail" />
+                                    </div>
+                                </div>
 
-                        <div wire:loading wire:target="Attachment">Uploading...</div>
-                        @if (!is_Null($Attachment))
+                            @elseif(!is_Null($Old_Attachment))
                             <div class="row">
                                 <div class="col-45">
-                                    <img class="col-75" src="{{ $Attachment->temporaryUrl() }}"" alt="File" />
+                                    <img class="col-75" src="{{ url('storage/'.$Old_Attachment) }}"" alt="Existing Thumbnail" />
                                 </div>
                             </div>
-
-                        @elseif(!is_Null($Old_Attachment))
-                            <div class="row">
-                                <div class="col-45">
-                                    <img class="col-75" src="{{ $Old_Attachment}}"" alt="Existing File" />
-                                </div>
-                            </div>
+                            @endif
                         @endif
-                    @endif
                 </div>
+        </div>
+    </div> {{-- End of Form Column --}}
+    <div class="col-lg-5">{{--Record Column--}}
+
+    </div> {{--Record Column--}}
+</div>
+
+
+
+        <form wire:submit.prevent="CreditEntry">
+            @csrf
+            <div class="form-data-container">
+                {{--Form Data 1--}}
 
 
                 <div class="form-data"> {{--Form Insight--}}
