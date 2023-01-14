@@ -9,7 +9,6 @@ class CreditLedger extends Model
 {
     use HasFactory;
     public $table="credit_ledger";
-    public $timestamps=false;
 
     public function scopeFilter($query, $key)
     {

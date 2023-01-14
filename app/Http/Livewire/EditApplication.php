@@ -75,8 +75,6 @@ class EditApplication extends Component
        'name.required' => 'Applicant Name Cannot be Empty',
        'RelativeName.required' => 'Enter Relative Name',
        'Gender.required' => 'Please Select Gender',
-       'MainService.required' => 'Please Select Service',
-       'SubService.required' => 'Please Select Service Category',
        'dob.required' => 'Please Select Date of Birth',
        'Mobile_No.required' => 'Mobile Number Cannot Be Empty',
        'total_amount.required' => 'Enter Total Amount',
@@ -245,7 +243,6 @@ class EditApplication extends Component
             {
                 if (Storage::disk('public')->exists($old_App_Image)) // Check for existing File
                 {
-                    dd($old_App_Image);
                     unlink(storage_path('app/public/'.$old_App_Image)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();

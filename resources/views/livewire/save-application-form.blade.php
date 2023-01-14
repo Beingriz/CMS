@@ -44,7 +44,7 @@
         </ol>
     </div>{{-- End of Page Tittle --}}
 
-    @if ($Open ==1)
+
         <div class="row"> {{-- buttons Row  --}}
             <div class="col-lg-6">
                 <h5 class="font-size-14 mb-3">Options</h5>
@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div> {{-- End of Row --}}
-    @endif
+
 <!-- ------------------------------------------------------------------------------------------------- -->
     <div class="row"> {{-- Form,Profile,Records Panel Row --}}
         <div class="col-lg-7">

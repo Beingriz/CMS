@@ -7,6 +7,7 @@ use App\Models\CreditLedger;
 use App\Models\CreditSource;
 use App\Models\CreditSources;
 use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Collection;
@@ -22,7 +23,7 @@ class Credit extends Component
     use WithPagination;
     public $transaction_id = 'Credit';
     public $SourceSelected = NULL;
-    public $Sources = NULL;
+    public $Sources,$creditsource = NULL;
     public $SelectedSources = NULL;
     public $Date;
     public $Unit_Price;
@@ -33,7 +34,7 @@ class Credit extends Component
     public $Description= 'Walk in Customer';
     public $Payment_Mode = 'Cash';
     public $Attachment ,$itteration;
-    public $Old_Attachment,$New_Attachment;
+    public $Old_Attachment,$New_Attachment,$lastRecTime;
 
     public $paginate = 10;
     public $Select_Date = NULL;
@@ -43,7 +44,7 @@ class Credit extends Component
     public $Single;
     public $collection = [];
     public $bal_id = NULL;
-    public $update = 0;
+    public $update = 0, $Show_Insight=0;
 
 
     protected $rules = [
@@ -130,7 +131,7 @@ class Credit extends Component
             $save_balance->save(); // Balance Ledger Entry Saved
 
             session()->flash('SuccessMsg', 'Credit Entry Saved Successfully!, Balance Ledger Updated');
-            return redirect('../credit_entry');
+            return redirect()->route('Credit');
         }
         else
         {
@@ -149,7 +150,7 @@ class Credit extends Component
             $creditentry->Attachment = $Attachment;
             $creditentry->save();//Credit Ledger Entry
             session()->flash('SuccessMsg', 'Credit Entry Saved Successfully!');
-            return redirect('../credit_entry');
+            return redirect()->route('Credit');
         }
      }
      public function Edit($Id)
@@ -387,19 +388,24 @@ class Credit extends Component
 
         }
     }
+    public function LastUpdate()
+    {
+        # code...
+        $latest_app = CreditLedger::latest('created_at')->first();
+        $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+
+    }
     public function render()
     {
-        if(!is_null($this->Select_Date))
-        {
+        $this->LastUpdate();
+        if(!is_null($this->Select_Date)){
             $todays_list = CreditLedger::where('Date',$this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
             $sl_no = $todays_list->total();
             if(sizeof($todays_list)==0)
             {
                 session()->flash('Error','Sorry!! No Record Available for '.$this->Select_Date);
             }
-        }
-        else
-        {
+        }else{
             $todays_list = CreditLedger::where('Date',$this->today)->filter(trim($this->filterby))->paginate($this->paginate);
             $sl_no = $todays_list->total();
         }
@@ -449,11 +455,12 @@ class Credit extends Component
 
         $contribution =  (($source_total*100)/$total_revenue);
         $contribution = number_format($contribution, 2,);
+        $creditsource = CreditSource::orderby('Name')->get();
 
 
         $percentage = number_format(($today_total/1500)*100) ;
         return view('livewire.credit',[
-            'credit_source'=>$this->credit_source,'credit_sources'=>$this->Sources,
+            'credit_source'=>$creditsource,'credit_sources'=>$this->Sources,
             'payment_mode'=>$this->payment_mode,
             'total_revenue'=>$this->sum,
             'previous_revenue'=>$this->previous_revenue,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'today'=>$this->today, 'total'=>$today_total, 'percentage'=>$percentage,'creditdata'=>$todays_list,
