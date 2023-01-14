@@ -173,6 +173,71 @@
         </div>
     </div> {{-- End of Form Column --}}
     <div class="col-lg-5">{{--Record Column--}}
+       <div class="card">
+        <div class="card-body">
+              <h4 class="mb-sm-0">Insight</h4>
+            <div class="row">
+                <div class="col-xl-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Total Revenue</p>
+                                    <h4 class="mb-2">&#x20B9; {{$total_revenue}}/-</h4>
+                                    <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$previous_revenue}}</span>Yesterday</p>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-primary rounded-3">
+                                        <i class="ri-shopping-cart-2-line font-size-24"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div>
+            <div class="row">
+                <div class="col-xl-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Total Revenue</p>
+                                    <h4 class="mb-2">&#x20B9; {{$total_revenue}}/-</h4>
+                                    <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$previous_revenue}}</span>Yesterday</p>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-primary rounded-3">
+                                        <i class="ri-shopping-cart-2-line font-size-24"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div>
+            <div class="row">
+                <div class="col-xl-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Total Revenue</p>
+                                    <h4 class="mb-2">&#x20B9; {{$total_revenue}}/-</h4>
+                                    <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$previous_revenue}}</span>Yesterday</p>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-primary rounded-3">
+                                        <i class="ri-shopping-cart-2-line font-size-24"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div>
+        </div>
+       </div>
 
     </div> {{--Record Column--}}
 </div>
