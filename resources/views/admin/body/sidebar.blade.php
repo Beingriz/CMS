@@ -91,7 +91,7 @@
                             <a href="javascript: void(0);" class="has-arrow">Credit Book</a>
                             <ul class="sub-menu" aria-expanded="true">
                                 <li><a href="{{route('Credit')}}">New Entry</a></li>
-                                <li><a href="{{ url('add_payment')}}">Add Sources</a></li>
+                                <li><a href="{{ route('CreditSource')}}">Add Category</a></li>
                                 <li><a href="layouts-compact-sidebar.html">Report</a></li>
                             </ul>
                         </li>

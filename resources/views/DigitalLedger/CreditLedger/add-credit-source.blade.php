@@ -1,3 +1,30 @@
+@extends('admin.admin_master')
+@section('admin');
+
+<div class="page-content" style="margin-top: -45px">
+    <div class="container=fluid">
+        @livewire('add-credit-source')
+    </div>
+</div>
+
+@endsection
+
+
+<script>
+    window.addEventListener('refresh-page', event => {
+       window.location.reload(false);
+    })
+  </script>
+
+
+
+
+
+
+
+
+{{--
+
 @extends('Layouts.main')
 @section('content')
 <!DOCTYPE html>
@@ -30,14 +57,6 @@
     </div>
 
 
-</body>
-
-<script>
-    window.addEventListener('refresh-page', event => {
-       window.location.reload(false);
-    })
-  </script>
-</html>
 
 
 
@@ -48,4 +67,5 @@
 
 
 
-@endsection
+
+@endsection --}}

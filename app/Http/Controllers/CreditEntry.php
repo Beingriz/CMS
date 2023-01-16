@@ -33,6 +33,11 @@ class Creditentry extends Controller
     {
         return view('DigitalLedger.CreditLedger.credit_entry');
     }
+    public function CreditSource()
+    {
+        # code...
+        return view('DigitalLedger.CreditLedger.add-credit-source');
+    }
     public function AddCreditHome()
     {
         return view('DigitalLedger.CreditLedger.add-credit-source',[
@@ -49,7 +54,7 @@ class Creditentry extends Controller
             $Source = $key['Source'];
             $Unit_Price = $key['Unit_Price'];
         }
-        return view('DigitalLedger.CreditLedger.edit-credit-source',[
+        return view('DigitalLedger.CreditLedger.add-credit-source',[
             'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'today'=>$this->today,'CS_Id'=>$CS_Id,
             'CS_Name'=>$CS_Name,'Source'=>$Source,'Unit_Price'=>$Unit_Price,
         ]);

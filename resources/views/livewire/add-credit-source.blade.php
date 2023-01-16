@@ -1,58 +1,72 @@
 <div>
-    <div class="form-container">
-        <div class="form-header">
-            <p class="heading">Credit Source Module</p>
-        </div>
-        @if (session('SuccessUpdate'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessUpdate')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('Error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('Error')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('SuccessMsg'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{session('SuccessMsg')}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        <form wire:submit.prevent="Save">
-            @csrf
-            <div class="form-data-container">
-                {{--Form Data 1--}}
-                <div class="form-data">
-                    @if (!empty($Type))
-                    <p class="heading2">{{$Type}}</p>
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Credit Ledger</h4>
+
+                    @if (session('SuccessMsg'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{session('SuccessMsg')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    @if (session('SuccessUpdate'))
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{session('SuccessUpdate')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    @if (session('Error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{session('Error')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     @endif
 
-                    <div class="row"> {{--Credit Source ID--}}
-                        <div class="col-45">
-                            <label class="label" for="Transaction_Id">Credit Source ID</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <label class="label" for="Transaction_Id">{{$CS_Id}}</label>
-                        </div>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
+                            <li class="breadcrumb-item active"><a href="{{route('new_application')}}">New Form</a></li>
+                        </ol>
                     </div>
 
+                </div>
+            </div>
+        </div>{{-- End of Row --}}
 
-                    <div class="row"> {{--Select Type--}}
-                        <div class="col-45">
-                            <label for="Source_Name">Select Category</label> <span class="important">*</span>
+        <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
+                <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
+                <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+            </ol>
+        </div>{{-- End of Page Tittle --}}
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                        <h5>Credit Ledger</h5>
+                        <h5>New Entry</h5>
+                    </div>
+                    <div class="card-body">
+                        <form wire:submit.prevent="Save">
+                            @csrf
+                        @if (!empty($Type))
+                        <p class="heading2">{{$Type}}</p>
+                        @endif
+
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Credit Id</label>
+                            <div class="col-sm-8">
+                                <label for="example-text-input" class="col-sm-4 col-form-label">{{$CS_Id}}</label>
+                            </div>
                         </div>
-                        <div class="col-55">
-                            <div class="md-form">
+
+                        <div class="row mb-3">
+                            <label for="example-search-input" class="col-sm-4 col-form-label">Category</label>
+                            <div class="col-sm-8">
                                 <select name="Type" id="type" wire:model="Type" wire:change="Change($event.target.value)" class="form-control">
                                     <option value="" selected>Select Category</option>
                                     <option value="Main Category">Main Category</option>
@@ -62,208 +76,207 @@
                             </div>
                         </div>
 
-                    </div>
-                    @if ($Type =='Main Category') {{--Main Category Fields--}}
-                        <div class="row"> {{--Category Name--}}
-                            <div class="col-45">
-                                <label for="CategoryName">Category Name</label> <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
+                        @if ($Type =='Main Category') {{--Main Category Fields--}}
+                            <div class="row mb-3">
+                                <label for="Date" class="col-sm-4 col-form-label">Category Name</label>
+                                <div class="col-sm-8">
                                     <input type="text"  wire:model="Name"  name="CategoryName" class="form-control"
-                                        placeholder="Category Name" >
-                                    <span class="error">@error('Name'){{$message}}@enderror</span>
+                                    placeholder="Category Name" >
+                                <span class="error">@error('Name'){{$message}}@enderror</span>
                                 </div>
                             </div>
-                        </div>
-                        {{$pos}}
-                        <div class="row"> {{--Thumbnail--}}
-                            <div class="col-45">
-                                <label for="Thumbnail">Thumbnail</label> <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <div class="md-form">
-                                    <input type="file" id="Thumbnail{{ $iteration }}"  wire:model="Image" accept=".jpg,.png" name="Thumbnail" class="form-control"
+                            {{$pos}}
+                            <div class="row mb-3">
+                                <label for="example-search-input" class="col-sm-4 col-form-label">Thumbnail</label>
+                                <div class="col-sm-8">
+                                    <div class="md-form">
+                                        <input type="file" id="Thumbnail{{ $iteration }}"  wire:model="Image" accept=".jpg,.png" name="Thumbnail" class="form-control"
                                         placeholder="Select Thumbnail" >
                                     <span class="error">@error('Image'){{$message}}@enderror</span>
+                                    </div>
                                 </div>
                             </div>
 
-                        </div>
-                        <div wire:loading wire:target="Image">Uploading...</div>
-                        <div class="row">
+                            <div wire:loading wire:target="Image">Uploading...</div>
+                            <div class="row">
 
-                            <div class="col-55">
-                                @if (!is_Null($Image))
-                                <div class="md-form">
-                                    <img class="col-75" src="{{ $Image->temporaryUrl() }}">
+                                <div class="col-55">
+                                    @if (!is_Null($Image))
+                                    <div class="md-form">
+                                        <img class="col-75" src="{{ $Image->temporaryUrl() }}">
+                                    </div>
+                                    @elseif(!is_null($OldImage) )
+                                    <div class="md-form">
+                                        <img class="col-75" src="{{url('storage/'.$OldImage) }}">
+                                    </div>
+                                    @endif
                                 </div>
-                                @elseif(!is_null($OldImage) )
-                                <div class="md-form">
-                                    <img class="col-75" src="./{{ $OldImage }}">
+
+
+                            </div>
+                        @endif
+
+                        @if ($Type =='Sub Category') {{--Sub Category Fields--}}
+
+                            <div class="row mb-3">
+                                <label for="Date" class="col-sm-4 col-form-label">Category's List</label>
+                                <div class="col-sm-8">
+                                    <select name="CategoryList" id="CategoryList" wire:model="CategoryList"  wire:change="ResetList($event.target.value)" class="form-control">
+                                        <option value="" selected>Select Main Category</option>
+                                        @foreach ($Categorys as $Category)
+                                            <option value="{{$Category->Name}}">{{$Category->Name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="error">@error('CategoryList'){{$message}}@enderror</span>
                                 </div>
-                                @endif
                             </div>
 
-
-                        </div>
-                    @endif
-
-                    @if ($Type =='Sub Category') {{--Sub Category Fields--}}
-                    <div class="row"> {{--Category List--}}
-                        <div class="col-45">
-                            <label for="CategoryList">Category's List</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <select name="CategoryList" id="CategoryList" wire:model="CategoryList"  wire:change="ResetList($event.target.value)" class="form-control">
-                                    <option value="" selected>Select Main Category</option>
-                                    @foreach ($Categorys as $Category)
-                                        <option value="{{$Category->Name}}">{{$Category->Name}}</option>
-                                    @endforeach
-                                </select>
-                                <span class="error">@error('CategoryList'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="row"> {{--Name--}}
-                        <div class="col-45">
-                            <label for="Source_Name">Sub Category Name</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <div class="md-form">
-                                <input type="text"  id="Source_Name" wire:model="SubCategoryName"  name="Source_Name" class="form-control"
+                            <div class="row mb-3">
+                                <label for="Date" class="col-sm-4 col-form-label">Sub Category Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text"  id="Source_Name" wire:model="SubCategoryName"  name="Source_Name" class="form-control"
                                     placeholder="Sub Category Name" >
-                                <span class="error">@error('SubCategoryName'){{$message}}@enderror</span>
+                                    <span class="error">@error('SubCategoryName'){{$message}}@enderror</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row"> {{--Unit Price--}}
-                        <div class="col-45">
-                            <label for="Unit_Price">Unit Price</label> <span class="important">*</span>
-                        </div>
-                        <div class="col-25">
-                            <div class="md-form">
-                                <input type="number" id="Unit_Price" wire:model="Unit_Price"  name="Unit_Price" class="form-control"
+
+                            <div class="row mb-3">{{--Unit Price--}}
+                                <label for="Date" class="col-sm-4 col-form-label">Unit Price</label>
+                                <div class="col-sm-8">
+                                    <input type="number" id="Unit_Price" wire:model="Unit_Price"  name="Unit_Price" class="form-control"
                                     placeholder="Price">
                                 <span class="error">@error('Unit_Price'){{$message}}@enderror</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    @endif
-                    <div class="form-data-buttons"> {{--Buttons--}}
-                        <div class="row">
-                            <div class="col-100">
-                            @if ($Update == 0)
-                                <button type="submit" value="submit" name="submit"
-                                class="btn btn-primary btn-rounded btn-sm">Save</button>
-                                @if ($Type =='Main Category')
+                        @endif
+                        <div class="form-data-buttons"> {{--Buttons--}}
+                            <div class="row">
+                                <div class="col-100">
+                                @if ($Update == 0)
+                                    <button type="submit" value="submit" name="submit"
+                                    class="btn btn-primary btn-rounded btn-sm">Save</button>
+                                    @if ($Type =='Main Category')
+                                        <a href='#' wire:click.prevent="ResetMainFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                    @elseif ($Type =='Sub Category')
+                                        <a href='#' wire:click.prevent="ResetSubFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                    @endif
+                                    <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                @elseif($Update == 1)
+                                    <a href='#' wire:click.prevent="UpdateMain('{{$CS_Id}}')" class="btn btn-success btn-rounded btn-sm">Update</a>
                                     <a href='#' wire:click.prevent="ResetMainFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                @elseif ($Type =='Sub Category')
+                                    <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                @elseif($Update == 2)
+                                    <a href='#' wire:click.prevent="UpdateSub('{{$CS_Id}}')" class="btn btn-success btn-rounded btn-sm">Update</a>
                                     <a href='#' wire:click.prevent="ResetSubFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                    <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
                                 @endif
-                                <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
-                            @elseif($Update == 1)
-                                <a href='#' wire:click.prevent="UpdateMain('{{$CS_Id}}')" class="btn btn-success btn-rounded btn-sm">Update</a>
-                                <a href='#' wire:click.prevent="ResetMainFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
-                            @elseif($Update == 2)
-                                <a href='#' wire:click.prevent="UpdateSub('{{$CS_Id}}')" class="btn btn-success btn-rounded btn-sm">Update</a>
-                                <a href='#' wire:click.prevent="ResetSubFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
-                            @endif
-                            </div>
+                                </div>
 
 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-data">
-                    @if (!empty($Type))
-                    <p class="heading2">{{$Type}}</p>
-                    @endif
-
-                    <div class="row">
-                        {{-- Sub Category List Table --}}
-                    @if ($Type == 'Main Category')
-                        <div class="row"> {{--Category List--}}
-                                <div class="md-form">
-                                    <span class="info-text">{{$exist_main_categories->total()}} Main  Categories List </span>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Sl.No</th>
-                                                <th>Name</th>
-                                                <th>Thumbnail</th>
-                                                <th>Edit</th>
-                                                <th>Delete</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @foreach ($exist_main_categories as $key)
-                                            <tr>
-                                                <td style="width: 10%">{{$n++}}</td>
-                                                <td style="width: 25%">{{$key->Name}}</td>
-                                                <td style="width: 10%"><img src="./{{$key->Thumbnail}}" alt=""> </td>
-                                                <td style="width: 10%"><a  onclick="confirm('Do you want to Edit {{$key->Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="EditMain('{{$key->Id}}')" class="btn btn-sm btn-rounded" >Edit</a></td>
-                                                <td style="width: 10%"><a  onclick="confirm('Do you want to Delete {{$key->Name}} Source?') || event.stopImmediatePropagation()" wire:click.prevent="DeleteMain('{{$key->Id}}')" class="btn btn-danger btn-sm btn-rounded" >Delete</a></td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    <span>{{$exist_main_categories->links()}}</span>
                             </div>
                         </div>
-                    @endif
-                        {{-- Sub Category List Table --}}
-                    @if ($Type == 'Sub Category' && Count($exist_categories)>0)
-                        <div class="row"> {{--Category List--}}
-                                <div class="md-form">
-                                    <span class="info-text">{{count($exist_categories)}}  Sub Categories Found for </span><p class="heading2">{{$CategoryList}}</p>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Sl.No</th>
-                                                <th>Category Name</th>
-                                                <th>Price</th>
-                                                <th>Revenue</th>
-                                                <th>Edit</th>
-                                                <th>Delete</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @foreach ($exist_categories as $key)
-                                            @while (count($exist_categories)>0)
-                                            <tr>
-                                                <td style="width: 10%">{{$n++}}
-                                                    @if(count($exist_categories)==count($exist_categories))
-                                                    @break
-                                                    @endif
-                                                </td>@endwhile
-                                                <td style="width: 25%">{{$key->Source}}</td>
-                                                <td style="width: 10%">{{$key->Unit_Price}}</td>
-                                                <td style="width: 10%">{{$key->Total_Revenue}}</td>
-                                                <td style="width: 10%"><a  onclick="confirm('Do you want to Edit {{$key->Source}} Source?') || event.stopImmediatePropagation()" wire:click.prevent="EditSub('{{$key->Id}}')" class="btn btn-sm btn-rounded" >Edit</a></td>
-                                                <td style="width: 10%"><a  onclick="confirm('Do you want to Delete  {{$key->Source}} Source?') || event.stopImmediatePropagation()" wire:click.prevent="DeleteSub('{{$key->Id}}')" class="btn btn-danger  btn-sm btn-rounded" >Delete</a></td>
-
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                            </div>
-
-                        </div>
-                    @endif
                     </div>
                 </div>
             </div>
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                        <h5>Mian Category List</h5>
+                        <h5>New Entry</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!empty($Type))
+                        <p class="heading2">{{$Type}}</p>
+                        @endif
+                        @if ($Type == 'Main Category')
+                        <span class="info-text">{{$exist_main_categories->total()}} Main  Categories List </span>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Name</th>
+                                        <th>Thumbnail</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($exist_main_categories as $key)
+                                        <tr>
+                                            <td>{{$exist_main_categories->firstItem()+$loop->index}}</td>
+                                            <td>{{$key->Name}}</td>
+                                            <td>
+                                                <img class="avatar-sm"  src="{{url('storage/'.$key->Thumbnail)}}" alt="Icon"></td>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                    <div class="btn-group" role="group">
+                                                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Action <i class="mdi mdi-chevron-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                            <a class="dropdown-item" title="Edit"  wire:click.prevent="EditMain('{{$key->Id}}')" >Edit</a>
+
+                                                            <a class="dropdown-item" title="Delete" onclick="confirm('Are You Sure!? You Want to Delete This Record?')||event.stopImmediatePropagation()" wire:click.prevent="DeleteMain('{{$key->Id}}')">Delete</a>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                </table>
+                                <span>{{$exist_main_categories->links()}}</span>
+                            </div>
+                        @endif
+
+                        @if ($Type == 'Sub Category' && Count($exist_categories)>0)
+                            <span class="info-text">{{count($exist_categories)}}  Sub Categories Found for </span><p class="heading2">{{$CategoryList}}</p>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Category Name</th>
+                                        <th>Price</th>
+                                        <th>Revenue</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($exist_categories as $key)
+                                        <tr>
+                                            <td>{{$exist_categories->firstItem()+$loop->index}}</td>
+                                            <td>{{$key->Source}}</td>
+                                            <td>{{$key->Unit_Price}}</td>
+                                            <td>{{$key->Total_Revenue}}</td>
+                                            <td>
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                    <div class="btn-group" role="group">
+                                                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Action <i class="mdi mdi-chevron-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                            <a class="dropdown-item" title="Edit" wire:click.prevent="EditSub('{{$key->Id}}')">Edit</a>
+
+                                                            <a class="dropdown-item" title="Delete" onclick="confirm('Do you want to Delete  {{$key->Source}} Source?') || event.stopImmediatePropagation()" wire:click.prevent="DeleteSub('{{$key->Id}}')" >Delete</a>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                </table>
+                                <span>{{$exist_categories->links()}}</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
         </form>
-    </div>
 </div>
 

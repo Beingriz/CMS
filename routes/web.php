@@ -62,6 +62,7 @@ Route::controller(ApplicationController::class)->group(function(){
 
 Route::controller(CreditEntry::class)->group(function(){
     Route::get('Credit', 'Home')->middleware(['auth'])->name('Credit');
+    Route::get('CreditSource', 'CreditSource')->middleware(['auth'])->name('CreditSource');
 });
 // Global  Search  Routes start
 // Route:: get('search/{key}', [ApplicationController::class,'Search']);

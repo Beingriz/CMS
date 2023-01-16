@@ -28,9 +28,9 @@ class AddCreditSource extends Component
     public $Checked = [];
     public $filterby;
     protected $exist_main_categories = [];
-    public $exist_categories;
+    protected $exist_categories=[];
     public $fName;
-    public $edit;
+    public $edit, $NewImage;
     protected $listeners = ['refreshProducts'];
 
     protected $paginationTheme = 'bootstrap';
@@ -171,27 +171,42 @@ class AddCreditSource extends Component
         $fetch = CreditSource::Wherekey($Id)->get();
         foreach($fetch as $key)
         {
-            $oldimage = $key['Thumbnail'];
             $oldname = $key['Name'];
         }
-        if(!is_Null($this->Image))
+
+        if(!empty($this->OldImage))
         {
-            $oldimage = str_replace('storage/app/', '' ,$oldimage);
-            if (Storage::exists($oldimage))
+            if($this->OldImage != 'Not Available' )
             {
-                unlink(storage_path('app/'.$oldimage));
-                $NewImage = 'storage/app/'. $this->Image->storeAs('Digital Ledger/Credit Department/Thumbnail',$this->Name.'_'.time().'.jpg');
+                if (Storage::disk('public')->exists($this->OldImage)) // Check for existing File
+                {
+                    unlink(storage_path('app/public/'.$this->OldImage)); // Deleting Existing File
+                    $url='Not Available';
+                    $data = array();
+
+                    $data['Thumbnail']=$url;
+                    DB::table('credit_source')->where([['Id','=',$Id]])->update($data);
+                }
+                else
+                {
+                    $this->NewImage = 'Not Available';
+                }
             }
             else
             {
-                $NewImage = 'storage/app/'.$this->Image->storeAs('Digital Ledger/Credit Department/Thumbnail',$this->Name.'_'.time().'.jpg');
+                $extension = $this->Image->getClientOriginalExtension();
+                $path = 'Thumbnails/';
+                $filename = $this->Name.'_'.time().'.'.$extension;
+                $url = $this->Image->storePubliclyAs($path,$filename,'public');
+                $this->NewImage = $url;
             }
         }
-        elseif(!is_Null($oldimage))
+        else
         {
-            $NewImage = $oldimage;
+            $this->NewImage = $this->OldImage;
         }
-        $update_source = DB::update('update credit_source set Name = ?, Thumbnail=? where Id = ?', [$this->Name,$NewImage,$Id]);
+
+        $update_source = DB::update('update credit_source set Name = ?, Thumbnail=? where Id = ?', [$this->Name,$this->NewImage,$Id]);
         $update_sources = DB::update('update credit_sources set CS_Name = ?  where CS_Id = ?', [$this->Name,$Id]);
         $update_CL = DB::update('update credit_ledger set Category = ? where Category = ?', [$this->Name,$oldname]);
         $this->ResetMainFields();
@@ -212,6 +227,8 @@ class AddCreditSource extends Component
             session()->flash('Error', 'Sorry!. Unable to Update '.$this->Name .' Source in Record');
         }
      }
+
+
      public function DeleteMain($Id) # Function to Delete Main Category Record
      {
         $fetch = CreditSource::Wherekey($Id)->get();
@@ -386,7 +403,7 @@ class AddCreditSource extends Component
         }
         elseif ($this->Type == "Sub Category")
         {
-            $this->exist_categories = CreditSources::Where('CS_Name','=',$this->CategoryList)->get();
+            $this->exist_categories = CreditSources::Where('CS_Name','=',$this->CategoryList)->paginate(10);
         }
         if(!is_null($this->CategoryList))
         {
@@ -395,7 +412,7 @@ class AddCreditSource extends Component
             {
                 $id = $key['Id'];
             }
-            $this->exist_categories = CreditSources::Where([['CS_Name','=',$this->CategoryList],['CS_Id','=',$id]])->get();
+            $this->exist_categories = CreditSources::Where([['CS_Name','=',$this->CategoryList],['CS_Id','=',$id]])->paginate(10);
         }
         return view('livewire.add-credit-source',[
             'n'=>$this->n,
