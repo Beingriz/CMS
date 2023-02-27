@@ -22,14 +22,14 @@
                 <li>
                     <a href="{{route('dashboard')}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
-                        <span>Dashboard</span>
+                        <span>Home</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{route('Dashboard')}}" >
                         <i class="ri-table-2"></i>
-                        <span>Home</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 {{-- <li>
@@ -65,11 +65,11 @@
                         <span>Admin Controls</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{url('client_registration')}}">Clinet Registration</a></li>
+                        {{-- <li><a href="{{url('client_registration')}}">Clinet Registration</a></li> --}}
                         <li> <a href="{{ route('add_services')}}">Services</a></li>
-                        <li><a href="{{ url('statusmodule')}}">Status</a></li>
+                        {{-- <li><a href="{{ url('statusmodule')}}">Status</a></li> --}}
                         <li><a href="{{url('bookmarks')}}">Bookmark</a></li>
-                        <li> <a href="{{url('add_document')}}">Add Documents</a></li>
+                        {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
                     </ul>
                 </li>
 
@@ -92,22 +92,22 @@
                             <ul class="sub-menu" aria-expanded="true">
                                 <li><a href="{{route('Credit')}}">New Entry</a></li>
                                 <li><a href="{{ route('CreditSource')}}">Add Category</a></li>
-                                <li><a href="layouts-compact-sidebar.html">Report</a></li>
+                                <li><a href="#">Report</a></li>
                             </ul>
                         </li>
 
-                        <li>
+                        {{-- <li>
                             <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
                             <ul class="sub-menu" aria-expanded="true">
                                 <li><a href="{{ url('debit_entry') }}">New Entry</a></li>
                                 <a href="{{ url('add_payment')  }}">Add Sources</a>
-                                <li><a href="layouts-hori-boxed-width.html">Refort</a></li>
+                                <li><a href="#">Refort</a></li>
                             </ul>
-                        </li>
+                        </li> --}}
                     </ul>
                 </li>
 
-                <li class="menu-title">Report</li>
+                {{-- <li class="menu-title">Report</li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -119,20 +119,20 @@
                         <li><a href="#">Old Clients</a></li>
                         <li><a href="#">Repeated Clients</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-profile-line"></i>
                         <span>Applications</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="#">Aadhar</a></li>
-                        {{-- load all services --}}
-                    </ul>
-                </li>
 
-  <li class="menu-title">Components</li>
+                    </ul>
+                </li> --}}
+
+                {{-- <li class="menu-title">Components</li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -144,7 +144,7 @@
 
 
                     </ul>
-                </li>
+                </li> --}}
 
                 {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
