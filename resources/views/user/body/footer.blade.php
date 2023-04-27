@@ -1,17 +1,21 @@
  <!-- Footer Start -->
+ @foreach ($records as $key)
+
+
  <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-light mb-4">Address</h4>
-                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>#37, Chikkabasthi, Bangalore </p>
-                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+91 8892988334</p>
-                <p class="mb-2"><i class="fa fa-envelope me-3"></i>Digitalcyber.blr@gmail.com</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{$key->Address}}</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"><a href="https://wa.me/+91{{$key->Phone_No}}" target="_blank_"></a></i>+91 {{$key->Phone_No}}</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>{{$key->Email_Id}}</p>
                 <div class="d-flex pt-2">
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-social"  href="{{$key->Twitter}}" target="_blank_"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="{{$key->Twitter}}" target="_blank_"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="{{$key->Instagram}}" target="_blank_"><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-outline-light btn-social"href="{{$key->Youtube}}" target="_blank_"><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="{{$key->Instagram}}" target="_blank_"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -58,3 +62,4 @@
 
   <!-- Back to Top -->
   <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"><i class="bi bi-arrow-up"></i></a>
+  @endforeach

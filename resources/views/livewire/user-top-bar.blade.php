@@ -46,14 +46,13 @@
 {{-- ---------------------------------------------------------------------------------------------------- --}}
 
 <div class="row">
-    <div class="col-lg-7">
+    <div class="col-lg-6">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Update User Top Bar</h4>
                 <p class="card-title-desc">Updating the User View Page top bar</p>
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Id</label>
-                    <div class="col-sm-10">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
                         <label for="example-text-input" class="col-sm-2 col-form-label">{{$Id}}</label>
                     </div>
                 </div>
@@ -132,6 +131,14 @@
                     </div>
                 </div>
                 <!-- end row -->
+                <div class="row mb-3">
+                    <label for="Youtube" class="col-sm-2 col-form-label">Youtube</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" placeholder="Youtube"  wire:model="Youtube" id="Youtube">
+                        <span class="error">@error('Youtube'){{$message}}@enderror</span>
+                    </div>
+                </div>
+                <!-- end row -->
 
                 <div class="form-data-buttons"> {{--Buttons--}}
                     <div class="row">
@@ -155,45 +162,70 @@
     </div> <!-- end col -->
 
 
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title"> User Top Bar Update</h5>
+                    <h5 class="card-title">Desktop View Header & Footer Details</h5>
                 </div>
-
                 <div class="row">
-                    <div class="col-lg-12" >
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid" aria-describedby="datatable_info">
-                        <thead class="table-light">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Phone No</th>
+                                        <th>Email</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Eidt</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Records as $key )
 
-                        </thead>
-                            <tbody>
-                                @foreach ($Records as $key )
-                                <tr>
-                                <td class="text-danger">Company Name</td>
-                                <td class="text-primary">{{$key['Company_Name']}}</td>
-                                <td class="text-danger">Address</td>
-                                <td class="text-primary">{{$key['Address']}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-danger ">Phone No</td>
-                                    <td class="text-primary">{{$key['Phone_No']}}</td>
-                                    <td class="text-danger">Time Form</td>
-                                    <td class="text-primary">{{$key['Time_From']}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-danger">Time To</td>
-                                    <td class="text-primary">{{$key['Time_To']}}</td>
-                                    <td class="text-danger">Action</td>
-                                    <td><a  class="btn btn-primary btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Edit {{$key->Name}} Bookmark?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->Id}}')"><i class="mdi mdi-circle-edit-outline">Edit</a></td>
-                                </tr>
+
+                                    <tr @if ($key->Selected == 'Yes') class="table-success" @endif>
+                                        <td>{{$key['Company_Name']}}</td>
+                                        <td>{{$key['Address']}}</td>
+                                        <td>{{$key['Phone_No']}}</td>
+                                        <td>{{$key['Email_Id']}}</td>
+                                        <td>{{$key['Time_From']}}</td>
+                                        <td>{{$key['Time_To']}}</td>
+                                        <td><a  class="btn btn-primary btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Edit {{$key->Company_Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->Id}}')">Edit</a></td>
+                                        <td><a  class="btn btn-success btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Select {{$key->Company_Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="Select('{{$key->Id}}')">Select</a></td>
+
+                                    </tr>
+                                </tbody>
                                 @endforeach
-
-                            </tbody>
-                        </table>
-                        <div class="row no-gutters align-items-center">
-                            <p class="card-text"><small class="text-muted">Last Updated at </small></p>
+                            </table>
                         </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     </div>
                 </div>
             </div>

@@ -16,7 +16,7 @@ class AdminController extends Controller
     public function HomeIndex()
     {
         $data = HomeSlide::find(1);
-        $records = ModelsUserTopBar::all();
+        $records = ModelsUserTopBar::Where('Selected','Yes')->get();
         return view('user.index',compact('records'));
     }
     public function destroy(Request $request)

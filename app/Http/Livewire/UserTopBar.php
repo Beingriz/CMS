@@ -4,13 +4,14 @@ namespace App\Http\Livewire;
 
 use App\Models\User;
 use App\Models\UserTopBar as ModelsUserTopBar;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 
 
 class UserTopBar extends Component
 {
-    public $Id,$Company_Name,$Address,$Phone_No,$Facebook,$Instagram,$LinkedIn,$Twitter,$Time_From,$Time_To,$Update;
+    public $Id,$Company_Name,$Address,$Phone_No,$Facebook,$Instagram,$LinkedIn,$Twitter,$Time_From,$Time_To,$Update,$Youtube;
     protected $rules = [
         'Company_Name' => 'Required',
         'Address' => 'Required',
@@ -42,6 +43,7 @@ class UserTopBar extends Component
         $this->Instagram="";
         $this->LinkedIn="";
         $this->Twitter ="";
+        $this->Youtube ="";
         $this->Update=0;
     }
     public function Save()
@@ -75,7 +77,44 @@ class UserTopBar extends Component
         $this->LinkedIn=$fetch['LinkedIn'];
         $this->Twitter =$fetch['Twitter'];
         $this->Update=1;
+        $this->Id = $fetch['Id'];
     }
+    public function Select($Id)
+    {
+        $data = array();
+        $data['Selected'] = 'No';
+        DB::table('user_top_bar')->Update($data);
+        $data['Selected'] = 'Yes';
+        $Update = DB::table('user_top_bar')->where('Id','=',$Id)->Update($data);
+        if($Update)
+        {
+            session()->flash('SuccessMsg','Details Updated Successfully');
+            $this->ResetFields();
+            $this->Update=0;
+        }
+
+    }
+    public function Update()
+    {
+        $data = array();
+        $data['Company_Name'] =  $this->Company_Name;
+        $data['Address'] =  $this->Address;
+        $data['Phone_No'] =  $this->Phone_No;
+        $data['Time_From'] =  $this->Time_From;
+        $data['Time_To'] =  $this->Time_To;
+        $data['Facebook'] =  $this->Facebook;
+        $data['Instagram'] =  $this->Instagram;
+        $data['LinkedIn'] =  $this->LinkedIn;
+        $data['Twitter'] =  $this->Twitter;
+        $data['Youtube'] =  $this->Youtube;
+        $Update = DB::table('user_top_bar')->where('Id','=',$this->Id)->Update($data);
+        if($Update)
+        {
+            session()->flash('SuccessMsg','Details Changed');
+        }
+
+    }
+
     public function render()
     {
         $Records = ModelsUserTopBar ::all();
