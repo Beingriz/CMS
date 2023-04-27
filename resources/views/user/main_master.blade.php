@@ -1,45 +1,43 @@
-<!doctype html>
-<html class="no-js" lang="en">
+<!DOCTYPE html>
+<html lang="en">
+
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Digital Cyber</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
 
-		<link rel="shortcut icon" type="image/x-icon" href="{{asset('frontend/assets/img/dc-logo.png')}}">
-        <!-- Place favicon.ico in the root directory -->
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
 
-		<!-- CSS here -->
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/animate.min.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/magnific-popup.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/fontawesome-all.min.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/slick.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/default.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/style.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/responsive.css')}}">
-        <link href="{{ URL::asset('/public/Bootstrap/css/style.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('/public/Bootstrap/css/600.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <!-- Bootstrap core CSS -->
-    <link href=" {{ URL::asset('/public/Bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="{{ URL::asset('/public/Bootstrap/css/mdb.min.css') }}" rel="stylesheet">
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+        <!-- Icon Font Stylesheet -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link href="{{asset('frontend/assets/lib/animate/animate.min.css')}}" rel="stylesheet">
+        <link href="{{asset('frontend/assets/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
+        <link href="{{asset('frontend/assets/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="{{asset('frontend/assets/css/bootstrap.min.css')}}" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="{{asset('frontend/assets/css/style.css')}}" rel="stylesheet">
     </head>
+
+
+
+
     <body>
 
-        <!-- preloader-start -->
-        {{-- <div id="preloader">
-            <div class="rasalina-spin-box"></div>
-        </div> --}}
-        <!-- preloader-end -->
 
-		<!-- Scroll-top -->
-        <button class="scroll-top scroll-to-target" data-target="html">
-            <i class="fas fa-angle-up"></i>
-        </button>
-        <!-- Scroll-top-end-->
 
         <!-- header-area -->
         @include('user.body.header')
@@ -61,18 +59,18 @@
 
 
 
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{{asset('frontend/assets/lib/wow/wow.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/easing/easing.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/waypoints/waypoints.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/counterup/counterup.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/owlcarousel/owl.carousel.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/isotope/isotope.pkgd.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/lightbox/js/lightbox.min.js')}}"></script>
 
-		<!-- JS here -->
-        <script src="{{asset('frontend/assets/js/vendor/jquery-3.6.0.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/bootstrap.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/isotope.pkgd.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/imagesloaded.pkgd.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/jquery.magnific-popup.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/element-in-view.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/slick.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/ajax-form.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/wow.min.js')}}"></script>
-        <script src="{{asset('frontend/assets/js/plugins.js')}}"></script>
+        <!-- Template Javascript -->
         <script src="{{asset('frontend/assets/js/main.js')}}"></script>
     </body>
 </html>

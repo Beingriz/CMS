@@ -1,66 +1,68 @@
-<header>
-    <div id="sticky-header" class="menu__area transparent-header">
-        <div class="container custom-container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="mobile__nav__toggler"><i class="fas fa-bars"></i></div>
-                    <div class="menu__wrap">
-                        <nav class="menu__nav">
-                            <div class="logo">
-                                <a href="index.html" class="logo__black"><img src="{{asset('frontend/assets/img/logo/logo_black.png')}}" alt=""></a>
-                                <a href="index.html" class="logo__white"><img src="{{asset('frontend/assets/img/logo/logo_white.png')}}" alt=""></a>
-                            </div>
-                            <div class="navbar__wrap main__menu d-none d-xl-flex">
-                                <ul class="navigation">
-                                    <li class="active"><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">About</a></li>
-                                    <li><a href="services-details.html">Services</a></li>
-                                    <li class="menu-item-has-children"><a href="#">Portfolio</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="portfolio.html">Portfolio</a></li>
-                                            <li><a href="portfolio-details.html">Portfolio Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children"><a href="#">Our Blog</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="blog.html">Our News</a></li>
-                                            <li><a href="blog-details.html">News Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="contact.html">contact me</a></li>
-                                </ul>
-                            </div>
-                            <div class="header__btn d-none d-md-block">
-                                <a href="contact.html" class="btn">Contact me</a>
-                            </div>
-                        </nav>
+    <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    <!-- Spinner End -->
+
+    <!-- Topbar Start -->
+        <div class="container-fluid bg-light p-0">
+            <div class="row gx-0 d-none d-lg-flex">
+                <div class="col-lg-7 px-5 text-start">
+                    <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                        <small class="fa fa-map-marker-alt text-primary me-2"></small>
+                        <small>#37, Chikkabasthi, Bangalore </small>
                     </div>
-                    <!-- Mobile Menu  -->
-                    <div class="mobile__menu">
-                        <nav class="menu__box">
-                            <div class="close__btn"><i class="fal fa-times"></i></div>
-                            <div class="nav-logo">
-                                <a href="index.html" class="logo__black"><img src="{{asset('frontend/assets/img/logo/logo_black.png')}}" alt=""></a>
-                                <a href="index.html" class="logo__white"><img src="{{asset('frontend/assets/img/logo/logo_white.png')}}" alt=""></a>
-                            </div>
-                            <div class="menu__outer">
-                                <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header-->
-                            </div>
-                            <div class="social-links">
-                                <ul class="clearfix">
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-instagram"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-youtube"></span></a></li>
-                                </ul>
-                            </div>
-                        </nav>
+                    <div class="h-100 d-inline-flex align-items-center py-3">
+                        <small class="far fa-clock text-primary me-2"></small>
+                        <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
                     </div>
-                    <div class="menu__backdrop"></div>
-                    <!-- End Mobile Menu -->
+                </div>
+                <div class="col-lg-5 px-5 text-end">
+                    <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                        <small class="fa fa-phone-alt text-primary me-2"></small>
+                        <small>+91 8892988334</small>
+                    </div>
+                    <div class="h-100 d-inline-flex align-items-center">
+                        <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-sm-square bg-white text-primary me-0" href=""><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</header>
+    <!-- Topbar End -->
+
+    <!-- Navbar Start -->
+        <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+            <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+                <h2 class="m-0 text-primary">Digital Cyber</h2>
+            </a>
+            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto p-4 p-lg-0">
+                    <a href="index.html" class="nav-item nav-link active">Home</a>
+                    <a href="about.html" class="nav-item nav-link">About</a>
+                    <a href="service.html" class="nav-item nav-link">Service</a>
+                    <a href="project.html" class="nav-item nav-link">Project</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu fade-up m-0">
+                            <a href="feature.html" class="dropdown-item">Feature</a>
+                            <a href="quote.html" class="dropdown-item">Free Quote</a>
+                            <a href="team.html" class="dropdown-item">Our Team</a>
+                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                            <a href="404.html" class="dropdown-item">404 Page</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                </div>
+                <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Get A Quote<i class="fa fa-arrow-right ms-3"></i></a>
+            </div>
+        </nav>
+    <!-- Navbar End -->
+
