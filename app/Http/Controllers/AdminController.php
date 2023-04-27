@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Livewire\UserTopBar;
 use App\Models\HomeSlide;
 use App\Models\User;
+use App\Models\UserTopBar as ModelsUserTopBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +16,8 @@ class AdminController extends Controller
     public function HomeIndex()
     {
         $data = HomeSlide::find(1);
-        return view('user.index',compact('data'));
+        $records = ModelsUserTopBar::all();
+        return view('user.index',compact('records'));
     }
     public function destroy(Request $request)
     {
@@ -43,5 +46,11 @@ class AdminController extends Controller
     public function AddServices()
     {
         return view('admin.Services.add_service');
+    }
+    public function UserTopBar()
+    {
+        # code...
+
+        return view('user.user_dashboard.topbar');
     }
 }

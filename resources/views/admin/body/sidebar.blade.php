@@ -25,6 +25,12 @@
                         <span>Home</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('user_top_bar')}}" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span>User Dashboard</span>
+                    </a>
+                </li>
 
                 <li>
                     <a href="{{route('Dashboard')}}" >

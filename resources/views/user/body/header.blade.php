@@ -12,17 +12,20 @@
                 <div class="col-lg-7 px-5 text-start">
                     <div class="h-100 d-inline-flex align-items-center py-3 me-4">
                         <small class="fa fa-map-marker-alt text-primary me-2"></small>
-                        <small>#37, Chikkabasthi, Bangalore </small>
+                        @foreach ($records as $key )
+
+
+                        <small>{{$key->Address}}</small>
                     </div>
                     <div class="h-100 d-inline-flex align-items-center py-3">
                         <small class="far fa-clock text-primary me-2"></small>
-                        <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
+                        <small>Mon - Fri : {{$key->Time_From}} - {{$key->Time_To}}</small>
                     </div>
                 </div>
                 <div class="col-lg-5 px-5 text-end">
                     <div class="h-100 d-inline-flex align-items-center py-3 me-4">
                         <small class="fa fa-phone-alt text-primary me-2"></small>
-                        <small>+91 8892988334</small>
+                        <small>+91 {{$key->Phone_No}}</small>
                     </div>
                     <div class="h-100 d-inline-flex align-items-center">
                         <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
@@ -33,12 +36,13 @@
                 </div>
             </div>
         </div>
+        @endforeach
     <!-- Topbar End -->
 
     <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
             <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-                <h2 class="m-0 text-primary">Digital Cyber</h2>
+                <h2 class="m-0 text-primary">{{$key->Company_Name}}</h2>
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
