@@ -34,6 +34,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('user_top_bar')}}">Header & Footer</a></li>
                         <li> <a href="{{route('carousel')}}">Carousel</a></li>
+                        <li> <a href="{{route('about_us')}}">About Us</a></li>
 
 
                     </ul>

@@ -35,6 +35,7 @@ Route::controller(AdminController::class)->group(function(){
  Route::get('/add/services', 'AddServices')->middleware(['auth'])->name('add_services');
  Route::get('/usertopbar', 'UserTopBar')->middleware(['auth'])->name('user_top_bar');
  Route::get('/carousel','Carousel')->middleware(['auth'])->name('carousel');
+ Route::get('/abous_us','AboutUs')->middleware(['auth'])->name('about_us');
 });
 
 // Home Slide Routes

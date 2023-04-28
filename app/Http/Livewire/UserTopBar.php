@@ -92,7 +92,6 @@ class UserTopBar extends Component
             $this->ResetFields();
             $this->Update=0;
         }
-
     }
     public function Update()
     {

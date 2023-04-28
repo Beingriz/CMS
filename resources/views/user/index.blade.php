@@ -59,15 +59,18 @@
                 <div class="row g-0 mx-lg-0">
                     <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
                         <div class="position-relative h-100">
-                            <img class="position-absolute img-fluid w-100 h-100" src="{{asset('frontend/assets/img/about.jpg')}}" style="object-fit: cover;" alt="">
+                            @foreach ($aboutus as $item)
+
+
+                            <img class="position-absolute img-fluid w-100 h-100" src="{{asset('storage/'.$item['Image'])}}" style="object-fit: cover;" alt="">
                         </div>
                     </div>
                     <div class="col-lg-6 about-text py-5 wow fadeIn" data-wow-delay="0.5s">
                         <div class="p-lg-5 pe-lg-0">
                             <div class="section-title text-start">
-                                <h1 class="display-5 mb-4">About Us</h1>
+                                <h1 class="display-5 mb-4">{{$item['Tittle']}}</h1>
                             </div>
-                            <p class="mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet</p>
+                            <p class="mb-4 pb-2">{{$item['Description']}}</p>
                             <div class="row g-4 mb-4 pb-2">
                                 <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="d-flex align-items-center">
@@ -75,7 +78,7 @@
                                             <i class="fa fa-users fa-2x text-primary"></i>
                                         </div>
                                         <div class="ms-3">
-                                            <h2 class="text-primary mb-1" data-toggle="counter-up">1234</h2>
+                                            <h2 class="text-primary mb-1" data-toggle="counter-up">{{$item['Total_Clients']}}</h2>
                                             <p class="fw-medium mb-0">Happy Clients</p>
                                         </div>
                                     </div>
@@ -86,8 +89,8 @@
                                             <i class="fa fa-check fa-2x text-primary"></i>
                                         </div>
                                         <div class="ms-3">
-                                            <h2 class="text-primary mb-1" data-toggle="counter-up">1234</h2>
-                                            <p class="fw-medium mb-0">Projects Done</p>
+                                            <h2 class="text-primary mb-1" data-toggle="counter-up">{{$item['Delivered']}}</h2>
+                                            <p class="fw-medium mb-0">Services Delivered</p>
                                         </div>
                                     </div>
                                 </div>
@@ -98,6 +101,7 @@
                 </div>
             </div>
         </div>
+        @endforeach
     <!-- About End -->
 
 
@@ -108,90 +112,20 @@
                     <h1 class="display-5 mb-5">Our Services</h1>
                 </div>
                 <div class="row g-4">
+                    @foreach ($services as $item )
                     <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="service-item">
                             <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-1.jpg')}}" alt="">
+                                <img class="img-fluid" src="{{asset('storage/'.$item['Thumbnail'])}}" alt="">
                             </div>
                             <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">General Carpentry</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
+                                <h4 class="mb-3">{{$item['Name']}}</h4>
+                                <p>{{$item['Description']}}</p>
                                 <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="service-item">
-                            <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-1.jpg')}}" alt="">
-                            </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">General Carpentry</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                                <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="service-item">
-                            <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-2.jpg')}}" alt="">
-                            </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">Furniture Manufacturing</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                                <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
-                        <div class="service-item">
-                            <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-3.jpg')}}" alt="">
-                            </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">Furniture Remodeling</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                                <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="service-item">
-                            <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-4.jpg')}}" alt="">
-                            </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">Wooden Floor</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                                <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="service-item">
-                            <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-5.jpg')}}" alt="">
-                            </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">Wooden Furniture</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                                <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
-                        <div class="service-item">
-                            <div class="overflow-hidden">
-                                <img class="img-fluid" src="{{asset('frontend/assets/img/service-6.jpg')}}" alt="">
-                            </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0">
-                                <h4 class="mb-3">Custom Work</h4>
-                                <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                                <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -207,7 +141,7 @@
                             <div class="section-title text-start">
                                 <h1 class="display-5 mb-4">Why Choose Us</h1>
                             </div>
-                            <p class="mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet</p>
+                            <p class="mb-4 pb-2">The team at DIGITAL CYBER is knowledgeable and experienced in handling various government-related tasks and can provide guidance and assistance to customers throughout the process</p>
                             <div class="row g-4">
                                 <div class="col-6">
                                     <div class="d-flex align-items-center">
@@ -226,8 +160,8 @@
                                             <i class="fa fa-user-check fa-2x text-primary"></i>
                                         </div>
                                         <div class="ms-4">
-                                            <p class="mb-2">Creative</p>
-                                            <h5 class="mb-0">Designers</h5>
+                                            <p class="mb-2">Document</p>
+                                            <h5 class="mb-0">Experts</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -258,7 +192,7 @@
                     </div>
                     <div class="col-lg-6 pe-lg-0" style="min-height: 400px;">
                         <div class="position-relative h-100">
-                            <img class="position-absolute img-fluid w-100 h-100" src="{{asset('frontend/assets/img/feature.jpg')}}" style="object-fit: cover;" alt="">
+                            <img class="position-absolute img-fluid w-100 h-100" src="{{asset('frontend/assets/img/Feature-1.jpg')}}" style="object-fit: cover;" alt="">
                         </div>
                     </div>
                 </div>
@@ -380,7 +314,7 @@
 
 
     <!-- Quote Start -->
-        <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
+        {{-- <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
             <div class="container quote px-lg-0">
                 <div class="row g-0 mx-lg-0">
                     <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
@@ -391,9 +325,9 @@
                     <div class="col-lg-6 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
                         <div class="p-lg-5 pe-lg-0">
                             <div class="section-title text-start">
-                                <h1 class="display-5 mb-4">Free Quote</h1>
+                                <h1 class="display-5 mb-4">Free Consultation</h1>
                             </div>
-                            <p class="mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet</p>
+                            <p class="mb-4 pb-2">Customer Focus: We at Digital Cyber puts the customer first, providing personalized attention and care to ensure that all customer needs are met.</p>
                             <form>
                                 <div class="row g-3">
                                     <div class="col-12 col-sm-6">
@@ -408,9 +342,9 @@
                                     <div class="col-12 col-sm-6">
                                         <select class="form-select border-0" style="height: 55px;">
                                             <option selected>Select A Service</option>
-                                            <option value="1">Service 1</option>
-                                            <option value="2">Service 2</option>
-                                            <option value="3">Service 3</option>
+                                            @foreach ($services as $item )
+                                            <option value="{{$item['Name']}}">{{$item['Name']}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-12">
@@ -425,7 +359,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
+        {{-- @include('user.user_dashboard.enquiry-form') --}}
+        @livewire('enquiry-form')
     <!-- Quote End -->
 
 

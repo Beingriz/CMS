@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Livewire\UserTopBar;
+use App\Models\About_Us;
 use App\Models\Carousel_DB;
 use App\Models\HomeSlide;
+use App\Models\MainServices;
 use App\Models\User;
 use App\Models\UserTopBar as ModelsUserTopBar;
 use Illuminate\Http\Request;
@@ -23,7 +25,9 @@ class AdminController extends Controller
             $this->Company_Name = $key['Company_Name'];
         }
         $carousel = Carousel_DB::all();
-        return view('user.index',compact('records','carousel'),['CompanyName'=>$this->Company_Name]);
+        $aboutus = About_Us::where('Selected','Yes')->get();
+        $services = MainServices::where('Service_Type','Public')->get();
+        return view('user.index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
     public function destroy(Request $request)
     {
@@ -61,5 +65,10 @@ class AdminController extends Controller
     {
         # code...
         return view('user.user_dashboard.carousel');
+    }
+    public function AboutUs()
+    {
+        # code...
+        return view('user.user_dashboard.about_us');
     }
 }

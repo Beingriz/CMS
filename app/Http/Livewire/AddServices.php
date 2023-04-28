@@ -28,7 +28,7 @@ class AddServices extends Component
     protected $rules = [
         'Name' =>'required ',
         'Service_Type' =>'required',
-        'Description' =>'required|min:50 |max:150',
+        'Description' =>'required|min:50 |max:100',
         'Thumbnail' =>'image|max:1024',
     ];
 
@@ -39,6 +39,10 @@ class AddServices extends Component
        'Thumbnail.required' =>'Please Select Thumbnail',
 
    ];
+   public function updated($propertyName)
+   {
+       $this->validateOnly($propertyName);
+   }
 
    public function mount()
    {
@@ -48,10 +52,7 @@ class AddServices extends Component
 
 
    }
-   public function updated($propertyName)
-   {
-       $this->validateOnly($propertyName);
-   }
+
    public function ResetFields()
    {
 
