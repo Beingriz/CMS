@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Livewire\UserTopBar;
+use App\Models\Carousel_DB;
 use App\Models\HomeSlide;
 use App\Models\User;
 use App\Models\UserTopBar as ModelsUserTopBar;
@@ -13,11 +14,16 @@ use Illuminate\Support\Facades\Auth;
 class AdminController extends Controller
 {
 
+    public $Company_Name;
     public function HomeIndex()
     {
         $data = HomeSlide::find(1);
         $records = ModelsUserTopBar::Where('Selected','Yes')->get();
-        return view('user.index',compact('records'));
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        $carousel = Carousel_DB::all();
+        return view('user.index',compact('records','carousel'),['CompanyName'=>$this->Company_Name]);
     }
     public function destroy(Request $request)
     {
@@ -49,8 +55,11 @@ class AdminController extends Controller
     }
     public function UserTopBar()
     {
-        # code...
-
         return view('user.user_dashboard.topbar');
+    }
+    public function Carousel()
+    {
+        # code...
+        return view('user.user_dashboard.carousel');
     }
 }

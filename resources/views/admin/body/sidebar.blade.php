@@ -25,11 +25,18 @@
                         <span>Home</span>
                     </a>
                 </li>
+                {{-- User Dashboard Menu --}}
                 <li>
-                    <a href="{{route('user_top_bar')}}" class="waves-effect">
+                    <a href="#" class="has-arrow waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>User Dashboard</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('user_top_bar')}}">Header & Footer</a></li>
+                        <li> <a href="{{route('carousel')}}">Carousel</a></li>
+
+
+                    </ul>
                 </li>
 
                 <li>
