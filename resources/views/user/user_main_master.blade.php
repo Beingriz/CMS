@@ -51,8 +51,6 @@
         </main>
         <!-- main-area-end -->
 
-
-
         <!-- Footer-area -->
         @include('user.body.footer')
         <!-- Footer-area-end -->

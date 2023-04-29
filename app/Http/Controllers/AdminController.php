@@ -27,7 +27,7 @@ class AdminController extends Controller
         $carousel = Carousel_DB::all();
         $aboutus = About_Us::where('Selected','Yes')->get();
         $services = MainServices::where('Service_Type','Public')->get();
-        return view('user.index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
+        return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
     public function destroy(Request $request)
     {
@@ -70,5 +70,10 @@ class AdminController extends Controller
     {
         # code...
         return view('user.user_dashboard.about_us');
+    }
+    public function ContactUs()
+    {
+        # code...
+        return view('user.user_dashboard.enquiry-form');
     }
 }

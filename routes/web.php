@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Creditentry;
 use App\Http\Controllers\Home\HomeSlideController;
+use App\Http\Controllers\UserController;
 use FontLib\Table\Type\name;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,6 @@ use Illuminate\Support\Facades\Auth;
 
 // Admin Routes
 Route::controller(AdminController::class)->group(function(){
- Route::get('/', 'HomeIndex')->name('user.index');
  Route::get('/admin/logout', 'destroy')->name('admin.logout');
  Route::get('/admin/profile_view', 'ProfileView')->middleware(['auth'])->name('admin.profile_view');
  Route::get('/admin/change_password', 'ChangePassword')->middleware(['auth'])->name('change_password');
@@ -38,11 +38,15 @@ Route::controller(AdminController::class)->group(function(){
  Route::get('/abous_us','AboutUs')->middleware(['auth'])->name('about_us');
 });
 
-// Home Slide Routes
-Route::controller(HomeSlideController::class)->group(function(){
- Route::get('/home/slide', 'Index')->middleware(['auth'])->name('home_slide');
 
+//User Routes
+Route::controller(UserController::class)->group(function(){
+    Route::get('/','Home')->name('User-Home');
+    Route::get('/user_home','HomeIndex')->name('home');
+    Route::get('/contact_us','ContactUs')->name('contact_us');
 });
+
+
 
 // Application  Routes start
 Route::controller(ApplicationController::class)->group(function(){

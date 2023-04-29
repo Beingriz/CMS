@@ -1,4 +1,9 @@
-<div>
+@extends('user.user_main_master')
+@section('User_Content')
+{{-- @include('user.body.header') --}}
+<!-- banner-area -->
+{{-- @include('user.home.home_slide') --}}
+<!-- banner-area -->
     {{-- Stop trying to control. --}}
     <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
         <div class="container quote px-lg-0">
@@ -14,19 +19,21 @@
                             <h1 class="display-5 mb-4">Free Consultation</h1>
                         </div>
                         <p class="mb-4 pb-2">Customer Focus: We at Digital Cyber puts the customer first, providing personalized attention and care to ensure that all customer needs are met.</p>
-                        <form>
+                        <form wire:submit.prevent="Save">
+                            {{-- @csrf --}}
                             <div class="row g-3">
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control border-0" placeholder="Your Name" style="height: 55px;">
+                                    <input type="text" class="form-control border-0" id="Name" placeholder="Your Name" wire:model="Name" name="Name" style="height: 55px;">
+                                    <span class="eroor"@error('Name'){{$message}}@enderror></span>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <input type="email" class="form-control border-0" placeholder="Your Email" style="height: 55px;">
+                                    <input type="email" class="form-control border-0" placeholder="Your Email" wire:model="Email" name="Email" style="height: 55px;">
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control border-0" placeholder="Your Mobile" style="height: 55px;">
+                                    <input type="text" class="form-control border-0" placeholder="Your Mobile" wire:model="Phone_No" name="Phone_No" style="height: 55px;">
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <select class="form-select border-0" style="height: 55px;">
+                                    <select class="form-select border-0" style="height: 55px;" wire:model="Service" name="Service">
                                         <option selected>Select A Service</option>
                                         @foreach ($services as $item )
                                         <option value="{{$item['Name']}}">{{$item['Name']}}</option>
@@ -34,10 +41,12 @@
                                     </select>
                                 </div>
                                 <div class="col-12">
-                                    <textarea class="form-control border-0" placeholder="Special Note"></textarea>
+                                    <textarea class="form-control border-0" placeholder="Special Note" wire:model="Message"></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit">Submit</button>
+                                    {{-- <button type="submit" value="submit" name="submit" --}}
+                                    {{-- class="btn btn-primary btn-rounded btn-sm">Add Service</button> --}}
+                                    <button class="btn btn-primary w-100 py-3" type="submit" name="submit" value="submit">Submit</button>
                                 </div>
                             </div>
                         </form>
@@ -46,4 +55,4 @@
             </div>
         </div>
     </div>
-</div>
+@endsection

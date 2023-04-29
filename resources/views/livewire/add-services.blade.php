@@ -57,6 +57,7 @@
                     <!-- end row -->
                     <form wire:submit.prevent="Save">
                         @csrf
+
                     <div class="row mb-3">
                         <label for="example-search-input" class="col-sm-2 col-form-label">Catogory</label>                    <div class="col-sm-10">
                             <select class="form-control" id="Category_Type" wire:model="Category_Type" name="Category_Type">
