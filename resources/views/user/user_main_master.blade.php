@@ -30,6 +30,11 @@
 
         <!-- Template Stylesheet -->
         <link href="{{asset('frontend/assets/css/style.css')}}" rel="stylesheet">
+        {{-- Toaster Message Style Sheet --}}
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
+
+        @livewireStyles
+
     </head>
 
 
@@ -58,6 +63,32 @@
 
 
         <!-- JavaScript Libraries -->
+        @livewireScripts
+        {{-- Toaset Script  --}}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+        <script>
+            @if(Session::has('message'))
+            var type = "{{ Session::get('alert-type','info') }}"
+            switch(type){
+                case 'info':
+                toastr.info(" {{ Session::get('message') }} ");
+                break;
+
+                case 'success':
+                toastr.success(" {{ Session::get('message') }} ");
+                break;
+
+                case 'warning':
+                toastr.warning(" {{ Session::get('message') }} ");
+                break;
+
+                case 'error':
+                toastr.error(" {{ Session::get('message') }} ");
+                break;
+            }
+            @endif
+        </script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{{asset('frontend/assets/lib/wow/wow.min.js')}}"></script>

@@ -1,5 +1,4 @@
-@extends('user.user_main_master')
-@section('User_Content')
+
     <!-- Team Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -75,4 +74,3 @@
         </div>
     </div>
 <!-- Team End -->
-@endsection

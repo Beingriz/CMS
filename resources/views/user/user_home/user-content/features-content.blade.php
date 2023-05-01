@@ -1,5 +1,4 @@
-@extends('user.user_main_master')
-@section('User_Content')
+
 
     <!-- Feature Start -->
         <div class="container-xxl py-5">
@@ -46,4 +45,3 @@
         </div>
     <!-- Feature Start -->
 
-@endsection

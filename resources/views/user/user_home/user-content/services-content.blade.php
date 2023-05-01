@@ -1,5 +1,4 @@
-@extends('user.user_main_master')
-@section('User_Content')
+
 
     <!-- Service Start -->
     <div class="container-xxl py-5">
@@ -26,4 +25,4 @@
         </div>
     </div>
     <!-- Service End -->
-@endsection
+

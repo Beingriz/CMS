@@ -1,5 +1,4 @@
-@extends('user.user_main_master')
-@section('User_Content')
+
 <!-- Feature Start -->
 <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
     <div class="container feature px-lg-0">
@@ -67,4 +66,4 @@
     </div>
 </div>
 <!-- Feature End -->
-@endsection
+

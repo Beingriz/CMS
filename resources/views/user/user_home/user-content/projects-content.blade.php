@@ -1,5 +1,4 @@
-@extends('user.user_main_master')
-@section('User_Content')
+
     <!-- Projects Start -->
         <div class="container-xxl py-5">
             <div class="container">
@@ -10,8 +9,8 @@
                     <div class="col-12 text-center">
                         <ul class="list-inline mb-5" id="portfolio-flters">
                             <li class="mx-2 active" data-filter="*">All</li>
-                            <li class="mx-2" data-filter=".first">General Carpentry</li>
-                            <li class="mx-2" data-filter=".second">Custom Carpentry</li>
+                            <li class="mx-2" data-filter=".first">Govt </li>
+                            <li class="mx-2" data-filter=".second">General</li>
                         </ul>
                     </div>
                 </div>
@@ -31,6 +30,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.3s">
                         <div class="rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
@@ -46,6 +46,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.5s">
                         <div class="rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
@@ -61,6 +62,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.1s">
                         <div class="rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
@@ -76,6 +78,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.3s">
                         <div class="rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
@@ -91,6 +94,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.5s">
                         <div class="rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
@@ -110,4 +114,4 @@
             </div>
         </div>
     <!-- Projects End -->
-@endsection
+

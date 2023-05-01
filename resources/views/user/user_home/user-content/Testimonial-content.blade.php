@@ -1,5 +1,4 @@
-@extends('user.user_main_master')
-@section('user')
+
 <!-- Testimonial Start -->
 <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
     <div class="container">
@@ -35,4 +34,3 @@
     </div>
 </div>
 <!-- Testimonial End -->
-@endsection

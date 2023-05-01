@@ -44,7 +44,6 @@ class UserController extends Controller
         }
         $services = MainServices::where('Service_Type','Public')->get();
         $carousel = Carousel_DB::all();
-
-        return view('user.user_home.enquiry-form',compact('services','records','carousel'));
+        return view('user.user_home.user-pages.enquiry-form-page',compact('services','records','carousel'));
     }
 }
