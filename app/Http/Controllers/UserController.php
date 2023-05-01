@@ -46,4 +46,47 @@ class UserController extends Controller
         $carousel = Carousel_DB::all();
         return view('user.user_home.user-pages.enquiry-form-page',compact('services','records','carousel'));
     }
+    public function AboutUS()
+    {
+        # code...
+        $aboutus = About_Us::where('Selected','Yes')->get();
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        return view('user.user_home.user-pages.about-page',compact('aboutus','records'));
+    }
+    public function Teams()
+    {
+        # To Display Teams page...
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        return view('user.user_home.user-pages.team-page',compact('records'));
+    }
+    public function Testimonials()
+    {
+        # To Display Testimonial page...
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        return view('user.user_home.user-pages.Testimonial-page',compact('records'));
+    }
+    public function Feature()
+    {
+        # code...
+        return view();
+    }
+    public function Services()
+    {
+        # To Display Services
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        $services = MainServices::where('Service_Type','Public')->get();
+        return view('user.user_home.user-pages.services-page',compact('services','records'));
+    }
 }

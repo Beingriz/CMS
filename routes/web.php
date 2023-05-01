@@ -44,6 +44,11 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/','Home')->name('User-Home');
     Route::get('/user_home','HomeIndex')->name('home');
     Route::get('/contact_us','ContactUs')->name('contact_us');
+    Route::get('/about_us','AboutUS')->name('about_us');
+    Route::get('/services','Services')->name('services');
+    Route::get('/teams','Teams')->name('teams');
+    Route::get('/testimonials','Testimonials')->name('testimonials');
+    Route::get('/features','Feature')->name('features');
 });
 
 

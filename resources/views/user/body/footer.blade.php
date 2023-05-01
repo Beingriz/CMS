@@ -7,8 +7,8 @@
         <div class="row g-5">
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-light mb-4">Address</h4>
-                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{$key->Address}}</p>
-                <p class="mb-2"><i class="fa fa-phone-alt me-3"><a href="https://wa.me/+91{{$key->Phone_No}}" target="_blank_"></a></i>+91 {{$key->Phone_No}}</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i><a href="https://goo.gl/maps/tx5L1kcc46qmedYGA" target="_blank_">{{$key->Address}}</a></p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"><a href="https://wa.me/+91{{$key->Phone_No}}" target="_blank_"></i>+91 {{$key->Phone_No}}</a></p>
                 <p class="mb-2"><i class="fa fa-envelope me-3"></i>{{$key->Email_Id}}</p>
                 <div class="d-flex pt-2">
                     <a class="btn btn-outline-light btn-social"  href="{{$key->Twitter}}" target="_blank_"><i class="fab fa-twitter"></i></a>
@@ -20,17 +20,17 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-light mb-4">Services</h4>
-                <a class="btn btn-link" href="">General Carpentry</a>
-                <a class="btn btn-link" href="">Furniture Remodeling</a>
-                <a class="btn btn-link" href="">Wooden Floor</a>
-                <a class="btn btn-link" href="">Wooden Furniture</a>
-                <a class="btn btn-link" href="">Custom Carpentry</a>
+                <a class="btn btn-link" href="">Aadhar Update</a>
+                <a class="btn btn-link" href="">Passport Assist.</a>
+                <a class="btn btn-link" href="">Election ID</a>
+                <a class="btn btn-link" href="">Senior Citizen Card</a>
+                <a class="btn btn-link" href="">Pan Card</a>
             </div>
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-light mb-4">Quick Links</h4>
-                <a class="btn btn-link" href="">About Us</a>
-                <a class="btn btn-link" href="">Contact Us</a>
-                <a class="btn btn-link" href="">Our Services</a>
+                <a class="btn btn-link" href="{{route('about_us')}}" title="Know More">About Us</a>
+                <a class="btn btn-link" href="{{route('contact_us')}}" title="Get Callback">Contact Us</a>
+                <a class="btn btn-link" href="{{route('services')}}" title="Apply Now">Our Services</a>
                 <a class="btn btn-link" href="">Terms & Condition</a>
                 <a class="btn btn-link" href="">Support</a>
             </div>
@@ -48,7 +48,7 @@
         <div class="copyright">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    &copy; <a class="border-bottom" href="#">Digital Cyber</a>, All Right Reserved.
+                    &copy; <a class="border-bottom" href="{{route('about_us')}}">Digital Cyber</a>, All Right Reserved.
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->

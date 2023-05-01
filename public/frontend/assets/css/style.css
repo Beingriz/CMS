@@ -1,4 +1,5 @@
 /********** Template CSS **********/
+
 :root {
     --primary: #AB7442;
     --light: #F5F5F5;
@@ -27,6 +28,7 @@
 
 
 /*** Spinner ***/
+
 #spinner {
     opacity: 0;
     visibility: hidden;
@@ -42,6 +44,7 @@
 
 
 /*** Button ***/
+
 .btn {
     font-weight: 500;
     transition: .5s;
@@ -77,7 +80,9 @@
     font-weight: normal;
 }
 
+
 /*** Navbar ***/
+
 .navbar .dropdown-toggle::after {
     border: none;
     content: "\f107";
@@ -103,11 +108,10 @@
 }
 
 @media (max-width: 991.98px) {
-    .navbar-light .navbar-nav .nav-link  {
+    .navbar-light .navbar-nav .nav-link {
         margin-right: 0;
         padding: 10px 0;
     }
-
     .navbar-light .navbar-nav {
         border-top: 1px solid #EEEEEE;
     }
@@ -138,7 +142,6 @@
         visibility: hidden;
         transition: .5s;
     }
-
     .navbar .nav-item:hover .dropdown-menu {
         top: 100%;
         visibility: visible;
@@ -149,25 +152,23 @@
 
 
 /*** Header ***/
+
 @media (max-width: 768px) {
     .header-carousel .owl-carousel-item {
         position: relative;
         min-height: 500px;
     }
-    
     .header-carousel .owl-carousel-item img {
         position: absolute;
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
-
     .header-carousel .owl-carousel-item h5,
     .header-carousel .owl-carousel-item p {
         font-size: 14px !important;
         font-weight: 400 !important;
     }
-
     .header-carousel .owl-carousel-item h1 {
         font-size: 30px;
         font-weight: 600;
@@ -244,16 +245,17 @@
 }
 
 .page-header {
-    background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(../img/carousel-1.jpg) center center no-repeat;
+    background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(../img/topheader.jpg) center center no-repeat;
     background-size: cover;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: var(--light);
 }
 
 
 /*** Section Title ***/
+
 .section-title h1 {
     position: relative;
     display: inline-block;
@@ -288,30 +290,31 @@
 
 
 /*** About ***/
+
 @media (min-width: 992px) {
     .container.about {
         max-width: 100% !important;
     }
-
-    .about-text  {
+    .about-text {
         padding-right: calc(((100% - 960px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1200px) {
-    .about-text  {
+    .about-text {
         padding-right: calc(((100% - 1140px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1400px) {
-    .about-text  {
+    .about-text {
         padding-right: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
 
 
 /*** Service ***/
+
 .service-item img {
     transition: .5s;
 }
@@ -322,30 +325,31 @@
 
 
 /*** Feature ***/
+
 @media (min-width: 992px) {
     .container.feature {
         max-width: 100% !important;
     }
-
-    .feature-text  {
+    .feature-text {
         padding-left: calc(((100% - 960px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1200px) {
-    .feature-text  {
+    .feature-text {
         padding-left: calc(((100% - 1140px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1400px) {
-    .feature-text  {
+    .feature-text {
         padding-left: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
 
 
 /*** Project Portfolio ***/
+
 #portfolio-flters li {
     display: inline-block;
     font-weight: 500;
@@ -398,30 +402,31 @@
 
 
 /*** Quote ***/
+
 @media (min-width: 992px) {
     .container.quote {
         max-width: 100% !important;
     }
-
-    .quote-text  {
+    .quote-text {
         padding-right: calc(((100% - 960px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1200px) {
-    .quote-text  {
+    .quote-text {
         padding-right: calc(((100% - 1140px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1400px) {
-    .quote-text  {
+    .quote-text {
         padding-right: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
 
 
 /*** Team ***/
+
 .team-item img {
     transition: .5s;
 }
@@ -458,6 +463,7 @@
 
 
 /*** Testimonial ***/
+
 .testimonial-carousel::before {
     position: absolute;
     content: "";
@@ -537,30 +543,31 @@
 
 
 /*** Contact ***/
+
 @media (min-width: 992px) {
     .container.contact {
         max-width: 100% !important;
     }
-
-    .contact-text  {
+    .contact-text {
         padding-left: calc(((100% - 960px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1200px) {
-    .contact-text  {
+    .contact-text {
         padding-left: calc(((100% - 1140px) / 2) + .75rem);
     }
 }
 
 @media (min-width: 1400px) {
-    .contact-text  {
+    .contact-text {
         padding-left: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
 
 
 /*** Footer ***/
+
 .footer {
     background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(../img/footer.jpg) center center no-repeat;
     background-size: cover;

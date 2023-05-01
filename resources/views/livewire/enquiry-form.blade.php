@@ -1,4 +1,21 @@
 <div>
+    <!-- Page Header Start -->
+        <div class="container-fluid page-header py-5 mb-5">
+            <div class="container py-5">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">Contact Us</h1>
+                <nav aria-label="breadcrumb animated slideInDown">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="text-white" href="{{route('home')}}">Home</a></li>
+                        <li class="breadcrumb-item"><a class="text-white" href="{{route('about_us')}}">Testimonials</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Teams</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+<!-- Page Header End -->
+
+
+
     {{-- Enquiry Form Content Start --}}
         <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
             <div class="container quote px-lg-0">
@@ -8,6 +25,7 @@
                             <img class="position-absolute img-fluid w-100 h-100" src="{{asset('frontend/assets/img/quote.jpg')}}" style="object-fit: cover;" alt="">
                         </div>
                     </div>
+
                     <div class="col-lg-6 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
                         <div class="p-lg-5 pe-lg-0">
                             <div class="section-title text-start">
@@ -18,25 +36,29 @@
                                 {{-- @csrf --}}
                                 <div class="row g-3">
                                     <div class="col-12 col-sm-6">
-                                        <input type="text" class="form-control border-0" id="Name" placeholder="Your Name" wire:model="Name" name="Name" style="height: 55px;">
-                                        <span class="eroor"@error('Name'){{$message}}@enderror></span>
-                                    </div>
+                                        <input type="text" class="form-control border-0" id="Name" placeholder="Your Name" wire:model.lazy="Name" name="Name" style="height: 55px;">
+                                        @error('Name') <span class="text-danger">{{ $message }}</span> @enderror                                    </div>
+
                                     <div class="col-12 col-sm-6">
                                         <input type="email" class="form-control border-0" placeholder="Your Email" wire:model="Email" name="Email" style="height: 55px;">
+                                        @error('Email') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <input type="text" class="form-control border-0" placeholder="Your Mobile" wire:model="Phone_No" name="Phone_No" style="height: 55px;">
+                                        <input type="number" class="form-control border-0" placeholder="Your Mobile" wire:model="Phone_No" name="Phone_No" style="height: 55px;">
+                                        @error('Phone_No') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <select class="form-select border-0" style="height: 55px;" wire:model="Service" name="Service">
-                                            <option selected>Select A Service</option>
+                                        <select class="form-select border-0" style="height: 55px;" wire:model.lazy="Service" name="Service">
+                                            <option selected="">Select A Service</option>
                                             @foreach ($services as $item )
                                             <option value="{{$item['Name']}}">{{$item['Name']}}</option>
                                             @endforeach
                                         </select>
+                                        @error('Service') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="col-12">
-                                        <textarea class="form-control border-0" placeholder="Special Note" wire:model="Message"></textarea>
+                                        <textarea class="form-control border-0" placeholder="{{$Msg_template}}" wire:model="Message" cols="10" rows="10"></textarea>
+                                        @error('Message') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="col-12">
                                         {{-- <button type="submit" value="submit" name="submit" --}}
@@ -48,6 +70,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     {{-- Content End --}}

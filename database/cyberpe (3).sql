@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2023 at 10:51 AM
+-- Generation Time: May 01, 2023 at 05:05 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -5763,7 +5763,10 @@ INSERT INTO `enquiry_form` (`Id`, `Name`, `Phone_No`, `Email`, `Service`, `Messa
 ('DC16829291562701', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Aadhar Card', 'I want to change my aadhar with new phone no', 'No', 'Not Available', 'No', NULL, '2023-05-01 10:51:18', '2023-05-01 10:51:18'),
 ('DC16829302515891', 'Nigar', 'asdasda', 'asdas@gmail.com', 'Aadhar Card', 'asdasda', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:07:46', '2023-05-01 11:07:46'),
 ('DC16829306785520', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Passport', 'khib', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:14:53', '2023-05-01 11:14:53'),
-('DC16829308066572', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Scholarships', 'xcxcz', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:17:17', '2023-05-01 11:17:17');
+('DC16829308066572', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Scholarships', 'xcxcz', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:17:17', '2023-05-01 11:17:17'),
+('DC16829428457548', 'Nigar', '8951775912', 'nigar@gmail.com', 'Agreement Paper', 'not avaialblel', 'No', 'Not Available', 'No', NULL, '2023-05-01 14:37:52', '2023-05-01 14:37:52'),
+('DC16829469134217', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Aadhar Card', 'i want the aadhar service for correction ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:18', '2023-05-01 15:47:18'),
+('DC1682947053226', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Agreement Paper', 'thank you for creating this ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:54', '2023-05-01 15:47:54');
 
 -- --------------------------------------------------------
 
