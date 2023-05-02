@@ -68,8 +68,8 @@
                                                 <i class="fa fa-users fa-2x text-primary"></i>
                                             </div>
                                             <div class="ms-3">
-                                                <h2 class="text-primary mb-1" data-toggle="counter-up">{{$item['Total_Amount']}}</h2>
-                                                <p class="fw-medium mb-0">Happy Clients</p>
+                                                <h2 class="text-primary mb-1" data-toggle="counter-up">{{$item['Total_Count']}}</h2>
+                                                <p class="fw-medium mb-0">Applied</p>
                                             </div>
                                         </div>
                                     </div>
@@ -79,8 +79,8 @@
                                                 <i class="fa fa-check fa-2x text-primary"></i>
                                             </div>
                                             <div class="ms-3">
-                                                <h2 class="text-primary mb-1" data-toggle="counter-up">{{$item['Total_Count']}}</h2>
-                                                <p class="fw-medium mb-0">Services Delivered</p>
+                                                <h2 class="text-primary mb-1" data-toggle="counter-up">{{$delivered}}</h2>
+                                                <p class="fw-medium mb-0">Delivered</p>
                                             </div>
                                         </div>
                                     </div>

@@ -7,9 +7,9 @@
     @include('user.user_home.user-content.about-content')
     @include('user.user_home.user-content.services-content')
     @include('user.user_home.user-content.features_bottom-content')
-    @include('user.user_home.user-content.projects-content')
+    {{-- @include('user.user_home.user-content.projects-content') --}}
     @include('user.user_home.user-content.enquiry-form-content')
-    @include('user.user_home.user-content.team-content')
-    @include('user.user_home.user-content.Testimonial-content')
+    {{-- @include('user.user_home.user-content.team-content')
+    @include('user.user_home.user-content.Testimonial-content') --}}
 
 @endsection

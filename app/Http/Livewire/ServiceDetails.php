@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Application;
 use App\Models\DocumentList;
 use App\Models\MainServices;
 use App\Models\SubServices;
@@ -16,12 +17,17 @@ class ServiceDetails extends Component
         # code...
         $this->Id = $Id;
     }
-
+    public $serviceName,$delivered;
     public function GetDetails($Id){
         $this->display=true;
         $this->getId = $Id;
         $this->show = false;
+        $subservices = SubServices::where('Id',$Id)->get();
+        foreach($subservices as $key){
+            $this->serviceName = $key['Name'];
+        }
 
+        $this->delivered = Application::where('Application_Type',$this->serviceName)->where('Status','Delivered to Client')->get()->count();
     }
     public $documents,$sl=1;
     public function Documents($Id){
