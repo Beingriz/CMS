@@ -89,4 +89,13 @@ class UserController extends Controller
         $services = MainServices::where('Service_Type','Public')->get();
         return view('user.user_home.user-pages.services-page',compact('services','records'));
     }
+    public function ServiceDetails($Id)
+    {
+        # code...
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        return view('user.user_home.user-pages.services-details-page',compact('records'),['ServiceId'=>$Id]);
+    }
 }
