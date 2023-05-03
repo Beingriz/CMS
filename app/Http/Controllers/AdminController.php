@@ -79,4 +79,5 @@ class AdminController extends Controller
         # code...
         return view('user.user_dashboard.enquiry-form');
     }
+    
 }

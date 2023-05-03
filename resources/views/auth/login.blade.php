@@ -1,130 +1,193 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
     <head>
+        <meta charset="utf-8">
+        <title>Digital Cyber</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
 
-        <meta charset="utf-8" />
-        <title>Login | Admin</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesdesign" name="author" />
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="{{asset('backend/assets/images/favicon.ico')}}">
+        <!-- Favicon -->
+        <link href="{{asset('frontend/assets/img/favicon.ico')}}" rel="icon">
 
-        <!-- Bootstrap Css -->
-        <link href="{{asset('backend/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-        <!-- Icons Css -->
-        <link href="{{asset('backend/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
-        <!-- App Css-->
-        <link href="{{asset('backend/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+        <!-- Icon Font Stylesheet -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link href="{{asset('frontend/assets/lib/animate/animate.min.css')}}" rel="stylesheet">
+        <link href="{{asset('frontend/assets/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
+        <link href="{{asset('frontend/assets/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="{{asset('frontend/assets/css/bootstrap.min.css')}}" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="{{asset('frontend/assets/css/style.css')}}" rel="stylesheet">
+        {{-- Toaster Message Style Sheet --}}
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+        <!-- MDB -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
 
+        {{-- MDB Design Sheets --}}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{{asset('frontend/assets/mdb/css/mdb.min.css')}}" />
+
+        @livewireStyles
 
     </head>
 
-    <body class="auth-body-bg">
-        <div class="bg-overlay"></div>
-        <div class="wrapper-page">
-            <div class="container-fluid p-0">
-                <div class="card">
-                    <div class="card-body">
+    <section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+      <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}">
+      @csrf
+          <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+            <p class="lead fw-normal mb-0 me-3">Welcome to Digital Cyber</p>
+            {{-- <button type="button" class="btn btn-primary btn-floating mx-1">
+              <i class="fab fa-facebook-f"></i>
+            </button>
 
-                        <div class="text-center mt-4">
-                            <div class="mb-3">
-                                <a href="index.html" class="auth-logo">
-                                    <img src="{{asset('backend/assets/images/dc-logo.png')}}" height="30" class="logo-dark mx-auto" alt="">
-                                    <img src="{{asset('backend/assets/images/logo-light.png')}}" height="30" class="logo-light mx-auto" alt="">
-                                </a>
-                            </div>
-                        </div>
+            <button type="button" class="btn btn-primary btn-floating mx-1">
+              <i class="fab fa-twitter"></i>
+            </button>
 
-                        <h4 class="text-muted text-center font-size-18"><b>Sign In</b></h4>
-                        <!-- Session Status -->
-                        <x-auth-session-status class="mb-4" :status="session('status')" />
+            <button type="button" class="btn btn-primary btn-floating mx-1">
+              <i class="fab fa-linkedin-in"></i>
+            </button> --}}
+          </div>
 
-                        <!-- Validation Errors -->
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-                        <div class="p-3">
-                           <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}">
-                                    @csrf
-                                <div class="form-group mb-3 row">
-                                    <div class="col-12">
-                                        <input  id="username"  name="username" class="form-control" type="text" required autofocus placeholder="Username">
-                                    </div>
-                                </div>
+          <div class="divider d-flex align-items-center my-4">
+            <p class="text-center fw-bold mx-3 mb-0">Login to your account</p>
+          </div>
 
-                                <div class="form-group mb-3 row">
-                                    <div class="col-12">
-                                        <input id="password"  name="password" class="form-control" type="password" required="" placeholder="Password">
-                                    </div>
-                                </div>
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="form3Example3" class="form-control form-control-lg"
+              placeholder="Enter a valid username" required autofocus name="username"/>
+            <label class="form-label" for="form3Example3">Username</label>
+          </div>
 
-                                <div class="form-group mb-3 row">
-                                    <div class="col-12">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="form-label ms-1" for="customCheck1">Remember me</label>
-                                        </div>
-                                    </div>
-                                </div>
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <input type="password" id="form3Example4" class="form-control form-control-lg"
+              placeholder="Enter password" name="password"/>
+            <label class="form-label" for="form3Example4">Password</label>
+          </div>
 
-                                <div class="form-group mb-3 text-center row mt-3 pt-1">
-                                    <div class="col-12">
-                                        <button class="btn btn-info w-100 waves-effect waves-light" type="submit">Log In</button>
-                                    </div>
-                                </div>
-
-                                <div class="form-group mb-0 row mt-2">
-                                    <div class="col-sm-7 mt-3">
-                                        <a href="{{ route('password.request')}}" class="text-muted"><i class="mdi mdi-lock"></i> Forgot your password?</a>
-                                    </div>
-                                    <div class="col-sm-5 mt-3">
-                                        <a href="{{ route('register')}}" class="text-muted"><i class="mdi mdi-account-circle"></i> Create an account</a>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- end -->
-                    </div>
-                    <!-- end cardbody -->
-                </div>
-                <!-- end card -->
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Checkbox -->
+            <div class="form-check mb-0">
+              <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+              <label class="form-check-label" for="form2Example3">
+                Remember me
+              </label>
             </div>
-            <!-- end container -->
-        </div>
-        <!-- end -->
+            <a href="{{ route('password.request')}}" class="text-body">Forgot password?</a>
+          </div>
 
-        <!-- JAVASCRIPT -->
-        <script src="{{asset('backend/assets/libs/jquery/jquery.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/metismenu/metisMenu.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/simplebar/simplebar.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/node-waves/waves.min.js')}}"></script>
-        <script src="{{asset('backend/assets/js/app.js')}}"></script>
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg" value="submit"
+              style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="{{ route('register')}}"
+                class="link-danger">Register</a></p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div
+    class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+    <!-- Copyright -->
+    <div class="text-white mb-3 mb-md-0">
+      Copyright © 2020. All rights reserved.
+    </div>
+    <!-- Copyright -->
+
+    <!-- Right -->
+    <div>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="#!" class="text-white">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </div>
+</section>
+
+
+    <body>
+
+        <!-- JavaScript Libraries -->
+        @livewireScripts
+        {{-- Toaset Script  --}}
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{{asset('frontend/assets/lib/wow/wow.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/easing/easing.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/waypoints/waypoints.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/counterup/counterup.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/owlcarousel/owl.carousel.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/isotope/isotope.pkgd.min.js')}}"></script>
+        <script src="{{asset('frontend/assets/lib/lightbox/js/lightbox.min.js')}}"></script>
+
+        <!-- Template Javascript -->
+        <script src="{{asset('frontend/assets/js/main.js')}}"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
- @if(Session::has('message'))
- var type = "{{ Session::get('alert-type','info') }}"
- switch(type){
-    case 'info':
-    toastr.info(" {{ Session::get('message') }} ");
-    break;
+        <script>
+            @if(Session::has('message'))
+            var type = "{{ Session::get('alert-type','info') }}"
+            switch(type){
+                case 'info':
+                toastr.info(" {{ Session::get('message') }} ");
+                break;
 
-    case 'success':
-    toastr.success(" {{ Session::get('message') }} ");
-    break;
+                case 'success':
+                toastr.success(" {{ Session::get('message') }} ");
+                break;
 
-    case 'warning':
-    toastr.warning(" {{ Session::get('message') }} ");
-    break;
+                case 'warning':
+                toastr.warning(" {{ Session::get('message') }} ");
+                break;
 
-    case 'error':
-    toastr.error(" {{ Session::get('message') }} ");
-    break;
- }
- @endif
-</script>
+                case 'error':
+                toastr.error(" {{ Session::get('message') }} ");
+                break;
+            }
+            @endif
+        </script>
 
+        <script type="text/javascript" src="{{asset('frontend/assets/mdb/js/mdb.min.js.map')}}"></script>
+        <!-- MDB -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js" ></script>
     </body>
 </html>
