@@ -98,4 +98,22 @@ class UserController extends Controller
         }
         return view('user.user_home.user-pages.services-details-page',compact('records'),['ServiceId'=>$Id]);
     }
+    public function Registration(){
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        return view('user.user_auth.user_registration',compact('records'));
+    }
+    public function Dashboard(){
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        $carousel = Carousel_DB::all();
+        $aboutus = About_Us::where('Selected','Yes')->get();
+        $services = MainServices::where('Service_Type','Public')->get();
+        return view('user.user_auth.user_dashboard',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
+
+    }
 }

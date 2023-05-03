@@ -64,6 +64,22 @@
                             <a href="{{route('testimonials')}}" class="dropdown-item">Testimonial</a>
                         </div>
                     </div>
+                    @if (Auth::check())
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{Auth::user()->name}}</a>
+                            <div class="dropdown-menu fade-up m-0">
+                                <a href="{{route('admin.logout')}}" class="dropdown-item">Logout</a>
+                            </div>
+                        </div>
+                    @else
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Account</a>
+                        <div class="dropdown-menu fade-up m-0">
+                            <a href="{{route('register')}}" class="dropdown-item">Register</a>
+                            <a href="{{route('login')}}" class="dropdown-item">Login</a>
+                        </div>
+                    </div>
+                @endif
 
                 </div>
                 <a href="{{route('contact_us')}}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Get A Quote<i class="fa fa-arrow-right ms-3"></i></a>

@@ -20,7 +20,7 @@
                 <li class="menu-title">Menu</li>
 
                 <li>
-                    <a href="{{route('dashboard')}}" class="waves-effect">
+                    <a href="{{route('admin_dashboard')}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Home</span>
                     </a>

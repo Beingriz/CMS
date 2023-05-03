@@ -12,7 +12,7 @@
                     </span>
                 </a>
 
-                <a href="{{route('dashboard')}}" class="logo logo-light">
+                <a href="{{route('admin_dashboard')}}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{asset('logo/dclogo.png')}}" alt="logo-sm-light" height="22">
                     </span>

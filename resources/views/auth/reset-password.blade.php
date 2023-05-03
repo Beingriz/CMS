@@ -48,7 +48,7 @@
                                 {{-- Email --}}
                                 <div class="form-group mb-3 row">
                                     <div class="col-12">
-                                        <input  id="email"  name="email" class="form-control" type="email" required autofocus placeholder="Username">
+                                        <input  id="text"  name="email" class="form-control" type="text" required autofocus placeholder="Username">
                                     </div>
                                 </div>
 
