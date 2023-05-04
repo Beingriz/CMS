@@ -29,9 +29,6 @@ class AdminController extends Controller
         $services = MainServices::where('Service_Type','Public')->get();
         return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
-    public function AdminDashboard(){
-        return view('admin.index');
-    }
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
@@ -43,7 +40,7 @@ class AdminController extends Controller
             'message'=>'You have been logged out Successfully',
             'alert-type' =>'success'
         );
-        return redirect('/')->with($notification);
+        return redirect('/login')->with($notification);
     } //End Destroy Function
 
     public function ProfileView()
