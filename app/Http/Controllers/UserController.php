@@ -13,7 +13,7 @@ class UserController extends Controller
 {
 
     public $Company_Name;
-    public function User(){
+    public function HomeIndex(){
         $records = UserTopBar::Where('Selected','Yes')->get();
         foreach($records as $key){
             $this->Company_Name = $key['Company_Name'];
@@ -115,12 +115,5 @@ class UserController extends Controller
         $services = MainServices::where('Service_Type','Public')->get();
         return view('user.user_auth.user_dashboard',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
 
-    }
-    public function ApplyNow($Name){
-        $records = UserTopBar::Where('Selected','Yes')->get();
-        foreach($records as $key){
-            $this->Company_Name = $key['Company_Name'];
-        }
-        return view('user.user_account.applynow',compact('records'),['Name'=>$Name]);
     }
 }

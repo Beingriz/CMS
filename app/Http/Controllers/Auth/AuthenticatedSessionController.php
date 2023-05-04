@@ -32,14 +32,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         $url ='';
-        if($request->user()->role === 'user' ){
+        if($request->user()->role == 'user' ){
             $url = 'user/dashboard';
         }elseif($request->user()->role === 'admin'){
             $url = '/admin/dashboard';
         }
-        $name = $request->user()->name;
         $notification = array(
-            'message'=>'Login Successfull '.$name.' ',
+            'message'=>'Login Successfull',
             'alert-type' =>'success'
         );
 
