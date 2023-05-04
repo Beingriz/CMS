@@ -40,16 +40,9 @@ Route::controller(AdminController::class)->group(function(){
 
 
 //User Routes
-Route::middleware(['auth','user.auth:user'])->group(function(){
-    Route::controller(UserController::class)->group(function(){
-    Route::get('/user/dashboard','Dashboard')->name('user.dashboard');
-    Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
-    });
-});
 Route::controller(UserController::class)->group(function(){
-    Route::get('/user/register','Registration')->name('new.user');
     Route::get('/','Home')->name('User-Home');
-    Route::get('/','HomeIndex')->name('home');
+    Route::get('/user_home','HomeIndex')->name('home');
     Route::get('/contact_us','ContactUs')->name('contact_us');
     Route::get('/about_us','AboutUS')->name('about_us');
     Route::get('/services','Services')->name('services');
@@ -112,13 +105,9 @@ Route::controller(CreditEntry::class)->group(function(){
 // Route::get('signup', [SignupController::class,'index']);
 // Route::post('signup', [SignupController::class,'Save']);
 
-Route::middleware(['auth','verified','user.auth:admin'])->group(function(){
-    Route::controller(AdminController::class)->group(function(){
-        Route::get('/admin/dashboard','AdminDashboard')->name('admin_dashboard');
-    });
-});
-// Route::get('/dashboard', function () {
-//     return view('admin.index');
-// })->middleware(['auth','verified',])->name('dashboard');
+
+Route::get('/dashboard', function () {
+    return view('admin.index');
+})->middleware(['auth','verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';
