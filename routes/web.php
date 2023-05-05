@@ -115,6 +115,6 @@ Route::controller(CreditEntry::class)->group(function(){
 
 Route::get('/dashboard', function () {
     return view('admin.index');
-})->middleware(['auth','verified','auth.role:admin'])->name('dashboard');
+})->middleware(['auth','auth.role:admin'])->name('dashboard');
 
 require __DIR__.'/auth.php';

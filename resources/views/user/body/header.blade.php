@@ -84,6 +84,7 @@
                 @if(!Auth::check())
                 <a href="{{route('contact_us')}}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Get A Quote<i class="fa fa-arrow-right ms-3"></i></a>
                 @endif
+
             </div>
         </nav>
     <!-- Navbar End -->
