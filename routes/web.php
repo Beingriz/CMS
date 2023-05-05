@@ -50,8 +50,10 @@ Route::controller(AdminController::class)->group(function(){
 Route::middleware('auth','auth.role:user')->group(function(){
     Route::controller(UserController::class)->group(function(){
         Route::get('/user/dashboard','UserDashboard')->name('user.dashboard');
-        Route::get('/view/profile/{id}','ViewProfile')->name('view.profile');
-        Route::get('/my/history/{mobile_no}','MyHistory')->name('my.history');
+        Route::get('/user/home/{id}','UserHome')->name('user.home');
+        Route::get('/view/profile','ViewProfile')->name('view.profile');
+        Route::get('/service/history/{mobile_no}','MyServiceHistory')->name('history');
+        Route::get('/eidt/profile','EditProfile')->name('edit.profile');
 
     });
 });
@@ -59,7 +61,7 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/','Home')->name('User-Home');
     Route::get('/','HomeIndex')->name('home');
     Route::get('/contact_us','ContactUs')->name('contact_us');
-    Route::get('/about_us','AboutUS')->name('about_us');
+    Route::get('/about_us','AboutUS')->name('aboutus');
     Route::get('/services','Services')->name('services');
     Route::get('/teams','Teams')->name('teams');
     Route::get('/testimonials','Testimonials')->name('testimonials');

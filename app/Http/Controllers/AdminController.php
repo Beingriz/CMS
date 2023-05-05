@@ -63,17 +63,17 @@ class AdminController extends Controller
     }
     public function UserTopBar()
     {
-        return view('user.user_dashboard.topbar');
+        return view('user.admin_forms.header_footer_form');
     }
     public function Carousel()
     {
         # code...
-        return view('user.user_dashboard.carousel');
+        return view('user.admin_forms.carousel_form');
     }
     public function AboutUs()
     {
         # code...
-        return view('user.user_dashboard.about_us');
+        return view('user.admin_forms.about_us_form');
     }
     public function ContactUs()
     {

@@ -55,6 +55,7 @@ trait RightInsightTrait
     private $bookmarks;
     private $MainServices;
     private $SubServices;
+    private $services_count;
 
     public function __construct()
     {
@@ -139,6 +140,9 @@ trait RightInsightTrait
         }
 
         $this->status_list = Status::all();
+
+        $services = MainServices::where('Service_Type','Public')->get();
+        $this->services_count = count($services);
     }
 
 }

@@ -1,34 +1,30 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Admin\User;
 
-use App\Models\Carousel_DB;
+use App\Models\About_Us;
+use App\Models\Application;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-class Carousel extends Component
+class AboutUsForm extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $Tittle,$Description,$Button1_Name,$Button1_Link,$Button2_Link,$Image,$Update,$Count,$Sl=1,$Id,$Old_Image,$New_Image;
 
+    public $Tittle,$Description,$Image,$Update,$Count,$Sl=1,$Id,$Old_Image,$New_Image,$Selected,$Delivered,$Iteration=0;
+    public $Clients;
     protected $rules = [
-        'Tittle' => 'Required|min:10|max:30',
-        'Description'=>'Required |min:10|max:110',
-        'Button1_Name'=>'Required|min:5|max:10',
-        'Button1_Link'=>'Required',
-        'Button2_Link'=>'Required',
+        'Tittle' => 'Required|max:30',
+        'Description'=>'Required |min:10|max:500',
         'Image'=> 'required|file|mimes:jpeg,png|max:2048',
     ];
     protected $messages = [
         'Tittle' => 'Please Enter Catchy Tittle',
         'Description'=>'Description should be less than 50 characters',
-        'Button1_Name'=>'Buttone Name Cannot be blank',
-        'Button1_Link'=>'Buttone Link Cannot be blank',
-        'Button2_Link'=>'Buttone Link Cannot be blank',
         'Image'=>'Image  Cannot be empty',
     ];
 
@@ -40,18 +36,17 @@ class Carousel extends Component
     public function mount()
     {
         # code...
-        $this->Id = 'SB'.time();
-        $this->Count = Carousel_DB::all()->count();
+        $this->Id = 'AU'.time();
+        $this->Clients = Application::all()->count();
+        $this->Delivered = Application::where('Status','=','Delivered to Client')->get()->count();
     }
     public function ResetFields()
     {
         # code...
         $this->Tittle="";
         $this->Description="";
-        $this->Button1_Name="";
-        $this->Button1_Link="";
-        $this->Button2_Link="";
         $this->Image=NULL;
+        $this->Iteration++;
         $this->Update = 0;
 
     }
@@ -59,35 +54,31 @@ class Carousel extends Component
     {
         # code...
         $this->validate();
-        $save = new Carousel_DB();
+        $save = new About_Us();
         $save->Id = $this->Id;
         $save->Tittle = $this->Tittle;
         $save->Description = $this->Description;
-        $save->Button1_Name = $this->Button1_Name;
-        $save->Button1_Link = $this->Button1_Link;
-        $save->Button2_Link = $this->Button2_Link;
+        $save->Total_Clients = $this->Clients;
+        $save->Delivered = $this->Delivered;
         if(!empty($this->Image)){
             $extension = $this->Image->getClientOriginalExtension();
-            $path = 'Carousel/';
-            $filename = 'Carousel'.$this->Tittle.'_'.time().'.'.$extension;
+            $path = 'About Us/';
+            $filename = 'AboutUs '.$this->Tittle.'_'.time().'.'.$extension;
             $url = $this->Image->storePubliclyAs($path,$filename,'public');
             $this->New_Image = $url;
         }
         $save->Image = $this->New_Image;
         $save->save();
-        session()->flash('SuccessMsg', 'New Carousel Added Successfully!');
+        session()->flash('SuccessMsg', 'New About Added Successfully!');
         $this->ResetFields();
         $this->Update=0;
     }
     public function Edit($Id)
     {
-        $fetch = Carousel_DB::find($Id);
+        $fetch = About_Us::find($Id);
         $this->Id = $Id;
         $this->Tittle = $fetch['Tittle'];
         $this->Description = $fetch['Description'];
-        $this->Button1_Name = $fetch['Button1_Name'];
-        $this->Button1_Link = $fetch['Button1_Link'];
-        $this->Button2_Link = $fetch['Button2_Link'];
         $this->Old_Image = $fetch['Image'];
         $this->Update=1;
 
@@ -106,16 +97,21 @@ class Carousel extends Component
                 if (Storage::disk('public')->exists($this->Old_Image)) // Check for existing File
                 {
                     unlink(storage_path('app/public/'.$this->Old_Image)); // Deleting Existing File
-                    $url="";
+
+                    $extension = $this->Image->getClientOriginalExtension();
+                    $path = 'AboutUS/';
+                    $filename = 'AboutUS'.$this->Tittle.'_'.time().'.'.$extension;
+                    $url = $this->Image->storePubliclyAs($path,$filename,'public');
+                    $this->New_Image = $url;
                     $data = array();
                     $data['Image']=$url;
-                    DB::table('carousel')->where([['Id','=',$this->Id]])->update($data); // update db wil empty string
+                    DB::table('about_us')->where([['Id','=',$this->Id]])->update($data); // update db wil empty string
                 }
                 else // if file not avaialbe then upload new selected image
                 {
                     $extension = $this->Image->getClientOriginalExtension();
-                    $path = 'Carousel/';
-                    $filename = 'Carousel'.$this->Tittle.'_'.time().'.'.$extension;
+                    $path = 'AboutUS/';
+                    $filename = 'AboutUS'.$this->Tittle.'_'.time().'.'.$extension;
                     $url = $this->Image->storePubliclyAs($path,$filename,'public');
                     $this->New_Image = $url;
                 }
@@ -123,8 +119,8 @@ class Carousel extends Component
             else // if old image is not available id db then upload image
             {
                 $extension = $this->Image->getClientOriginalExtension();
-                $path = 'Carousel/';
-                $filename = 'Carousel'.$this->Tittle.'_'.time().'.'.$extension;
+                $path = 'AboutUS/';
+                $filename = 'AboutUS'.$this->Tittle.'_'.time().'.'.$extension;
                 $url = $this->Image->storePubliclyAs($path,$filename,'public');
                 $this->New_Image = $url;
             }
@@ -138,30 +134,45 @@ class Carousel extends Component
     {
         if(!empty($this->Old_Image)){
             $this->validate([
-                'Tittle' => 'Required|min:10|max:30',
-                'Description'=>'Required |min:10|max:100',
-                'Button1_Name'=>'Required|min:5|max:10',
-                'Button1_Link'=>'Required',
-                'Button2_Link'=>'Required',
+                'Tittle' => 'Required|max:30',
+                'Description'=>'Required |min:10|max:500',
             ]);
         }
         $data = array();
         $data['Tittle'] = $this->Tittle;
         $data['Description'] = $this->Description;
-        $data['Button1_Name'] = $this->Button1_Name;
-        $data['Button2_Link'] = $this->Button2_Link;
-        $data['Button1_Link'] = $this->Button1_Link;
+        $data['Total_Clients'] = $this->Clients;
+        $data['Delivered'] = $this->Delivered;
         $this->Image();
         $data['Image']= $this->New_Image;
-        DB::table('carousel')->where([['Id','=',$this->Id]])->update($data);
-        session()->flash('SuccessMsg','Carousel Details Updated Successfully!');
+        DB::table('about_us')->where([['Id','=',$this->Id]])->update($data);
+        session()->flash('SuccessMsg','About Us Details Updated Successfully!');
         $this->ResetFields();
         $this->Update=0;
     }
-
+    public function Select($Id)
+    {
+        $data = array();
+        $data['Selected'] = 'No';
+        DB::table('about_us')->Update($data);
+        $data['Selected'] = 'Yes';
+        $Update = DB::table('about_us')->where('Id','=',$Id)->Update($data);
+    }
+    public function Delete($Id)
+    {
+        $fetch = About_Us::find($Id);
+        $image = $fetch['Image'];
+        if (Storage::disk('public')->exists($image)) // Check for existing File
+        {
+            unlink(storage_path('app/public/'.$image)); // Deleting Existing File
+        }
+        About_Us::Where('Id','=',$Id)->delete();
+        session()->flash('SuccessMsg', 'Record Deleted Successfully!');
+    }
     public function render()
     {
-        $Records = Carousel_DB::all();
-        return view('livewire.carousel',compact('Records'));
+        $Records = About_Us::all();
+        return view('livewire.admin.user.about-us-form',compact('Records'));
     }
+
 }

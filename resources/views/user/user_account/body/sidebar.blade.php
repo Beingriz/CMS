@@ -20,30 +20,23 @@
                 <li class="menu-title">Menu</li>
 
                 <li>
-                    <a href="{{route('dashboard')}}" class="waves-effect">
+                    <a href="{{route('user.home',Auth::user()->id)}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Home</span>
                     </a>
                 </li>
-                {{-- User Dashboard Menu --}}
+
+
                 <li>
-                    <a href="#" class="has-arrow waves-effect">
-                        <i class="ri-dashboard-line"></i>
-                        <span>User Dashboard</span>
+                    <a href="{{route('history',Auth::user()->mobile_no)}}" >
+                        <i class="ri-lock-unlock-line align-middle me-1"></i>
+                        <span>My Orders</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('user_top_bar')}}">Header & Footer</a></li>
-                        <li> <a href="{{route('carousel')}}">Carousel</a></li>
-                        <li> <a href="{{route('about_us')}}">About Us</a></li>
-
-
-                    </ul>
                 </li>
-
                 <li>
                     <a href="{{route('Dashboard')}}" >
-                        <i class="ri-table-2"></i>
-                        <span>Dashboard</span>
+                        <i class="ri-lock-unlock-line align-middle me-1"></i>
+                        <span>Services</span>
                     </a>
                 </li>
                 {{-- <li>
@@ -64,7 +57,7 @@
                 <li>
                     <a href="#" class="has-arrow waves-effect">
                         <i class="ri-account-circle-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">2</span>
-                        <span>App Controls</span>
+                        <span>Services</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('new_application')}}">New Application</a></li>

@@ -7,7 +7,9 @@ use App\Models\Application;
 use App\Models\Carousel_DB;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
+use App\Models\User;
 use App\Models\UserTopBar;
+use App\Traits\RightInsightTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
@@ -17,7 +19,7 @@ class UserController extends Controller
 
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
+    use RightInsightTrait;
     public $Company_Name;
     public function HomeIndex(){
         $records = UserTopBar::Where('Selected','Yes')->get();
@@ -27,7 +29,8 @@ class UserController extends Controller
         $carousel = Carousel_DB::all();
         $aboutus = About_Us::where('Selected','Yes')->get();
         $services = MainServices::where('Service_Type','Public')->get();
-        return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
+        $services_count = count($services);
+        return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name,'services_count'=>$services_count]);
     }
     public function UserDashboard(){
         $records = UserTopBar::Where('Selected','Yes')->get();
@@ -37,7 +40,15 @@ class UserController extends Controller
         $carousel = Carousel_DB::all();
         $aboutus = About_Us::where('Selected','Yes')->get();
         $services = MainServices::where('Service_Type','Public')->get();
-        return view('user.user_auth.user_dashboard',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
+        $services_count = count($services);
+        return view('user.user_auth.user_dashboard',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name,'services_count'=>$services_count]);
+    }
+    public function UserHome($Id)
+    {
+        # code...
+        $services = MainServices::where('Service_Type','Public')->get();
+        $services_count = count($services);
+        return view('user.user_account.user_home',['services_count'=>$services_count]);
     }
     public function Home()
     {
@@ -114,11 +125,13 @@ class UserController extends Controller
         }
         return view('user.user_home.user-pages.services-details-page',compact('records'),['ServiceId'=>$Id]);
     }
-    public function ViewProfile($Id){
-        return view('user.user_account.pages.user_view_profile',['Id'=>$Id]);
+
+    public function ViewProfile(){
+        $id = Auth::user()->id;
+        $profiledata = User::find($id);
+        return view('user.user_account.pages.user_view_profile',compact('profiledata'),['services_count'=>$this->services_count]);
     }
-    public function MyHistory($mobile_no){
-        $services = Application::where('mobile_no',$mobile_no)->paginate(10);
-        return view('user.user_account.pages.user_my_history',['services'=>$services]);
+    public function MyServiceHistory($mobile_no){
+        return view('user.user_account.pages.user_service_history',['mobile_no'=>$mobile_no,'services_count'=>$this->services_count]);
     }
 }

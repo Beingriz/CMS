@@ -9,7 +9,7 @@
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                         <li class="breadcrumb-item active"><a href="{{route('services')}}">Services</a></li>
-                        <li class="breadcrumb-item active"><a href="{{route('my.history',Auth::user()->mobile_no)}}">My History</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('history',Auth::user()->mobile_no)}}">My History</a></li>
                     </ol>
                 </div>
 

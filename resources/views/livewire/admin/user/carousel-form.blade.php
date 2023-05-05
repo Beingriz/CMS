@@ -187,17 +187,6 @@
                                                 </div>
 
                                             </td>
-
-
-
-
-
-
-
-
-
-
-
                                                 {{-- <a  class="btn btn-primary btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Edit {{$key->Company_Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->Id}}')">Edit</a></td> --}}
                                         </tr>
                                     </tbody>
