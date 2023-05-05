@@ -51,22 +51,39 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
+                    @if (Auth::check())
+                    <a href="{{route('home')}}" class="nav-item nav-link active">Home</a>
+                    <a href="{{route('services')}}" class="nav-item nav-link">Service</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{Auth::user()->name}}</a>
+                        <div class="dropdown-menu fade-up m-0">
+                            {{-- <a href="{{route('features')}}" class="dropdown-item">Feature</a> --}}
+                            <a href="#" class="dropdown-item">View Profile</a>
+                            <a href="#" class="dropdown-item">My History</a>
+                            <a href="#" class="dropdown-item">Track</a>
+                            <a href="#" class="dropdown-item">Review</a>
+                            <a href="{{route('admin.logout')}}" class="dropdown-item">Logout</a>
+
+                        </div>
+                    </div>
+                    @else
                     <a href="{{route('home')}}" class="nav-item nav-link active">Home</a>
                     <a href="{{route('about_us')}}" class="nav-item nav-link">About</a>
                     <a href="{{route('services')}}" class="nav-item nav-link">Service</a>
                     <a href="{{route('contact_us')}}" class="nav-item nav-link">Contact</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Menu</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Account</a>
                         <div class="dropdown-menu fade-up m-0">
                             {{-- <a href="{{route('features')}}" class="dropdown-item">Feature</a> --}}
-                            <a href="{{route('contact_us')}}" class="dropdown-item">Free Consultation</a>
-                            <a href="{{route('teams')}}" class="dropdown-item">Our Team</a>
-                            <a href="{{route('testimonials')}}" class="dropdown-item">Testimonial</a>
+                            <a href="{{route('register')}}" class="dropdown-item">Register</a>
+                            <a href="{{route('login')}}" class="dropdown-item">Login</a>
                         </div>
                     </div>
-
+                    @endif
                 </div>
+                @if(!Auth::check())
                 <a href="{{route('contact_us')}}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Get A Quote<i class="fa fa-arrow-right ms-3"></i></a>
+                @endif
             </div>
         </nav>
     <!-- Navbar End -->

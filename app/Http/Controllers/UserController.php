@@ -23,6 +23,16 @@ class UserController extends Controller
         $services = MainServices::where('Service_Type','Public')->get();
         return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
+    public function UserDashboard(){
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        $carousel = Carousel_DB::all();
+        $aboutus = About_Us::where('Selected','Yes')->get();
+        $services = MainServices::where('Service_Type','Public')->get();
+        return view('user.user_auth.user_dashboard',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
+    }
     public function Home()
     {
         $data = HomeSlide::find(1);

@@ -40,9 +40,16 @@ Route::controller(AdminController::class)->group(function(){
 
 
 //User Routes
+
+Route::middleware('auth','auth.role:user')->group(function(){
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/user/dashboard','UserDashboard')->name('user.dashboard');
+
+    });
+});
 Route::controller(UserController::class)->group(function(){
     Route::get('/','Home')->name('User-Home');
-    Route::get('/user_home','HomeIndex')->name('home');
+    Route::get('/','HomeIndex')->name('home');
     Route::get('/contact_us','ContactUs')->name('contact_us');
     Route::get('/about_us','AboutUS')->name('about_us');
     Route::get('/services','Services')->name('services');
@@ -108,6 +115,6 @@ Route::controller(CreditEntry::class)->group(function(){
 
 Route::get('/dashboard', function () {
     return view('admin.index');
-})->middleware(['auth','verified'])->name('dashboard');
+})->middleware(['auth','verified','auth.role:admin'])->name('dashboard');
 
 require __DIR__.'/auth.php';

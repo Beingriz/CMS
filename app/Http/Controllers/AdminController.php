@@ -40,7 +40,7 @@ class AdminController extends Controller
             'message'=>'You have been logged out Successfully',
             'alert-type' =>'success'
         );
-        return redirect('/login')->with($notification);
+        return redirect('/')->with($notification);
     } //End Destroy Function
 
     public function ProfileView()
