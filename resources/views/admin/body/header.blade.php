@@ -270,9 +270,13 @@
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}"
+                    @if (Auth::check())
+                        <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}"
                         alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1">{{Auth::user()->name}}</span>
+                        <span class="d-none d-xl-inline-block ms-1">{{Auth::user()->name}}</span>
+                    @endif
+
+
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">

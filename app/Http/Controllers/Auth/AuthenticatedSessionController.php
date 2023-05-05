@@ -31,12 +31,19 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $url ='';
+        if($request->user()->role === 'user' ){
+            $url = 'user/dashboard';
+        }elseif($request->user()->role === 'admin'){
+            $url = '/dashboard';
+        }
+        $name = $request->user()->name;
         $notification = array(
-            'message'=>'Login Successfull',
+            'message'=>$name.' Welcome back',
             'alert-type' =>'success'
         );
 
-        return redirect()->intended(RouteServiceProvider::HOME)->with($notification);
+        return redirect()->intended($url)->with($notification);
     }
 
     /**

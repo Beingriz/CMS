@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\About_Us;
+use App\Models\Application;
 use App\Models\Carousel_DB;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
 use App\Models\UserTopBar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Livewire\WithPagination;
 
 class UserController extends Controller
 {
+
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     public $Company_Name;
     public function HomeIndex(){
@@ -22,6 +28,16 @@ class UserController extends Controller
         $aboutus = About_Us::where('Selected','Yes')->get();
         $services = MainServices::where('Service_Type','Public')->get();
         return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
+    }
+    public function UserDashboard(){
+        $records = UserTopBar::Where('Selected','Yes')->get();
+        foreach($records as $key){
+            $this->Company_Name = $key['Company_Name'];
+        }
+        $carousel = Carousel_DB::all();
+        $aboutus = About_Us::where('Selected','Yes')->get();
+        $services = MainServices::where('Service_Type','Public')->get();
+        return view('user.user_auth.user_dashboard',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
     public function Home()
     {
@@ -97,5 +113,12 @@ class UserController extends Controller
             $this->Company_Name = $key['Company_Name'];
         }
         return view('user.user_home.user-pages.services-details-page',compact('records'),['ServiceId'=>$Id]);
+    }
+    public function ViewProfile($Id){
+        return view('user.user_account.pages.user_view_profile',['Id'=>$Id]);
+    }
+    public function MyHistory($mobile_no){
+        $services = Application::where('mobile_no',$mobile_no)->paginate(10);
+        return view('user.user_account.pages.user_my_history',['services'=>$services]);
     }
 }

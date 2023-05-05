@@ -1,86 +1,64 @@
-<!doctype html>
-<html lang="en">
-
-    <head>
-
-        <meta charset="utf-8" />
-        <title>Recover Password | Upcube - Admin & Dashboard Template</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesdesign" name="author" />
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="{{asset('backend/assets/images/favicon.ico')}}">
-
-        <!-- Bootstrap Css -->
-        <link href="{{asset('backend/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-        <!-- Icons Css -->
-        <link href="{{asset('backend/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
-        <!-- App Css-->
-        <link href="{{asset('backend/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
-
-    </head>
-
-    <body class="auth-body-bg">
-        <div class="bg-overlay"></div>
-        <div class="wrapper-page">
-            <div class="container-fluid p-0">
-                <div class="card">
-                    <div class="card-body">
-
-                        <div class="text-center mt-4">
-                            <div class="mb-3">
-                                <a href="index.html" class="auth-logo">
-                                    <img src="{{asset('backend/assets/images/dc-logo.png')}}" height="30" class="logo-dark mx-auto" alt="">
-                                    <img src="{{asset('backend/assets/images/logo-light.png')}}" height="30" class="logo-light mx-auto" alt="">
-                                </a>
-                            </div>
-                        </div>
-
-                        <h4 class="text-muted text-center font-size-18"><b>Reset Password</b></h4>
-
-                        <div class="p-3">
-                            <form class="form-horizontal mt-3" method="POST" action="{{ route('password.email') }}">
-                                @csrf
-
-                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                Enter Your <strong>E-mail</strong> and instructions will be sent to you!
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                                    <!-- Session Status -->
-                                    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-                                    <!-- Validation Errors -->
-                                    <x-auth-validation-errors class="mb-4" :errors="$errors" />
-                                <div class="form-group mb-3">
-                                    <div class="col-xs-12">
-                                        <input class="form-control" id="emial" name="email" type="email" required autofocus placeholder="Email">
-                                    </div>
-                                </div>
-
-                                <div class="form-group pb-2 text-center row mt-3">
-                                    <div class="col-12">
-                                        <button class="btn btn-info w-100 waves-effect waves-light" type="submit">Send Email</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- end cardbody -->
-                </div>
-                <!-- end card -->
-            </div>
-            <!-- end container -->
+@extends('auth.auth_master')
+@section('auth')
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-9 col-lg-6 col-xl-5">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+            class="img-fluid" alt="Sample image">
         </div>
-        <!-- end -->
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+          <form method="POST" action="{{ route('password.email') }}"> @csrf
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                Enter Your <strong>E-mail</strong> and instructions will be sent to you!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <!-- Session Status -->
+            <x-auth-session-status class="mb-4 text-info" :status="session('status')" />
+
+            <!-- Validation Errors -->
+            <x-auth-validation-errors class="mb-4 text-danger" :errors="$errors" />
+            <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+              {{-- <p class="lead fw-normal mb-0 me-3">Recover Password</p> --}}
+
+            </div>
+
+            <div class="divider d-flex align-items-center my-4">
+              <p class="text-center fw-bold mx-3 mb-0">Recover Password</p>
+              <a class="text-primary" href="{{route('home')}}">Home Page</a>
+            </div>
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input type="email" id="form3Example3" name="email" required autofocus class="form-control form-control-lg"
+                placeholder="Enter a valid email address" />
+              <label class="form-label" for="form3Example3">Email address</label>
+            </div>
 
 
-        <!-- JAVASCRIPT -->
-        <script src="{{asset('backend/assets/libs/jquery/jquery.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/metismenu/metisMenu.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/simplebar/simplebar.min.js')}}"></script>
-        <script src="{{asset('backend/assets/libs/node-waves/waves.min.js')}}"></script>
-        <script src="{{asset('backend/assets/js/app.js')}}"></script>
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button type="submit" class="btn btn-primary btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;">Send Email</button>
+              <p class="small fw-bold mt-2 pt-1 mb-0">Remember Password ? <a href="{{route('login')}}"
+                  class="link-danger">Login</a></p>
+            </div>
 
-    </body>
-</html>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+      <!-- Copyright -->
+      <div class="text-white mb-3 mb-md-0">
+        Copyright © 2020. All rights reserved.
+      </div>
+      <!-- Copyright -->
+
+      <!-- Right -->
+
+      <!-- Right -->
+    </div>
+  </section>
+@endsection

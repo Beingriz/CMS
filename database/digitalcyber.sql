@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2023 at 06:38 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- Generation Time: May 05, 2023 at 05:52 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cyberpe`
+-- Database: `digitalcyber`
 --
 
 -- --------------------------------------------------------
@@ -5737,6 +5737,40 @@ INSERT INTO `document_list` (`Sl_No`, `Id`, `Service_Id`, `Sub_Service_Id`, `Nam
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `enquiry_form`
+--
+
+CREATE TABLE `enquiry_form` (
+  `Id` varchar(225) NOT NULL,
+  `Name` varchar(225) NOT NULL,
+  `Phone_No` varchar(225) NOT NULL,
+  `Email` varchar(225) NOT NULL,
+  `Service` varchar(225) NOT NULL,
+  `Message` varchar(500) NOT NULL DEFAULT 'Not Available',
+  `Callback` varchar(50) NOT NULL DEFAULT 'No',
+  `Feedback` varchar(500) NOT NULL DEFAULT 'Not Available',
+  `Conversion` varchar(50) NOT NULL DEFAULT 'No',
+  `Amount` varchar(225) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `enquiry_form`
+--
+
+INSERT INTO `enquiry_form` (`Id`, `Name`, `Phone_No`, `Email`, `Service`, `Message`, `Callback`, `Feedback`, `Conversion`, `Amount`, `created_at`, `updated_at`) VALUES
+('DC16829291562701', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Aadhar Card', 'I want to change my aadhar with new phone no', 'No', 'Not Available', 'No', NULL, '2023-05-01 10:51:18', '2023-05-01 10:51:18'),
+('DC16829302515891', 'Nigar', 'asdasda', 'asdas@gmail.com', 'Aadhar Card', 'asdasda', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:07:46', '2023-05-01 11:07:46'),
+('DC16829306785520', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Passport', 'khib', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:14:53', '2023-05-01 11:14:53'),
+('DC16829308066572', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Scholarships', 'xcxcz', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:17:17', '2023-05-01 11:17:17'),
+('DC16829428457548', 'Nigar', '8951775912', 'nigar@gmail.com', 'Agreement Paper', 'not avaialblel', 'No', 'Not Available', 'No', NULL, '2023-05-01 14:37:52', '2023-05-01 14:37:52'),
+('DC16829469134217', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Aadhar Card', 'i want the aadhar service for correction ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:18', '2023-05-01 15:47:18'),
+('DC1682947053226', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Agreement Paper', 'thank you for creating this ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:54', '2023-05-01 15:47:54');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -5855,7 +5889,9 @@ CREATE TABLE `password_resets` (
 --
 
 INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
-('mdrizwan.blr05@gmail.com', '$2y$10$uO7xR0tE3tMLVRpnwM09VeuSXcxCdJ34JN5Qd30V6tY0Cm46cBmtm', '2022-07-05 23:45:25');
+('mdrizwan.blr05@gmail.com', '$2y$10$uO7xR0tE3tMLVRpnwM09VeuSXcxCdJ34JN5Qd30V6tY0Cm46cBmtm', '2022-07-05 23:45:25'),
+('nigarsp@gmail.com', '$2y$10$SHhxb4JBJocYC49hPFbyUe0GB99HUUzTHWrHL6eyLCZzGnuYR/lwK', '2023-05-05 03:11:36'),
+('salman@gmail.com', '$2y$10$MdrEF44dQL7RQMfKfBghi.sZR7qA2SWJ55czbJr.8DO0imprjzV1m', '2023-05-05 05:49:48');
 
 -- --------------------------------------------------------
 
@@ -6154,6 +6190,7 @@ CREATE TABLE `users` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `username` varchar(255) DEFAULT NULL,
+  `role` varchar(50) NOT NULL DEFAULT 'user',
   `mobile_no` varchar(250) DEFAULT NULL,
   `dob` date DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
@@ -6167,11 +6204,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `username`, `mobile_no`, `dob`, `address`, `profile_image`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Md Rizwan', 'mdrizwan.blr@yahoo.com', '2022-07-05 23:07:21', '$2y$10$fuIKsYRvdTzXoEprJUX8WeIUs4F7SV5QWZi1VYfH0Bzb8nyErKBKS', '	\nBeingrizz', NULL, NULL, NULL, NULL, 'jTjpaAEABD83NEEqyfJFV8ztEPGnJALIGYx1fNGkYMeKcVIiICBNBsLwbrzB', '2022-07-05 22:34:54', '2022-07-06 03:51:48'),
-(2, 'Md Rizwan', 'mdrizwan.blrs05@gmail.com', '2022-07-05 23:32:00', '$2y$10$WuiD5r0j0qcEk.zUs.iRSeL13njgmsBSGRnHVLqaYhjWwp/PY2fzW', 'Beingriz', '8951775912', '1993-12-02', '# 1386, SMV Layout 4th Block, Chikkabasthi, Bangalore 560056', 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', 'M8ksYCRmlGO1bIwlRDxuxaFJZM7bjatZWaaDXGtBtDBI3EEYReQy9D6tNnTi', '2022-07-05 23:31:42', '2022-07-12 21:53:22'),
-(3, 'Salmam', 'salman@gmail.com', '2022-07-06 03:07:21', '$2y$10$nOLI.aAnZPADDqc7zOkc0.lj6MECUnau5iuh0p8X1/XXfZYl/27r6', 'Beingsalman', NULL, NULL, NULL, NULL, NULL, '2022-07-06 03:07:09', '2022-07-06 03:07:21'),
-(4, 'Nigar sultana', 'nigarsp@gmail.com', '2022-07-06 08:02:18', '$2y$10$3qnHhbwUv4zsITLZAHTZ1OAtEY5ATpTe6O99g9iBbP/V3Un3uRnr2', 'Nigar', '9066683291', '1994-12-05', NULL, NULL, NULL, '2022-07-06 07:59:08', '2022-07-06 08:02:18');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `username`, `role`, `mobile_no`, `dob`, `address`, `profile_image`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Md Rizwan', 'mdrizwan.blr@yahoo.com', '2022-07-05 23:07:21', '$2y$10$fuIKsYRvdTzXoEprJUX8WeIUs4F7SV5QWZi1VYfH0Bzb8nyErKBKS', '	\nBeingrizz', 'user', NULL, NULL, NULL, NULL, 'jTjpaAEABD83NEEqyfJFV8ztEPGnJALIGYx1fNGkYMeKcVIiICBNBsLwbrzB', '2022-07-05 22:34:54', '2022-07-06 03:51:48'),
+(2, 'Md Rizwan', 'mdrizwan.blrs05@gmail.com', '2022-07-05 23:32:00', '$2y$10$WuiD5r0j0qcEk.zUs.iRSeL13njgmsBSGRnHVLqaYhjWwp/PY2fzW', 'Beingriz', 'admin', '8951775912', '1993-12-02', '# 1386, SMV Layout 4th Block, Chikkabasthi, Bangalore 560056', 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', 'vfVg5f7qaTivw8arnf3VycNBsqVdcTr0awKDpseIHp71aerjeC8zocffPPp0', '2022-07-05 23:31:42', '2022-07-12 21:53:22'),
+(3, 'Salmam', 'salman@gmail.com', '2022-07-06 03:07:21', '$2y$10$nOLI.aAnZPADDqc7zOkc0.lj6MECUnau5iuh0p8X1/XXfZYl/27r6', 'Beingsalman', 'user', NULL, NULL, NULL, 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', NULL, '2022-07-06 03:07:09', '2022-07-06 03:07:21'),
+(4, 'Nigar sultana', 'nigarsp@gmail.com', '2022-07-06 08:02:18', '$2y$10$3qnHhbwUv4zsITLZAHTZ1OAtEY5ATpTe6O99g9iBbP/V3Un3uRnr2', 'Nigar', 'user', '9066683291', '1994-12-05', NULL, NULL, NULL, '2022-07-06 07:59:08', '2022-07-06 08:02:18'),
+(5, 'Md Rizwan', 'digitalcyber.irctc2@gmail.com', NULL, '$2y$10$ch0S2NexaWjXh3ccsQVHO.S1crcUQZDdUtY.Kw2pSFxsACSUGyR3u', 'Nigarr', 'admin', '8951775913', NULL, NULL, NULL, NULL, '2023-05-05 04:40:45', '2023-05-05 04:40:45'),
+(6, 'Salman', 'salmann@gmail.com', NULL, '$2y$10$eKT0Tfb5m.JO8e2esMYQVeB1bvI0TV9nEqaAIR60KRr3X0JiLENfS', 'salman', 'user', '8892719056', NULL, NULL, 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', NULL, '2023-05-05 04:44:54', '2023-05-05 04:44:54'),
+(7, 'Nigar', 'nigar@gmail.com', NULL, '$2y$10$fbTyNwbMYOPLEkvQGuuQgOl9LNGtLh7YNMYI.BJqAVtbgyxhgyqeq', 'nigu', 'user', '9066673291', NULL, NULL, NULL, NULL, '2023-05-05 04:49:14', '2023-05-05 04:49:14');
 
 -- --------------------------------------------------------
 
@@ -6291,6 +6331,12 @@ ALTER TABLE `document_files`
 ALTER TABLE `document_list`
   ADD PRIMARY KEY (`Id`),
   ADD UNIQUE KEY `Sl_No` (`Sl_No`);
+
+--
+-- Indexes for table `enquiry_form`
+--
+ALTER TABLE `enquiry_form`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -6464,7 +6510,7 @@ ALTER TABLE `sub_service_list`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
