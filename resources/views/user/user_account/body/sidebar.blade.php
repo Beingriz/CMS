@@ -34,11 +34,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('Dashboard')}}" >
+                    <a href="{{route('service.list')}}" >
                         <i class="ri-lock-unlock-line align-middle me-1"></i>
-                        <span>Services</span>
+                        <span>All Services</span>
                     </a>
                 </li>
+
                 {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-mail-send-line"></i>
@@ -60,7 +61,9 @@
                         <span>Services</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('new_application')}}">New Application</a></li>
+                        @foreach ($service_list as $item)
+                        <li><a href="{{route('serv.details',$item->Id)}}">{{$item->Name}}</a></li>
+                        @endforeach
                         <li> <a href="{{route('update_application')}}">Update</a></li>
 
 

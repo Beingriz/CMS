@@ -131,7 +131,7 @@
                     <a class="dropdown-item" href="{{route('user.home',Auth::user()->id)}}"><i class="ri-dashboard-line"></i> Home</a>
                     <a class="dropdown-item" href="{{route('view.profile')}}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
                     <a class="dropdown-item" href="{{route('history',Auth::user()->mobile_no)}}"><i class="ri-lock-unlock-line align-middle me-1"></i> My Orders</a>
-                    <a class="dropdown-item d-block" href="{{route('services')}}"><span class="badge bg-success float-end mt-1">{{$services_count}}</span><i class="ri-settings-2-line align-middle me-1"></i> Services</a>
+                    <a class="dropdown-item d-block" href="{{route('service.list')}}"><span class="badge bg-success float-end mt-1">{{$services_count}}</span><i class="ri-settings-2-line align-middle me-1"></i> Services</a>
                     <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i>Change Password</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="{{ route('admin.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>

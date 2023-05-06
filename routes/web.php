@@ -54,6 +54,9 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/view/profile','ViewProfile')->name('view.profile');
         Route::get('/service/history/{mobile_no}','MyServiceHistory')->name('history');
         Route::get('/eidt/profile','EditProfile')->name('edit.profile');
+        Route::get('/about/company','About')->name('about.us');
+        Route::get('/serivce/list','ServiceList')->name('service.list');
+        Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
 
     });
 });

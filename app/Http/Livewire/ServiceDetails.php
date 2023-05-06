@@ -7,21 +7,25 @@ use App\Models\DocumentList;
 use App\Models\MainServices;
 use App\Models\SubServices;
 use App\Models\UserTopBar;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ServiceDetails extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $Id,$SubServices,$Company_Name,$ServiceName,$display=false,$getId,$show=false;
     public function mount($Id)
     {
         # code...
         $this->Id = $Id;
     }
-    public $serviceName,$delivered;
+    public $serviceName,$delivered,$Image,$docList;
     public function GetDetails($Id){
         $this->display=true;
         $this->getId = $Id;
-        $this->show = false;
+        $this->showDoc = false;
         $subservices = SubServices::where('Id',$Id)->get();
         foreach($subservices as $key){
             $this->serviceName = $key['Name'];
@@ -29,13 +33,36 @@ class ServiceDetails extends Component
 
         $this->delivered = Application::where('Application_Type',$this->serviceName)->where('Status','Delivered to Client')->get()->count();
     }
-    public $documents,$sl=1;
-    public function Documents($Id){
-        $this->show = true;
-        $this->documents = DocumentList::where('Sub_Service_Id',$Id)->get();
+    public $sl=1,$showDoc = false,$docId='DCA001';
+    public function GetDocuments($Id){
+        $this->showDoc = true;
+        $this->docId = $Id;
+        $this->display=false;
     }
+    public function GetImage()
+    {
+        $serviceName = MainServices::where('Id',$this->Id)->get();
+        foreach($serviceName as $key){
+            $this->Image = $key['Thumbnail'];
+            if (Storage::disk('public')->exists($this->Image)) // Check for existing File
+            {
+                $this->Image = $key['Thumbnail'];
+            }
+            else{
+
+                $this->Image = "Not Available";
+            }
+        }
+    }
+    // public function GetDocuments($Id)
+    // {
+    //     # code...Displying List of Documents Required
+    //     $this->docList=DocumentList::where('ServiceId',$Id)->get();
+
+    // }
     public function render()
     {
+        $this->GetImage();
         $records = UserTopBar::Where('Selected','Yes')->get();
         foreach($records as $key){
             $this->Company_Name = $key['Company_Name'];
@@ -45,7 +72,8 @@ class ServiceDetails extends Component
             $this->ServiceName = $key['Name'];
         }
         $subservices = SubServices::where('Service_Id',$this->Id)->get();
+        $documents= DocumentList::where('Sub_Service_Id',$this->docId)->paginate(10);
         $this->SubServices = SubServices::Where('Id',$this->getId)->get();
-        return view('livewire.service-details',compact('subservices','records'),['ServiceName',$this->ServiceName]);
+        return view('livewire.service-details',compact('subservices','records','documents'),['ServiceName',$this->ServiceName]);
     }
 }
