@@ -28,14 +28,20 @@ use Illuminate\Support\Facades\Auth;
 // });
 
 // Admin Routes
+Route::middleware('auth','auth.role:admin')->group(function(){
+    Route::controller(AdminController::class)->group(function(){
+        Route::get('/dashboard','AdminDashboard')->name('dashboard');
+        Route::get('/admin/logout', 'destroy')->name('admin.logout');
+        Route::get('/admin/profile_view', 'ProfileView')->name('admin.profile_view');
+        Route::get('/admin/change_password', 'ChangePassword')->name('change_password');
+        Route::get('/add/services', 'AddServices')->name('add_services');
+        Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
+        Route::get('/carousel','Carousel')->name('carousel');
+        Route::get('/abous_us','AboutUs')->name('about_us');
+    });
+});
 Route::controller(AdminController::class)->group(function(){
- Route::get('/admin/logout', 'destroy')->name('admin.logout');
- Route::get('/admin/profile_view', 'ProfileView')->middleware(['auth'])->name('admin.profile_view');
- Route::get('/admin/change_password', 'ChangePassword')->middleware(['auth'])->name('change_password');
- Route::get('/add/services', 'AddServices')->middleware(['auth'])->name('add_services');
- Route::get('/usertopbar', 'UserTopBar')->middleware(['auth'])->name('user_top_bar');
- Route::get('/carousel','Carousel')->middleware(['auth'])->name('carousel');
- Route::get('/abous_us','AboutUs')->middleware(['auth'])->name('about_us');
+    Route::get('/admin/logout', 'destroy')->name('admin.logout');
 });
 
 
@@ -44,6 +50,14 @@ Route::controller(AdminController::class)->group(function(){
 Route::middleware('auth','auth.role:user')->group(function(){
     Route::controller(UserController::class)->group(function(){
         Route::get('/user/dashboard','UserDashboard')->name('user.dashboard');
+        Route::get('/user/home/{id}','UserHome')->name('user.home');
+        Route::get('/view/profile','ViewProfile')->name('view.profile');
+        Route::get('/service/history/{mobile_no}','MyServiceHistory')->name('history');
+        Route::get('/eidt/profile','EditProfile')->name('edit.profile');
+        Route::get('/about/company','About')->name('about.us');
+        Route::get('/serivce/list','ServiceList')->name('service.list');
+        Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
+        Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
 
     });
 });
@@ -51,7 +65,7 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/','Home')->name('User-Home');
     Route::get('/','HomeIndex')->name('home');
     Route::get('/contact_us','ContactUs')->name('contact_us');
-    Route::get('/about_us','AboutUS')->name('about_us');
+    Route::get('/about_us','AboutUS')->name('aboutus');
     Route::get('/services','Services')->name('services');
     Route::get('/teams','Teams')->name('teams');
     Route::get('/testimonials','Testimonials')->name('testimonials');
@@ -62,11 +76,12 @@ Route::controller(UserController::class)->group(function(){
 
 
 // Application  Routes start
+Route::middleware('auth','auth.role:admin')->group(function(){
 Route::controller(ApplicationController::class)->group(function(){
     Route::get('app_home', 'Home')->middleware(['auth'])->name('App_Dashboard');
     Route::get('app_home', 'Dashboard')->middleware(['auth'])->name('Dashboard');
     Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->middleware(['auth'])->name('DynamicDashboard');
-    Route::get('new/application', 'index')->middleware(['auth'])->name('new_application');
+    Route::get('new/application', 'index')->middleware(['auth','auth.role:admin'])->name('new_application');
     Route::get('update/application', 'updateApplication')->middleware(['auth'])->name('update_application');
     Route::get('edit/application/{id}', 'Edit')->middleware(['auth'])->name('edit_application');
     Route::get('download/docs/{id}', 'Download_Files')->middleware(['auth'])->name('download_documents');
@@ -78,6 +93,7 @@ Route::controller(ApplicationController::class)->group(function(){
     Route::get('bookmarks', 'Bookmarks')->middleware(['auth'])->name('Bookmarks');
     Route::get('global/search/{key}', 'GlobalSearch')->middleware(['auth'])->name('global_search');
     Route::get('edit/profile/{id}', 'EditProfile')->middleware(['auth'])->name('edit_profile');
+});
 });
 
 Route::controller(CreditEntry::class)->group(function(){
@@ -113,8 +129,8 @@ Route::controller(CreditEntry::class)->group(function(){
 // Route::post('signup', [SignupController::class,'Save']);
 
 
-Route::get('/dashboard', function () {
-    return view('admin.index');
-})->middleware(['auth','auth.role:admin'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('admin.index');
+// })->middleware(['auth','auth.role:admin'])->name('dashboard');
 
 require __DIR__.'/auth.php';

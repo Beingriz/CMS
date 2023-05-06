@@ -58,10 +58,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{Auth::user()->name}}</a>
                         <div class="dropdown-menu fade-up m-0">
                             {{-- <a href="{{route('features')}}" class="dropdown-item">Feature</a> --}}
-                            <a href="#" class="dropdown-item">View Profile</a>
-                            <a href="#" class="dropdown-item">My History</a>
-                            <a href="#" class="dropdown-item">Track</a>
-                            <a href="#" class="dropdown-item">Review</a>
+                            <a href="{{route('user.home',Auth::user()->id)}}" class="dropdown-item">My Account</a>
                             <a href="{{route('admin.logout')}}" class="dropdown-item">Logout</a>
 
                         </div>

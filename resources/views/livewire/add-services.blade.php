@@ -94,7 +94,7 @@
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Description</label>
                             <div class="col-sm-10">
                                 <textarea id="Description" wire:model="Description" name="Description" class="form-control"
-                                    placeholder="Service Description" rows="3" maxlength="150" resize="none"></textarea>
+                                    placeholder="Service Description" rows="3" ></textarea>
                                             <span class="error">@error('Description'){{$message}}@enderror</span>
                             </div>
                         </div>
@@ -217,7 +217,7 @@
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Description</label>
                             <div class="col-sm-10">
                                 <textarea id="Description" wire:model="Description" name="Description" class="form-control"
-                                    placeholder="Service Description" rows="3" maxlength="150" resize="none"></textarea>
+                                    placeholder="Service Description" rows="3" ></textarea>
                                     <span class="error">@error('Description'){{$message}}@enderror</span>
                             </div>
                         </div>

@@ -29,6 +29,10 @@ class AdminController extends Controller
         $services = MainServices::where('Service_Type','Public')->get();
         return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
+    public function AdminDashboard(){
+        return view('admin.index');
+
+    }
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
@@ -59,17 +63,17 @@ class AdminController extends Controller
     }
     public function UserTopBar()
     {
-        return view('user.user_dashboard.topbar');
+        return view('user.admin_forms.header_footer_form');
     }
     public function Carousel()
     {
         # code...
-        return view('user.user_dashboard.carousel');
+        return view('user.admin_forms.carousel_form');
     }
     public function AboutUs()
     {
         # code...
-        return view('user.user_dashboard.about_us');
+        return view('user.admin_forms.about_us_form');
     }
     public function ContactUs()
     {
