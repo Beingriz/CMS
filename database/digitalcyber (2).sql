@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2023 at 10:08 AM
+-- Generation Time: May 06, 2023 at 06:40 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -46,6 +46,28 @@ CREATE TABLE `about_us` (
 INSERT INTO `about_us` (`Id`, `Tittle`, `Description`, `Total_Clients`, `Image`, `Delivered`, `Selected`, `created_at`, `updated_at`) VALUES
 ('AU1682682051', 'About Us', 'At DIGITAL CYBER, we are more than just a cyber cafe. We are a team of dedicated professionals committed to providing convenient and efficient government-related services to our customers. Our mission is to make it easier for individuals to access and complete government paperwork by providing a one-stop-shop for all their needs.', '1658', 'About Us//AboutUs About Us_1682682178.jpg', '412', 'No', '2023-04-28 19:42:58', '2023-04-28 19:42:58'),
 ('AU1682685601', 'More About Us', 'At DIGITAL CYBER, we are more than just a cyber cafe. We are a team of dedicated professionals committed to providing convenient and efficient government-related services to our customers. Our mission is to make it easier for individuals to access and complete government paperwork by providing a one-stop-shop for all their needs.', '1658', 'AboutUS//AboutUSMore About Us_1682685749.jpg', '412', 'Yes', '2023-04-28 20:41:38', '2023-04-28 20:41:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `applynow`
+--
+
+CREATE TABLE `applynow` (
+  `Id` varchar(225) NOT NULL,
+  `Service` varchar(225) NOT NULL,
+  `Service_Type` varchar(225) NOT NULL,
+  `Name` varchar(225) NOT NULL,
+  `App_MobileNo` varchar(225) NOT NULL,
+  `Mobile_No` varchar(225) NOT NULL,
+  `Father_Name` varchar(225) NOT NULL,
+  `Dob` date NOT NULL,
+  `Message` varchar(1000) NOT NULL,
+  `File` varchar(500) NOT NULL,
+  `Consent` varchar(1000) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4774,7 +4796,7 @@ INSERT INTO `digital_cyber_db` (`Id`, `Client_Id`, `Received_Date`, `Name`, `Gen
 ('971', 'DC2121845737', '2021-08-31', 'NOORUL AEIN', NULL, '', '2005-08-04', '9964727975', 'Scholarships', 'Post Metric Scholarship', '2021-08-31', 125, 125, 0, 'Cash', 'Not Available', 'Received', 'KA202122000035465', 'Not Available', 'KA202122000035465', 'Not Available', 'Not Available', '2021-08-31', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('972', 'DC2121461524', '2021-08-31', 'HUMERA SADIYA', NULL, '', '2003-09-30', '9686351251', 'Scholarships', 'Post Metric Scholarship', '2021-08-31', 125, 125, 0, 'Cash', 'Not Available', 'Under Process', 'KA202122000274204', 'Not Available', 'KA202122000274204', 'Not Available', 'Not Available', '2021-09-05', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('973', 'DC2121831167', '2021-08-31', 'SYED ABDUL MATHEEN', NULL, '', '2009-03-01', '7338141495', 'Scholarships', 'Pre Metric Scholarship', '2021-08-31', 100, 100, 0, 'Cash', 'Not Available', 'Received', 'KA202122000275411', 'Not Available', 'KA202122000275411', 'Not Available', 'Not Available', '2021-08-31', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
-('974', 'DC2121439786', '2021-08-31', 'UME HAFZA', NULL, '', '2008-11-26', '9886617871', 'Aadhar Card', 'Aadhar Download', '2021-08-31', 150, 150, 0, 'Cash', 'Not Available', 'Under Process', '78147000', 'Not Available', '5.96E+11', 'Not Available', 'Not Available', '2021-08-31', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
+('974', 'DC2121439786', '2021-08-31', 'UME HAFZA', NULL, '', '2008-11-26', '9886617871', 'Aadhar Card', 'Smart Card', '2021-08-31', 150, 150, 0, 'Cash', 'Not Available', 'Under Process', '78147000', 'Not Available', '5.96E+11', 'Not Available', 'Not Available', '2021-08-31', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('975', 'DC2121252136', '2021-08-31', 'ISHAQ AHMED', NULL, '', '2010-05-12', '9742717292', 'Pan Card', 'New Pan', '2021-08-31', 350, 350, 0, 'Cash', 'Not Available', 'Pan Alloted', 'G049166920', 'Not Available', 'EFYPA2191P', 'Not Available', 'Not Available', '2021-09-05', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('976', 'DC2121675641', '2021-09-02', 'MOHAMMED', NULL, '', '0976-01-01', '900658362', 'Train Reservation', '2S Seating Coach', '2021-09-02', 100, 100, 0, 'Cash', 'Not Available', 'Received', 'NOT AVAILABLE', 'Not Available', 'NOT AVAILABLE', 'Not Available', 'Not Available', '2021-09-02', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('977', 'DC2121608093', '2021-09-02', 'AYUB KHAN', NULL, '', '1980-01-01', '9945844575', 'Agreement Paper', 'House Renatal Agreement ', '2021-09-02', 200, 200, 0, 'Cash', 'Not Available', 'Received', 'NOT AVAILABLE', 'Not Available', 'NOT AVAILABLE ', 'Not Available', 'Not Available', '2021-09-02', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
@@ -5498,8 +5520,8 @@ INSERT INTO `digital_cyber_db` (`Id`, `Client_Id`, `Received_Date`, `Name`, `Gen
 ('DCA20221658584206', 'DC2020987678', '2022-07-23', 'Md Rizwan', 'Male', 'Final Testing', '2022-07-23', '8951775912', 'Agreement Paper', 'Shop Lease Agreement ', '2022-09-09', 250, 250, 0, 'Cash', 'Not Available', 'Delivered to Client ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Client_DB/Md Rizwan_DC2020987678/Md Rizwan/Photo/ProfileMd Rizwan_1662716730.jpg', '2022-09-09', 'No', 'Yes', '2022-07-25 10:07:14', '2022-09-09 12:15:30'),
 ('DCA20221658584475', 'DC1628614604', '2022-07-23', 'Salman Khan', NULL, NULL, '2022-07-30', '9342404759', 'Aadhar Card', 'Address Correction', NULL, 100, 100, 0, 'Cash', 'Not Available', 'Received', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'No', 'Yes', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('DCA20221658743561', 'DC2020987678', '2022-07-25', 'Rizwan', 'Male', 'Khan', '2022-07-04', '8951775912', 'Aadhar Card', 'DOB Correction', '2022-08-08', 110, 10, 100, 'Cash', 'Not Available', 'Submitted ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', '2022-08-08', 'No', 'Yes', '2022-07-25 10:08:26', '2022-07-25 10:08:26'),
-('DCA20221658746242', 'DC2020987678', '2022-07-25', 'SHATAJ', 'Male', 'Sasdsa', '2024-06-05', '8951775912', 'APL Ration Card', 'Correction  ', NULL, 100, 20, 80, 'Google Pay', 'Not Available', 'Pan Alloted ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'No', 'Yes', '2022-07-25 10:52:06', '2022-07-25 10:52:06'),
-('DCA20221658746428', 'DC2020987678', '2022-07-25', 'Salman', 'Male', 'Khan', '2022-07-29', '8951775912', 'Aadhar Card', 'Aadhar Download', '2023-02-27', 10, 2, 8, 'Cash', 'Not Available', 'Delivered to Client ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Client_DB/Salman_DC2020987678/Salman/Photo/ProfileSalman_1677509960.jpg', '2023-02-27', 'No', 'Yes', '2022-07-25 10:55:12', '2023-02-27 17:29:20'),
+('DCA20221658746242', 'DC2020987678', '2022-07-25', 'SHATAJ', 'Male', 'Sasdsa', '2024-06-05', '8951775912', 'APL Ration Card', 'Correction Application', NULL, 100, 20, 80, 'Google Pay', 'Not Available', 'Pan Alloted ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'No', 'Yes', '2022-07-25 10:52:06', '2022-07-25 10:52:06'),
+('DCA20221658746428', 'DC2020987678', '2022-07-25', 'Salman', 'Male', 'Khan', '2022-07-29', '8951775912', 'Aadhar Card', 'Smart Card', '2023-02-27', 10, 2, 8, 'Cash', 'Not Available', 'Delivered to Client ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Client_DB/Salman_DC2020987678/Salman/Photo/ProfileSalman_1677509960.jpg', '2023-02-27', 'No', 'Yes', '2022-07-25 10:55:12', '2023-02-27 17:29:20'),
 ('DCA20221658746885', 'DC2020987678', '2022-07-25', 'Salman Khan', 'Male', 'Rizwan', '1993-12-07', '8951775912', 'Aadhar Card', 'Address Correction', NULL, 10, 1, 9, 'Cash', 'Not Available', 'Received ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'No', 'Yes', '2022-07-25 11:02:36', '2022-07-25 11:02:36'),
 ('DCA20221658746956', 'DC2020987678', '2022-07-25', 'Salman Khan', 'Male', 'Rizwan', '1995-08-19', '8951775912', 'Aadhar Card', 'Address Correction', NULL, 100, 10, 90, 'Phone Pe', 'Not Available', 'Received ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', NULL, 'No', 'Yes', '2022-07-25 11:04:18', '2022-07-25 11:04:18'),
 ('DCA20221658747127', 'DC1628612961', '2022-07-25', 'Nigar Sultana', 'Female', 'Md Rizwan', '1993-07-18', '9066673291', 'Aadhar Card', 'Name Correction', '2023-01-13', 250, 100, 150, 'Phone Pe', 'Client_DB/Nigar Sultana_DC1628612961/Nigar Sultana/Aadhar Card/Name Correction/PR_Phone Pe_1673616718.png', 'Delivered to Client ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Client_DB/Nigar Sultana_DC1628612961/Nigar Sultana/Photo/ProfileNigar Sultana_1673616718.png', '2023-01-13', 'No', 'Yes', '2022-07-25 11:10:42', '2023-01-13 16:01:58'),
@@ -6092,7 +6114,7 @@ CREATE TABLE `sub_service_list` (
   `Id` varchar(50) NOT NULL,
   `Name` varchar(250) NOT NULL,
   `Service_Type` varchar(50) DEFAULT NULL,
-  `Description` varchar(200) DEFAULT NULL,
+  `Description` varchar(500) DEFAULT NULL,
   `Unit_Price` int(50) NOT NULL,
   `Service_Fee` varchar(250) DEFAULT NULL,
   `Total_Count` int(50) DEFAULT NULL,
@@ -6108,19 +6130,19 @@ CREATE TABLE `sub_service_list` (
 --
 
 INSERT INTO `sub_service_list` (`Sl_No`, `Service_Id`, `Id`, `Name`, `Service_Type`, `Description`, `Unit_Price`, `Service_Fee`, `Total_Count`, `Total_Amount`, `Thumbnail`, `Recycle_Bin`, `updated_at`, `created_at`) VALUES
-(75, 'DCAC001', 'DC16KW', 'Aadhar Download', 'Public', '', 100, '0', 2, NULL, 'Thumbnails/Services/Aadhar Download/SS_Aadhar Download_1660362936.png', 'No', '2022-08-11 18:18:55', '2022-08-11 18:18:55'),
+(75, 'DCAC001', 'DC16KW', 'Smart Card', 'Public', 'The Aadhaar Smart Card is a physical card that contains an individual\'s Aadhaar details in a chip format. It serves as a convenient way to carry and present your Aadhaar information when required, without having to carry your original Aadhaar card. The card is available to anyone who has an Aadhaar number and can be ordered online through the UIDAI website or from authorized centers.', 150, '50', 2, NULL, 'Thumbnails/Services/Smart Card/SS_Smart Card_1683385058.jpg', 'No', '2022-08-11 18:18:55', '2022-08-11 18:18:55'),
 (71, 'DC81PFL', 'DC41UXQ', 'New Applicaiton', 'Public', 'As a part of decentralisation through the Indian Constitutional Amendment Act 1993, the implementation of Widow Pension, which were handled by the Soc', 200, NULL, 0, NULL, NULL, 'No', '2021-10-03 00:10:22', '2021-10-03 00:10:22'),
-(1, 'DCAC001', 'DCAC01', 'Name Correction', 'Public', '', 200, NULL, 10, 0, 'Thumbnails/Services/Name Correction/MS_Name Correction_1660311919.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(2, 'DCAC001', 'DCAC02', 'DOB Correction', 'Public', '', 250, '50', 10, 0, 'Thumbnails/Services/DOB Correction/SS_DOB Correction_1660314697.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(4, 'DCAC001', 'DCAC04', 'Father Name', 'Public', '', 250, '50', 0, 0, 'Thumbnails/Services/Father Name/SS_Father Name_1660314743.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(5, 'DCAC001', 'DCAC05', 'Address Correction', 'Public', '', 250, '50', 76, 0, 'Thumbnails/Services/Address Correction/SS_Address Correction_1660314759.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(1, 'DCAC001', 'DCAC01', 'Name Correction', 'Public', 'Correcting your name in documents is an essential task that should not be taken lightly. Whether you\'ve recently changed your name due to marriage, divorce, or personal reasons, or your name has been misspelled or incorrectly recorded in official documents, it\'s important to take the necessary steps to ensure that your name is accurately reflected in all your important paperwork.', 200, '50', 10, 0, 'Thumbnails/Services/Name Correction/SS_Name Correction_1683384363.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(2, 'DCAC001', 'DCAC02', 'DOB Correction', 'Public', 'Correcting your date of birth in documents is an important task that should not be ignored. Whether your date of birth was recorded incorrectly, or you need to update it due to legal or personal reasons, \n\nIt can result in delays or rejections in processing important applications, including passport and visa applications,', 250, '50', 10, 0, 'Thumbnails/Services/DOB Correction/SS_DOB Correction_1683384528.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(4, 'DCAC001', 'DCAC04', 'Father Name', 'Public', 'Correcting your father\'s name in Aadhaar, India\'s national identity card, is important for several reasons. Your Aadhaar card is a vital document that serves as proof of identity and is required for various government and private transactions. Any incorrect information on your Aadhaar card, including your father\'s name, can cause problems and delays in these transactions.', 250, '50', 0, 0, 'Thumbnails/Services/Father Name/SS_Father Name_1683384785.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(5, 'DCAC001', 'DCAC05', 'Address Correction', 'Public', 'Correcting your address in official documents is crucial for several reasons. Your address is an essential piece of information used to verify your identity and determine your eligibility for various government and private services. Any incorrect information on your address can cause problems and delays in these transactions.', 300, '50', 76, 0, 'Thumbnails/Services/Address Correction/SS_Address Correction_1683384900.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (6, 'DCAP006', 'DCAP01', 'House Renatal Agreement', NULL, NULL, 200, NULL, 78, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (7, 'DCAP006', 'DCAP02', 'Shop Renatal Agreement', NULL, NULL, 200, NULL, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (8, 'DCAP006', 'DCAP03', 'House Lease Agreement', NULL, NULL, 200, NULL, 13, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (9, 'DCAP006', 'DCAP04', 'Shop Lease Agreement', NULL, NULL, 200, NULL, 1, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(10, 'DCAPL005', 'DCAPL01', 'New Application', NULL, NULL, 0, NULL, 15, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(11, 'DCAPL005', 'DCAPL02', 'Correction ', NULL, NULL, 0, NULL, 1, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
-(12, 'DCAPL005', 'DCAPL03', 'Cancellation', NULL, NULL, 0, NULL, 1, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(10, 'DCAPL005', 'DCAPL01', 'New Application', '', '', 500, '0', 15, 0, 'Thumbnails/Services/New Application/SS_New Application_1683382236.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(11, 'DCAPL005', 'DCAPL02', 'Correction Application', 'Public', '', 250, '0', 1, 0, 'Thumbnails/Services/Correction Application/SS_Correction Application_1683382732.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
+(12, 'DCAPL005', 'DCAPL03', 'Cancellation Application', 'Public', '', 500, '0', 1, 0, 'Thumbnails/Services/Cancellation Appli/SS_Cancellation Appli_1683382771.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (13, 'DCBA009', 'DCBA01', 'State Bank of India', 'Public', 'We provide financial Services of State Bank of India as Customer Service Point, Where a Customer Can Deposit Cash, Withdraw Cash & Money Transfer', 300, NULL, 12, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (14, 'DCBA009', 'DCBA02', 'Canara', 'Public', 'Canara Bank Provides Online Account Opening Facility for Individuals, we at our Outlet  assist Customers to open an Account in Canara Bank. ', 200, NULL, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (15, 'DCBA009', 'DCBA03', 'Kotak', 'Public', 'Kotak Mahindra Bank Provides Online 811 Account Opening Facility for Individuals, we at our Outlet  assist to open an Account in Kotak Bank. ', 250, NULL, 0, 0, NULL, 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
@@ -6248,6 +6270,12 @@ INSERT INTO `user_top_bar` (`Id`, `Selected`, `Company_Name`, `Address`, `Phone_
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `applynow`
+--
+ALTER TABLE `applynow`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `balance_ledger`
