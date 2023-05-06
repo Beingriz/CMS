@@ -57,6 +57,7 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/about/company','About')->name('about.us');
         Route::get('/serivce/list','ServiceList')->name('service.list');
         Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
+        Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
 
     });
 });

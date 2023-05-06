@@ -152,5 +152,12 @@ class UserController extends Controller
         $aboutus = About_Us::where('Selected','Yes')->get();
         return view('user.user_account.pages.about-page',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list]);
     }
+    public function ApplyNow($Id)
+    {
+        $services = MainServices::where('Service_Type','Public')->get();
+        $aboutus = About_Us::where('Selected','Yes')->get();
+        return view('user.user_account.pages.apply_now_form',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id]);
+    }
+
 }
 

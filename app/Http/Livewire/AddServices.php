@@ -28,7 +28,7 @@ class AddServices extends Component
     protected $rules = [
         'Name' =>'required ',
         'Service_Type' =>'required',
-        'Description' =>'required|min:50 |max:100',
+        'Description' =>'required|min:50 |max:400',
         'Thumbnail' =>'image|max:1024',
     ];
 

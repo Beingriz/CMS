@@ -54,12 +54,7 @@ class ServiceDetails extends Component
             }
         }
     }
-    // public function GetDocuments($Id)
-    // {
-    //     # code...Displying List of Documents Required
-    //     $this->docList=DocumentList::where('ServiceId',$Id)->get();
 
-    // }
     public function render()
     {
         $this->GetImage();
