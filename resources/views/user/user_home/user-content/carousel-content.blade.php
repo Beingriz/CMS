@@ -14,11 +14,11 @@
                                 <h1 class="display-3 text-white animated slideInDown mb-4">{{$item['Tittle']}}</h1>
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">{{$item['Description']}}</p>
                                 @if (Auth::check())
-                                <a href="{{$item['Button1_Link']}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">{{$item['Button1_Name']}}</a>
-                                <a href="{{$item['Button2_Link']}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
+                                <a href="{{route('serv.details',$item['Service_Id'])}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Apply Now</a>
+                                <a href="{{route('callback',Auth::user()->id)}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
                                 @endif
-                                <a href="{{$item['Button1_Link']}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">{{$item['Button1_Name']}}</a>
-                                <a href="{{$item['Button2_Link']}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
+                                <a href="{{route('login')}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Apply Now</a>
+                                <a href="{{route('contact_us')}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
                             </div>
                         </div>
                     </div>

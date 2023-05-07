@@ -6,7 +6,10 @@
             <h1 class="display-3 text-white mb-3 animated slideInDown">{{$ServiceName}}</h1>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb">
+                    @if(Auth::check())
                     <li class="breadcrumb-item"><a class="text-white" href="{{route('user.home',Auth::user()->id)}}">Home</a></li>
+                    @endif
+                    <li class="breadcrumb-item"><a class="text-white" href="{{route('home')}}">Home</a></li>
                     <li class="breadcrumb-item"><a class="text-white" href="{{route('about.us')}}">About Us</a></li>
                     <li class="breadcrumb-item text-white active" aria-current="page">Services</li>
                 </ol>

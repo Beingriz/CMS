@@ -65,7 +65,7 @@
                     </div>
                     @else
                     <a href="{{route('home')}}" class="nav-item nav-link active">Home</a>
-                    <a href="{{route('about_us')}}" class="nav-item nav-link">About</a>
+                    <a href="{{route('aboutus')}}" class="nav-item nav-link">About</a>
                     <a href="{{route('services')}}" class="nav-item nav-link">Service</a>
                     <a href="{{route('contact_us')}}" class="nav-item nav-link">Contact</a>
                     <div class="nav-item dropdown">

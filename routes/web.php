@@ -71,7 +71,7 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/teams','Teams')->name('teams');
     Route::get('/testimonials','Testimonials')->name('testimonials');
     Route::get('/features','Feature')->name('features');
-    Route::get('/service{id}','ServiceDetails')->name('service.details');
+    Route::get('/service/{id}','ServiceDetails')->name('service.details');
 });
 
 

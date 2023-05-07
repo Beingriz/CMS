@@ -19,17 +19,11 @@ class CarouselForm extends Component
     protected $rules = [
         'Tittle' => 'Required|min:10|max:30',
         'Description'=>'Required |min:10|max:110',
-        'Button1_Name'=>'Required|min:5|max:10',
-        'Button1_Link'=>'Required',
-        'Button2_Link'=>'Required',
         'Image'=> 'required|file|mimes:jpeg,png|max:2048',
     ];
     protected $messages = [
         'Tittle' => 'Please Enter Catchy Tittle',
         'Description'=>'Description should be less than 50 characters',
-        'Button1_Name'=>'Buttone Name Cannot be blank',
-        'Button1_Link'=>'Buttone Link Cannot be blank',
-        'Button2_Link'=>'Buttone Link Cannot be blank',
         'Image'=>'Image  Cannot be empty',
     ];
 
@@ -49,9 +43,6 @@ class CarouselForm extends Component
         # code...
         $this->Tittle="";
         $this->Description="";
-        $this->Button1_Name="";
-        $this->Button1_Link="";
-        $this->Button2_Link="";
         $this->Image=NULL;
         $this->Update = 0;
 
@@ -63,10 +54,9 @@ class CarouselForm extends Component
         $save = new Carousel_DB();
         $save->Id = $this->Id;
         $save->Tittle = $this->Tittle;
+        $getId= MainServices::where('Name',$this->Tittle)->get();
         $save->Description = $this->Description;
-        $save->Button1_Name = $this->Button1_Name;
-        $save->Button1_Link = $this->Button1_Link;
-        $save->Button2_Link = $this->Button2_Link;
+        $save->Service_Id = $getId->Id;
         if(!empty($this->Image)){
             $extension = $this->Image->getClientOriginalExtension();
             $path = 'Carousel/';
