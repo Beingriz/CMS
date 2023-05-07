@@ -10,7 +10,7 @@ class ServiceHistory extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $MobileNo;
+    public $MobileNo,$service_count;
     public function mount($id)
     {
         $this->MobileNo = $id;
@@ -22,6 +22,7 @@ class ServiceHistory extends Component
     public function render()
     {
         $Services = Application::where('Mobile_No',$this->MobileNo)->paginate(10);
+        $this->service_count = Application::where('Mobile_No',$this->MobileNo)->count();
         return view('livewire.user.service-history',compact('Services'));
     }
 }

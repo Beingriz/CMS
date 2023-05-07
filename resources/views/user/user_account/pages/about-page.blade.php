@@ -10,7 +10,7 @@
             <h1 class="display-3 text-white mb-3 animated slideInDown">About Us</h1>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-white" href="{{route('home')}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="{{route('user.home',Auth::user()->id)}}">Home</a></li>
                     <li class="breadcrumb-item"><a class="text-white" href="{{route('service.list')}}">Services</a></li>
                     <li class="breadcrumb-item text-white active" aria-current="page">About</li>
                 </ol>

@@ -59,46 +59,36 @@
                     <!-- end row -->
                     <form wire:submit.prevent="Save">
 
+                    <!-- end row -->
                     <div class="row mb-3">
-                        <label for="Tittle" class="col-sm-3 col-form-label">Tittle </label>
+                        <label for="Tittle-url-input" class="col-sm-3 col-form-label">Tittle</label>
                         <div class="col-sm-9">
-                            <input class="form-control" type="text" placeholder="Tittle Name"  wire:model="Tittle" id="Tittle">
-                            <span class="error">@error('Tittle'){{$message}}@enderror</span>
+                            <select class="form-control" id="Service_Type" id="Tittle" wire:model="Tittle" name="Tittle">
+                                <option value="">---Select---</option>
+                                @foreach ($Services as $item)
+                                    <option value="{{$item->Name}}">{{$item->Name}}</option>
+                                @endforeach
+
+                            </select>
+                            <span class="error">@error('Service_Type'){{$message}}@enderror</span>
                         </div>
                     </div>
+
                     <!-- end row -->
                     <div class="row mb-3">
                         <label for="Description" class="col-sm-3 col-form-label">Description</label>
                         <div class="col-sm-9">
-                            <input class="form-control" type="text" placeholder="Description"  wire:model="Description" id="Description">
+                            <textarea class="form-control" placeholder="Description" rows="5" wire:model="Description" id="Description"></textarea>
                             <span class="error">@error('Description'){{$message}}@enderror</span>
                         </div>
                     </div>
                     <!-- end row -->
-                    <div class="row mb-3">
-                        <label for="Button1_Name" class="col-sm-3 col-form-label">View More</label>
-                        <div class="col-sm-4">
-                            <input class="form-control" type="text" placeholder="Name"  wire:model="Button1_Name" id="Button1_Name">
-                            <span class="error">@error('Button1_Name'){{$message}}@enderror</span>
-                        </div>
-                        <div class="col-sm-5">
-                            <input class="form-control" type="text" placeholder="Link"  wire:model="Button1_Link" id="Button1_Link">
-                            <span class="error">@error('Button1_Link'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    <!-- end row -->
-                    <div class="row mb-3">
-                        <label for="Button2_Link" class="col-sm-3 col-form-label">Call Back</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" placeholder="Link"  wire:model="Button2_Link" id="Button2_Link">
-                            <span class="error">@error('Button2_Link'){{$message}}@enderror</span>
-                        </div>
-                    </div>
+
                     <!-- end row -->
                       {{-- Profile Image --}}
                       <div class="row mb-3">
-                        <label for="Image" class="col-sm-2 col-form-label">Image</label>
-                        <div class="col-sm-10">
+                        <label for="Image" class="col-sm-3 col-form-label">Image</label>
+                        <div class="col-sm-9">
                             <input class="form-control" type="file" accept="image/jpeg, image/png" wire:model="Image" id="Image">
                             <span class="error">@error('Image'){{$message}}@enderror</span>
 
@@ -157,8 +147,7 @@
                                             <th>Sl_No</th>
                                             <th>Tittle</th>
                                             <th>Description</th>
-                                            <th>Name</th>
-                                            <th>Link</th>
+                                            <th>Banner</th>
                                             <th>Eidt</th>
                                         </tr>
                                     </thead>
@@ -168,10 +157,10 @@
                                             <td>{{$Sl++}}</td>
                                             <td>{{$key['Tittle']}}</td>
                                             <td>{{$key['Description']}}</td>
-                                            <td>{{$key['Button1_Name']}}</td>
-                                            <td>{{$key['Button2_Link']}}</td>
                                             <td>
-
+                                                <img class="avatar-sm"  src="{{url('storage/'.$key->Image)}}" alt="Banner"></td>
+                                            </td>
+                                            <td>
                                                 <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                                     <div class="btn-group" role="group">
                                                         <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

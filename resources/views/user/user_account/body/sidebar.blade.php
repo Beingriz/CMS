@@ -35,30 +35,14 @@
                 </li>
                 <li>
                     <a href="{{route('service.list')}}" >
-                        <i class="ri-lock-unlock-line align-middle me-1"></i>
+                        <i class="ri-profile-line"></i>
                         <span>All Services</span>
                     </a>
                 </li>
-
-                {{-- <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-mail-send-line"></i>
-                        <span>Services</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('new_application')}}">New Application</a></li>
-                        <li><a href="{{route('new_application')}}">Update</a></li>
-                        <li><a href="{{route('new_application')}}">Balance</a></li>
-                        <li><a href="{{route('new_application')}}">Reports</a></li>
-                        <li><a href="{{route('new_application')}}">Filter</a></li>
-                        <li><a href="{{route('new_application')}}">Delete</a></li>
-
-                    </ul>
-                </li> --}}
                 <li>
                     <a href="#" class="has-arrow waves-effect">
-                        <i class="ri-account-circle-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">2</span>
-                        <span>Services</span>
+                        <i class="ri-file-paper-2-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">{{$services_count}}</span>
+                        <span>List</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         @foreach ($service_list as $item)
@@ -70,66 +54,17 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-account-circle-line"></i>
-                        <span>Admin Controls</span>
+                    <a href="#" >
+                        <i class="ri-feedback-fill"></i>
+                        <span>Feedback</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        {{-- <li><a href="{{url('client_registration')}}">Clinet Registration</a></li> --}}
-                        <li> <a href="{{ route('add_services')}}">Services</a></li>
-                        {{-- <li><a href="{{ url('statusmodule')}}">Status</a></li> --}}
-                        <li><a href="{{url('bookmarks')}}">Bookmark</a></li>
-                        {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
-                    </ul>
                 </li>
-
-
-
-
-
-
-
-
-
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-layout-3-line"></i>
-                        <span>Ledger</span>
+                    <a href="{{route('admin.logout')}}" >
+                        <i class="ri-logout-circle-line"></i>
+                        <span>Logout</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="true">
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">Credit Book</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{route('Credit')}}">New Entry</a></li>
-                                <li><a href="{{ route('CreditSource')}}">Add Category</a></li>
-                                <li><a href="#">Report</a></li>
-                            </ul>
-                        </li>
-
-                        {{-- <li>
-                            <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{ url('debit_entry') }}">New Entry</a></li>
-                                <a href="{{ url('add_payment')  }}">Add Sources</a>
-                                <li><a href="#">Refort</a></li>
-                            </ul>
-                        </li> --}}
-                    </ul>
                 </li>
-
-                {{-- <li class="menu-title">Report</li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-account-circle-line"></i>
-                        <span>Clients</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#">New Clients</a></li>
-                        <li><a href="#">Old Clients</a></li>
-                        <li><a href="#">Repeated Clients</a></li>
-                    </ul>
-                </li> --}}
 
                 {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

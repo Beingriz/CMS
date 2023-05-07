@@ -37,8 +37,8 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{url('user.home',Auth::user()->id)}}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{url('services.list')}}">Services</a></li>
+            <li class="breadcrumb-item"><a href="{{route('user.home',Auth::user()->id)}}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{route('service.list')}}">Services</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 

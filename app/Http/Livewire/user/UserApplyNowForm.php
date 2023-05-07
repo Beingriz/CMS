@@ -29,7 +29,7 @@ class UserApplyNowForm extends Component
     }
     public function mount($Id)
     {
-        $this->App_Id = 'AN'.date('dd').time();
+        $this->App_Id = 'AN'.date('d-Y').rand(99,9999);
         $this->ServiceId = $Id;
         $this->Profile();
         $this->mobile = Auth::user()->mobile_no;
@@ -73,10 +73,10 @@ class UserApplyNowForm extends Component
         $apply->save();
         session()->flash('SuccessMsg', 'Application Submitted Successfully!');
         $notification = array(
-            'message'=>'Profile Updated Sucessfully',
+            'message'=>'Application Submitted Sucessfully',
             'info-type' => 'success'
         );
-        return redirect('user.home');
+        return redirect()->route('acknowledgment',$this->App_Id)->with($notification);
 
 
 

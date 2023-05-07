@@ -23,11 +23,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-// Route::get('/', function () {
-//     return view('user.index');
-// });
-
-// Admin Routes
+// Admin Authenticated Routes
 Route::middleware('auth','auth.role:admin')->group(function(){
     Route::controller(AdminController::class)->group(function(){
         Route::get('/dashboard','AdminDashboard')->name('dashboard');
@@ -45,7 +41,7 @@ Route::controller(AdminController::class)->group(function(){
 });
 
 
-//User Routes
+// User Authenticated Routes
 
 Route::middleware('auth','auth.role:user')->group(function(){
     Route::controller(UserController::class)->group(function(){
@@ -57,9 +53,13 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/about/company','About')->name('about.us');
         Route::get('/serivce/list','ServiceList')->name('service.list');
         Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
+        // Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
+    });
+});
+Route::middleware('auth','auth.role:user','prevent.back')->group(function(){
+    Route::controller(UserController::class)->group(function(){
         Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
         Route::get('/acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
-
     });
 });
 Route::controller(UserController::class)->group(function(){

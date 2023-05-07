@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\User;
 
 use App\Models\Carousel_DB;
+use App\Models\MainServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -13,7 +14,7 @@ class CarouselForm extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $Tittle,$Description,$Button1_Name,$Button1_Link,$Button2_Link,$Image,$Update,$Count,$Sl=1,$Id,$Old_Image,$New_Image;
+    public $Tittle,$Description,$Button1_Name,$Button1_Link,$Button2_Link,$Image,$Update,$Count,$Sl=1,$Id,$Old_Image,$New_Image,$Services,$Service_Id;
 
     protected $rules = [
         'Tittle' => 'Required|min:10|max:30',
@@ -84,10 +85,8 @@ class CarouselForm extends Component
         $fetch = Carousel_DB::find($Id);
         $this->Id = $Id;
         $this->Tittle = $fetch['Tittle'];
+        $this->Service_Id = $fetch['Service_Id'];
         $this->Description = $fetch['Description'];
-        $this->Button1_Name = $fetch['Button1_Name'];
-        $this->Button1_Link = $fetch['Button1_Link'];
-        $this->Button2_Link = $fetch['Button2_Link'];
         $this->Old_Image = $fetch['Image'];
         $this->Update=1;
 
@@ -162,6 +161,7 @@ class CarouselForm extends Component
     public function render()
     {
         $Records = Carousel_DB::all();
+        $this->Services = MainServices::where('Service_Type','Public')->get();
         return view('livewire.admin.user.carousel-form',compact('Records'));
     }
 

@@ -10,6 +10,7 @@ use App\Models\MainServices;
 use App\Models\User;
 use App\Models\UserTopBar;
 use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
@@ -48,7 +49,22 @@ class UserController extends Controller
         # code...
         $services = MainServices::where('Service_Type','Public')->get();
         $services_count = count($services);
-        return view('user.user_account.user_home',['services_count'=>$services_count,'service_list'=>$this->services_list]);
+        $registered_on = User::where('id',$Id)->latest('created_at')->first();
+        $reg_time =  Carbon::parse($registered_on['created_at'])->diffForHumans();
+        $applied = Application::where('Mobile_No',Auth::user()->mobile_no)->count();
+        $records = Application::where('Mobile_No',Auth::user()->mobile_no)->get();
+
+        $delivered = Application::where('Mobile_No',Auth::user()->mobile_no)
+                                ->where('Status','Deliveted to Client')->count();
+        $perc = ($delivered*100)/$applied ;
+        $perc = number_format($perc,2);
+        $bal=0;$paid=0;
+        foreach($records as $key)
+        {
+            $paid += $key['Amount_Paid'];
+            $bal += $key['Balance'];
+        }
+        return view('user.user_account.user_home',compact('services'),['services_count'=>$services_count,'service_list'=>$this->services_list,'reg_on'=>$reg_time,'Applied'=>$applied,'Delivered'=>$delivered,'perc'=>$perc,'bal'=>$bal,'paid'=>$paid]);
     }
     public function Home()
     {
@@ -158,11 +174,13 @@ class UserController extends Controller
         $aboutus = About_Us::where('Selected','Yes')->get();
         return view('user.user_account.pages.apply_now_form',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id]);
     }
+
     public function Acknowledgment($Id)
     {
         $services = MainServices::where('Service_Type','Public')->get();
         $aboutus = About_Us::where('Selected','Yes')->get();
-        return view('user.user_account.pages.ackmowledgment',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id]);
+        $date = Carbon::now();
+        return view('user.user_account.pages.ackmowledgment',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'App_Id'=>$Id,'date'=>$date]);
     }
 
 

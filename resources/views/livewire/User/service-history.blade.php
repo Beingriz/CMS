@@ -14,13 +14,25 @@
             </div>
         </div>
     </div>{{-- End of Row --}}
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">My Service History</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-white" href="{{route('user.home',Auth::user()->id)}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="{{route('service.list')}}">Services</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">My History</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
     <div class="row"> {{-- Start of Search Result Details Row --}}
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <h4 class="card-title">Search Result found. </h4>
+                        <h4 class="card-title"> {{$service_count}} Services Applied </h4>
                     </div>
 
                     <div class="table-responsive">
