@@ -52,11 +52,10 @@ class EnquiryForm extends Component
         $save->save();
 
         $notification = array(
-            'message'=>'Callback Request is Sent Seccessfully',
+            'message'=>$this->Name.' your Callback Request is Sent Seccessfully',
             'alert-type'=>'info'
         );
-
-        return redirect()->route('User-Home')->with($notification);
+        return redirect()->route('home')->with($notification);
 
     }
     public function Capitalize(){

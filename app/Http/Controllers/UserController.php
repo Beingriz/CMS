@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\About_Us;
 use App\Models\Application;
+use App\Models\Callback_Db;
 use App\Models\Carousel_DB;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
@@ -187,6 +188,23 @@ class UserController extends Controller
         $aboutus = About_Us::where('Selected','Yes')->get();
         $date = Carbon::now();
         return view('user.user_account.pages.ackmowledgment',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'App_Id'=>$Id,'date'=>$date]);
+    }
+    public function Callback($Id)
+    {
+        $user = User::findorFail($Id);
+        $time = Carbon::now();
+        $save = new Callback_Db();
+        $save['Id'] = 'CB'.$time->format('dmY:m:s');
+        $save['Client_Id'] = $user->id;
+        $save['Name'] = $user->name;
+        $save['Mobile_No'] = $user->mobile_no;
+        $save['Username'] = $user->username;
+        $save->save();
+        $notification = array([
+            'message'=>$user->name.' Callback Request sent! Thank you!.',
+            'alaert-type'=>'info',
+        ]);
+        return redirect()->route('user.dashboard')->with($notification);
     }
 
 

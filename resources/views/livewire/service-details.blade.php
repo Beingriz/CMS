@@ -26,9 +26,9 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         @if($Image == 'Not Available')
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ url('storage/no_image.jpg') }}" alt="">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ url('storage/no_image.jpg') }}" height="70px" width="70px" alt="">
                         @else
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{asset('storage/'.$item['Thumbnail'])}}" alt="">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{asset('storage/'.$item['Thumbnail'])}}"  height="70px" width="70px" alt="">
                         @endif
                         <div class="flex-grow-1">
                             <h5 class="mt-0 font-size-18 mb-1">{{$item['Name']}}</h5>
@@ -45,7 +45,7 @@
                                     <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('apply.now',$item->Id)}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="" data-bs-original-title="Submit" aria-label="@skypename"><i class="fas fa-arrow-right"></i></a>
+                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('callback',Auth::user()->id)}}" data-bs-original-title="Callback" aria-label="@skypename"><i class="fas fa-phone"></i></a>
                                 </li>
                             </ul>
 
@@ -128,8 +128,8 @@
                             </div>
                             <div class="p-lg-5 pe-lg-0">
                                 <a href="#showDoc" wire:click="GetDocuments('{{$item['Id']}}')" class="btn btn-primary py-3 px-3">View Documents</a>
-                                <a href="" class="btn btn-primary py-3 px-3">Apply Now</a>
-                                <a href="{{route('contact_us')}}" class="btn btn-primary py-3 px-3">Get Callback</a>
+                                <a href="{{route('apply.now',$item['Id'])}}" class="btn btn-primary py-3 px-3">Apply Now</a>
+                                <a href="{{route('callback',Auth::user()->id)}}" class="btn btn-primary py-3 px-3">Get Callback</a>
                             </div>
                     </div>
                 </div>
@@ -175,10 +175,6 @@
                                     </td>
                                 </tr>
                                 @endforelse
-
-
-
-
                             </tbody>
                         </table>
 
