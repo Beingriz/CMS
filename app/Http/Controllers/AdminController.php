@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\UserTopBar as ModelsUserTopBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -68,7 +68,8 @@ class AdminController extends Controller
     public function Carousel()
     {
         # code...
-        return view('user.admin_forms.carousel_form');
+        $Id ="";
+        return view('user.admin_forms.carousel_form',['EditData'=>$Id]);
     }
     public function AboutUs()
     {
@@ -80,4 +81,23 @@ class AdminController extends Controller
         # code...
         return view('user.user_dashboard.enquiry-form');
     }
+    public function DeleteCarousel($Id)
+    {
+        $getDetials = Carousel_DB::findorFail($Id);
+        $img = $getDetials->Image;
+
+        if (Storage::disk('public')->exists($img)) // Check for existing File
+        {
+            unlink(storage_path('app/public/'.$img)); // Deleting Existing File
+        }
+        Carousel_DB::where('Id',$Id)->delete();
+        $notification = array(
+            'message' =>'Deleted Succssfully',
+            'alert-type'  => 'info'
+        );
+        return redirect()->back()->with($notification);
+    }
+    public function EditCarousel($Id){
+        return view('user.admin_forms.carousel_form',['EditData'=>$Id]);
+    }//End Function
 }

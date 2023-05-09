@@ -16,9 +16,10 @@
                                 @if (Auth::check())
                                 <a href="{{route('serv.details',$item['Service_Id'])}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Apply Now</a>
                                 <a href="{{route('callback',Auth::user()->id)}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
-                                @endif
+                                @else
                                 <a href="{{route('login')}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Apply Now</a>
                                 <a href="{{route('contact_us')}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
+                                @endif
                             </div>
                         </div>
                     </div>

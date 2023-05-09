@@ -19,33 +19,61 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Menu</li>
 
+                {{-- Admin Dashboard --}}
                 <li>
                     <a href="{{route('dashboard')}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
-                        <span>Home</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-                {{-- User Dashboard Menu --}}
+                {{-- Application Dashboard --}}
+                <li>
+                    <a href="{{route('Dashboard')}}" >
+                        <i class=" ri-profile-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                {{-- Application Menu --}}
                 <li>
                     <a href="#" class="has-arrow waves-effect">
-                        <i class="ri-dashboard-line"></i>
-                        <span>User Dashboard</span>
+                        <i class="ri-account-circle-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">2</span>
+                        <span>Application Menu</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('user_top_bar')}}">Header & Footer</a></li>
-                        <li> <a href="{{route('carousel')}}">Carousel</a></li>
-                        <li> <a href="{{route('about_us')}}">About Us</a></li>
+                        <li><a href="{{route('new.application')}}">New Application</a></li>
+                        <li> <a href="{{route('update_application')}}">Update</a></li>
 
 
                     </ul>
                 </li>
-
+                {{-- Admin Controls Menu --}}
                 <li>
-                    <a href="{{route('Dashboard')}}" >
-                        <i class="ri-table-2"></i>
-                        <span>Dashboard</span>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-bar-chart-line"></i>
+                        <span>Admin Controls</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        {{-- <li><a href="{{url('client_registration')}}">Clinet Registration</a></li> --}}
+                        <li> <a href="{{ route('add_services')}}">Services</a></li>
+                        {{-- <li><a href="{{ url('statusmodule')}}">Status</a></li> --}}
+                        <li><a href="{{url('bookmarks')}}">Bookmark</a></li>
+                        {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
+                    </ul>
                 </li>
+                {{-- User Control Menu --}}
+                <li>
+                    <a href="#" class="has-arrow waves-effect">
+                        <i class="ri-home-3-line"></i>
+                        <span>User Controls</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('user_top_bar')}}">Header & Footer</a></li>
+                        <li> <a href="{{route('new.carousel')}}">Carousel</a></li>
+                        <li> <a href="{{route('about_us')}}">About Us</a></li>
+                    </ul>
+                </li>
+
+
                 {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-mail-send-line"></i>
@@ -61,31 +89,8 @@
 
                     </ul>
                 </li> --}}
-                <li>
-                    <a href="#" class="has-arrow waves-effect">
-                        <i class="ri-account-circle-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">2</span>
-                        <span>App Controls</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('new_application')}}">New Application</a></li>
-                        <li> <a href="{{route('update_application')}}">Update</a></li>
 
 
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-account-circle-line"></i>
-                        <span>Admin Controls</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        {{-- <li><a href="{{url('client_registration')}}">Clinet Registration</a></li> --}}
-                        <li> <a href="{{ route('add_services')}}">Services</a></li>
-                        {{-- <li><a href="{{ url('statusmodule')}}">Status</a></li> --}}
-                        <li><a href="{{url('bookmarks')}}">Bookmark</a></li>
-                        {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
-                    </ul>
-                </li>
 
 
 

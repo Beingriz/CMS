@@ -39,9 +39,10 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{url('dashboard')}}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{url('app_home')}}">Application</a></li>
-            <li class="breadcrumb-item"><a href="{{url('app_form')}}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{url('dashboard')}}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{route('app.home')}}">App Home</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new.application')}}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new.carousel')}}">New Carousel</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 
@@ -68,7 +69,6 @@
                                 @foreach ($Services as $item)
                                     <option value="{{$item->Name}}">{{$item->Name}}</option>
                                 @endforeach
-
                             </select>
                             <span class="error">@error('Service_Type'){{$message}}@enderror</span>
                         </div>
@@ -89,7 +89,7 @@
                       <div class="row mb-3">
                         <label for="Image" class="col-sm-3 col-form-label">Image</label>
                         <div class="col-sm-9">
-                            <input class="form-control" type="file" accept="image/jpeg, image/png" wire:model="Image" id="Image">
+                            <input class="form-control" type="file" id="{{$Clearr}}" accept="image/jpeg, image/png" wire:model="Image" >
                             <span class="error">@error('Image'){{$message}}@enderror</span>
 
                         </div>
@@ -100,7 +100,7 @@
                         <label for="Image" class="col-sm-3 col-form-label"></label>
                         <div class="col-lg-8">
                             <div wire:loading wire:target="Image">Uploading...</div>
-                            <img class=" rounded avatar-lg" src="{{ $Image->temporaryUrl() }}" alt="Image" />
+                            <img class=" rounded avatar-lg"  src="{{ (!$Image)?url('storage/no_image.jpg'):url($Image->temporaryUrl()) }}" alt="Image" />
                             </div>
                     </div>
                     @elseif(!is_Null($Old_Image))
@@ -167,12 +167,11 @@
                                                             Action <i class="mdi mdi-chevron-down"></i>
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item" href="#" title="Edit  Application"  onclick="confirm('Are You Sure!? You Want to Edit This Record?')||event.stopImmediatePropagation" wire:click.prevent="Edit('{{$key->Id}}')" >Edit</a>
+                                                            <a class="dropdown-item" href="{{route('edit.carousel',$key->Id)}}" title="Edit  Application"  id="editData" >Edit</a>
 
-                                                            <a class="dropdown-item" title="Delete Application" onclick="confirm('Are You Sure!? You Want to Delete This Record?')||event.stopImmediatePropagation" wire:click="Delete('{{$key->Id}}')">Delete</a>
+                                                            <a class="dropdown-item" href="{{route('delete.carousel',$key->Id)}}" title="Delete Application" id="deleteData" >Delete</a>
                                                         </div>
                                                     </div>
-
                                                 </div>
 
                                             </td>
@@ -187,7 +186,5 @@
                     </div>
                 </div>
             </div>
-
     </div>
-
 </div>

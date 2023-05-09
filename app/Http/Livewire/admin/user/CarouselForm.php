@@ -14,10 +14,10 @@ class CarouselForm extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $Tittle,$Description,$Button1_Name,$Button1_Link,$Button2_Link,$Image,$Update,$Count,$Sl=1,$Id,$Old_Image,$New_Image,$Services,$Service_Id;
+    public $Tittle,$Description,$Button1_Name,$Button1_Link,$Button2_Link,$Image,$Update,$Count,$Sl=1,$Id,$Old_Image,$New_Image,$Services,$Service_Id,$Clearr;
 
     protected $rules = [
-        'Tittle' => 'Required|min:10|max:30',
+        'Tittle' => 'Required',
         'Description'=>'Required |min:10|max:110',
         'Image'=> 'required|file|mimes:jpeg,png|max:2048',
     ];
@@ -30,23 +30,31 @@ class CarouselForm extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
-    }
+    } //End Function
 
-    public function mount()
+    public function mount($EditData)
     {
         # code...
         $this->Id = 'SB'.time();
         $this->Count = Carousel_DB::all()->count();
-    }
+        if(!empty($EditData)){
+            $this->Edit($EditData);
+        }
+
+    }//End Function
+
+
     public function ResetFields()
     {
         # code...
+        $this->Id = 'SB'.time();
         $this->Tittle="";
         $this->Description="";
-        $this->Image=NULL;
+        $this->Image=null;
         $this->Update = 0;
+        $this->Clearr++;
+    }//End Function
 
-    }
     public function Save()
     {
         # code...
@@ -54,9 +62,8 @@ class CarouselForm extends Component
         $save = new Carousel_DB();
         $save->Id = $this->Id;
         $save->Tittle = $this->Tittle;
-        $getId= MainServices::where('Name',$this->Tittle)->get();
         $save->Description = $this->Description;
-        $save->Service_Id = $getId->Id;
+        $save->Service_Id = $this->Service_Id;
         if(!empty($this->Image)){
             $extension = $this->Image->getClientOriginalExtension();
             $path = 'Carousel/';
@@ -66,10 +73,15 @@ class CarouselForm extends Component
         }
         $save->Image = $this->New_Image;
         $save->save();
-        session()->flash('SuccessMsg', 'New Carousel Added Successfully!');
         $this->ResetFields();
         $this->Update=0;
-    }
+        $notification = array(
+            'message'=>'Carousel Added Succesfully!',
+            'alert-type'=>'success',
+        );
+        return redirect()->back()->with($notification);
+    }//End Function
+
     public function Edit($Id)
     {
         $fetch = Carousel_DB::find($Id);
@@ -79,15 +91,13 @@ class CarouselForm extends Component
         $this->Description = $fetch['Description'];
         $this->Old_Image = $fetch['Image'];
         $this->Update=1;
+    }//End Function
 
-    }
+
     public function Image()
     {
-        # code...
         # if image is selected, check if database has any image, else update the new image
         # if image is not selected, dont update image. remove validation for image selection
-
-
         if(!empty($this->Image)) //if new image is selected
         {
             if(!empty($this->Old_Image)) // check if old image is available in db
@@ -125,31 +135,36 @@ class CarouselForm extends Component
     }
     public function Update()
     {
-        if(!empty($this->Old_Image)){
-            $this->validate([
-                'Tittle' => 'Required|min:10|max:30',
-                'Description'=>'Required |min:10|max:100',
-                'Button1_Name'=>'Required|min:5|max:10',
-                'Button1_Link'=>'Required',
-                'Button2_Link'=>'Required',
-            ]);
-        }
+        $this->validate([
+            'Tittle' => 'Required',
+        'Description'=>'Required |min:10|max:110',
+        ]);
         $data = array();
         $data['Tittle'] = $this->Tittle;
         $data['Description'] = $this->Description;
-        $data['Button1_Name'] = $this->Button1_Name;
-        $data['Button2_Link'] = $this->Button2_Link;
-        $data['Button1_Link'] = $this->Button1_Link;
+        $data['Service_Id'] = $this->Service_Id;
         $this->Image();
         $data['Image']= $this->New_Image;
         DB::table('carousel')->where([['Id','=',$this->Id]])->update($data);
-        session()->flash('SuccessMsg','Carousel Details Updated Successfully!');
         $this->ResetFields();
         $this->Update=0;
+        $notification = array(
+            'message'=>'Data Updated Successfully!',
+            'alert-type'=>'success',
+        );
+        return redirect()->back()->with($notification);
     }
+
 
     public function render()
     {
+
+        if(!empty($this->Tittle)){
+            $getId= MainServices::where('Name',$this->Tittle)->get();
+            foreach($getId as $key){
+                $this->Service_Id = $key['Id'];
+            }
+        }
         $Records = Carousel_DB::all();
         $this->Services = MainServices::where('Service_Type','Public')->get();
         return view('livewire.admin.user.carousel-form',compact('Records'));

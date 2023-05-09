@@ -32,8 +32,12 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('/admin/change_password', 'ChangePassword')->name('change_password');
         Route::get('/add/services', 'AddServices')->name('add_services');
         Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
-        Route::get('/carousel','Carousel')->name('carousel');
+        Route::get('/New/Carousel','Carousel')->name('new.carousel');
         Route::get('/abous_us','AboutUs')->name('about_us');
+        Route::get('/eidt/carousel/{id}','EditCarousel')->name('edit.carousel');
+        Route::get('/delete/carousel/{id}','DeleteCarousel')->name('delete.carousel');
+
+
     });
 });
 Route::controller(AdminController::class)->group(function(){
@@ -54,12 +58,13 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/serivce/list','ServiceList')->name('service.list');
         Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
         // Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
+        Route::get('/callback','CallBack')->name('callback');
+
     });
 });
 Route::middleware('auth','auth.role:user','prevent.back')->group(function(){
     Route::controller(UserController::class)->group(function(){
         Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
-        Route::get('/acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
     });
 });
 Route::controller(UserController::class)->group(function(){
@@ -76,25 +81,25 @@ Route::controller(UserController::class)->group(function(){
 
 
 
-// Application  Routes start
+// Application Authentic Routes start
 Route::middleware('auth','auth.role:admin')->group(function(){
-Route::controller(ApplicationController::class)->group(function(){
-    Route::get('app_home', 'Home')->middleware(['auth'])->name('App_Dashboard');
-    Route::get('app_home', 'Dashboard')->middleware(['auth'])->name('Dashboard');
-    Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->middleware(['auth'])->name('DynamicDashboard');
-    Route::get('new/application', 'index')->middleware(['auth','auth.role:admin'])->name('new_application');
-    Route::get('update/application', 'updateApplication')->middleware(['auth'])->name('update_application');
-    Route::get('edit/application/{id}', 'Edit')->middleware(['auth'])->name('edit_application');
-    Route::get('download/docs/{id}', 'Download_Files')->middleware(['auth'])->name('download_documents');
-    Route::get('delete/docs/{id}', 'Delete_File')->middleware(['auth'])->name('delete_document');
-    Route::get('download/ack/{id}', 'Download_Ack')->middleware(['auth'])->name('download_ack');
-    Route::get('download/doc/{id}', 'Download_Doc')->middleware(['auth'])->name('download_doc');
-    Route::get('download/paymentreceipt/{id}', 'Download_Pay')->middleware(['auth'])->name('download_pay');
-    Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->middleware(['auth'])->name('multiple_doc_delete');
-    Route::get('bookmarks', 'Bookmarks')->middleware(['auth'])->name('Bookmarks');
-    Route::get('global/search/{key}', 'GlobalSearch')->middleware(['auth'])->name('global_search');
-    Route::get('edit/profile/{id}', 'EditProfile')->middleware(['auth'])->name('edit_profile');
-});
+    Route::controller(ApplicationController::class)->group(function(){
+        Route::get('Application/Home', 'Home')->name('app.home');
+        Route::get('App/Dashboard', 'Dashboard')->name('Dashboard');
+        Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->name('DynamicDashboard');
+        Route::get('New/Application', 'index')->name('new.application');
+        Route::get('update/application', 'updateApplication')->name('update_application');
+        Route::get('edit/application/{id}', 'Edit')->name('edit_application');
+        Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
+        Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
+        Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
+        Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
+        Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
+        Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');
+        Route::get('bookmarks', 'Bookmarks')->name('Bookmarks');
+        Route::get('global/search/{key}', 'GlobalSearch')->name('global_search');
+        Route::get('edit/profile/{id}', 'EditProfile')->name('edit_profile');
+    });
 });
 
 Route::controller(CreditEntry::class)->group(function(){
