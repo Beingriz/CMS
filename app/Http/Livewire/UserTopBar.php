@@ -27,9 +27,12 @@ class UserTopBar extends Component
         'Time_From'=> 'Companys From Timming shuld not be blank ',
         'Time_To'=> 'Companys To Timming shuld not be blank ',
     ];
-    public function mount()
+    public function mount($EditData)
     {
         $this->Id = 'UTB'.time();
+        if(!empty($EditData)){
+            $this->Edit($EditData);
+        }
     }
     public function ResetFields()
     {

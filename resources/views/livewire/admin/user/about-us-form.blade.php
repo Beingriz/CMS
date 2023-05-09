@@ -39,8 +39,8 @@
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="{{url('dashboard')}}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{url('app_home')}}">Application</a></li>
-            <li class="breadcrumb-item"><a href="{{url('app_form')}}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new.application')}}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new.about_us')}}">New About-Us</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 
@@ -70,7 +70,7 @@
                     <div class="row mb-3">
                         <label for="Description" class="col-sm-3 col-form-label">Description</label>
                         <div class="col-sm-9">
-                            <input class="form-control" type="text" placeholder="Description"  wire:model="Description" id="Description">
+                            <textarea class="form-control" rows="10" placeholder="Description"  wire:model="Description" id="Description"></textarea>
                             <span class="error">@error('Description'){{$message}}@enderror</span>
                         </div>
                     </div>
@@ -78,8 +78,8 @@
 
                     {{-- Profile Image --}}
                       <div class="row mb-3">
-                        <label for="Image" class="col-sm-2 col-form-label">Image</label>
-                        <div class="col-sm-10">
+                        <label for="Image" class="col-sm-3 col-form-label">Image</label>
+                        <div class="col-sm-9">
                             <input class="form-control" type="file" id="Image{$Iteration}" accept="image/jpeg, image/png" wire:model="Image" id="Image">
                             <span class="error">@error('Image'){{$message}}@enderror</span>
 
@@ -138,6 +138,7 @@
                                             <th>Sl_No</th>
                                             <th>Tittle</th>
                                             <th>Description</th>
+                                            <th>Image</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -148,17 +149,21 @@
                                             <td>{{$key['Tittle']}}</td>
                                             <td>{{$key['Description']}}</td>
                                             <td>
+                                                <img class="avatar-sm"  src="{{url('storage/'.$key->Image)}}" alt="Banner"></td>
+                                            </td>
 
+                                            <td>
                                                 <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                                     <div class="btn-group" role="group">
                                                         <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             Action <i class="mdi mdi-chevron-down"></i>
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item" href="#" title="Edit  Application"  onclick="confirm('Are You Sure!? You Want to Edit This Record?')||event.stopImmediatePropagation" wire:click.prevent="Edit('{{$key->Id}}')" >Edit</a>
+                                                            <a class="dropdown-item" href="{{route('edit.aboutus',$key->Id)}}" title="Edit Application"  id="editData"  >Edit</a>
 
-                                                            <a class="dropdown-item" title="Delete Application"  wire:click="Select('{{$key->Id}}')" onclick="confirm('Are You Sure!? You Want to Select This Record?')||event.stopImmediatePropagation" >Select</a>
-                                                            <a class="dropdown-item" title="Delete Application"  wire:click="Delete('{{$key->Id}}')" onclick="confirm('Are You Sure!? You Want to Delete This Record?')||event.stopImmediatePropagation" >Delete</a>
+                                                            <a class="dropdown-item" href="{{route('select.aboutus',$key->Id)}}" id="SelectData" title="Select Record"    >Select</a>
+
+                                                            <a class="dropdown-item" href="{{route('delete.aboutus',$key->Id)}}" title="Delete Application" id="delete"  >Delete</a>
                                                         </div>
                                                     </div>
 

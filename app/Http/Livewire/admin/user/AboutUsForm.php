@@ -33,12 +33,21 @@ class AboutUsForm extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount()
+    public function mount($EditData,$SelectId)
     {
         # code...
         $this->Id = 'AU'.time();
         $this->Clients = Application::all()->count();
         $this->Delivered = Application::where('Status','=','Delivered to Client')->get()->count();
+
+        //Edit Id from Controller to Make Edit on Livewire
+        if(!empty($EditData)){
+            $this->Edit($EditData);
+        }
+        //Select ID From Controller
+        if(!empty($SelectId)){
+            $this->Select($SelectId);
+        }
     }
     public function ResetFields()
     {
@@ -69,9 +78,13 @@ class AboutUsForm extends Component
         }
         $save->Image = $this->New_Image;
         $save->save();
-        session()->flash('SuccessMsg', 'New About Added Successfully!');
         $this->ResetFields();
         $this->Update=0;
+        $notification = array(
+            'message' => 'New About Us Added Succesfully!',
+            'alert-type'=>'success',
+        );
+        return redirect()->route('new.about_us')->with($notification);
     }
     public function Edit($Id)
     {

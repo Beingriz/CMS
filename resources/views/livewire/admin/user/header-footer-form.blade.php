@@ -194,6 +194,24 @@
                                         <td>{{$key['Email_Id']}}</td>
                                         <td>{{$key['Time_From']}}</td>
                                         <td>{{$key['Time_To']}}</td>
+                                        <td>
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Action <i class="mdi mdi-chevron-down"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                        <a class="dropdown-item" href="{{route('edit.header',$key->Id)}}" title="Edit Application"  id="editData"  >Edit</a>
+
+                                                        <a class="dropdown-item" href="{{route('select.aboutus',$key->Id)}}" id="SelectData" title="Select Record"    >Select</a>
+
+                                                        <a class="dropdown-item" href="{{route('delete.aboutus',$key->Id)}}" title="Delete Application" id="delete"  >Delete</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+
                                         <td><a  class="btn btn-primary btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Edit {{$key->Company_Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->Id}}')">Edit</a></td>
                                         <td><a  class="btn btn-success btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Select {{$key->Company_Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="Select('{{$key->Id}}')">Select</a></td>
 

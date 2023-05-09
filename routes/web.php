@@ -33,8 +33,12 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('/add/services', 'AddServices')->name('add_services');
         Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
         Route::get('/New/Carousel','Carousel')->name('new.carousel');
-        Route::get('/abous_us','AboutUs')->name('about_us');
+        Route::get('/abous_us','AboutUs')->name('new.about_us');
         Route::get('/eidt/carousel/{id}','EditCarousel')->name('edit.carousel');
+        Route::get('/Eidt/AboutUs/{id}','EditAboutUs')->name('edit.aboutus');
+        Route::get('/Delete/AboutUs/{id}','DeleteAboutUs')->name('delete.aboutus');
+        Route::get('/Select/AboutUs/{id}','SelectAbout')->name('select.aboutus');
+        Route::get('/Edit/Header/{id}','EditHeader')->name('edit.header');
         Route::get('/delete/carousel/{id}','DeleteCarousel')->name('delete.carousel');
 
 

@@ -63,7 +63,8 @@ class AdminController extends Controller
     }
     public function UserTopBar()
     {
-        return view('user.admin_forms.header_footer_form');
+        $editId="";
+        return view('user.admin_forms.header_footer_form',['EditData'=>$editId]);
     }
     public function Carousel()
     {
@@ -74,7 +75,8 @@ class AdminController extends Controller
     public function AboutUs()
     {
         # code...
-        return view('user.admin_forms.about_us_form');
+        $Id = "";
+        return view('user.admin_forms.about_us_form',['EditData'=>$Id,'SelectId'=>$Id]);
     }
     public function ContactUs()
     {
@@ -99,5 +101,35 @@ class AdminController extends Controller
     }
     public function EditCarousel($Id){
         return view('user.admin_forms.carousel_form',['EditData'=>$Id]);
+    }//End Function
+
+    public function EditAboutUs($Id){
+        $selectId="";
+        return view('user.admin_forms.about_us_form',['EditData'=>$Id,'SelectId'=>$selectId]);
+    }//End Function
+
+    public function SelectAbout($Id){
+        $editId="";
+        return view('user.admin_forms.about_us_form',['EditData'=>$editId,'SelectId'=>$Id]);
+    }//End Function
+
+    public function DeleteAboutUs($Id)
+    {
+        $fetch = About_Us::findorFail($Id);
+        $image = $fetch['Image'];
+        if (Storage::disk('public')->exists($image)) // Check for existing File
+        {
+            unlink(storage_path('app/public/'.$image)); // Deleting Existing File
+        }
+        About_Us::Where('Id','=',$Id)->delete();
+        $notification = array(
+            'message'=>'Record Deleted!',
+            'alert-type' =>'danger'
+        );
+        return redirect()->route('new.about_us')->with($notification);
+    }
+    public function EditHeader($Id){
+        $editId="";
+        return view('user.admin_forms.header_footer_form',['EditData'=>$editId,]);
     }//End Function
 }
