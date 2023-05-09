@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2023 at 06:40 PM
+-- Generation Time: May 09, 2023 at 05:37 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -44,8 +44,8 @@ CREATE TABLE `about_us` (
 --
 
 INSERT INTO `about_us` (`Id`, `Tittle`, `Description`, `Total_Clients`, `Image`, `Delivered`, `Selected`, `created_at`, `updated_at`) VALUES
-('AU1682682051', 'About Us', 'At DIGITAL CYBER, we are more than just a cyber cafe. We are a team of dedicated professionals committed to providing convenient and efficient government-related services to our customers. Our mission is to make it easier for individuals to access and complete government paperwork by providing a one-stop-shop for all their needs.', '1658', 'About Us//AboutUs About Us_1682682178.jpg', '412', 'No', '2023-04-28 19:42:58', '2023-04-28 19:42:58'),
-('AU1682685601', 'More About Us', 'At DIGITAL CYBER, we are more than just a cyber cafe. We are a team of dedicated professionals committed to providing convenient and efficient government-related services to our customers. Our mission is to make it easier for individuals to access and complete government paperwork by providing a one-stop-shop for all their needs.', '1658', 'AboutUS//AboutUSMore About Us_1682685749.jpg', '412', 'Yes', '2023-04-28 20:41:38', '2023-04-28 20:41:38');
+('AU1682682051', 'About Us', 'At DIGITAL CYBER, we are more than just a cyber Cafe. We are a team of dedicated professionals committed to providing convenient and efficient government-related services to our customers. Our mission is to make it easier for individuals to access and complete government paperwork by providing a one-stop-shop for all their needs.', '1658', 'AboutUS//AboutUSAbout Us_1683642349.jpg', '414', 'No', '2023-04-28 19:42:58', '2023-04-28 19:42:58'),
+('AU1682685601', 'More About Us', 'At DIGITAL CYBER, we are more than just a cyber cafe. We are a team of dedicated professionals committed to providing convenient and efficient government-related services to our customers. Our mission is to make it easier for individuals to access and complete government paperwork by providing a one-stop-shop for all their needs.', '1658', 'AboutUS//AboutUSMore About Us_1683643569.jpg', '414', 'Yes', '2023-04-28 20:41:38', '2023-04-28 20:41:38');
 
 -- --------------------------------------------------------
 
@@ -61,13 +61,32 @@ CREATE TABLE `applynow` (
   `App_MobileNo` varchar(225) NOT NULL,
   `Mobile_No` varchar(225) NOT NULL,
   `Father_Name` varchar(225) NOT NULL,
-  `Dob` date NOT NULL,
-  `Message` varchar(1000) NOT NULL,
-  `File` varchar(500) NOT NULL,
+  `Dob` date DEFAULT NULL,
+  `Message` varchar(1000) DEFAULT NULL,
+  `File` varchar(500) DEFAULT NULL,
   `Consent` varchar(1000) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `applynow`
+--
+
+INSERT INTO `applynow` (`Id`, `Service`, `Service_Type`, `Name`, `App_MobileNo`, `Mobile_No`, `Father_Name`, `Dob`, `Message`, `File`, `Consent`, `created_at`, `updated_at`) VALUES
+('AN07-20232541', 'Aadhar Card', 'Smart Card', 'Md Rizwan', '8951775912', '8951775912', 'slsas', '1993-12-02', 'asdsa', NULL, '', '2023-05-07 09:07:53', '2023-05-07 09:07:53'),
+('AN07-20236729', 'Aadhar Card', 'Address Correction', 'Md Rizwan', '8951775912', '8951775912', 'sadasd', '1993-12-02', 'sdsaas', NULL, '', '2023-05-07 10:11:43', '2023-05-07 10:11:43'),
+('AN07071683434421', 'Aadhar Card', 'Smart Card', 'Md Rizwan', '8951775912', '8951775912', 'dasds', '1993-12-02', 'asdasd', NULL, '', '2023-05-07 07:11:35', '2023-05-07 07:11:35'),
+('AN07071683434653', 'Agreement Paper', 'Shop Renatal Agreement', 'Md Rizwan', '8951775912', '8951775912', 'sadasd', '1993-12-02', 'sdasdas', NULL, '', '2023-05-07 07:14:18', '2023-05-07 07:14:18'),
+('AN07071683437559', 'Agreement Paper', 'Shop Renatal Agreement', 'Md Rizwan', '8951775912', '8951775912', 'weq', '1993-12-02', 'qweqw', NULL, '', '2023-05-07 08:02:45', '2023-05-07 08:02:45'),
+('AN09-20235972', 'Pan Card', 'Re-Print Pan ', 'Md Rizwan', '8951775912', '8951775912', 'weq', '1993-12-02', 'sadasdasd', NULL, '', '2023-05-09 11:13:19', '2023-05-09 11:13:19'),
+('ANSun-20232781', 'Agreement Paper', 'Shop Renatal Agreement', 'Md Rizwan', '8951775912', '8951775912', 'dasds', '1993-12-02', 'asdas', NULL, '', '2023-05-07 08:21:38', '2023-05-07 08:21:38'),
+('ANSun-20233013', 'Agreement Paper', 'Shop Renatal Agreement', 'Md Rizwan', '8951775912', '8951775912', 'slsas', '1993-12-02', 'sdsad', NULL, '', '2023-05-07 08:19:18', '2023-05-07 08:19:18'),
+('ANSun-20235653', 'Aadhar Card', 'Name Correction', 'Md Rizwan', '8951775912', '8951775912', 'sdasdas', '1993-12-02', 'asdsdsad', NULL, '', '2023-05-07 08:26:37', '2023-05-07 08:26:37'),
+('ANSun-20237286', 'Aadhar Card', 'DOB Correction', 'Md Rizwan', '8951775912', '8951775912', 'sadsdsa', '1993-12-02', 'asdsadas', NULL, '', '2023-05-07 08:51:10', '2023-05-07 08:51:10'),
+('ANSun-20237891', 'Agreement Paper', 'Shop Renatal Agreement', 'Md Rizwan', '8951775912', '8951775912', 'sdasds', '1993-12-02', 'asdsad', NULL, '', '2023-05-07 08:23:10', '2023-05-07 08:23:10'),
+('ANSun-20238064', 'Agreement Paper', 'Shop Renatal Agreement', 'Md Rizwan', '8951775912', '8951775912', 'asdsa', '1993-12-02', 'sdasdsa', NULL, '', '2023-05-07 08:48:06', '2023-05-07 08:48:06'),
+('ANSun-20239903', 'Aadhar Card', 'Name Correction', 'Md Rizwan', '8951775912', '8951775912', 'sadasd', '1993-12-02', 'qwewq', NULL, '', '2023-05-07 08:50:25', '2023-05-07 08:50:25');
 
 -- --------------------------------------------------------
 
@@ -193,6 +212,36 @@ INSERT INTO `bookmark` (`Sl_No`, `BM_Id`, `Name`, `Relation`, `Hyperlink`, `Thum
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `callback`
+--
+
+CREATE TABLE `callback` (
+  `Id` varchar(225) NOT NULL,
+  `Client_Id` varchar(225) NOT NULL,
+  `Name` varchar(225) NOT NULL,
+  `Mobile_No` varchar(225) NOT NULL,
+  `Username` varchar(225) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `callback`
+--
+
+INSERT INTO `callback` (`Id`, `Client_Id`, `Name`, `Mobile_No`, `Username`, `created_at`, `updated_at`) VALUES
+('CB09-05-23', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:14:26', '2023-05-09 14:14:26'),
+('CB090520230707:05:19', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:18:19', '2023-05-09 14:18:19'),
+('CB0905202319Mayth', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:17:49', '2023-05-09 14:17:49'),
+('CB09052023:05:39', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:18:39', '2023-05-09 14:18:39'),
+('CB090523070705055555', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:14:55', '2023-05-09 14:14:55'),
+('CB09052307:05:28', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:15:28', '2023-05-09 14:15:28'),
+('CB20230509194702326689', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:17:02', '2023-05-09 14:17:02'),
+('CBTue-20231683632577', '2', 'Md Rizwan', '8951775912', 'Beingriz', '2023-05-09 14:12:57', '2023-05-09 14:12:57');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `carousel`
 --
 
@@ -200,9 +249,7 @@ CREATE TABLE `carousel` (
   `Id` varchar(225) NOT NULL,
   `Tittle` varchar(225) NOT NULL,
   `Description` varchar(225) NOT NULL,
-  `Button1_Name` varchar(225) NOT NULL,
-  `Button1_Link` varchar(225) NOT NULL,
-  `Button2_Link` varchar(225) NOT NULL,
+  `Service_Id` varchar(225) NOT NULL,
   `created_at` varchar(225) NOT NULL,
   `updated_at` varchar(225) NOT NULL,
   `Image` varchar(225) NOT NULL
@@ -212,11 +259,11 @@ CREATE TABLE `carousel` (
 -- Dumping data for table `carousel`
 --
 
-INSERT INTO `carousel` (`Id`, `Tittle`, `Description`, `Button1_Name`, `Button1_Link`, `Button2_Link`, `created_at`, `updated_at`, `Image`) VALUES
-('SB1682663063', 'Aadhar Services', 'Get Your Aadhar Card Today and Simplify Your Life', 'View More', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', '2023-04-28 14:31:54', '2023-04-28 14:31:54', 'Carousel//CarouselAadhar Services_1682677274.jpg'),
-('SB1682663564', 'PAN Card Service', 'Streamline Your Taxes with a PAN Card', 'Apply Now', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', '2023-04-28 14:33:23', '2023-04-28 14:33:23', 'Carousel//Carousel1682676767.jpg'),
-('SB1682664315', 'Driving License', 'Hit the Road with Confidence - Apply for Your Driving License', 'Apply Now', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', '2023-04-28 14:46:14', '2023-04-28 14:46:14', 'Carousel//CarouselDriving License_1682677288.jpg'),
-('SB1682664408', 'Election ID Services', 'Exercise Your Right to Vote - Get Your Voter ID Card Now', 'Apply Now', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', 'http://localhost/phpmyadmin/index.php?route=/database/structure&server=1&db=cyberpe&table=', '2023-04-28 14:47:00', '2023-04-28 14:47:00', 'Carousel//CarouselElection ID Serivices_1682677300.jpg');
+INSERT INTO `carousel` (`Id`, `Tittle`, `Description`, `Service_Id`, `created_at`, `updated_at`, `Image`) VALUES
+('SB1683616848', 'Aadhar Card', 'Aadhaar Card: Your Key to Easy and Secure Identification Document.', 'DCAC001', '2023-05-09 15:21:20', '2023-05-09 15:21:20', 'Carousel//CarouselAadhar Card_1683616880.jpg'),
+('SB1683618762', 'Pan Card', 'Get Your PAN Card Quickly and Hassle-Free with Our Reliable Services.', 'DCPC002', '2023-05-09 15:53:35', '2023-05-09 15:53:35', 'Carousel//CarouselPan Card_1683618815.jpg'),
+('SB1683618815', 'Passport', 'Experience Smooth and Efficient Passport Application Process with Our Expert Assistance.', 'DCPP003', '2023-05-09 15:54:11', '2023-05-09 15:54:11', 'Carousel//CarouselPassport_1683618851.jpg'),
+('SB1683621291', 'Election Card', 'Exercise Your Right to Vote Easily with Our Fast and Convenient Election Card Services.', 'DCEC007', '2023-05-09 16:35:22', '2023-05-09 16:35:22', 'Carousel//CarouselElection Card_1683621322.jpg');
 
 -- --------------------------------------------------------
 
@@ -4588,7 +4635,7 @@ INSERT INTO `digital_cyber_db` (`Id`, `Client_Id`, `Received_Date`, `Name`, `Gen
 ('763', 'DC2121379781', '2021-07-08', 'NASREEN BEGUM A', NULL, '', '1985-07-09', '6361266862', 'Covid-19', 'Labours Releif', '2021-07-08', 50, 50, 0, 'Cash', 'Not Available', 'Received', 'LD0023211078967', 'Not Available', '5.20E+11', 'Not Available', 'Not Available', '2021-07-08', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('764', 'DC2121919979', '2021-07-09', 'MOHAMMED ZAMEER', NULL, '', '1985-01-01', '9972068625', 'Pan Card', 'New Pan', '2021-07-09', 350, 300, 50, 'Cash', 'Not Available', 'Acknowledgement ', 'G046107057', 'Not Available', 'NOT AVAILABLE', 'Not Available', 'Not Available', '2021-07-09', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('765', 'DC2121760420', '2021-07-09', 'MOHAMMED REHAN', NULL, '', '2006-07-09', '9972068625', 'Pan Card', 'New Pan', '2021-07-09', 350, 350, 0, 'Cash', 'Not Available', 'Delivered to Client', 'G046107058', 'Not Available', 'FHWPR0005N', 'Not Available', 'Not Available', '2021-09-05', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
-('766', 'DC2121511845', '2021-07-09', 'SHABBIR A', NULL, '', '1986-12-11', '9945701362', 'Aadhar Card', 'Name Correction', '2021-07-09', 200, 200, 0, 'Cash', 'Not Available', 'Received', '75832662', 'Not Available', '9.46E+11', 'Not Available', 'Not Available', '2021-07-09', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
+('766', 'DC2121511845', '2021-07-09', 'SHABBIR A', NULL, '', '1986-12-11', '9945701362', 'Aadhar Card', 'Name Correction', '2021-07-09', 200, 200, 0, 'Cash', 'Not Available', 'Delivered to Client', '75832662', 'Not Available', '9.46E+11', 'Not Available', 'Not Available', '2021-07-09', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('907', 'DC2121778112', '2021-08-06', 'MAHALAKSHMI M ', NULL, '', '1993-01-01', '9916038573', 'Aadhar Card', 'Address Correction', '2021-08-06', 500, 500, 0, 'Cash', 'Not Available', 'Aadhar Updated', '78911552', 'Not Available', '4.47E+11', 'Not Available', 'Not Available', '2021-09-21', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('767', 'DC2121485611', '2021-07-09', 'TAHERA BANU', NULL, '', '1980-10-09', '6364442037', 'Covid-19', 'Labours Releif', '2021-07-09', 50, 50, 0, 'Cash', 'Not Available', 'Received', 'LD0023211089925', 'Not Available', '5.20E+11', 'Not Available', 'Not Available', '2021-07-09', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('768', 'DC2121221445', '2021-07-09', 'V LAKSHMI', NULL, '', '1978-01-01', '9535552716', 'Covid-19', 'Labours Releif', '2021-07-09', 50, 50, 0, 'Cash', 'Not Available', 'Received', 'LD0023211102122', 'Not Available', '5.20E+11', 'Not Available', 'Not Available', '2021-07-09', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
@@ -4861,7 +4908,7 @@ INSERT INTO `digital_cyber_db` (`Id`, `Client_Id`, `Received_Date`, `Name`, `Gen
 ('1037', 'DC2121755321', '2021-09-25', 'MOHAMMED SAQOOD', NULL, '', '2011-02-02', '9845785201', 'Aadhar Card', 'Address Correction', '2021-09-25', 100, 100, 0, 'Cash', 'Not Available', 'Received', '79712041', 'Not Available', '5.02E+11', 'Not Available', 'Not Available', '2021-09-25', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('1038', 'DC2121524221', '2021-09-25', 'MOHAMMED MANSOOR', NULL, '', '1974-05-13', '9845785201', 'Aadhar Card', 'Address Correction', '2021-09-25', 100, 100, 0, 'Cash', 'Not Available', 'Received', '79710810', 'Not Available', '3.13E+11', 'Not Available', 'Not Available', '2021-09-25', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('1039', 'DC2121969078', '2021-09-25', 'MOHAMMED MAHMOOD', NULL, '', '2009-01-01', '9845785201', 'Aadhar Card', 'Address Correction', '2021-09-25', 100, 100, 0, 'Phone Pe', 'Not Available', 'Received', '79712852', 'Not Available', '9.62E+11', 'Not Available', 'Not Available', '2021-09-25', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
-('1040', 'DC2121751331', '2021-09-25', 'NAZIA BANO', NULL, '', '2008-03-01', '9535505434', 'Aadhar Card', 'Name Correction', '2021-09-25', 150, 150, 0, 'Cash', 'Not Available', 'Received', '79715390', 'Not Available', '3.88E+11', 'Not Available', 'Not Available', '2021-09-25', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
+('1040', 'DC2121751331', '2021-09-25', 'NAZIA BANO', NULL, '', '2008-03-01', '9535505434', 'Aadhar Card', 'Name Correction', '2021-09-25', 150, 150, 0, 'Cash', 'Not Available', 'Delivered to Client', '79715390', 'Not Available', '3.88E+11', 'Not Available', 'Not Available', '2021-09-25', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('1041', 'DC2121136763', '2021-09-25', 'NADEEM AHMED', NULL, '', '1986-01-01', '9113050723', 'Train Reservation', '2S Seating Coach', '2021-09-25', 150, 150, 0, 'Phone Pe', 'Not Available', 'Received', 'NOT AVAILABLE', 'Not Available', 'NOT AVAILABLE', 'Not Available', 'Not Available', '2021-09-25', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('1042', 'DC2121801477', '2021-09-26', 'FARIDA BANU', NULL, '', '1987-01-01', '9916378586', 'Pan Card', 'New Pan', '2021-09-26', 350, 300, 50, 'Cash', 'Not Available', 'Pan Alloted', 'G050385906', 'Not Available', 'FXQPB34365J', 'Not Available', 'Not Available', '2021-10-05', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
 ('1043', 'DC2121811934', '2021-09-26', 'MOHAMMED AFSAR', NULL, '', '1969-06-15', '8867390293', 'Pan Card', 'New Pan', '2021-09-26', 350, 0, 350, 'Cash', 'Not Available', 'Received', 'G050385909', 'Not Available', 'NOT AVAILABLE ', 'Not Available', 'Not Available', '2021-09-26', 'No', 'No', '2022-07-25 10:07:14', '2022-07-25 10:07:14'),
@@ -5788,7 +5835,17 @@ INSERT INTO `enquiry_form` (`Id`, `Name`, `Phone_No`, `Email`, `Service`, `Messa
 ('DC16829308066572', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Scholarships', 'xcxcz', 'No', 'Not Available', 'No', NULL, '2023-05-01 11:17:17', '2023-05-01 11:17:17'),
 ('DC16829428457548', 'Nigar', '8951775912', 'nigar@gmail.com', 'Agreement Paper', 'not avaialblel', 'No', 'Not Available', 'No', NULL, '2023-05-01 14:37:52', '2023-05-01 14:37:52'),
 ('DC16829469134217', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Aadhar Card', 'i want the aadhar service for correction ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:18', '2023-05-01 15:47:18'),
-('DC1682947053226', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Agreement Paper', 'thank you for creating this ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:54', '2023-05-01 15:47:54');
+('DC1682947053226', 'Md Rizwan', '8951775912', 'digitalcyber.blr@gmail.com', 'Agreement Paper', 'thank you for creating this ', 'No', 'Not Available', 'No', NULL, '2023-05-01 15:47:54', '2023-05-01 15:47:54'),
+('DC16836296579888', 'Salman Khan', '9342404759', 'salma@gmail.com', 'Aadhar Card', 'thank you i want to apply', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:24:53', '2023-05-09 13:24:53'),
+('DC16836298682244', 'Md Rizwan', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Aadhar Card', 'asdadsa asd asdasd asdasd ', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:28:02', '2023-05-09 13:28:02'),
+('DC16836299106365', 'Asdasd', '8892988334', 'Khan@gmail.com', 'Election Card', 'asdasdasd ada asdasd ', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:28:46', '2023-05-09 13:28:46'),
+('DC16836300445411', 'Salman', '8892988334', 'asdas@gmail.com', 'SBI Kiosk', 'sad asda asq asdq asd ', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:30:56', '2023-05-09 13:30:56'),
+('DC16836300701317', 'Nigar', '8951775912', 'asdas@gmail.com', 'Caste & Income', 'd as asasdddddddddddddddddddddddddddddddddddddddddddddddddddddddd', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:31:30', '2023-05-09 13:31:30'),
+('DC16836301462612', 'Asdasdas', '8951775923', 'Khan@gmail.com', 'Caste & Income', 'asdasda adsa asda sda sd', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:32:42', '2023-05-09 13:32:42'),
+('DC16836301762047', 'Nigar', '1312312311', 'mdrizwan.blr@yhaoo.com', 'Aadhar Card', 'asdas adsa asdas adad ads', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:33:18', '2023-05-09 13:33:18'),
+('DC16836303691183', 'Md Rizwan', '8951775912', 'Khan@gmail.com', 'BPL Ration Card', 'as asdas asdas asdasd sd', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:36:23', '2023-05-09 13:36:23'),
+('DC16836308278065', 'Salman', '8892988334', 'asdas@gmail.com', 'BPL Ration Card', 'asdas adsasd sadasdasd', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:43:59', '2023-05-09 13:43:59'),
+('DC16836309112559', 'Asdasdas', '8951775912', 'mdrizwan.blr@yhaoo.com', 'Vehicle Insurance', 'asdas23 43234 23423 sad', 'No', 'Not Available', 'No', NULL, '2023-05-09 13:45:27', '2023-05-09 13:45:27');
 
 -- --------------------------------------------------------
 
@@ -6042,7 +6099,7 @@ CREATE TABLE `service_list` (
 --
 
 INSERT INTO `service_list` (`Sl_No`, `Id`, `Name`, `Service_Type`, `Description`, `Details`, `Features`, `Specification`, `Order_By`, `Total_Count`, `Total_Amount`, `Temp_Count`, `Thumbnail`, `Image`, `Recycle_Bin`, `updated_at`, `created_at`) VALUES
-(1, 'DCAC001', 'Aadhar Card', 'Public', 'It serves as a proof of identity and is required for availing various government  services.', 'Aadhaar number is verifiable in an online, cost-effective way. It is unique and robust enough to eliminate duplicates and fake identities and may be used as a basis/primary identifier to roll out several Government welfare schemes and programmes for effective service delivery thereby promoting transparency and good governance. This is the only program of its kind globally, wherein a state-of-the-art digital and online Id is being provided free of cost at such a large scale to people, and has the potential to change the way service delivery functions in the country.', 'Uniqueness\nThis is achieved through the process of demographic and biometric de-duplication. The de-duplication process compares the resident’s demographic and biometric information, collected during the process of enrolment, with the records in the UIDAI database to verify if the resident is already in the database or not. An individual needs to enrol for Aadhaar only once and after de-duplication only one Aadhaar shall be generated. In case, the resident enrols more than once, the subsequent enrolments will be rejected.\n\nPortability\nAadhaar gives nationwide portability as it can be authenticated anywhere on-line. This is critical as millions of Indians migrate from one state to another or from rural area to urban centres etc.\n\nRandom number\nAadhaar number is a random number devoid of any intelligence. Person willing to enrol has to provide minimal demographic along with biometric information during the enrolment process. The Aadhaar enrolment process does not capture details like caste, religion, income, health, geography, etc.', 'Aadhar Updates as Follows:\r\n1. Name \r\n2. Father Name \r\n3. Address\r\n4.Gender\r\n5. DOB\r\n\r\nUsing Valid Proof ..', 'A', 97, 22075, 21, 'Thumbnails/Services/Aadhar Card/MS_Aadhar Card_1682694342.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(1, 'DCAC001', 'Aadhar Card', 'Public', 'It serves as a proof of identity and is required for availing various government  services.', 'Aadhaar number is verifiable in an online, cost-effective way. It is unique and robust enough to eliminate duplicates and fake identities and may be used as a basis/primary identifier to roll out several Government welfare schemes and programmes for effective service delivery thereby promoting transparency and good governance. This is the only program of its kind globally, wherein a state-of-the-art digital and online Id is being provided free of cost at such a large scale to people, and has the potential to change the way service delivery functions in the country.', 'Uniqueness\nThis is achieved through the process of demographic and biometric de-duplication. The de-duplication process compares the resident’s demographic and biometric information, collected during the process of enrolment, with the records in the UIDAI database to verify if the resident is already in the database or not. An individual needs to enrol for Aadhaar only once and after de-duplication only one Aadhaar shall be generated. In case, the resident enrols more than once, the subsequent enrolments will be rejected.\n\nPortability\nAadhaar gives nationwide portability as it can be authenticated anywhere on-line. This is critical as millions of Indians migrate from one state to another or from rural area to urban centres etc.\n\nRandom number\nAadhaar number is a random number devoid of any intelligence. Person willing to enrol has to provide minimal demographic along with biometric information during the enrolment process. The Aadhaar enrolment process does not capture details like caste, religion, income, health, geography, etc.', 'Aadhar Updates as Follows:\r\n1. Name \r\n2. Father Name \r\n3. Address\r\n4.Gender\r\n5. DOB\r\n\r\nUsing Valid Proof ..', 'A', 97, 22075, 19, 'Thumbnails/Services/Aadhar Card/MS_Aadhar Card_1682694342.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (6, 'DCAP006', 'Agreement Paper', 'Public', 'Agreements are mean to avoid the dispute between two  parties at any point of time.', 'We undertake the Agreement work in our Branches to ensure the Leagal Terms and Conditions to be maintained', '1. Agreement Avoid Violations\n2. Agreement in E-Stam makes Secure with Govt Bond', 'Aadhar and Electricity Bill is Required to Get Agreement Done', 'A', 93, 18720, 19, 'Thumbnails/Services/Agreement Paper/MS_Agreement Paper_1682696469.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (5, 'DCAPL005', 'APL Ration Card', 'Public', 'Above Poverty Line, The card is issued to households that do not fall under the BPL category', '', '', '', 'B', 2, 520, 0, 'Thumbnails/Services/APL Ration Card/MS_APL Ration Card_1682696303.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (9, 'DCBA009', 'SBI Kiosk', 'Public', 'A bank is a financial institution licensed to receive deposits and make loans. Banks may also provide financial services.', 'KEY TAKEAWAYS\nA bank is a financial institution licensed to receive deposits and make loans.\nThere are several types of banks including retail, commercial, and investment banks.\nIn most countries, banks are regulated by the national government or central bank.', 'We Provide State SBI bank Services along with Kotak and Canara Bank Account Opening Facility', '', 'A', 12, 3300, 0, 'Thumbnails/Services/SBI Kiosk/MS_SBI Kiosk_1682693942.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
@@ -6082,19 +6139,19 @@ CREATE TABLE `status` (
 
 INSERT INTO `status` (`Sl_No`, `Orderby`, `Status`, `Total_Count`, `Relation`, `Class`, `Total_Amount`, `Temp_Count`, `Thumbnail`) VALUES
 (1, 'A', 'Received', 295, 'General', 'table-info', 46652, 0, NULL),
-(2, 'B', 'Submitted', 19, 'General', 'table-prmary', 6600, 0, NULL),
-(3, 'D', 'Under Process', 82, 'General', 'table-warning', 12915, 1, NULL),
+(2, 'B', 'Submitted', 19, 'General', 'table-prmary', 6600, 1, NULL),
+(3, 'D', 'Under Process', 82, 'General', 'table-warning', 12915, 0, NULL),
 (4, 'N', 'ID No Alloted', 0, 'Election Card', 'table-success', 0, 0, NULL),
 (5, 'J', 'Pan Alloted', 22, 'Pan Card', 'table-success', 6550, 0, NULL),
-(6, 'C', 'Acknowledgement ', 17, 'General', 'table-warning', 8460, 0, NULL),
+(6, 'C', 'Acknowledgement ', 17, 'General', 'table-warning', 8460, 1, NULL),
 (7, 'O', 'Passport No', 0, 'Passport', 'table-success', 0, 0, NULL),
 (8, 'E', 'In Office', 16, 'General', 'table-success', 6900, 0, NULL),
-(9, 'F', 'Delivered to Client', 401, 'General', 'table-success', 166923, 1, NULL),
-(10, 'H', 'Rejected', 297, 'General', 'table-danger', 15440, 0, NULL),
+(9, 'F', 'Delivered to Client', 401, 'General', 'table-success', 166923, 3, NULL),
+(10, 'H', 'Rejected', 297, 'General', 'table-danger', 15440, 1, NULL),
 (11, 'G', 'On Hold', 9, 'General', 'table-warning', 2953, 0, NULL),
 (12, 'I', 'Returned', 3, 'General', 'table-danger', 950, 0, NULL),
 (14, 'M', 'Accepted', 58, 'Election Card', 'table-success', 2650, 0, NULL),
-(15, 'P', 'Aadhar Updated', 42, 'Aadhar Card', 'table-success', 11010, 0, NULL),
+(15, 'P', 'Aadhar Updated', 42, 'Aadhar Card', 'table-success', 11010, 4, NULL),
 (18, 'K', 'BLO Appointed', 2, 'Election Card', 'table-warning', 250, 0, NULL),
 (19, 'L', 'Field Verified', 0, 'Election Card', 'table-success', 0, 0, NULL),
 (25, 'R', 'Journey Completed', 0, 'Train Reservation', 'table-success', 0, 0, NULL),
@@ -6228,9 +6285,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `username`, `role`, `mobile_no`, `dob`, `address`, `profile_image`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Md Rizwan', 'mdrizwan.blr@yahoo.com', '2022-07-05 23:07:21', '$2y$10$fuIKsYRvdTzXoEprJUX8WeIUs4F7SV5QWZi1VYfH0Bzb8nyErKBKS', '	\nBeingrizz', 'user', NULL, NULL, NULL, NULL, 'jTjpaAEABD83NEEqyfJFV8ztEPGnJALIGYx1fNGkYMeKcVIiICBNBsLwbrzB', '2022-07-05 22:34:54', '2022-07-06 03:51:48'),
-(2, 'Md Rizwan', 'mdrizwan.blrs05@gmail.com', '2022-07-05 23:32:00', '$2y$10$WuiD5r0j0qcEk.zUs.iRSeL13njgmsBSGRnHVLqaYhjWwp/PY2fzW', 'Beingriz', 'user', '8951775912', '1993-12-02', '# 1386, SMV Layout 4th Block, Chikkabasthi, Bangalore 560056', 'Uploads/Admin/Profile/Md Rizwan/20230506_Profile.png', 'QyAMcJUxrEuMcxl1ZtHnwUz6cCLEaRIlo8elaQMl5oJJhTSXb9P2yNyHnqGT', '2022-07-05 23:31:42', '2022-07-12 21:53:22'),
+(2, 'Md Rizwan', 'mdrizwan.blrs05@gmail.com', '2022-07-05 23:32:00', '$2y$10$WuiD5r0j0qcEk.zUs.iRSeL13njgmsBSGRnHVLqaYhjWwp/PY2fzW', 'Beingriz', 'user', '8951775912', '1993-12-02', '# 1386, SMV Layout 4th Block, Chikkabasthi, Bangalore 560056', 'Uploads/Admin/Profile/Md Rizwan/20230506_Profile.png', '5DuFSVNaJ8A7wF0cd3iRxT5EgfrFv9Jj4XeAv2CFPSKoB0qLqybnzTYd7jeJ', '2022-07-05 23:31:42', '2022-07-12 21:53:22'),
 (3, 'Salmam', 'salman@gmail.com', '2022-07-06 03:07:21', '$2y$10$nOLI.aAnZPADDqc7zOkc0.lj6MECUnau5iuh0p8X1/XXfZYl/27r6', 'Beingsalman', 'user', NULL, NULL, NULL, 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', NULL, '2022-07-06 03:07:09', '2022-07-06 03:07:21'),
-(4, 'Nigar sultana', 'nigarsp@gmail.com', '2022-07-06 08:02:18', '$2y$10$3qnHhbwUv4zsITLZAHTZ1OAtEY5ATpTe6O99g9iBbP/V3Un3uRnr2', 'Nigar', 'admin', '9066683291', '1994-12-05', '# 1386, SMV Layout 4th Block, Chikkabasthi, Bangalore 560056', 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', NULL, '2022-07-06 07:59:08', '2022-07-06 08:02:18'),
+(4, 'Nigar sultana', 'nigarsp@gmail.com', '2022-07-06 08:02:18', '$2y$10$3qnHhbwUv4zsITLZAHTZ1OAtEY5ATpTe6O99g9iBbP/V3Un3uRnr2', 'Nigar', 'admin', '9066683291', '1994-12-22', '# 1386, SMV Layout 4th Block, Chikkabasthi, Bangalore 560056', 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', NULL, '2022-07-06 07:59:08', '2022-07-06 08:02:18'),
 (5, 'Md Rizwan', 'digitalcyber.irctc2@gmail.com', NULL, '$2y$10$ch0S2NexaWjXh3ccsQVHO.S1crcUQZDdUtY.Kw2pSFxsACSUGyR3u', 'Nigarr', 'admin', '8951775913', NULL, NULL, NULL, NULL, '2023-05-05 04:40:45', '2023-05-05 04:40:45'),
 (6, 'Salman', 'salmann@gmail.com', NULL, '$2y$10$eKT0Tfb5m.JO8e2esMYQVeB1bvI0TV9nEqaAIR60KRr3X0JiLENfS', 'salman', 'user', '8892719056', NULL, NULL, 'Uploads/Admin/Profile/Md Rizwan/20230113_Profile.png', NULL, '2023-05-05 04:44:54', '2023-05-05 04:44:54'),
 (7, 'Nigar', 'nigar@gmail.com', NULL, '$2y$10$fbTyNwbMYOPLEkvQGuuQgOl9LNGtLh7YNMYI.BJqAVtbgyxhgyqeq', 'nigu', 'user', '9066673291', NULL, NULL, NULL, NULL, '2023-05-05 04:49:14', '2023-05-05 04:49:14');
@@ -6289,6 +6346,12 @@ ALTER TABLE `balance_ledger`
 ALTER TABLE `bookmark`
   ADD PRIMARY KEY (`Sl_No`),
   ADD UNIQUE KEY `bm_id` (`BM_Id`);
+
+--
+-- Indexes for table `callback`
+--
+ALTER TABLE `callback`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `carousel`
