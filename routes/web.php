@@ -63,8 +63,9 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
         Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
         Route::get('/acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
+        Route::get('/Feedback/{id}','Feedback')->name('feedback');
 
-        Route::get('/callback/{id}','CallBack')->name('callback');
+        Route::get('/callback/{id}/{service}/{service_type}','CallBack')->name('callback');
 
     });
 });

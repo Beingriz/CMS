@@ -28,7 +28,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-light mb-4">Quick Links</h4>
-                <a class="btn btn-link" href="{{route('about_us')}}" title="Know More">About Us</a>
+                <a class="btn btn-link" href="{{route('aboutus')}}" title="Know More">About Us</a>
                 <a class="btn btn-link" href="{{route('contact_us')}}" title="Get Callback">Contact Us</a>
                 <a class="btn btn-link" href="{{route('services')}}" title="Apply Now">Our Services</a>
                 <a class="btn btn-link" href="">Terms & Condition</a>
@@ -48,7 +48,7 @@
         <div class="copyright">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    &copy; <a class="border-bottom" href="{{route('about_us')}}">Digital Cyber</a>, All Right Reserved.
+                    &copy; <a class="border-bottom" href="{{route('aboutus')}}">Digital Cyber</a>, All Right Reserved.
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->

@@ -26,15 +26,18 @@ class UserApplyNowForm extends Component
 
     public function updated($propertyName){
         $this->validateOnly($propertyName);
-    }
+    }//End Function
+
+
     public function mount($Id)
     {
         $this->App_Id = 'AN'.date('d-Y').rand(99,9999);
         $this->ServiceId = $Id;
         $this->Profile();
         $this->mobile = Auth::user()->mobile_no;
+    }//End Function
 
-    }
+
     public function Sign()
     {
        $this->Signed = false;
@@ -42,7 +45,9 @@ class UserApplyNowForm extends Component
        $this->Recived = 'Consent Received';
        $this->Read_Consent = 1;
        $this->disabled = 'disabled';
-    }
+    }//End Function
+
+
     public function ApplyNow()
     {
         # code...
@@ -71,29 +76,30 @@ class UserApplyNowForm extends Component
         $apply->File = $this->File;
         $apply->Consent = $consent;
         $apply->save();
-        session()->flash('SuccessMsg', 'Application Submitted Successfully!');
         $notification = array(
             'message'=>'Application Submitted Sucessfully',
             'info-type' => 'success'
         );
         return redirect()->route('acknowledgment',$this->App_Id)->with($notification);
+    } //End Function
 
 
-
-    }
     public function ResetFields(){
         $this->Name = Null;
         $this->PhoneNo = Null;
         $this->Dob = Null;
         $this->Description = Null;
         $this->Read_Consent = Null;
-    }
+    }//End Function
+
+
     public function Profile(){
         $this->Name = Auth::user()->name;
         $this->PhoneNo = Auth::user()->mobile_no;
         $this->Dob = Auth::user()->dob;
         $this->Address = Auth::user()->address;
-    }
+    }//End Function
+
     public function render()
     {
         $fetch = SubServices::where('Id',$this->ServiceId)->get();

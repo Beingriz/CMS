@@ -189,24 +189,28 @@ class UserController extends Controller
         $date = Carbon::now();
         return view('user.user_account.pages.ackmowledgment',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'App_Id'=>$Id,'date'=>$date]);
     }
-    public function Callback($Id)
+    public function Callback($Id,$service, $servicetype)
     {
         $user = User::findorFail($Id);
         $time = Carbon::now();
         $save = new Callback_Db();
-        $save['Id'] = 'CB'.$time->format('dmY:m:s');
+        $save['Id'] = 'CB'.$time->format('m-d-Y-H:i:s');
         $save['Client_Id'] = $user->id;
         $save['Name'] = $user->name;
         $save['Mobile_No'] = $user->mobile_no;
         $save['Username'] = $user->username;
+        $save['Service'] = $service;
+        $save['Service_Type'] = $servicetype;
         $save->save();
-        $notification = array([
-            'message'=>$user->name.' Callback Request sent! Thank you!.',
+        $notification = array(
+            'message'=> $user->name.' your Callback Request for : '.$service.' -> '.$servicetype.' is Sent! Thank you!.',
             'alaert-type'=>'info',
-        ]);
-        return redirect()->route('user.dashboard')->with($notification);
+        );
+        return redirect()->route('user.home',$user->id)->with($notification);
     }
-
+    public function Feedback($Id){
+        return view('user.user_account.pages.feedback_form',['Id'=>$Id],['services_count'=>$this->services_count,'service_list'=>$this->services_list]);
+    }
 
 
 }

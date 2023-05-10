@@ -54,7 +54,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#" >
+                    <a href="{{route('feedback',Auth::user()->id)}}" >
                         <i class="ri-feedback-fill"></i>
                         <span>Feedback</span>
                     </a>

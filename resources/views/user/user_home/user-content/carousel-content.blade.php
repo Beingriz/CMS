@@ -15,7 +15,7 @@
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">{{$item['Description']}}</p>
                                 @if (Auth::check())
                                 <a href="{{route('serv.details',$item['Service_Id'])}}"  class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Apply Now</a>
-                                <a href="{{route('callback',Auth::user()->id)}}" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
+                                <a href="{{route('callback',[Auth::user()->id,'From Carousel',$item['Tittle']])}}" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>
                                 @else
                                 <a href="{{route('login')}}" target="_blank_" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Apply Now</a>
                                 <a href="{{route('contact_us')}}" target="_blank_" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Get Callback</a>

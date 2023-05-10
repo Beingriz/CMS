@@ -11,7 +11,7 @@
                             </div>
                             <h1 class="display-1 text-light mb-0">01</h1>
                         </div>
-                        <h5>Creative Designers</h5>
+                        <h5>Document Experts</h5>
                     </div>
                     <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
                         <div class="d-flex align-items-center justify-content-between mb-2">
@@ -20,7 +20,7 @@
                             </div>
                             <h1 class="display-1 text-light mb-0">02</h1>
                         </div>
-                        <h5>Quality Products</h5>
+                        <h5>Quality Service</h5>
                     </div>
                     <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
                         <div class="d-flex align-items-center justify-content-between mb-2">

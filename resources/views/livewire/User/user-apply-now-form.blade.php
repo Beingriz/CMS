@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Bookmark</h4>
+                <h4 class="mb-sm-0">Application</h4>
 
                 @if (session('SuccessMsg'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -161,8 +161,6 @@
                                 class="btn btn-primary btn-rounded btn-sm">Apply Now</button>
 
                             <a href="" wire:click.prevent="ResetFields" class="btn btn-warning btn-rounded btn-sm">Reset</a>
-                            <a href="{{route('service.list')}}"  class="btn btn-rounded btn-sm">Go Back</a>
-                            <a href="{{route('acknowledgment',$App_Id)}}"  class="btn btn-rounded btn-sm">Go Back</a>
                             </div>
                         </div>
                     </div>
