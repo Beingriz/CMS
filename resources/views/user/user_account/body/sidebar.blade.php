@@ -60,7 +60,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('admin.logout')}}" >
+                    <a href="{{route('admin.logout')}}" id="logout">
                         <i class="ri-logout-circle-line"></i>
                         <span>Logout</span>
                     </a>

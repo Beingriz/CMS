@@ -53,6 +53,31 @@ $(function() {
     });
 
 });
+// Logout
+$(function() {
+    $(document).on('click', '#logout', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "you will be logged out.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Logout'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = link
+            }
+        })
+
+
+    });
+
+});
 // DeleteData
 $(function() {
     $(document).on('click', '#deleteData', function(e) {

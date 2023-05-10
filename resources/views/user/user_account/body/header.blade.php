@@ -134,7 +134,7 @@
                     <a class="dropdown-item d-block" href="{{route('service.list')}}"><span class="badge bg-success float-end mt-1">{{$services_count}}</span><i class="ri-settings-2-line align-middle me-1"></i> Services</a>
                     <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i>Change Password</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{{ route('admin.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
+                    <a class="dropdown-item text-danger" href="{{ route('admin.logout')}}" id="logout"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>
              {{-- Profile Button End--}}
