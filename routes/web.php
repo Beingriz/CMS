@@ -47,22 +47,29 @@ Route::middleware('auth','auth.role:admin')->group(function(){
 Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/logout', 'destroy')->name('admin.logout');
 });
+Route::controller(ApplicationController::class)->group(function(){
+    Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
+    Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
+    Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
+});
 
 
 // User Authenticated Routes
 
 Route::middleware('auth','auth.role:user')->group(function(){
     Route::controller(UserController::class)->group(function(){
-        Route::get('/user/dashboard','UserDashboard')->name('user.dashboard');
-        Route::get('/user/home/{id}','UserHome')->name('user.home');
-        Route::get('/view/profile','ViewProfile')->name('view.profile');
-        Route::get('/service/history/{mobile_no}','MyServiceHistory')->name('history');
-        Route::get('/eidt/profile','EditProfile')->name('edit.profile');
-        Route::get('/about/company','About')->name('about.us');
-        Route::get('/serivce/list','ServiceList')->name('service.list');
-        Route::get('/serivce/details/{id}','ServDetails')->name('serv.details');
-        Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
-        Route::get('/acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
+        Route::get('/User/Dashboard','UserDashboard')->name('user.dashboard');
+        Route::get('/User/Home/{id}','UserHome')->name('user.home');
+        Route::get('/View/Profile','ViewProfile')->name('view.profile');
+        Route::get('/Service/History/{mobile_no}','MyServiceHistory')->name('history');
+        Route::get('/Eidt/Profile','EditProfile')->name('edit.profile');
+        Route::get('/About/Company','About')->name('about.us');
+        Route::get('/Serivce/List','ServiceList')->name('service.list');
+        Route::get('/Serivce/Details/{id}','ServDetails')->name('serv.details');
+        Route::get('/ApplyNow/{id}','ApplyNow')->name('apply.now');
+        Route::get('/Acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
+        Route::get('/Track/{id}','Track')->name('track');
+        Route::get('/View/Application{id}','viewApplication')->name('view.applicaiton');
         Route::get('/Feedback/{id}','Feedback')->name('feedback');
 
         Route::get('/callback/{id}/{service}/{service_type}','CallBack')->name('callback');
@@ -84,6 +91,8 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/testimonials','Testimonials')->name('testimonials');
     Route::get('/features','Feature')->name('features');
     Route::get('/service/{id}','ServiceDetails')->name('service.details');
+
+
 });
 
 
@@ -97,10 +106,8 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('New/Application', 'index')->name('new.application');
         Route::get('update/application', 'updateApplication')->name('update_application');
         Route::get('edit/application/{id}', 'Edit')->name('edit_application');
-        Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
+
         Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
-        Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
-        Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');
         Route::get('bookmarks', 'Bookmarks')->name('Bookmarks');

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\About_Us;
 use App\Models\Application;
+use App\Models\ApplyServiceForm;
 use App\Models\Callback_Db;
 use App\Models\Carousel_DB;
+use App\Models\Feedback;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
 use App\Models\User;
@@ -210,6 +212,20 @@ class UserController extends Controller
     }
     public function Feedback($Id){
         return view('user.user_account.pages.feedback_form',['Id'=>$Id],['services_count'=>$this->services_count,'service_list'=>$this->services_list]);
+    }
+    public function Track($Id){
+        $records = ApplyServiceForm::where('Id',$Id)->get();
+        $applied_on = ApplyServiceForm::where('id',$Id)->latest('created_at')->first();
+        $time =  Carbon::parse($applied_on['created_at'])->diffForHumans();
+
+        return view('user.user_account.pages.track_application',['time'=>$time,'records'=>$records,'Id'=>$Id,'services_count'=>$this->services_count,'service_list'=>$this->services_list]);
+    }
+    public function viewApplication($Id){
+        $records = Application::where('Id',$Id)->get();
+        $applied_on = Application::where('id',$Id)->latest('created_at')->first();
+        $time =  Carbon::parse($applied_on['created_at'])->diffForHumans();
+
+        return view('user.user_account.pages.track_application',['time'=>$time,'records'=>$records,'Id'=>$Id,'services_count'=>$this->services_count,'service_list'=>$this->services_list]);
     }
 
 

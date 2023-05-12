@@ -1,4 +1,20 @@
 <div>
+       {{-- The whole world belongs to you. --}}
+       <div class="row">{{-- Messags / Notification Row--}}
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Welcome {{Auth::user()->name}}<span class="text-primary"></span> </h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('services')}}">Services</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('history',Auth::user()->mobile_no)}}">My History</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>{{-- End of Row --}}
+
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -191,6 +207,10 @@
                 </p>
                 @if ($Signed)
                 <a href="#" wire:click.prevent="Sign"  class="btn btn-primary waves-effect waves-light">Sign Digitally</a>
+                <input type="checkbox" id="digisign" switch="primary"  wire:model="DigitallySigned" hidden>
+                <label for="digisign" data-on-label="Yes" data-off-label="No" hidden></label>
+                <span class="error">@error('DigitallySigned'){{$message}}@enderror</span>
+
                 @endif
             </div>
         </div>

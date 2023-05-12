@@ -63,7 +63,7 @@
                                                     Action <i class="mdi mdi-chevron-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                    <a class="dropdown-item" title="Open Applicatin" href=""wire:click="View('{{$data->Id}}')"id="open">View</a>
+                                                    <a class="dropdown-item" title="Open Applicatin" href="{{route('view.applicaiton',$data->Id)}}"id="editData">View</a>
                                                 </div>
                                             </div>
 

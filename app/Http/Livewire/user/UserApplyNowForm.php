@@ -14,7 +14,7 @@ class UserApplyNowForm extends Component
 {
     use WithFileUploads;
     public $App_Id,$Category_Type,$Service_Type,$Name,$PhoneNo,$FatherName,$Dob,$Description,$File,$ServiceId,$ServiceName,$subServices,$Read_Consent,$signature,$Address,$mobile;
-    public $Update=0,$mainServiceId,$mainServiceName,$Signed=true,$Recived,$disabled;
+    public $Update=0,$mainServiceId,$mainServiceName,$Signed=true,$Recived,$disabled,$DigitallySigned;
     protected $rules = [
         'Name' =>'required',
         'PhoneNo' =>'required | min:10 | max:10',
@@ -22,6 +22,7 @@ class UserApplyNowForm extends Component
         'Dob' =>'required',
         'Description' =>'required',
     ];
+
     public $ConsentMatter;
 
     public function updated($propertyName){
@@ -31,7 +32,8 @@ class UserApplyNowForm extends Component
 
     public function mount($Id)
     {
-        $this->App_Id = 'AN'.date('d-Y').rand(99,9999);
+        $time = Carbon::now();
+        $this->App_Id = 'AN'.$time->format('d-m-Y-H:i:s');
         $this->ServiceId = $Id;
         $this->Profile();
         $this->mobile = Auth::user()->mobile_no;
@@ -44,6 +46,7 @@ class UserApplyNowForm extends Component
        $this->signature = Carbon::now();
        $this->Recived = 'Consent Received';
        $this->Read_Consent = 1;
+       $this->DigitallySigned = 1;
        $this->disabled = 'disabled';
     }//End Function
 
@@ -52,10 +55,16 @@ class UserApplyNowForm extends Component
     {
         # code...
         if($this->File != Null){
-            $this->validate([
-                'Read_Consent'=>'required',
-                'Read_Consent.required'=>'Please give your consent',
-            ]);
+            $this->validate(
+                ['Read_Consent' => 'required',
+                'DigitallySigned'=>'required'],
+                [
+                    'Read_Consent.required' => 'The :attribute must Accept.',
+                    'DigitallySigned.required' => 'Please Sign this consent :attribute.',
+                ],
+                ['Read_Consent' => 'Consent',
+                'DigitallySigned' => 'Digitally'],
+            );
         }
         $this->validate();
         $consent = "";
@@ -65,12 +74,12 @@ class UserApplyNowForm extends Component
         $apply = new ApplyServiceForm();
 
         $apply->Id = $this->App_Id;
-        $apply->Service = $this->mainServiceName;
-        $apply->Service_Type = $this->ServiceName;
+        $apply->Application = $this->mainServiceName;
+        $apply->Application_Type = $this->ServiceName;
         $apply->Name = trim($this->Name);
         $apply->App_MobileNo = trim($this->PhoneNo);
         $apply->Mobile_No = trim($this->mobile);
-        $apply->Father_Name = trim($this->FatherName);
+        $apply->Relative_Name = trim($this->FatherName);
         $apply->Dob = trim($this->Dob);
         $apply->Message = trim($this->Description);
         $apply->File = $this->File;

@@ -1,6 +1,33 @@
 @extends('user\user_account\user_account_master')
 @section('UserAccount')
-<div class="page-content" style="margin-top: -15px">
+    {{-- The whole world belongs to you. --}}
+    <div class="row">{{-- Messags / Notification Row--}}
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Welcome {{Auth::user()->name}}<span class="text-primary"></span> </h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('services')}}">Services</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('history',Auth::user()->mobile_no)}}">My History</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>{{-- End of Row --}}
+    <div class="container-fluid page-header py-5 ">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Acknowledgment</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-white" href="{{route('user.home',Auth::user()->id)}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="{{route('service.list')}}">Services</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">My History</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+<div class="page-content" >
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -27,7 +54,7 @@
                                 <div class="cd-timeline-content">
                                     <h3>Payment & Validation</h3>
                                     <p class="m-b-20 text-muted font-14">The provided document and application will undergo a validation process.</p>
-                                    <a href="" wire:click.prevent="TrackApplication" class="btn btn-primary btn-rounded waves-effect waves-light m-t-5">Track Application</a>
+                                    <a href="{{route('track',$App_Id)}}" class="btn btn-primary btn-rounded waves-effect waves-light m-t-5">Track Application</a>
 
                                     <span class="cd-date">{{$date->addDays(2)->format('d-M-Y')}}</span>
                                 </div> <!-- cd-timeline-content -->

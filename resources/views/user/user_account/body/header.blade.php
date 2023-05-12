@@ -117,9 +117,9 @@
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @if (Auth::check())
-                    <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}" alt="Header Avatar">
+                    <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}" alt="Profile">
                     @else
-                    <img class="rounded-circle header-profile-user" src="" alt="Header Avatar">
+                    <img class="rounded-circle header-profile-user" src="{{url('storage/no_image.jpg')}}" alt="Profile">
 
                     @endif
 
