@@ -29,29 +29,11 @@
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">Total Sales</p>
-                                <h4 class="mb-2">1452</h4>
+                                <h4 class="mb-2">{{$totalSales}}</h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>9.23%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
                                 <span class="avatar-title bg-light text-primary rounded-3">
-                                    <i class="ri-shopping-cart-2-line font-size-24"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">New Orders</p>
-                                <h4 class="mb-2">938</h4>
-                                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="ri-arrow-right-down-line me-1 align-middle"></i>1.09%</span>from previous period</p>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-light text-success rounded-3">
                                     <i class="mdi mdi-currency-usd font-size-24"></i>
                                 </span>
                             </div>
@@ -64,8 +46,26 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
+                                <p class="text-truncate font-size-14 mb-2">New Orders</p>
+                                <h4 class="mb-2">{{$totalOrders}}</h4>
+                                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="ri-arrow-right-down-line me-1 align-middle"></i>1.09%</span>from previous period</p>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-success rounded-3">
+                                    <i class="ri-shopping-cart-2-line font-size-24"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><!-- end cardbody -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">New Users</p>
-                                <h4 class="mb-2">8246</h4>
+                                <h4 class="mb-2">{{$newUsers}}</h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>16.2%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
@@ -82,13 +82,13 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Unique Visitors</p>
-                                <h4 class="mb-2">29670</h4>
+                                <p class="text-truncate font-size-14 mb-2">Call Back </p>
+                                <h4 class="mb-2">{{$callBack}}</h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>11.7%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
                                 <span class="avatar-title bg-light text-success rounded-3">
-                                    <i class="mdi mdi-currency-btc font-size-24"></i>
+                                    <i class="ri-phone-fill font-size-24"></i>
                                 </span>
                             </div>
                         </div>
@@ -108,24 +108,24 @@
                                     <span class="text-muted">Report<i class="mdi mdi-chevron-down ms-1"></i></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Export</a>
-                                    <a class="dropdown-item" href="#">Import</a>
-                                    <a class="dropdown-item" href="#">Download Report</a>
+                                    <a class="dropdown-item" href="#">Callbacks</a>
+                                    <a class="dropdown-item" href="#">Apply Now</a>
+                                    <a class="dropdown-item" href="#">Feedback</a>
                                 </div>
                             </div>
                         </div>
-                        <h4 class="card-title mb-4">Email Sent</h4>
+                        <h4 class="card-title mb-4">Revenue</h4>
 
                         <div class="text-center pt-3">
                             <div class="row">
                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                     <div class="d-inline-flex">
-                                        <h5 class="me-2">25,117</h5>
+                                        <h5 class="me-2">{{$totalRevenue}}</h5>
                                         <div class="text-success font-size-12">
                                             <i class="mdi mdi-menu-up font-size-14"> </i>2.2 %
                                         </div>
                                     </div>
-                                    <p class="text-muted text-truncate mb-0">Marketplace</p>
+                                    <p class="text-muted text-truncate mb-0">Applications</p>
                                 </div><!-- end col -->
                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                     <div class="d-inline-flex">
@@ -148,9 +148,7 @@
                             </div><!-- end row -->
                         </div>
                     </div>
-                    <div class="card-body py-0 px-2">
-                        <div id="area_chart" class="apex-charts" dir="ltr"></div>
-                    </div>
+
                 </div><!-- end card -->
             </div>
             <!-- end col -->
@@ -195,9 +193,7 @@
                             </div><!-- end row -->
                         </div>
                     </div>
-                    <div class="card-body py-0 px-2">
-                        <div id="column_line_chart" class="apex-charts" dir="ltr"></div>
-                    </div>
+
                 </div><!-- end card -->
             </div>
             <!-- end col -->

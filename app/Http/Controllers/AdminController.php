@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\UserTopBar as ModelsUserTopBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -30,7 +31,38 @@ class AdminController extends Controller
         return view('user.user_home.user_index',compact('records','carousel','aboutus','services'),['CompanyName'=>$this->Company_Name]);
     }
     public function AdminDashboard(){
-        return view('admin.index');
+        $totalToday = DB::table('digital_cyber_db')
+                        ->select(DB::raw('COUNT(*) as total_today'))
+                        ->whereRaw('DATE(created_at) = CURDATE()')
+                        ->value('total_today');
+
+        $results = DB::select("SELECT YEAR(created_at) AS year, MONTH(created_at) AS month, COUNT(*) AS total_entries
+                        FROM digital_cyber_db
+                        WHERE (YEAR(created_at) = YEAR(CURRENT_DATE) AND MONTH(created_at) = MONTH(CURRENT_DATE))
+                        GROUP BY  YEAR(created_at), MONTH(created_at)
+                        ORDER BY  YEAR(created_at), MONTH(created_at) ");
+
+        $totalSales =  DB::table('digital_cyber_db')
+                                ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
+                                ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                                ->value('total_amount');
+        $totlaOrders = DB::table('digital_cyber_db')
+                            ->select(DB::raw('COUNT(*) as total_orders'))
+                            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                            ->value('total_orders');
+        $newUsers = DB::table('users')
+                            ->select(DB::raw('COUNT(*) as new_users'))
+                            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                            ->value('new_users');
+        $callBack = DB::table('callback')
+                            ->select(DB::raw('COUNT(*) as callback'))
+                            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                            ->value('callback');
+        $totalRevenue =  DB::table('digital_cyber_db')
+                            ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
+                            ->value('total_revenue');
+
+        return view('admin.index',['totalSales'=> $totalSales,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue]);
 
     }
     public function destroy(Request $request)

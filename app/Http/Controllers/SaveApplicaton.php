@@ -150,7 +150,7 @@ class SaveApplicaton extends Controller
                     $save_credit->Attachment = "../Client/Payment/Attachements/..";
                     $save_credit->save(); // Credit Ledger entry Saved
 
-                    return redirect('app_form')->with('SuccessMsg','Application Saved Successfully!!');
+                    return redirect()->route('new.application')->with('SuccessMsg','Application Saved Successfully!!');
                 }
             }
             else // For Unregistered or New Clients
@@ -222,7 +222,7 @@ class SaveApplicaton extends Controller
                     $save_balance->Description = $Description;
                     $save_balance->save(); // Balance Ledgere Saved
 
-                    return redirect('app_form')->with('SuccessMsg','Client Registered! Application Saved Successfully!, Balance Ledgere Updated!');
+                    return redirect()->route('new.application')->with('SuccessMsg','Client Registered! Application Saved Successfully!, Balance Ledgere Updated!');
                 }
                 else
                 {

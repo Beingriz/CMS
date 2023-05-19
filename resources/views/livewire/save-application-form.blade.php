@@ -72,7 +72,7 @@
                 <div class="card-body">
                     @if ($Open==1)
                     <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="{{route('new_application')}}"><i class="ri-refresh-line"></i> Refresh
+                        <a href="{{route('new.application')}}"><i class="ri-refresh-line"></i> Refresh
                         </div></a>
                     @endif
 

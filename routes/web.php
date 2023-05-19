@@ -58,7 +58,7 @@ Route::controller(ApplicationController::class)->group(function(){
 
 Route::middleware('auth','auth.role:user')->group(function(){
     Route::controller(UserController::class)->group(function(){
-        Route::get('/User/Dashboard','UserDashboard')->name('user.dashboard');
+        Route::get('/user/dashboard','UserDashboard')->name('user.dashboard');
         Route::get('/User/Home/{id}','UserHome')->name('user.home');
         Route::get('/View/Profile','ViewProfile')->name('view.profile');
         Route::get('/Service/History/{mobile_no}','MyServiceHistory')->name('history');
