@@ -112,18 +112,18 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                            <a href="" class="dropdown-item" wire:click.prevent="CreditLedger">Credit Ledger</a>
+                            <a href="" class="dropdown-item" wire:click.prevent="DebitLedger">Debit Ledger</a>
+                            <a href="" class="dropdown-item" wire:click.prevent="Leads">New Leads</a>
+                            <a href="" class="dropdown-item" wire:click.prevent="CallBack">Call Back Request</a>
+                            <a href="" class="dropdown-item" wire:click.prevent="FeedBack">Feedback</a>
                         </div>
                     </div>
 
                     <h4 class="card-title mb-4">Latest Transactions</h4>
 
+                    @if ($appReport)
+                    <p class="text-truncate font-size-20 mb-2">Application</p>
                     <div class="table-responsive">
                         <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
                             <thead class="table-light">
@@ -168,6 +168,305 @@
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if($creditReport)
+                    <p class="text-truncate font-size-20 mb-2">Credit Ledger</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Category</th>
+                                    <th>Perticular</th>
+                                    <th>Total Amount</th>
+                                    <th>Amount</th>
+                                    <th>Balance</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                    {{-- <th>Start date</th> --}}
+                                    {{-- <th style="width: 120px;">Salary</th> --}}
+                                </tr>
+                            </thead><!-- end thead -->
+                            <tbody>
+                                @foreach ($CreditLedger as $item)
+                                <tr>
+                                    <td>{{$CreditLedger->firstItem()+$loop->index}}</td>
+                                    <td><h6 class="mb-0">{{$item->Category}}</h6></td>
+                                    <td>{{$item->Sub_Category}}</td>
+                                    <td>{{$item->Total_Amount}}</td>
+                                    <td>{{$item->Amount_Paid}} </td>
+                                    <td>{{$item->Balance}} </td>
+                                    <td class="text-wrap">{{$item->Description}} </td>
+                                    <td>
+                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                            <div class="btn-group" role="group">
+                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Action <i class="mdi mdi-chevron-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                    <a class="dropdown-item" title="View" href=""id="editData">View</a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                 <!-- end -->
+
+                            </tbody><!-- end tbody -->
+                        </table> <!-- end table -->
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                            <p class="text-muted">Showing {{count($CreditLedger)}} of {{$CreditLedger->total()}} entries</p>
+                            </div>
+                            {{-- <span>{{$services->links()}}</span> --}}
+                            <div class="col-md-4">
+                                <span class="pagination pagination-rounded float-end" >
+                                    {{$CreditLedger->links()}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @if($debitReport)
+                    <p class="text-truncate font-size-20 mb-2">Debit Ledger</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Category</th>
+                                    <th>Source	</th>
+                                    <th>Total Amount</th>
+                                    <th>Amount</th>
+                                    <th>Balance</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                    {{-- <th>Start date</th> --}}
+                                    {{-- <th style="width: 120px;">Salary</th> --}}
+                                </tr>
+                            </thead><!-- end thead -->
+                            <tbody>
+                                @foreach ($DebitLedger as $item)
+                                <tr>
+                                    <td>{{$DebitLedger->firstItem()+$loop->index}}</td>
+                                    <td><h6 class="mb-0">{{$item->Category}}</h6></td>
+                                    <td>{{$item->Sub_Category}}</td>
+                                    <td>{{$item->Total_Amount}}</td>
+                                    <td>{{$item->Amount_Paid}} </td>
+                                    <td>{{$item->Balance}} </td>
+                                    <td class="text-wrap">{{$item->Description}} </td>
+                                    <td>
+                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                            <div class="btn-group" role="group">
+                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Action <i class="mdi mdi-chevron-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                    <a class="dropdown-item" title="View" href=""id="editData">View</a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                 <!-- end -->
+
+                            </tbody><!-- end tbody -->
+                        </table> <!-- end table -->
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                            <p class="text-muted">Showing {{count($DebitLedger)}} of {{$DebitLedger->total()}} entries</p>
+                            </div>
+                            {{-- <span>{{$services->links()}}</span> --}}
+                            <div class="col-md-4">
+                                <span class="pagination pagination-rounded float-end" >
+                                    {{$DebitLedger->links()}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    {{-- Call Back Report Start --}}
+                    @if($callBackReport)
+                    <p class="text-truncate font-size-20 mb-2">Callback Requests</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Service</th>
+                                    <th>Service Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead><!-- end thead -->
+                            <tbody>
+                                @foreach ($callbacks as $item)
+                                <tr>
+                                    <td>{{$callbacks->firstItem()+$loop->index}}</td>
+                                    <td><h6 class="mb-0">{{$item->Name}}</h6></td>
+                                    <td>{{$item->Mobile_No}}</td>
+                                    <td>{{$item->Service}}</td>
+                                    <td>{{$item->Service_Type}} </td>
+                                    <td>
+                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                            <div class="btn-group" role="group">
+                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Action <i class="mdi mdi-chevron-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                    <a class="dropdown-item" title="View" href=""id="editData">View</a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                 <!-- end -->
+
+                            </tbody><!-- end tbody -->
+                        </table> <!-- end table -->
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                            <p class="text-muted">Showing {{count($callbacks)}} of {{$callbacks->total()}} entries</p>
+                            </div>
+                            {{-- <span>{{$services->links()}}</span> --}}
+                            <div class="col-md-4">
+                                <span class="pagination pagination-rounded float-end" >
+                                    {{$callbacks->links()}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    {{-- Call Back Report End --}}
+                    {{-- Feedback Report Start --}}
+                    @if($feedbackReport)
+                        <p class="text-truncate font-size-20 mb-2">Feedbacks</p>
+                        <div class="table-responsive">
+                            <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th>Name</th>
+                                        <th>Phone No</th>
+                                        <th>Messahe</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead><!-- end thead -->
+                                <tbody>
+                                    @foreach ($feedbacks as $item)
+                                    <tr>
+                                        <td>{{$feedbacks->firstItem()+$loop->index}}</td>
+                                        <td><h6 class="mb-0">{{$item->Name}}</h6></td>
+                                        <td>{{$item->Phone_No}}</td>
+                                        <td class="text-wrap">{{$item->Message}} </td>
+                                        <td>
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Action <i class="mdi mdi-chevron-down"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                        <a class="dropdown-item" title="View" href=""id="editData">View</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    <!-- end -->
+
+                                </tbody><!-- end tbody -->
+                            </table> <!-- end table -->
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                <p class="text-muted">Showing {{count($feedbacks)}} of {{$feedbacks->total()}} entries</p>
+                                </div>
+                                {{-- <span>{{$services->links()}}</span> --}}
+                                <div class="col-md-4">
+                                    <span class="pagination pagination-rounded float-end" >
+                                        {{$feedbacks->links()}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    {{-- Feedback Report End --}}
+
+
+                    {{-- Lead Report Start --}}
+                    @if($leadReport)
+                        <p class="text-truncate font-size-20 mb-2">Lead Report</p>
+                        <div class="table-responsive">
+                            <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th>Name</th>
+                                        <th>Mobile No	</th>
+                                        <th>Application</th>
+                                        <th>Message</th>
+                                        <th>Balance</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                        {{-- <th>Start date</th> --}}
+                                        {{-- <th style="width: 120px;">Salary</th> --}}
+                                    </tr>
+                                </thead><!-- end thead -->
+                                <tbody>
+                                    @foreach ($leads as $item)
+                                    <tr>
+                                        <td>{{$leads->firstItem()+$loop->index}}</td>
+                                        <td><h6 class="mb-0">{{$item->Name}}</h6></td>
+                                        <td>{{$item->App_MobileNo}}</td>
+                                        <td>{{$item->Application}} | {{$item->Application_Type}}</td>
+                                        <td>{{$item->Message}} </td>
+                                        <td>{{$item->Balance}} </td>
+                                        <td class="text-wrap">{{$item->Description}} </td>
+                                        <td>
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Action <i class="mdi mdi-chevron-down"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                        <a class="dropdown-item" title="View" href=""id="editData">View</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    <!-- end -->
+
+                                </tbody><!-- end tbody -->
+                            </table> <!-- end table -->
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                <p class="text-muted">Showing {{count($leads)}} of {{$leads->total()}} entries</p>
+                                </div>
+                                {{-- <span>{{$services->links()}}</span> --}}
+                                <div class="col-md-4">
+                                    <span class="pagination pagination-rounded float-end" >
+                                        {{$leads->links()}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    {{-- Lead Report End --}}
+
                 </div><!-- end card -->
             </div><!-- end card -->
         </div>

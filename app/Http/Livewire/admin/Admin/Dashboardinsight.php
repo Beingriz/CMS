@@ -3,6 +3,11 @@
 namespace App\Http\Livewire\Admin\Admin;
 
 use App\Models\Application;
+use App\Models\ApplyServiceForm;
+use App\Models\Callback_Db;
+use App\Models\CreditLedger;
+use App\Models\Debit;
+use App\Models\Feedback;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -109,8 +114,64 @@ class Dashboardinsight extends Component
                             ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE - INTERVAL 1 YEAR)')
                             ->count();
     }
+    public $creditReport = false,$appReport = true,$debitReport = false,$leadReport = false,$callBackReport = false,$feedbackReport = false;
 
-    public function render()
+    public function CreditLedger(){
+        //Credit Ledger
+        $this->creditReport = true;
+        $this->appReport = false;
+        $this->callBackReport = false;
+        $this->leadReport = false;
+        $this->feedbackReport = false;
+        $this->debitReport = false;
+
+
+    } // End Function
+    public function DebitLedger(){
+        //Debit Ledger
+        $this->debitReport = true;
+        $this->creditReport = false;
+        $this->appReport = false;
+        $this->callBackReport = false;
+        $this->leadReport = false;
+        $this->feedbackReport = false;
+
+    }// End Function
+
+    public function Leads(){
+        //Leads
+        $this->debitReport = false;
+        $this->creditReport = false;
+        $this->appReport = false;
+        $this->callBackReport = false;
+        $this->leadReport = true;
+        $this->feedbackReport = false;
+
+
+    }// End Function
+
+    public function CallBack(){
+        //CallBack
+        $this->debitReport = false;
+        $this->creditReport = false;
+        $this->appReport = false;
+        $this->callBackReport = true;
+        $this->leadReport = false;
+        $this->feedbackReport = false;
+    }// End Function
+
+    public function FeedBack(){
+        //FeedBack
+        $this->debitReport = false;
+        $this->creditReport = false;
+        $this->appReport = false;
+        $this->callBackReport = false;
+        $this->leadReport = false;
+        $this->feedbackReport = true;
+    }// End Function
+
+
+   public function render()
     {
         $this->totalToday = DB::table('digital_cyber_db')
                         ->select(DB::raw('COUNT(*) as total_today'))
@@ -165,9 +226,13 @@ class Dashboardinsight extends Component
                             ->select(DB::raw('COUNT(*) as callbackApp'))
                             ->value('callbackApp');
         }
-        $Applist = Application::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
+        $applist = Application::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
+        $creditledger = CreditLedger::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
+        $DebitLedger = Debit::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
+        $callback = Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
+        $feedback = Feedback::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
+        $lead = ApplyServiceForm::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
 
-
-        return view('livewire.admin.admin.dashboardinsight',compact('Applist'));
+        return view('livewire.admin.admin.dashboardinsight',['Applist'=>$applist,'CreditLedger'=>$creditledger,'DebitLedger'=>$DebitLedger,'callbacks'=>$callback,'feedbacks'=>$feedback,'leads'=>$lead]);
     }
 }
