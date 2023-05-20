@@ -9,7 +9,7 @@ class Debit extends Model
 {
     use HasFactory;
     public $table="debit_ledger";
-    public $timestamps=false;
+    // public $timestamps=false;
 
     public function scopeFilter($query, $key)
     {

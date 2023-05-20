@@ -30,7 +30,7 @@
                 <li>
                     <a href="{{route('Dashboard')}}" >
                         <i class=" ri-profile-line"></i>
-                        <span>Dashboard</span>
+                        <span>Home</span>
                     </a>
                 </li>
                 {{-- Application Menu --}}

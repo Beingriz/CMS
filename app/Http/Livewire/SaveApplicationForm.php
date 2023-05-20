@@ -133,6 +133,7 @@ class SaveApplicationForm extends Component
         {
             $client_Id='DC'.time();
             $name = $this->Name;
+            $profileimage =  'noimage';
         }
 
         if(!empty($this->Applicant_Image))

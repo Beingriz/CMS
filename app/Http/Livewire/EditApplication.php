@@ -68,7 +68,6 @@ class EditApplication extends Component
         'Amount_Paid' =>'required',
         'PaymentMode' =>'required',
         'Applied_Date' =>'required',
-        'MainService' =>'required',
         'SubService' =>'required',
     ];
     protected $messages = [

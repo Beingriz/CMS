@@ -24,7 +24,7 @@
                 @endif
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{route('new_application')}}">Application</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('new.application')}}">Application</a></li>
                         <li class="breadcrumb-item active">Update</li>
                         <li class="breadcrumb-item active">ID: {{$Client_Id}}</li>
                     </ol>
@@ -721,7 +721,7 @@
 
                                         <div class="text-center">
                                             <a href="" wire:click.prevent="Update('{{$Id}}')" class="btn btn-success waves-effect waves-light"><i class="ri-check-line align-middle me-2"></i> Update </a>
-                                            <a href="{{route('new_application')}}" class="btn btn-light waves-effect waves-light">Cancel</a>
+                                            <a href="{{route('new.application')}}" class="btn btn-light waves-effect waves-light">Cancel</a>
 
                                         </div>
 

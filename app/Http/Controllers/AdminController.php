@@ -58,11 +58,20 @@ class AdminController extends Controller
                             ->select(DB::raw('COUNT(*) as callback'))
                             ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
                             ->value('callback');
-        $totalRevenue =  DB::table('digital_cyber_db')
+        $totalRevenue =  DB::table('credit_ledger')
                             ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
                             ->value('total_revenue');
+        $lastWeekAmount = DB::select("SELECT SUM(Amount_Paid) AS lastWeekamount FROM credit_ledger
+                            WHERE created_at >= CURDATE() - INTERVAL DAYOFWEEK(CURDATE()) + 6 DAY
+                                AND created_at < CURDATE() - INTERVAL DAYOFWEEK(CURDATE()) - 1 DAY");
+        $lastMonthAmount = DB::table('credit_ledger')
+                            ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
+                            ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)')
+                            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)')
+                            ->value('total_amount');
 
-        return view('admin.index',['totalSales'=> $totalSales,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue]);
+
+        return view('admin.index',['totalSales'=> $totalSales,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
 
     }
     public function destroy(Request $request)
