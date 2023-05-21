@@ -16,11 +16,7 @@ $(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = link
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+
             }
         })
 

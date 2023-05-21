@@ -374,9 +374,21 @@ class ApplicationController extends Controller
     {
         return view('Admin.Bookmark.bookmarks',['n'=>$this->n,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'application_type'=>$this->application_type,'info'=>$this->info,]);
     }
-    public function StatusModule()
+    public function AddStatus()
     {
-        return view('Admin.Status Module.status',['n'=>$this->n,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'application_type'=>$this->application_type,'info'=>$this->info,]);
+        $Id=''; $id='';
+        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id]);
+
+    }
+    public function EditStatus ($Id)
+    {
+        $id='';
+        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id]);
+    }
+    public function DeleteStatus ($Id)
+    {
+        $id='';
+        return view('admin.Status.status',['EditId'=>$id,'DeleteId'=>$Id]);
     }
     public function AppStatusList($service)
     {

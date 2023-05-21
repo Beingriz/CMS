@@ -106,13 +106,15 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('New/Application', 'index')->name('new.application');
         Route::get('update/application', 'updateApplication')->name('update_application');
         Route::get('edit/application/{id}', 'Edit')->name('edit_application');
-
         Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');
         Route::get('bookmarks', 'Bookmarks')->name('Bookmarks');
         Route::get('global/search/{key}', 'GlobalSearch')->name('global_search');
         Route::get('edit/profile/{id}', 'EditProfile')->name('edit_profile');
+        Route::get('new/status', 'AddStatus')->name('new.status');
+        Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
+        Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
     });
 });
 
@@ -144,7 +146,6 @@ Route::controller(CreditEntry::class)->group(function(){
 // Route::get('selected_ser_bal_lis/{value}', [ApplicationController::class,'Selected_Ser_Balance_List']);
 // Route::get('/print_ack/{id}', [ApplicationController::class,'PrintAck']);
 // Route::get('bookmarks', [ApplicationController::class,'Bookmarks']);
-// Route::get('statusmodule', [ApplicationController::class,'StatusModule']);
 // Route::get('signup', [SignupController::class,'index']);
 // Route::post('signup', [SignupController::class,'Save']);
 
