@@ -80,6 +80,7 @@
                         <div class="col-sm-10">
                             <select class="form-control" id="ChangeRelation" wire:model="ChangeRelation" name="ChangeRelation" >
                                 <option value="">---Select---</option>
+                                <option value="General">General</option>
                                 @foreach ($MainServices as $item)
                                     <option value="{{$item->Name}}">{{$item->Name}}</option>
                                 @endforeach
@@ -106,7 +107,7 @@
                     </div>
                     <!-- end row -->
                     <div class="row mb-3">
-                        <label for="example-tel-input" class="col-sm-2 col-form-label">Thumbnail<</label>
+                        <label for="example-tel-input" class="col-sm-2 col-form-label">Thumbnail</label>
                         <div class="col-sm-10">
                             <input class="form-control" type="file" wire:model="Thumbnail" id="Thumbnail{{ $iteration }}">
                             <span class="error">@error('Thumbnail'){{$message}}@enderror</span>
@@ -141,7 +142,7 @@
                                         <a href="#" wire:click.prevent="ResetFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                 @endif
 
-                                <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                <a href='{{route('dashboard')}}' class="btn  btn-warning btn-rounded btn-sm ">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -177,9 +178,9 @@
                                         <td>
                                             <img class="avatar-sm"  src="{{url('storage/'.$key->Thumbnail)}}" alt="Bookmark"></td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-primary font-size-15" onclick="confirm('Do you want to Edit {{$key->Name}} Bookmark?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->BM_Id}}')"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                            <a href="{{route('edit.bookmark',$key->BM_Id)}}" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                            <a href ="#"class="btn btn-sm btn-danger font-size-15"  onclick="confirm('Do you want to Delete {{$key->Name}} Bookmark?') || event.stopImmediatePropagation()" wire:click.prevent="Delete('{{$key->BM_Id}}')"  ><i class="mdi mdi-delete-alert-outline"  ></i></a>
+                                            <a href ="{{route('delete.bookmark',$key->BM_Id)}}"class="btn btn-sm btn-danger font-size-15"  id="delete"   ><i class="mdi mdi-delete-alert-outline"  ></i></a>
                                         </td>
                                     </tr>
                                     @endforeach

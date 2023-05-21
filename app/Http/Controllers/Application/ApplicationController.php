@@ -372,7 +372,18 @@ class ApplicationController extends Controller
     }
     public function Bookmarks()
     {
-        return view('Admin.Bookmark.bookmarks',['n'=>$this->n,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'application_type'=>$this->application_type,'info'=>$this->info,]);
+        $editId ='';$deleteId='';
+        return view('Admin.Bookmark.bookmarks',['EditId'=>$editId,'DeleteId'=>$deleteId]);
+    }
+    public function EditBookmark($Id)
+    {
+        $deleteId='';
+        return view('Admin.Bookmark.bookmarks',['EditId'=>$Id,'DeleteId'=>$deleteId]);
+    }
+    public function DeleteBookmark($Id)
+    {
+        $editId ='';
+        return view('Admin.Bookmark.bookmarks',['EditId'=>$editId,'DeleteId'=>$Id]);
     }
     public function AddStatus()
     {

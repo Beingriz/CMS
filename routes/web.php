@@ -110,6 +110,8 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');
         Route::get('bookmarks', 'Bookmarks')->name('Bookmarks');
+        Route::get('edit/bookmarks/{id}', 'EditBookmark')->name('edit.bookmark');
+        Route::get('delete/bookmarks/{id}', 'DeleteBookmark')->name('delete.bookmark');
         Route::get('global/search/{key}', 'GlobalSearch')->name('global_search');
         Route::get('edit/profile/{id}', 'EditProfile')->name('edit_profile');
         Route::get('new/status', 'AddStatus')->name('new.status');

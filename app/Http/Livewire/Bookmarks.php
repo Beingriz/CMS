@@ -37,9 +37,15 @@ class Bookmarks extends Component
    {
        $this->validateOnly($propertyName);
    }
-    public function mount()
+    public function mount($EditId,$DeleteId)
     {
         $this->Bm_Id = 'BM'.time();
+        if(!empty($EditId)){
+            $this->Edit($EditId);
+        }
+        if(!empty($DeleteId)){
+            $this->Delete($DeleteId);
+        }
     }
     public function ResetFields()
     {
@@ -107,14 +113,13 @@ class Bookmarks extends Component
     }
     public function Update()
     {
-        if(!is_Null($this->Thumbnail))
+        if(!is_Null($this->Thumbnail)) // Check if new image is selected
         {
             if(!is_Null($this->Old_Thumbnail))
             {
-
                 if(Storage::disk('public')->exists($this->Old_Thumbnail))
                 {
-                    unlink(storage_path('app/'.$this->Old_Thumbnail));
+                    unlink(storage_path('app/public/'.$this->Old_Thumbnail));
                     $extension = $this->Thumbnail->getClientOriginalExtension();
                     $path = 'Thumbnails/Bookmarks/'.$this->Name;
                     $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
@@ -137,7 +142,7 @@ class Bookmarks extends Component
                 ]);
             }
         }
-        else
+        else // check old is exist
         {
             if(!is_Null($this->Old_Thumbnail))
             {
@@ -193,13 +198,10 @@ class Bookmarks extends Component
     public function Delete($bm_Id)
     {
         $fetch = Bookmark::Where('BM_Id',$bm_Id)->get();
-        if(count($fetch)>0)
+        foreach($fetch as $item)
         {
-            foreach($fetch as $item)
-            {
-                $this->Old_Thumbnail = $item['Thumbnail'];
-                $this->Name = $item['Name'];
-            }
+            $this->Old_Thumbnail = $item['Thumbnail'];
+            $this->Name = $item['Name'];
         }
         if($this->Old_Thumbnail == NULL)
         {
@@ -217,7 +219,7 @@ class Bookmarks extends Component
         }
         elseif(Storage::disk('public')->exists($this->Old_Thumbnail))
         {
-            unlink(storage_path('app/'.$this->Old_Thumbnail));
+            unlink(storage_path('app/public/'.$this->Old_Thumbnail));
             $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
             if($delete)
             {
