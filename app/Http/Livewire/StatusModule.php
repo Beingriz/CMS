@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Application;
 use App\Models\Bookmark;
+use App\Models\ClientRegister;
 use App\Models\MainServices;
 use App\Models\Status;
 use Carbon\Carbon;
@@ -37,7 +38,7 @@ class StatusModule extends Component
    {
        $this->validateOnly($propertyName);
    }
-    public function mount($Id,$DelId)
+    public function mount($Id,$DelId,$ViewStatus)
     {
         $this->Id = 'ST'.time();
         if(!empty($Id)){
@@ -45,6 +46,9 @@ class StatusModule extends Component
         }
         if(!empty($DelId)){
             $this->Delete($DelId);
+        }
+        if(!empty($ViewStatus)){
+            $this->ViewStatus($ViewStatus);
         }
 
     }
@@ -62,6 +66,7 @@ class StatusModule extends Component
     }
     public function Change($val)
     {
+        $this->list = false;
         $this->Name = NULL;
         $this->Thumbnail = NULL;
         $this->ChangeRelation = NULL;
@@ -162,21 +167,55 @@ class StatusModule extends Component
         $this->ChangeRelation=Null;
         $this->iteration++;
     }
+    public $list=false,$status;
+    public function ViewStatus($status){
+        $this->list = true;
+        $this->status = $status;
+    }
+    public function UpdateStatus($Id, $Status)
+    {
+        $data = array();
+        $data['Status'] = trim($Status);
+        Application::Where('Id',$Id)->update($data);
+        $status = Status::all();
+        foreach($status as $item){
+            $name = $item['Status'];
+            $amount = DB::table('digital_cyber_db')->Where('Status',$name)->SUM('Total_Amount');
+            $count = DB::table('digital_cyber_db')->where('Status',$name)->count();
+            $data = array();
+            $data['Total_Amount'] = $amount;
+            $data['Total_Count'] = $count;
+            DB::table('status')->where('Status',$name)->update($data);
+        }
+         $notification = array(
+            'message' =>'Status Updated Successfully',
+            'alert-type' => 'info'
+         );
+         return redirect()->back()->with($notification);
+    }
+
     public function Update()
     {
-        if(!is_Null($this->Thumbnail))
+        if(!is_Null($this->Thumbnail)) // Check if new image is selected
         {
             if(!is_Null($this->Old_Thumbnail))
             {
-                $Thumbnail = str_replace('storage/app/', '',$this->Old_Thumbnail);
-                if(Storage::exists($Thumbnail))
+                if(Storage::disk('public')->exists($this->Old_Thumbnail))
                 {
-                    unlink(storage_path('app/'.$Thumbnail));
-                    $this->New_Thumbnail = 'storage/app/'. $this->Thumbnail->storeAs('Thumbnails/Status/',$this->Name.time().'.jpeg');
+                    unlink(storage_path('app/public/'.$this->Old_Thumbnail));
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Status/'.$this->Name;
+                    $filename = 'St_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
                 }
                 else
                 {
-                    $this->New_Thumbnail = 'storage/app/'. $this->Thumbnail->storeAs('Thumbnails/Status/',$this->Name.time().'.jpeg');
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Status/'.$this->Name;
+                    $filename = 'St_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
                 }
             }
             else
@@ -186,12 +225,11 @@ class StatusModule extends Component
                 ]);
             }
         }
-        else
+        else // check old is exist
         {
             if(!is_Null($this->Old_Thumbnail))
             {
-                $Thumbnail = str_replace('storage/app/', '',$this->Old_Thumbnail);
-                if(Storage::exists($Thumbnail))
+                if(Storage::disk('public')->exists($this->Old_Thumbnail))
                 {
                     $this->New_Thumbnail = $this->Old_Thumbnail;
                 }
@@ -211,30 +249,18 @@ class StatusModule extends Component
             }
 
         }
-        if($this->ChangeRelation =="")
-        {
-            $this->Relation = $this->Relation;
-        }
-        else
+        if(!empty($this->ChangeRelation))
         {
             $this->Relation = $this->ChangeRelation;
         }
-        $fetch = Status::where('ST_Id',$this->ST_Id)->get();
-        foreach($fetch as $key)
-        {
-            $status = $key['Status'];
-        }
-        $check = Application::Where('Status',$status)->get();
-        if(count($check)>0)
-        {
-            $Update_App = DB::update('update digital_cyber_db set Status = ? where Status = ?', [$this->Name,$status]);
-
-        }
-        $Update = DB::update('update status set Status = ?, Relation = ?, Orderby = ?, Thumbnail = ? where ST_Id = ? ', [$this->Name,$this->Relation,$this->Order,$this->New_Thumbnail,$this->ST_Id]);
-
+        $data = array();
+        $data['Status'] = $this->Name;
+        $data['Relation'] = $this->Relation;
+        $data['Thumbnail'] = $this->New_Thumbnail;
+        $Update = DB::table('status')->where('Id','=',$this->Id)->Update($data);
         if($Update)
         {
-            session()->flash('SuccessMsg',$this->Name.' Status is Updated in '.$this->Relation.' Category');
+            session()->flash('SuccessMsg',$this->Name.' Status is Updated for '.$this->Relation);
             $this->ResetFields();
             $this->Thumbnail=Null;
             $this->iteration++;
@@ -247,21 +273,42 @@ class StatusModule extends Component
         foreach($fetch as $item)
         {
             $this->Old_Thumbnail = $item['Thumbnail'];
-            $this->Name = $item['Status'];
+            $this->Name = $item['Name'];
+            $this->Relation = $item['Relation'];
         }
-        if (Storage::disk('public')->exists($this->Old_Thumbnail)) // Check for existing File
+        if($this->Old_Thumbnail == NULL)
         {
-            unlink(storage_path('app/public/'.$this->Old_Thumbnail)); // Deleting Existing File
             $delete = Status::Where('Id',$Id)->delete();
             if($delete)
             {
-                return redirect()->route('new.status');
-                session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
-
+                session()->flash('SuccessMsg',$this->Name.'  is Deleted From'. $this->Relation);
+                $this->Relation =$this->Relation;
             }
             else
             {
                 session()->flash('Error', 'Unable to Delete Bookmark');
+                $this->Relation = $this->Relation;
+            }
+        }
+        elseif(Storage::disk('public')->exists($this->Old_Thumbnail))
+        {
+            unlink(storage_path('app/public/'.$this->Old_Thumbnail));
+            $delete = Status::Where('Id',$Id)->delete();
+            if($delete)
+            {
+                // session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
+                $this->Relation = $this->Relation;
+                $notification = array(
+                    'message'=> $this->Name.' is Deleted from '.$this->Relation,
+                    'alert-type'=>'info'
+                );
+                return redirect()->back()->with($notification);
+            }
+            else
+            {
+                $delete = Status::Where('Id',$Id)->delete();
+                session()->flash('Error', 'Unable to Delete Icon / Not Available Bookmark');
+
             }
         }
         else
@@ -269,12 +316,19 @@ class StatusModule extends Component
             $delete = Status::Where('Id',$Id)->delete();
             if($delete)
             {
-                return redirect()->route('new.status');
-                session()->flash('SuccessMsg',$this->Name.'  is Deleted from '.$this->Relation);
+
+                $this->Relation = $this->Relation;
+                $notification = array(
+                    'message'=> $this->Name.' is Deleted from '.$this->Relation,
+                    'alert-type'=>'info'
+                );
+                return redirect()->back()->with($notification);
             }
             else
             {
+                $this->Relation = $this->Relation;
                 session()->flash('Error', 'Unable to Delete Bookmark');
+
             }
         }
 
@@ -288,8 +342,10 @@ class StatusModule extends Component
     public function render()
     {
         $this->LastUpdate();
+        $status_list = Status::all();
         $MainServices = MainServices::all();
         $Existing_st = DB::table('status')->where('Relation',$this->Relation)->paginate(5);
-        return view('livewire.status-module',['MainServices'=>$MainServices,'Existing_st'=>$Existing_st]);
+        $records = Application::where('status',$this->status)->paginate(10);
+        return view('livewire.status-module',['MainServices'=>$MainServices,'Existing_st'=>$Existing_st,'status_list' =>$status_list,'records'=>$records]);
     }
 }

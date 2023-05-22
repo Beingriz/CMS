@@ -78,12 +78,10 @@ class DynamicDashboard extends Component
     {
         $fetch_details = NULL;
         $No = 'No';
-        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',$name],['Recycle_Bin',$No]])->get();
+        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',trim($name)],['Recycle_Bin',$No]])->get();
         $this->StatusDetails = $fetch_details;
         $this->count = count($fetch_details);
         $this->status_name = $name;
-
-
     }
     public function UpdateStatus($Id,$pstatus,$ustatus)
     {

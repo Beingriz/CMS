@@ -25,7 +25,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Digital Cyber</a></li>
-                        <li class="breadcrumb-item active"><a href="{{route('new_application')}}">New Form</a></li>
+                        <li class="breadcrumb-item active"><a href="{{route('new.application')}}">New Form</a></li>
                     </ol>
                 </div>
 

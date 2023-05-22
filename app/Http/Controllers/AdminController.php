@@ -70,6 +70,7 @@ class AdminController extends Controller
                             ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)')
                             ->value('total_amount');
 
+        // Status Count and Amount Update
 
         return view('admin.index',['totalSales'=> $totalSales,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
 

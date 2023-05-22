@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Application;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\DocumentFiles;
+use App\Models\Status;
 use App\Models\SubServices;
 use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
@@ -86,6 +87,16 @@ class ApplicationController extends Controller
 
         }
         // Code for insight Data Records are fetched from RightInsight Trait
+        $status = Status::all();
+        foreach($status as $item){
+            $name = $item['Status'];
+            $amount = DB::table('digital_cyber_db')->Where('Status',$name)->SUM('Total_Amount');
+            $count = DB::table('digital_cyber_db')->where('Status',$name)->count();
+            $data = array();
+            $data['Total_Amount'] = $amount;
+            $data['Total_Count'] = $count;
+            DB::table('status')->where('Status',$name)->update($data);
+        }
         return view('Application\app_dashboard',['total_applicaiton'=>$this->applications_served,'total_amount'=>$total_amount,'Mainservices'=>$this->MainServices,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'new_clients'=>$this->new_clients,'previous_day_new_clients'=>$this->previous_day_new_clients,'bookmarks'=>$this->bookmarks,]);
     }
     public function DynamicDashboard($MainServiceId)
@@ -388,18 +399,27 @@ class ApplicationController extends Controller
     public function AddStatus()
     {
         $Id=''; $id='';
-        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id]);
+        $status='';
+        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id,'VeiwStatus'=>$status]);
 
     }
     public function EditStatus ($Id)
     {
         $id='';
-        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id]);
+        $status='';
+        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id,'VeiwStatus'=>$status]);
+    }
+    public function ViewStatus ($status)
+    {
+        $eid='';
+        $did='';
+        return view('admin.Status.status',['EditId'=>$eid,'DeleteId'=>$did,'VeiwStatus'=>$status]);
     }
     public function DeleteStatus ($Id)
     {
         $id='';
-        return view('admin.Status.status',['EditId'=>$id,'DeleteId'=>$Id]);
+        $status='';
+        return view('admin.Status.status',['EditId'=>$id,'DeleteId'=>$Id,'VeiwStatus'=>$status]);
     }
     public function AppStatusList($service)
     {

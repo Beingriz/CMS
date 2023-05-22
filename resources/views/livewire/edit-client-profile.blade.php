@@ -24,7 +24,7 @@
                 @endif
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{route('new_application')}}">Application</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('new.application')}}">Application</a></li>
                         <li class="breadcrumb-item active">Update</li>
                         <li class="breadcrumb-item active">ID: </li>
                     </ol>

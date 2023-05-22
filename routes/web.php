@@ -116,7 +116,10 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('edit/profile/{id}', 'EditProfile')->name('edit_profile');
         Route::get('new/status', 'AddStatus')->name('new.status');
         Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
+        Route::get('List/App/status/{status}', 'ViewStatus')->name('view.status');
         Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
+        // Route::get('Application/Status{service}','AppStatusList')->name('app.status');
+
     });
 });
 
@@ -144,7 +147,6 @@ Route::controller(CreditEntry::class)->group(function(){
 // Route::get('/view_recycle_bin', [ApplicationController::class,'ViewRecycleBin']);
 // Route::get('/restore_app/{id}', [ApplicationController::class,'Restore']);
 // Route::get('balance_list', [ApplicationController::class,'BalanceList']);
-// Route::get('app_status_list/{service}', [ApplicationController::class,'AppStatusList']);
 // Route::get('selected_ser_bal_lis/{value}', [ApplicationController::class,'Selected_Ser_Balance_List']);
 // Route::get('/print_ack/{id}', [ApplicationController::class,'PrintAck']);
 // Route::get('bookmarks', [ApplicationController::class,'Bookmarks']);

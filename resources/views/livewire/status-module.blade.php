@@ -183,8 +183,9 @@
                                         <td>
                                             <img class="avatar-sm"  src="{{asset('storage/'.$key->Thumbnail)}}" alt=""></td>
                                         <td>
-                                            <a href="{{route('edit.status',$key->Id)}}" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
-                                            <a href="{{route('delete.status',$key->Id)}}" class="btn btn-sm btn-danger font-size-15" id="deleteData"><i class=" mdi mdi-trash-can"></i></a>
+                                            <a href="{{route('edit.status',$key->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                            <a href="{{route('delete.status',$key->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
+                                            <a href="#"  wire:click.prevent = "ViewStatus('{{$key->Status}}')"title="View List" class="btn btn-sm btn-info font-size-15" ><i class="mdi mdi-view-grid-plus"></i></a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -209,6 +210,103 @@
             </div>
             @endif
     </div>
+@if ($list)
+<div class="row"> {{-- Start of Search Result Details Row --}}
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title"> Search Result found. </h4>
+                    {{-- <h4 class="card-title">Status : {{ !is_null($Status) ?  $Status : 'All'}} {{$StatusCount}} </h4> --}}
+                </div>
+
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Delete</th>
+                                <th >Received</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th >Application</th>
+                                <th >Services</th>
+                                <th>Ref No</th>
+                                <th >Document</th>
+                                <th>Status</th>
+                                <th>Profile</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse( $records as $data )
+                            <tr>
+                                <td>{{$records->firstItem()+$loop->index }}</td>
+                                <td><input type="checkbox" name="checked" id="checked" value="{{$data->Id}}" wire:model="Checked"></td>
+
+                                <td>{{ $data->Received_Date }}</td>
+                                <td>{{ $data->Name }}</td>
+                                <td>{{ $data->Mobile_No }}</td>
+                                <td>{{ $data->Application}}</td>
+                                <td>{{$data->Application_Type}}</td>
+                                <td>{{ $data->Ack_No }}</td>
+                                <td>{{ $data->Document_No }}</td>
+                                <td>
+
+
+                                <select  wire:change="UpdateStatus('{{$data->Id}}',event.target.value)" name="bystatus" id="bystatus" class="form-control form-control-sm">
+                                <option selected="">{{ $data->Status }}</option>
+                                    @foreach ($status_list as $status)
+                                    <option value="{{ $status->Status }} ">{{ $status->Status }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>  <img src="{{ (!empty($data['Applicant_Image']))?url('storage/'.$data['Applicant_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md"></td>
+
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Edit<i class="mdi mdi-square-edit-outline"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                <a class="dropdown-item btn-primary" id="update" title="Edit Applicaiton" href="{{route('edit_application',$data->Id)}}">Edit</a>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="11">
+                                        <img class=" avatar-xl" alt="No Result" src="{{asset('storage/no_result.png')}}">
+                                        <p>No Result Found</p>
+                                    </td>
+                                </tr>
+                            @endforelse()
+                        </tbody>
+
+                    </table>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-md-8">
+                        <p class="text-muted">Showing {{count($records)}} of {{$records->total()}} entries</p>
+                        </div>
+                        <div class="col-md-4">
+                            <span class=" pagination pagination-rounded float-end" >
+                                {{$records->links()}}
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 
 
 <div>
