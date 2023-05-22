@@ -45,16 +45,15 @@
 
 {{-- ---------------------------------------------------------------------------------------------------- --}}
     <div class="row">
-        <div class="col-lg-7">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title"> Favourite Bookmark</h4>
                     <p class="card-title-desc">Add New Bookmarks</p>
                     <div class="row mb-3">
-                        <label for="example-text-input" class="col-sm-2 col-form-label">Bookmark Id</label>
-                        <div class="col-sm-10">
-                            <label for="example-text-input" class="col-sm-2 col-form-label">{{$Bm_Id}}</label>
-                        </div>
+                        <label for="example-text-input" class="col-sm-3 col-form-label">Bookmark Id</label>
+                        <label for="example-text-input" class="col-sm-3 col-form-label">{{$Bm_Id}}</label>
+
                     </div>
                     <!-- end row -->
                     <form wire:submit.prevent="Save">
@@ -153,7 +152,7 @@
 
 
             @if (count($Existing_Bm)>0)
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">#{{$Existing_Bm->total()}}  Bookmarks for {{$Relation}} Category</h5>

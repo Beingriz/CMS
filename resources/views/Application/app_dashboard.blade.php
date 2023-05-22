@@ -58,6 +58,9 @@
             <div class="data-table-header">
                 <p class="heading">Bookmarks </p>
             </div>
+
+        </div>
+        <div class="row">
             @foreach($bookmarks as $bookmark)
             <a href="{{ $bookmark->Hyperlink }}" target="_blank" class="bookmark">
                 <img class="b-img" src="{{(!empty($bookmark->Thumbnail))?url('storage/'.$bookmark->Thumbnail):url('storage/no_image.jpg')}}" alt="Bookmark Icon">

@@ -166,11 +166,7 @@ class Bookmarks extends Component
             }
 
         }
-        if($this->ChangeRelation == NULL)
-        {
-            $this->Relation = $this->Relation;
-        }
-        else
+        if(!empty($this->ChangeRelation))
         {
             $this->Relation = $this->ChangeRelation;
         }
@@ -202,14 +198,15 @@ class Bookmarks extends Component
         {
             $this->Old_Thumbnail = $item['Thumbnail'];
             $this->Name = $item['Name'];
+            $this->Relation = $item['Relation'];
         }
         if($this->Old_Thumbnail == NULL)
         {
             $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
             if($delete)
             {
-                session()->flash('SuccessMsg',$this->Name.'  is Deleted from '.$this->Relation);
-                $this->Relation = $this->Relation;
+                session()->flash('SuccessMsg',$this->Name.'  is Deleted From'. $this->Relation);
+                $this->Relation =$this->Relation;
             }
             else
             {
@@ -223,13 +220,17 @@ class Bookmarks extends Component
             $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
             if($delete)
             {
-                session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
+                // session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
                 $this->Relation = $this->Relation;
+                $notification = array(
+                    'message'=> $this->Name.' is Deleted from '.$this->Relation,
+                    'alert-type'=>'info'
+                );
+                return redirect()->back()->with($notification);
             }
             else
             {
                 $delete = Bookmark::Where('BM_Id',$bm_Id)->delete();
-                $this->Relation = $this->Relation;
                 session()->flash('Error', 'Unable to Delete Icon / Not Available Bookmark');
 
             }
@@ -240,10 +241,12 @@ class Bookmarks extends Component
             if($delete)
             {
 
-                session()->flash('SuccessMsg',$this->Name.'  is Deleted from '.$this->Relation);
                 $this->Relation = $this->Relation;
-
-
+                $notification = array(
+                    'message'=> $this->Name.' is Deleted from '.$this->Relation,
+                    'alert-type'=>'info'
+                );
+                return redirect()->back()->with($notification);
             }
             else
             {
