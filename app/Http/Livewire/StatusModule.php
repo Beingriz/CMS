@@ -344,7 +344,7 @@ class StatusModule extends Component
         $this->LastUpdate();
         $status_list = Status::all();
         $MainServices = MainServices::all();
-        $Existing_st = DB::table('status')->where('Relation',$this->Relation)->paginate(5);
+        $Existing_st = DB::table('status')->where('Relation',$this->Relation)->orderBy('Orderby','asc')->paginate(5);
         $records = Application::where('status',$this->status)->paginate(10);
         return view('livewire.status-module',['MainServices'=>$MainServices,'Existing_st'=>$Existing_st,'status_list' =>$status_list,'records'=>$records]);
     }

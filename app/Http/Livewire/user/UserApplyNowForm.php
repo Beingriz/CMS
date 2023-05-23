@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User;
 
+use App\Models\Application;
 use App\Models\ApplyServiceForm;
 use App\Models\MainServices;
 use App\Models\SubServices;
@@ -85,6 +86,33 @@ class UserApplyNowForm extends Component
         $apply->File = $this->File;
         $apply->Consent = $consent;
         $apply->save();
+
+        $app_field = new Application();
+        $app_field->Id = $this->App_Id;
+        $app_field->Client_Id = Auth::user()->Client_Id;
+        $app_field->Received_Date = date('Y-m-d');;
+        $app_field->Application = $this->mainServiceName;
+        $app_field->Application_Type = $this->ServiceName;
+        $app_field->Name = trim($this->Name);
+        $app_field->Relative_Name = trim($this->FatherName);
+        $app_field->Gender = Auth::user()->gender;
+        $app_field->Mobile_No =  trim($this->mobile);
+        $app_field->DOB = trim($this->Dob);
+        $app_field->Applied_Date = NULL;
+        $app_field->Total_Amount = 0;
+        $app_field->Amount_Paid =  0;
+        $app_field->Balance =  0;
+        $app_field->Payment_Mode= 'Not Available';
+        $app_field->Payment_Receipt= 'Not Available';
+        $app_field->Status= 'Submitted';
+        $app_field->Ack_No= 'Not Available';
+        $app_field->Ack_File= 'Not Available';
+        $app_field->Document_No= 'Not Available';
+        $app_field->Doc_File= 'Not Available';
+        $app_field->Delivered_Date= NULL;
+        $app_field->Applicant_Image= Auth::user()->profile_image;
+        $app_field->save(); // Application Form Saved
+
         $notification = array(
             'message'=>'Application Submitted Sucessfully',
             'info-type' => 'success'

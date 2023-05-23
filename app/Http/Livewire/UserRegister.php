@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ClientRegister;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Livewire\Component;
@@ -33,16 +34,31 @@ class UserRegister extends Component
     }
     public function Register(){
         $this->validate();
+        $client_Id = 'DC'.time();
         $user = User::create([
+            'Client_Id' =>$client_Id,
             'name' => $this->name,
             'username' => $this->username,
             'mobile_no' => $this->mobile_no,
             'email' => $this->email,
+            'profile_image' => 'account.png',
             'password' => Hash::make($this->password),
         ]);
 
-        event(new Registered($user));
 
+        $user_data = new ClientRegister();
+        $user_data->Id= $client_Id;
+        $user_data->Name = $this->name;
+        $user_data->Relative_Name = 'Not Available';
+        $user_data->Gender = 'Not Available';
+        $user_data->DOB = NULL;
+        $user_data->Mobile_No = $this->mobile_no;
+        $user_data->Email_Id = $this->email;
+        $user_data->Address = "Not Available";
+        $user_data->Profile_Image = 'account.png';
+        $user_data->Client_Type = "New Client";
+        $user_data->save(); // Client Registered
+        event(new Registered($user));
         Auth::login($user);
         $notification = array(
             'message'=>$this->name.' Login Successfull',

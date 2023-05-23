@@ -59,6 +59,9 @@ class UserController extends Controller
 
         $delivered = Application::where('Mobile_No',Auth::user()->mobile_no)
                                 ->where('Status','Deliveted to Client')->count();
+        if($applied <=0){
+            $applied = 1;
+        }
         $perc = ($delivered*100)/$applied ;
         $perc = number_format($perc,2);
         $bal=0;$paid=0;

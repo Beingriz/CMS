@@ -18,7 +18,7 @@
                                 <h5 class="text-truncate text-primary font-size-20 mb-2">{{Auth::user()->name}}</h5>
                                 <div class="col-8">
                                     <div class="text-center mt-8">
-                                        <h5>Applied {{$services_count}} Services</h5>
+                                        <h5>Applied {{$Applied}} Services</h5>
                                         <p class="mb-2 text-truncate">Registerd Since {{$reg_on}}</p>
                                     </div>
                                 </div>

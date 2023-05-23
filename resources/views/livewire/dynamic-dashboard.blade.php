@@ -73,14 +73,12 @@
             <div class="dynamic-table-header">
                 <p class="mt-0 font-size-18 mb-1 float-center" style="color: white"> Status of {{$Serv_Name}} , {{$Sub_Serv_Name}}</p>
             </div>
-        </div>
-        <div class="row">
             @foreach ($status as $item)
                 <a href="#" class="col-xl-3 col-md-10" wire:click.prevent="ShowDetails('{{$item->Status}}')">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                                <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
 
                                 <div class="flex-grow-1">
                                     <h5 class="mt-0 font-size-18 mb-1">{{$item->Status}}</h5>
@@ -97,7 +95,6 @@
             @endforeach
         </div>{{-- End of Status Count Row --}}
     @endif
-
 
     @if ($count>0)
         @include('Application.dynamic-table')

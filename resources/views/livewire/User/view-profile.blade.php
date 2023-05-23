@@ -18,7 +18,10 @@
                         </center>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Username  : {{$profiledata->username}}</li>                        <li class="list-group-item">Name      : {{$profiledata->name}}</li>
+                        <li class="list-group-item">Clinet Id  : {{$profiledata->Client_Id}}</li>
+                        <li class="list-group-item">Name      : {{$profiledata->name}}</li>
+                        <li class="list-group-item">Username  : {{$profiledata->username}}</li>
+                        <li class="list-group-item">Gender      : {{$profiledata->gender}}</li>
                         <li class="list-group-item">Email     : {{$profiledata->email}}</li>
                         <li class="list-group-item">Mobile No : {{$profiledata->mobile_no}}</li>
                         <li class="list-group-item">DOB       : {{$profiledata->dob}}</li>
@@ -62,6 +65,18 @@
                                         <div class="col-sm-9">
                                             <input class="form-control" type="text"  wire:model="email"placeholder="Name" id="email">
                                             <span class="error">@error('email'){{$message}}@enderror</span>
+                                        </div>
+                                    </div>
+                                    {{-- Gender --}}
+                                    <div class="row mb-3">
+                                        <label for="email" class="col-sm-3 col-form-label">Gender</label>
+                                        <div class="col-sm-9">
+                                            <select name="gender" id="gender" wire:model="gender" class="form-control">
+                                                <option value="">---Select----</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                            <span class="error">@error('gender'){{$message}}@enderror</span>
                                         </div>
                                     </div>
 

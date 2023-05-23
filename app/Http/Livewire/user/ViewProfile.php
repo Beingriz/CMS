@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\User;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class ViewProfile extends Component
     public $ProfileView =1, $ProfileEdit = 0;
 
     public $profiledata;
-    public $name,$email,$dob,$mobile_no,$address,$username,$profile_image,$old_profile_image;
+    public $name,$email,$dob,$mobile_no,$address,$username,$profile_image,$old_profile_image,$gender;
 
 
     protected $rules = [
@@ -51,6 +52,7 @@ class ViewProfile extends Component
             $this->email = $key['email'];
             $this->mobile_no = $key['mobile_no'];
             $this->dob = $key['dob'];
+            $this->gender = $key['gender'];
             $this->address = $key['address'];
             $this->old_profile_image = $key['profile_image'];
         }
@@ -62,6 +64,7 @@ class ViewProfile extends Component
         $this->name= NUll;
         $this->email= NUll;
         $this->mobile_no= NUll;
+        $this->gender= "";
         $this->dob= NUll;
         $this->address= NUll;
 
@@ -71,6 +74,7 @@ class ViewProfile extends Component
         $this->validate([
             'name'=>'required',
             'dob'=>'required',
+            'gender'=>'required',
             'address'=>'required']);
 
         $id = Auth::user()->id;
@@ -79,22 +83,33 @@ class ViewProfile extends Component
         $data['name'] = $this->name;
         $data['email'] = $this->email;
         $data['dob'] = $this->dob;
+        $data['gender'] = $this->gender;
         $data['address'] = $this->address;
+        $data['updated_at'] = Carbon::now();
         if(!is_NUll($this->profile_image)) // if New Profile Images is Selected-- Uploading file
         {
-            if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
+            if(!is_NULL($this->old_profile_image)){
+                if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
                 {
-
                     unlink(storage_path('app/public/'.$this->old_profile_image)); // Deleting Existing File
-
                 }
+            }
             $filename = date('Ymd').'_'.$this->profile_image->getClientOriginalName();
-
             $data['profile_image'] = $this->profile_image->storePubliclyAs('Uploads/Admin/Profile/'.$this->name,$filename,'public');
         } // New Profile Image Uploaded Successfully
 
-        $update = DB::table('users')->where('id',$id)->update($data);
-        if($update > 0 )
+        $update_profile = DB::table('users')->where('id',$id)->update($data);
+
+        $data = array();
+        $data['Name'] = $this->name;
+        $data['Email_Id'] = $this->email;
+        $data['DOB'] = $this->dob;
+        $data['Gender'] = $this->gender;
+        $data['Address'] = $this->address;
+        $data['updated_at'] = Carbon::now();
+        $data['Profile_Image'] = Auth::user()->profile_image;;
+        $update_client = DB::table('client_register')->where('Id',Auth::user()->Client_Id)->update($data);
+        if($update_profile > 0 || $update_client > 0 )
         {
             $notification = array(
                 'message'=>'Profile Updated',
@@ -108,7 +123,6 @@ class ViewProfile extends Component
                 'alert-type' =>'info'
             );
         }
-
         return redirect()->route('view.profile')->with($notification);
     }
     public function render()
