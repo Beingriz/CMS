@@ -31,7 +31,8 @@ class Creditentry extends Controller
      */
     public function Home()
     {
-        return view('DigitalLedger.CreditLedger.credit_entry');
+        $editId='';$DeleteData='';
+        return view('DigitalLedger.CreditLedger.credit_entry',['EditData'=>$editId,'DeleteData'=>$DeleteData]);
     }
     public function CreditSource()
     {
@@ -89,6 +90,14 @@ class Creditentry extends Controller
         return redirect('credit_entry')->with('SuccessMsg', 'Credit Entry Saved Successfully');
 
     }
+    public function EditCredit($Id){
+        $DeleteData='';
+        return view('DigitalLedger.CreditLedger.credit_entry',['EditData'=>$Id,'DeleteData'=>$DeleteData]);
+    }
+    public function DeleteCredit($DeleteData){
+        $eidtData='';
+        return view('DigitalLedger.CreditLedger.credit_entry',['EditData'=>$eidtData,'DeleteData'=>$DeleteData]);
+    }
 
     public function Daily_count()
     {   $total = 0;
@@ -108,8 +117,8 @@ class Creditentry extends Controller
         $sl_no = CreditLedger::where('date',$today)->count();
 
         $percentage = ($total*100)/1500;
-
-        return view('DigitalLedger.CreditLedger.credit_entry' ,[
+        $editId='';$DeleteData='';
+        return view('DigitalLedger.CreditLedger.credit_entry' ,['EditData'=>$editId,'DeleteData'=>$DeleteData,
             'creditdata'=>$todays_list ,'total'=>$total ,
             'sl_no'=>$sl_no, 'n'=>$n, 'credit_source'=>$credit_source,
             'date'=>$today ,'payment_mode'=>$payment_mode,
@@ -217,7 +226,9 @@ class Creditentry extends Controller
     {
         $today = date("Y-m-d");
         $desc = "Received Rs. ".$request->Amount."/- From  ".$request->Description . " for ". $request->Particular.", on ".$today." by  ". $request->Payment_mode;
-        $validate = $request->input();
+        if(!empty($this->Attachment)){
+
+        }
         $validate_rules = ['Particular'=>'required','Date'=>'required','Amount'=>'required','Description'=>'required','Payment_mode'=>'required'];
         $validation = Validator::make($request->all(), $validate_rules);
         if($validation->fails())

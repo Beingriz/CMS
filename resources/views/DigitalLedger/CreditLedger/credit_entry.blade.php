@@ -3,7 +3,7 @@
 
 <div class="page-content" style="margin-top: -45px">
     <div class="container=fluid">
-        @livewire('credit')
+        @livewire('credit',['EditData'=>$EditData,'DeleteData'=>$DeleteData])
     </div>
 </div>
 

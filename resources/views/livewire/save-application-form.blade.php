@@ -41,6 +41,8 @@
             <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
             <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
             <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+            <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
+            <li class="breadcrumb-item"><a href="{{route('update_application')}}">Debit</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 

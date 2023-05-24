@@ -54,14 +54,14 @@
             </div>
         </div>
     </div> {{-- End of Row --}}
-
+{{$Show_Insight}}
     {{-- Form Row --}}
     <div class="row">
         <div class="col-lg-5">{{--Start of Form Column --}}
             <div class="card">
                 <div class="card-header d-sm-flex align-items-center justify-content-between"">
                     <h5>Credit Ledger</h5>
-                    <h5>New Entry</h5>
+                    <h5><a href="{{route('Credit')}}">New Entry</a></h5>
                 </div>
                 <div class="card-body">
                         <div class="row mb-3">
@@ -128,13 +128,11 @@
                             <div class="row mb-3">
                                 <label for="Date" class="col-sm-4 col-form-label">Paid / Bal </label>
                                 <div class="col-sm-4">
-                                    <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid" class="form-control"
-                                        placeholder="Paid" onblur="balance()">
+                                    <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid" class="form-control" placeholder="Paid"
                                     <span class="error">@error('Amount_Paid'){{$message}}@enderror</span>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input type="number" id="bal" name="Balance" class="form-control"
-                                    placeholder="Bal" readonly>
+                                    <input type="number" id="bal" name="Balance" wire:model="Balance" class="form-control" placeholder="Bal" readonly>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -148,7 +146,7 @@
                             <div class="row mb-3">
                                 <label for="example-search-input" class="col-sm-4 col-form-label">Payment</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="Payment_mode" wire:model="Payment_Mode" name="Payment_mode" wire:change="Change($event.target.value)"">
+                                    <select class="form-control" id="Payment_mode" wire:model="Payment_Mode" name="Payment_mode" wire:change="Change($event.target.value)">
                                         <option value="">---Select---</option>
                                         @foreach ($payment_mode as $payment_mode)
                                         <option value="{{$payment_mode->Payment_Mode}}">
@@ -191,13 +189,13 @@
                                         @if ($update==0)
                                             <button type="submit" value="submit" name="submit"
                                             class="btn btn-primary btn-rounded btn-sm">Save</button>
-                                            <a href="#" wire:click.prevent="ResetFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                            <a href="{{route('Credit')}}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                         @elseif($update==1)
-                                            <a  href="#" wire:click.prevent="Update()"  class="btn btn-success btn-rounded btn-sm" wire:click="Update('{{$transaction_id}}')">Update</button>
-                                                <a href="#" wire:click.prevent="ResetFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                            <a  href="#" class="btn btn-success btn-rounded btn-sm" wire:click.prevent="Update('{{$transaction_id}}')">Update</button>
+                                            <a href="{{route('Credit')}}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                         @endif
 
-                                        <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                        <a href="{{route('dashboard')}}" class="btn btn-warning btn-rounded btn-sm">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -300,12 +298,21 @@
                         {{session('Error')}}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+                        @if ($clearButton)
+
+                        @endif
                     @endif
-                    @if (sizeof($collection)>0)
-                        <br>
-                        <span class="info-text">Balance Due Found for {{count($collection)}} Records!.</span>
-                        <table>
-                            <thead>
+                    @if ($clearButton)
+                       <div class="row">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-tittle">
+                                    <h5>Balance Update</h5>
+                                </div>
+                            </div>
+                            <span class="info-text">Balance Due Found for {{count($balCollection)}} Records!.</span>
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
                                     <th>Description</th>
@@ -316,7 +323,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($collection as $item)
+                                @foreach ($balCollection as $item)
                                 <tr>
                                     <td style="width:25%">{{$item['Id']}}</td>
                                     <td style="width:25%">{{$item['Description']}}</td>
@@ -324,15 +331,17 @@
                                     <td style="width:25%">&#x20B9; {{$item['Amount_Paid']}}</td>
                                     <td style="width:25%">&#x20B9; {{$item['Balance']}}</td>
                                     <td style="width:25%">
-                                        <a class="btn-sm btn-primary"  wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Update</a>
+                                        <a class="btn-sm btn-primary" title="Clear Balance" wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Clear</a>
                                     </td>
                                 </tr>
                                 @endforeach
                                 <span class="info-text">Total Balance Due : &#x20B9;{{
-                                    $collection->sum('Balance') }}</span>
+                                    $balCollection->sum('Balance') }}</span>
                             </tbody>
                         </table>
-                        <div class="row"></div>
+                        </div>
+                       </div>
+
                     @endif
 
                     <div class="progress" style="height: 15px">
@@ -418,19 +427,9 @@
                                 <td>{{ $data->Amount_Paid }}</td>
                                 <td>{{ $data->Description }}</td>
                                 <td>
-                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                        <div class="btn-group" role="group">
-                                            <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Action <i class="mdi mdi-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                <a class="dropdown-item" title="Edit  Application" href=""wire:click="Edit('{{$data->Id}}')"id="update">Edit</a>
+                                    <a href="{{route('edit.credit',$data->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                                <a class="dropdown-item" title="Delete Application" onclick="confirm('Are You Sure!? You Want to Delete This Record?')||event.stopImmediatePropagation" wire:click="Delete('{{$data->Id}}')">Delete</a>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                    <a href="{{route('delete.credit',$data->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
                                 </td>
                             </tr>
                             @endforeach

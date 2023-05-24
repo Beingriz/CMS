@@ -148,7 +148,9 @@
                                     <td>{{$item->Application}} | {{$item->Application_Type}}</td>
                                     <td>{{$item->Amount_Paid}} </td>
                                     <td>{{$item->Balance}} </td>
-                                    <td>23</td>
+                                    <td>
+                                        <a href="{{route('edit_application',$item->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                    </td>
                                 </tr>
                                 @endforeach
 

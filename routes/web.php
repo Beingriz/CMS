@@ -122,10 +122,13 @@ Route::middleware('auth','auth.role:admin')->group(function(){
 
     });
 });
-
-Route::controller(CreditEntry::class)->group(function(){
+Route::middleware('auth','auth.role:admin')->group(function(){
+    Route::controller(CreditEntry::class)->group(function(){
     Route::get('Credit', 'Home')->middleware(['auth'])->name('Credit');
+    Route::get('edit/credit/entry/{Id}', 'EditCredit')->middleware(['auth'])->name('edit.credit');
+    Route::get('delete/credit/entry/{Id}', 'DeleteCredit')->middleware(['auth'])->name('delete.credit');
     Route::get('CreditSource', 'CreditSource')->middleware(['auth'])->name('CreditSource');
+    });
 });
 // Global  Search  Routes start
 // Route:: get('search/{key}', [ApplicationController::class,'Search']);

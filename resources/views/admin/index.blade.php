@@ -20,7 +20,13 @@
                 </div>
             </div>
         </div>
-        <!-- end page title -->
+        <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="{{route('new.application')}}">New Application</a></li>
+                <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
+                <li class="breadcrumb-item"><a href="{{route('update_application')}}">Debit</a></li>
+            </ol>
+        </div>{{-- End of Page Tittle --}}
 
         <div class="row">
             <div class="col-xl-3 col-md-6">

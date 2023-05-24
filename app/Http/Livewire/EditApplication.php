@@ -42,9 +42,9 @@ class EditApplication extends Component
     public $filterby,$show = 0 , $collection, $no='No';
     public $Select_Date,$Daily_Income=0;
     public $show_app=[];
-    public $Ack,$Doc,$Pay;
+    public $Ack,$Doc,$Pay,$subservice,$mainservice;
     public $Ack_Path,$Doc_Path,$Payment_Path,$Profile_Image,$RelativeName,$Gender;
-    public $created,$updated,$AckFileDownload='Disable',$DocFileDownload='Disable',$PayFileDownload='Disable'  ;
+    public $created,$updated,$AckFileDownload='Disable',$DocFileDownload='Disable',$PayFileDownload='Disable',$SubSelected  ;
 
 
     public $i=1,$Pro_Yes='off' ;
@@ -97,7 +97,9 @@ class EditApplication extends Component
             $this->RelativeName = $key['Relative_Name'];
             $this->Gender = $key['Gender'];
             $this->Application = $key['Application'];
+            $this->mainservice = $key['Application'];
             $this->Application_Type = $key['Application_Type'];
+            $this->subservice = $key['Application_Type'];
             $this->SubService = $key['Application_Type'];
             $this->Dob = $key['Dob'];
             $this->Mobile_No = $key['Mobile_No'];
@@ -112,7 +114,7 @@ class EditApplication extends Component
             $this->Balance = $key['Balance'];
             $this->PaymentMode = $key['Payment_Mode'];
             $this->Status = $key['Status'];
-            $this->Delivered_Date = $key['Delivered_Date'];
+            $this->Updated_Date = $key['Delivered_Date'];
             $this->Registered = $key['Registered'];
             $this->Ack = $key['Ack_File'];
             $this->Doc = $key['Doc_File'];
@@ -197,7 +199,7 @@ class EditApplication extends Component
             }
             else
             {
-                $this->DocFiPayFileDownloadleDownload = 'Disable';
+                $this->PayFileDownload = 'Disable';
             }
         }
 
@@ -229,11 +231,15 @@ class EditApplication extends Component
             {
                 $this->ServiceName = $key['Name'];
             }
+        }else{
+            $this->ServiceName = $this->mainservice;
         }
         if(!is_null($this->SubService))
         {
 
             $this->SubSelected = $this->SubService;
+        }else{
+            $this->SubSelected = $this->subservice;
         }
             // Attept to Delete the Old file Before Updating New File for Perticular Application Id
         if(!empty($this->Applicant_Image))
@@ -376,7 +382,7 @@ class EditApplication extends Component
         $update_data['Gender']=$this->Gender;
         $update_data['Mobile_No']=$this->Mobile_No;
         $update_data['Application']=$this->ServiceName;
-        $update_data['Application_Type']=$this->SubService;
+        $update_data['Application_Type']=$this->SubSelected;
         $update_data['Dob']=$this->Dob;
         $update_data['Ack_No']=$this->Ack_No;
         $update_data['Document_No']=$this->Document_No;

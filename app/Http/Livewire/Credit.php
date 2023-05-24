@@ -29,12 +29,12 @@ class Credit extends Component
     public $Unit_Price;
     public $Quantity;
     public $Total_Amount = NULL,$Total;
-    public $Amount_Paid;
-    public $Balance;
+    public $Amount_Paid=0;
+    public $Balance=0;
     public $Description= 'Walk in Customer';
     public $Payment_Mode = 'Cash';
     public $Attachment ,$itteration;
-    public $Old_Attachment,$New_Attachment,$lastRecTime;
+    public $Old_Attachment,$New_Attachment,$lastRecTime,$clearButton = false,$balamount,$balId,$balCollection;
 
     public $paginate = 10;
     public $Select_Date = NULL;
@@ -69,88 +69,150 @@ class Credit extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount()
+    public function mount($EditData,$DeleteData)
     {
         $this->transaction_id = 'CE'.time();
         $this->Date = date("Y-m-d");
         $this->Total = 0;
         $this->Quantity = 1;
         $this->Total_Amount = 0;
+        $this->Balance = 0;
+        if(!empty($EditData)){
+            $this->Edit($EditData);
+        }
+        if(!empty($DeleteData)){
+            $this->Delete($DeleteData);
+        }
+    }
+    public function ImageUpload(){
+        if(!empty($this->Attachment)) // Check if new image is selected
+        {
+            if(!empty($this->Old_Attachment))
+            {
+                if(Storage::disk('public')->exists($this->Old_Attachment))
+                {
+                    unlink(storage_path('app/public/'.$this->Old_Attachment));
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Digital Ledger/Credit Book/Attachments'.time();
+                    $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Attachment = $url;
+                }
+                else
+                {
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Digital Ledger/Credit Book/Attachments'.time();
+                    $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Attachment = $url;
+                }
+            }
+            else
+            {
+                if($this->Payment_Mode!='Cash')
+                {
+                    $this->validate([
+                        'Attachment'=>'required|image',
+                    ]);
+                }
+            }
+        }
+        else // check old is exist
+        {
+            if(!empty($this->Old_Attachment))
+            {
+                if(Storage::disk('public')->exists($this->Old_Attachment))
+                {
+                    $this->New_Attachment = $this->Old_Attachment;
+                }
+            }
+            else
+            {
+                if($this->Payment_Mode!='Cash')
+                {
+                    $this->validate([
+                        'Attachment'=>'required|image',
+                    ]);
+                }
+            }
+        }
     }
     public function CreditEntry()
     {
         $this->validate();
+        $transId = 'CE'.time();
+        $clientId = 'C'.time();
         $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
         $CategoryName = CreditSource::Wherekey($this->SourceSelected)->get();
             foreach($CategoryName as $key)
             {
                 $CategoryName = $key['Name'];
             }
-            if(!is_Null($this->Attachment))
-            {
-                $Attachment = 'storage/app/'. $this->Attachment->storeAs('Payments/Attachment/Credit Ledger', 'CE'.time().'.jpeg');
-            }
-            else
-            {
-                $Attachment = 'storage/app/Payments/Attachment/jpeg';
-            }
+        $this->ImageUpload();
         if($this->Balance>0)
         {
             $Desc = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Description." for ".$CategoryName.','.$this->SelectedSources. " , on ".$this->Date." by  ". $this->Payment_Mode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
-
-
             $creditentry  = new CreditLedger;
-            $creditentry->Id = 'CE'.time();
-            $creditentry->Client_Id = 'WC'.time();
+            $creditentry->Id = $transId;
+            $creditentry->Client_Id = $clientId;
             $creditentry->Date = $this->Date;
             $creditentry->Category = $CategoryName;
             $creditentry->Sub_Category = $this->SelectedSources;
+            $creditentry->Unit_Price = $this->Unit_Price;
+            $creditentry->Quantity = $this->Quantity;
             $creditentry->Total_Amount = $this->Total_Amount;
             $creditentry->Amount_Paid =$this->Amount_Paid;
             $creditentry->Balance = $this->Balance;
             $creditentry->Description =$Desc;
             $creditentry->Payment_Mode = $this->Payment_Mode;
-            $creditentry->Attachment =$Attachment;
+            $creditentry->Attachment =$this->New_Attachment;
             $creditentry->save();//Credit Ledger Entry
 
-
             $save_balance = new BalanceLedger;
-            $save_balance->Id = 'WC'.time();
-            $save_balance->Client_Id = 'CE'.time();
+            $save_balance->Id = $transId;
+            $save_balance->Client_Id = $clientId;
             $save_balance->Date = $this->Date;
             $save_balance->Name = $this->Description;
-            $save_balance->Mobile_No = 'WC'.time();
+            $save_balance->Mobile_No = $clientId;
             $save_balance->Category = $CategoryName;
             $save_balance->Sub_Category = $this->SelectedSources;
             $save_balance->Total_Amount =$this->Total_Amount;
             $save_balance->Amount_Paid = $this->Amount_Paid;
             $save_balance->Balance = $this->Balance;
             $save_balance->Payment_Mode =$this->Payment_Mode;
-            $save_balance->Attachment = $Attachment;
+            $save_balance->Attachment = $this->New_Attachment;
             $save_balance->Description = $this->Description;
             $save_balance->save(); // Balance Ledger Entry Saved
 
-            session()->flash('SuccessMsg', 'Credit Entry Saved Successfully!, Balance Ledger Updated');
-            return redirect()->route('Credit');
+            $notification = array(
+                'message'=>'Transaction Saved, Balance Updated!',
+                'alert-type'=>'success'
+            );
+            return redirect()->route('Credit')->with($notification);
         }
         else
         {
             $Desc = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Description." for ".$CategoryName.','.$this->SelectedSources. " , on ".$this->Date." by  ". $this->Payment_Mode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
             $creditentry  = new CreditLedger;
-            $creditentry->Id = 'CE'.time();
-            $creditentry->Client_Id = 'WC'.time();
+            $creditentry->Id = $transId;
+            $creditentry->Client_Id = $clientId;
             $creditentry->Date = $this->Date;
             $creditentry->Category = $CategoryName;
             $creditentry->Sub_Category = $this->SelectedSources;
+            $creditentry->Unit_Price = $this->Unit_Price;
+            $creditentry->Quantity = $this->Quantity;
             $creditentry->Total_Amount = $this->Total_Amount;
             $creditentry->Amount_Paid =$this->Amount_Paid;
             $creditentry->Balance = $this->Balance;
             $creditentry->Description =$Desc;
             $creditentry->Payment_Mode = $this->Payment_Mode;
-            $creditentry->Attachment = $Attachment;
+            $creditentry->Attachment = $this->New_Attachment;
             $creditentry->save();//Credit Ledger Entry
-            session()->flash('SuccessMsg', 'Credit Entry Saved Successfully!');
-            return redirect()->route('Credit');
+            $notification = array(
+                'message'=>'Transaction Saved!',
+                'alert-type'=>'success'
+            );
+            return redirect()->route('Credit')->with($notification);
         }
      }
      public function Edit($Id)
@@ -165,6 +227,8 @@ class Credit extends Component
             $this->SelectedSources = $key['Sub_Category'];
             $this->Date = $key['Date'];
             $this->Total_Amount = $key['Total_Amount'];
+            $this->Unit_Price = $key['Unit_Price'];
+            $this->Quantity = $key['Quantity'];
             $this->Amount_Paid = $key['Amount_Paid'];
             $this->Balance = $key['Balance'];
             $this->Description = $this->Description;
@@ -181,10 +245,10 @@ class Credit extends Component
      }
      public function ResetFields()
      {
-        $this->Total_Amount =NULL;
+        $this->Total_Amount =0;
         $this->Quantity = 0;
-        $this->Amount_Paid =NULL;
-        $this->Balance =NULL;
+        $this->Amount_Paid = 0;
+        $this->Balance = 0;
         $this->Description = $this->Description;
         $this->Payment_Mode =NULL;
         $this->Old_Attachment =NULL;
@@ -197,7 +261,7 @@ class Credit extends Component
         $this->itteration++;
      }
      public function Update($Id)
-     {
+    {
         $CategoryName = CreditSource::Wherekey($this->SourceSelected)->get();
         foreach($CategoryName as $key)
         {
@@ -205,111 +269,79 @@ class Credit extends Component
         }
         $Desc = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Description." for ".$CategoryName.','.$this->SelectedSources. " , on ".$this->Date." by  ". $this->Payment_Mode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
 
-
-        if(!is_Null($this->Attachment))
+        $this->ImageUpload();
+        $data = array();
+        $data['Date'] = $this->Date;
+        $data['Category'] = $CategoryName;
+        $data['Sub_Category'] = $this->SelectedSources;
+        $data['Unit_Price'] = $this->Unit_Price;
+        $data['Quantity'] = $this->Quantity;
+        $data['Total_Amount'] = $this->Total_Amount;
+        $data['Amount_Paid'] = $this->Amount_Paid;
+        $data['Balance'] = $this->Balance;
+        $data['Description'] = $Desc;
+        $data['Payment_Mode'] = $this->Payment_Mode;
+        $data['Attachment'] = $this->New_Attachment;
+        $Update = DB::table('credit_ledger')->where('Id','=',$Id)->Update($data);
+        $this->clerBalDue($Id, $this->Amount_Paid);
+        if($Update > 0)
         {
-            if(!is_Null($this->Old_Attachment))
-            {
-                $Attachment = str_replace('storage/app/', '',$this->Old_Attachment);
-                if(Storage::exists($Attachment))
-                {
-                    unlink(storage_path('app/'.$Attachment));
-                    $this->New_Attachment = 'storage/app/'. $this->Attachment->storeAs('Payments/Attachment/Credit Ledger', 'CE'.time().'.jpeg');
-                }
-                else
-                {
-                    $this->New_Attachment = 'storage/app/'. $this->Attachment->storeAs('Payments/Attachment/Credit Ledger', 'CE'.time().'.jpeg');
-                }
-            }
-            else
-            {
-                if($this->Payment_Mode!='Cash')
-                {
-                    $this->validate([
-                        'Attachment'=>'required|image',
-                    ]);
-                }
-            }
-        }
-        else
-        {
-            if(!is_Null($this->Old_Attachment))
-            {
-                $Attachment = str_replace('storage/app/', '',$this->Old_Attachment);
-                if(Storage::exists($Attachment))
-                {
-                    $this->New_Attachment = $this->Old_Attachment;
-                }
-                else
-                {
-                    session()->flash('Error','File Does not Exist. Please Select New Attchment');
-                    if($this->Payment_Mode!='Cash')
-                    {
-                        $this->validate([
-                            'Attachment'=>'required|image',
-                        ]);
-                    }
-                }
-            }
-            else
-            {
-                if($this->Payment_Mode!='Cash')
-                {
-                    $this->validate([
-                        'Attachment'=>'required|image',
-                    ]);
-                }
-        }
-
-        $update = DB::update('update credit_ledger set Date = ?, Category = ?, Sub_Category = ?, Total_Amount = ?, Amount_Paid = ?, Balance = ?, Description = ?, Payment_Mode = ? , Attachment = ? where Id = ?', [$this->Date,$CategoryName,$this->SelectedSources, $this->Total_Amount, $this->Amount_Paid, $this->Balance, $Desc, $this->Payment_Mode, $this->New_Attachment, $Id]);
-        if($update)
-        {
-            session()->flash('SuccessMsg', 'Credit Ledger Updated Successfully.');
+            $notification = array(
+                'message'=>'Credit Ledger Update!',
+                'alert-type'=>'sucess'
+            );
+            return redirect()->route('Credit')->with($notification);
+            $this->ResetFields();
+            $this->Attachment=Null;
+            $this->itteration++;
             $this->update = 0;
         }
-     }
-     }
+    }
+    public function clerBalDue($Id,$amount){
+        $getbal =  DB::table('Balance_ledger')->Where('Client_Id', $Id)->SUM('Balance');
+        if($getbal > $amount){
+            $data = array();
+            $data ['Balance'] = $amount;
+            DB::table('Balance_ledger')->Where('Client_Id', $Id)->update($data);
+        }
+    }
+    public function deleteImage($Id){
+        $fetch = CreditLedger::Where('Id',$Id)->get();
+        foreach($fetch as $key)
+        {
+            $file = $key['Attachment'];
+        }
+        if(!empty($file)){
+            if(Storage::disk('public')->exists($file))
+            {
+                unlink(storage_path('app/public/'.$file));
+            }
+        }
+
+    }
      public function Delete($Id)
      {
-        $check_bal = BalanceLedger::Where('Client_Id', $Id)->get();
-        if(sizeof($check_bal)>0)
-        {
-            $total_bal=0;
-            foreach ($check_bal as $bal_count)
+        $getbal =  DB::table('Balance_ledger')->Where('Id', $Id)->SUM('Balance');
+        if($getbal>0){
+            $this->clearButton = true;
+            $this->balId=$Id;
+            $this->balamount = $getbal;
+            session()->flash('Error', 'The Selected Entery has balance Due Please Clear Due of '. $getbal. ' for ID: '.$Id);
+
+        }
+        else{
+            $this->deleteImage($Id);
+            $credit = CreditLedger::wherekey($Id)->delete();
+            $balance = BalanceLedger::wherekey($Id)->delete();
+            if($credit > 0 && $balance >0)
             {
-                $total_bal = $bal_count['Balance'];
-            }
-            if($total_bal>0)
-            {
-                session()->flash('Error', 'The Selected Entery has balance Due Please Clear Due of '. $total_bal. ' for ID: '.$Id);
+                session()->flash('SuccessMsg', 'Record Deleted Successfully!! '.$Id);
             }
             else
             {
-                $credit = CreditLedger::wherekey($Id)->delete();
-                $balance = BalanceLedger::wherekey($Id)->delete();
-                if($credit && $balance)
-                {
-                    session()->flash('SuccessMsg', 'Record Deleted Successfully!! '.$Id);
-                }
-                else
-                {
-                    session()->flash('Error', 'Unable to Delete the Record! Please retry... '.$Id);
-                }
+                session()->flash('Error', 'Unable to Delete the Record! Please retry... '.$Id);
             }
         }
-        else
-        {
-            $credit = CreditLedger::wherekey($Id)->delete();
-            if($credit)
-                {
-                    session()->flash('SuccessMsg', 'Record Deleted Successfully!! '.$Id);
-                }
-                else
-                {
-                    session()->flash('Error', 'Unable to Delete the Record! Please retry... '.$Id);
-                }
-        }
-
      }
      public function MultipleDelete()
      {
@@ -371,21 +403,38 @@ class Credit extends Component
     public function UpdateBalance($Id)
     {
         $fetch = BalanceLedger::where('Id',$Id)->get();
-        $amount = 0;
         foreach ($fetch as $key)
         {
-            $amount = $key['Balance'];
+            $total = $key['Total_Amount'];
+            $paid = $key['Amount_Paid'];
+            $bal = $key['Balance'];
         }
-        $update_bal = DB::table('balance_ledger')->where('Client_Id',$Id)->update(['Balance'=>0]);
-        $update_credit = DB::table('credit_ledger')->where('Id',$Id)->update(['Balance'=>0]);
+        $fetch = CreditLedger::where('Id',$Id)->get();
+        foreach ($fetch as $key)
+        {
+            $desc = $key['Description'];
+        }
+        $baldata = array();
+        $baldata['Amount_Paid'] = $total;
+        $baldata['Balance'] = 0;
+        $baldata['Balance'] = 0;
+
+        $creditdata = array();
+        $creditdata['Amount_Paid'] = $total;
+        $creditdata['Balance'] = 0;
+        $desc = $desc . 'Balance Updated @'.Carbon::now();
+        $creditdata['Balance'] = 0;
+        $creditdata['Description'] =$desc;
+
+        $update_bal = DB::table('balance_ledger')->where('Id',$Id)->update($baldata);
+        $update_credit = DB::table('credit_ledger')->where('Id',$Id)->update($creditdata);
         if($update_bal && $update_credit)
         {
-           session()->flash('SuccessMsg', 'Balance Due of Rupees '.$amount. ' is Cleared'.$Id);
+            session()->flash('SuccessMsg', 'Balance Due of Rupees '.$bal. ' is Cleared'.$Id);
         }
         else
         {
             session()->flash('Error', 'unable to update');
-
         }
     }
     public function LastUpdate()
@@ -398,6 +447,7 @@ class Credit extends Component
     public function render()
     {
         $this->LastUpdate();
+        $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
         if(!is_null($this->Select_Date)){
             $todays_list = CreditLedger::where('Date',$this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
             $sl_no = $todays_list->total();
@@ -414,9 +464,7 @@ class Credit extends Component
         {
             $this->Sources = CreditSources::orderby('Source')->where('CS_Id',$this->SourceSelected)->get();
         }
-
-
-
+        $this->balCollection = BalanceLedger::where('Id',$this->balId)->get();
         $Unit_Price = 0;
         if(!empty($this->SourceSelected))
         {
