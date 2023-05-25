@@ -124,10 +124,14 @@ Route::middleware('auth','auth.role:admin')->group(function(){
 });
 Route::middleware('auth','auth.role:admin')->group(function(){
     Route::controller(CreditEntry::class)->group(function(){
-    Route::get('Credit', 'Home')->middleware(['auth'])->name('Credit');
-    Route::get('edit/credit/entry/{Id}', 'EditCredit')->middleware(['auth'])->name('edit.credit');
-    Route::get('delete/credit/entry/{Id}', 'DeleteCredit')->middleware(['auth'])->name('delete.credit');
-    Route::get('CreditSource', 'CreditSource')->middleware(['auth'])->name('CreditSource');
+    Route::get('Credit', 'Home')->name('Credit');
+    Route::get('edit/credit/entry/{Id}', 'EditCredit')->name('edit.credit');
+    Route::get('delete/credit/entry/{Id}', 'DeleteCredit')->name('delete.credit');
+    Route::get('CreditSource', 'CreditSource')->name('CreditSource');
+    Route::get('edit/credit/main/source{id}', 'EidtMainSource')->name('edit.mainsource');
+    Route::get('delete/credit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
+    Route::get('edit/credit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
+    Route::get('delete/credit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
     });
 });
 // Global  Search  Routes start

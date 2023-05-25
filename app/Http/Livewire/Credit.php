@@ -44,7 +44,7 @@ class Credit extends Component
     public $Single;
     public $collection = [];
     public $bal_id = NULL;
-    public $update = 0, $Show_Insight=0;
+    public $update = 0, $Show_Insight=false;
 
 
     protected $rules = [
@@ -142,7 +142,7 @@ class Credit extends Component
         $this->validate();
         $transId = 'CE'.time();
         $clientId = 'C'.time();
-        $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
+        $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
         $CategoryName = CreditSource::Wherekey($this->SourceSelected)->get();
             foreach($CategoryName as $key)
             {
@@ -326,20 +326,38 @@ class Credit extends Component
             $this->clearButton = true;
             $this->balId=$Id;
             $this->balamount = $getbal;
-            session()->flash('Error', 'The Selected Entery has balance Due Please Clear Due of '. $getbal. ' for ID: '.$Id);
 
+            $notification = array(
+                'message'=>'The Selected Entery has balance Due Please Clear Due of '.$getbal.' For Id '.$Id,
+                'alert-type'=>'error'
+            );
+            return redirect()->back()->with($notification);
         }
         else{
             $this->deleteImage($Id);
             $credit = CreditLedger::wherekey($Id)->delete();
             $balance = BalanceLedger::wherekey($Id)->delete();
-            if($credit > 0 && $balance >0)
+            if($credit > 0)
             {
-                session()->flash('SuccessMsg', 'Record Deleted Successfully!! '.$Id);
+                $notification = array(
+                    'message'=>'Credit Transaction Deleted!',
+                    'alert-type'=>'info'
+                );
+                return redirect()->back()->with($notification);
             }
-            else
+            elseif($balance > 0 && $credit > 0)
             {
-                session()->flash('Error', 'Unable to Delete the Record! Please retry... '.$Id);
+                $notification = array(
+                    'message'=>'Credit & Balance Ledger Entry Deleted!',
+                    'alert-type'=>'info'
+                );
+                return redirect()->back()->with($notification);
+            }else{
+                $notification = array(
+                    'message'=>'Unable to Delete!. retry',
+                    'alert-type'=>'error'
+                );
+                return redirect()->back()->with($notification);
             }
         }
      }
@@ -422,7 +440,7 @@ class Credit extends Component
         $creditdata = array();
         $creditdata['Amount_Paid'] = $total;
         $creditdata['Balance'] = 0;
-        $desc = $desc . 'Balance Updated @'.Carbon::now();
+        $desc = $desc . ' Balance Updated @'.Carbon::now();
         $creditdata['Balance'] = 0;
         $creditdata['Description'] =$desc;
 
@@ -430,11 +448,20 @@ class Credit extends Component
         $update_credit = DB::table('credit_ledger')->where('Id',$Id)->update($creditdata);
         if($update_bal && $update_credit)
         {
-            session()->flash('SuccessMsg', 'Balance Due of Rupees '.$bal. ' is Cleared'.$Id);
+            $notification = array(
+                'message'=>'Balance Clered, No Due.!',
+                'alert-type'=>'success'
+            );
+            return redirect()->route('Credit')->with($notification);
+
         }
         else
         {
-            session()->flash('Error', 'unable to update');
+            $notification = array(
+                'message'=>'Unable to Clear the Balance! Please retry',
+                'alert-type'=>'danger'
+            );
+            return redirect()->route('Credit')->with($notification);
         }
     }
     public function LastUpdate()
@@ -447,7 +474,11 @@ class Credit extends Component
     public function render()
     {
         $this->LastUpdate();
-        $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
+        if(empty($this->Show_Insight)){
+            $this->Show_Insight = false;
+        }else{
+            $this->Show_Insight = true;
+        }
         if(!is_null($this->Select_Date)){
             $todays_list = CreditLedger::where('Date',$this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
             $sl_no = $todays_list->total();
@@ -478,8 +509,8 @@ class Credit extends Component
             }
         }
         $this->Unit_Price = $Unit_Price;
-        $this->Total_Amount = ( intval($Unit_Price)* intval($this->Quantity));
-
+        $this->Total_Amount = intval($Unit_Price) * intval($this->Quantity);
+        $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
 
         // Credit Insight Code
         $source = CreditLedger::Where('Sub_Category',$this->SelectedSources)->get();

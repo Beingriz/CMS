@@ -39,9 +39,8 @@
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
-            <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
-            <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new.application')}}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 
@@ -54,14 +53,13 @@
             </div>
         </div>
     </div> {{-- End of Row --}}
-{{$Show_Insight}}
     {{-- Form Row --}}
     <div class="row">
         <div class="col-lg-5">{{--Start of Form Column --}}
             <div class="card">
                 <div class="card-header d-sm-flex align-items-center justify-content-between"">
                     <h5>Credit Ledger</h5>
-                    <h5><a href="{{route('Credit')}}">New Entry</a></h5>
+                    <h5><a href="{{route('Credit')}}" title="Click here for New Transaction">New Entry</a></h5>
                 </div>
                 <div class="card-body">
                         <div class="row mb-3">
@@ -204,7 +202,7 @@
             </div>
         </div> {{-- End of Form Column --}}
 
-        @if($Show_Insight == 1)
+        @if($Show_Insight)
         <div class="col-lg-7">{{--Record Column--}}
             <div class="card">
                 <div class="card-body">
@@ -331,7 +329,7 @@
                                     <td style="width:25%">&#x20B9; {{$item['Amount_Paid']}}</td>
                                     <td style="width:25%">&#x20B9; {{$item['Balance']}}</td>
                                     <td style="width:25%">
-                                        <a class="btn-sm btn-primary" title="Clear Balance" wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Clear</a>
+                                        <a class="btn-sm btn-primary" href="#" title="Clear Balance" wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Clear</a>
                                     </td>
                                 </tr>
                                 @endforeach

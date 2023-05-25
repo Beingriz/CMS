@@ -39,8 +39,7 @@
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
-                <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
-                <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+                <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
             </ol>
         </div>{{-- End of Page Tittle --}}
         <div class="row">
@@ -48,7 +47,7 @@
                 <div class="card">
                     <div class="card-header d-sm-flex align-items-center justify-content-between"">
                         <h5>Credit Ledger</h5>
-                        <h5>New Entry</h5>
+                        <h5><a href="{{route('CreditSource')}}" title="Click here for New Credit Source">New Entry</a></h5>
                     </div>
                     <div class="card-body">
                         <form wire:submit.prevent="Save">
@@ -107,7 +106,7 @@
                                     </div>
                                     @elseif(!is_null($OldImage) )
                                     <div class="md-form">
-                                        <img class="col-75" src="{{url('storage/'.$OldImage) }}">
+                                        <img class="col-75" src="{{!empty($OldImage)?url('storage/'.$OldImage):url('storage/no_image.jpg') }}">
                                     </div>
                                     @endif
                                 </div>
@@ -134,7 +133,7 @@
                             <div class="row mb-3">
                                 <label for="Date" class="col-sm-4 col-form-label">Sub Category Name</label>
                                 <div class="col-sm-8">
-                                    <input type="text"  id="Source_Name" wire:model="SubCategoryName"  name="Source_Name" class="form-control"
+                                    <input type="text"  id="Source_Name" wire:model.lazy="SubCategoryName"  name="Source_Name" class="form-control"
                                     placeholder="Sub Category Name" >
                                     <span class="error">@error('SubCategoryName'){{$message}}@enderror</span>
                                 </div>
@@ -160,15 +159,15 @@
                                     @elseif ($Type =='Sub Category')
                                         <a href='#' wire:click.prevent="ResetSubFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @endif
-                                    <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                    <a href="{{route('dashboard')}}" class="btn btn-rounded btn-warning btn-sm">Cancel</a>
                                 @elseif($Update == 1)
                                     <a href='#' wire:click.prevent="UpdateMain('{{$CS_Id}}')" class="btn btn-success btn-rounded btn-sm">Update</a>
-                                    <a href='#' wire:click.prevent="ResetMainFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                    <a href="{{route('CreditSource')}}"  class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                    <a href="{{route('dashboard')}}" class="btn btn-rounded btn-warning btn-sm">Cancel</a>
                                 @elseif($Update == 2)
                                     <a href='#' wire:click.prevent="UpdateSub('{{$CS_Id}}')" class="btn btn-success btn-rounded btn-sm">Update</a>
-                                    <a href='#' wire:click.prevent="ResetSubFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                    <a href="{{route('CreditSource')}}"  class="btn btn-info btn-rounded btn-sm">Reset</a>
+                                    <a href="{{route('dashboard')}}" class="btn btn-rounded btn-warning btn-sm">Cancel</a>
                                 @endif
                                 </div>
 
@@ -181,8 +180,8 @@
             <div class="col-lg-7">
                 <div class="card">
                     <div class="card-header d-sm-flex align-items-center justify-content-between"">
-                        <h5>Mian Category List</h5>
-                        <h5>New Entry</h5>
+                        <h5>Existing Category</h5>
+                        <h5><a href="{{route('CreditSource')}}" title="Click here for New Credit Source">New Entry</a></h5>
                     </div>
                     <div class="card-body">
                         @if (!empty($Type))
@@ -209,19 +208,9 @@
                                                 <img class="avatar-sm"  src="{{url('storage/'.$key->Thumbnail)}}" alt="Icon"></td>
                                             </td>
                                             <td>
-                                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                    <div class="btn-group" role="group">
-                                                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action <i class="mdi mdi-chevron-down"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item" title="Edit"  wire:click.prevent="EditMain('{{$key->Id}}')" >Edit</a>
+                                                <a href="{{route('edit.mainsource',$key->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                                <a href="{{route('delete.mainsource',$key->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
 
-                                                            <a class="dropdown-item" title="Delete" onclick="confirm('Are You Sure!? You Want to Delete This Record?')||event.stopImmediatePropagation()" wire:click.prevent="DeleteMain('{{$key->Id}}')">Delete</a>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -252,19 +241,9 @@
                                             <td>{{$key->Unit_Price}}</td>
                                             <td>{{$key->Total_Revenue}}</td>
                                             <td>
-                                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                    <div class="btn-group" role="group">
-                                                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action <i class="mdi mdi-chevron-down"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item" title="Edit" wire:click.prevent="EditSub('{{$key->Id}}')">Edit</a>
+                                                <a href="{{route('edit.subsource',$key->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                                <a href="{{route('delete.subsource',$key->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
 
-                                                            <a class="dropdown-item" title="Delete" onclick="confirm('Do you want to Delete  {{$key->Source}} Source?') || event.stopImmediatePropagation()" wire:click.prevent="DeleteSub('{{$key->Id}}')" >Delete</a>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

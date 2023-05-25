@@ -36,8 +36,43 @@ class Creditentry extends Controller
     }
     public function CreditSource()
     {
-        # code...
-        return view('DigitalLedger.CreditLedger.add-credit-source');
+        $EditData='';
+        $DeleteData='';
+        $editid='';
+        $deleteid='';
+        return view('DigitalLedger.CreditLedger.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function EidtMainSource($Id)
+    {
+        $EditData=$Id;
+        $DeleteData='';
+        $editid='';
+        $deleteid='';
+        return view('DigitalLedger.CreditLedger.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function DeleteMainSource($Id)
+    {
+        $EditData='';
+        $DeleteData=$Id;
+        $editid='';
+        $deleteid='';
+        return view('DigitalLedger.CreditLedger.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function EditsSubSource($Id)
+    {
+        $EditData='';
+        $DeleteData='';
+        $editid=$Id;
+        $deleteid='';
+        return view('DigitalLedger.CreditLedger.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function DeleteSubSource($Id)
+    {
+        $EditData='';
+        $DeleteData='';
+        $editid='';
+        $deleteid=$Id;
+        return view('DigitalLedger.CreditLedger.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function AddCreditHome()
     {

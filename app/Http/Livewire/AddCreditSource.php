@@ -37,13 +37,13 @@ class AddCreditSource extends Component
 
     protected $rules = [
         'Name' => 'required|unique:credit_source',
-        'Thumbnail'=>'required|image',
+        'Image'=>'required|image',
     ];
     protected $messages = [
         'Name.required'=>'Please Enter the Category Name',
         'SubCategoryName.required' => 'Please Enter Sub Category Name',
         'Unit_Price.required' => 'Please Set Unit Price',
-        'Thumbnail.required|'=>'Please Select Thumbnail',
+        'Image.required|'=>'Please Select Thumbnail',
      ];
 
     public function updated( $propertyName)
@@ -52,15 +52,26 @@ class AddCreditSource extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount()
+    public function mount($EditData,$DeleteData,$editid,$deleteid)
     {
 
         $time = substr(time() , 6 ,8 );
-
         $this->CS_Id = 'CS'.$time;
         if($this->CategoryList)
         {
             $this->edit = NULL;
+        }
+        if(!empty($EditData)){
+            $this->EditMain($EditData);
+        }
+        if(!empty($DeleteData)){
+            $this->DeleteMain($DeleteData);
+        }
+        if(!empty($editid)){
+            $this->EditSub($editid);
+        }
+        if(!empty($deleteid)){
+            $this->DeleteSub($deleteid);
         }
     }
     public function ResetMainFields()
@@ -95,12 +106,15 @@ class AddCreditSource extends Component
             $save_CS = new CreditSource();
             $save_CS->Id = $this->CS_Id;
             $save_CS->Name = $this->Name;
-            $save_CS->Thumbnail = '/storage/app/'.$this->Image->storeAs('Digital Ledger/Credit Department/Thumbnail',$this->Name.'.jpg');
+            $this->ImageUpload();
+            $save_CS->Thumbnail = $this->NewImage;
             $save_CS->save(); //Category Created
-            session()->flash('SuccessMsg', 'New Source '.$this->Name.', '.$this->CS_Id. ' Created Successfully!!');
-            // redirect('../add_credit_source');
-            $this->ResetMainFields();
-
+            $notification = array(
+                'message'=>'Credit Sournce'.$this->Name.' Added!.',
+                'alert-type'=>'success'
+            );
+            return redirect()->route('CreditSource')->with($notification);
+            $this->Type == 'Main Category';
         }
         elseif($this->Type == 'Sub Category')
         {
@@ -152,6 +166,7 @@ class AddCreditSource extends Component
     }
      public function EditMain($id) # Function to Fetch Main Category Fields
      {
+        $this->Type = 'Main Category';
         $this->Update = 1;
         $fetch = CreditSource::Where('Id','=',$id)->get();
         foreach($fetch as $key)
@@ -165,7 +180,67 @@ class AddCreditSource extends Component
         $this->Name = $Name;
         $this->OldImage = $OldImage;
      }
+     public function ImageUpload(){
 
+        if(!empty($this->Image)) // Check if new image is selected
+        {
+            if(!empty($this->OldImage))
+            {
+                if(Storage::disk('public')->exists($this->OldImage))
+                {
+                    unlink(storage_path('app/public/'.$this->OldImage));
+                    $extension = $this->Image->getClientOriginalExtension();
+                    $path = 'Digital Ledger/Credit Source/Thumbnail'.time();
+                    $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Image->storePubliclyAs($path,$filename,'public');
+                    $this->NewImage = $url;
+                }
+                else
+                {
+                    $extension = $this->Image->getClientOriginalExtension();
+                    $path = 'Digital Ledger/Credit Source/Thumbnail'.time();
+                    $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Image->storePubliclyAs($path,$filename,'public');
+                    $this->NewImage = $url;
+                }
+            }
+            else
+            {
+
+                $this->validate([
+                    'Image'=>'required|image',
+                ]);
+                $extension = $this->Image->getClientOriginalExtension();
+                $path = 'Digital Ledger/Credit Source/Thumbnail'.time();
+                $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                $url = $this->Image->storePubliclyAs($path,$filename,'public');
+                $this->NewImage = $url;
+
+            }
+        }
+        else // check old is exist
+        {
+            if(!empty($this->OldImage))
+            {
+                if(Storage::disk('public')->exists($this->OldImage))
+                {
+                    $this->NewImage = $this->OldImage;
+                }
+            }
+            else
+            {
+                $this->validate([
+                    'Image'=>'required|image',
+                ]);
+                $extension = $this->Image->getClientOriginalExtension();
+                $path = 'Digital Ledger/Credit Source/Thumbnail'.time();
+                $filename = 'BM_'.$this->Name.'_'.time().'.'.$extension;
+                $url = $this->Image->storePubliclyAs($path,$filename,'public');
+                $this->NewImage = $url;
+
+            }
+        }
+    }
      public function UpdateMain($Id) # Function to Update Main Category Fields in Record
      {
         $fetch = CreditSource::Wherekey($Id)->get();
@@ -173,39 +248,7 @@ class AddCreditSource extends Component
         {
             $oldname = $key['Name'];
         }
-
-        if(!empty($this->OldImage))
-        {
-            if($this->OldImage != 'Not Available' )
-            {
-                if (Storage::disk('public')->exists($this->OldImage)) // Check for existing File
-                {
-                    unlink(storage_path('app/public/'.$this->OldImage)); // Deleting Existing File
-                    $url='Not Available';
-                    $data = array();
-
-                    $data['Thumbnail']=$url;
-                    DB::table('credit_source')->where([['Id','=',$Id]])->update($data);
-                }
-                else
-                {
-                    $this->NewImage = 'Not Available';
-                }
-            }
-            else
-            {
-                $extension = $this->Image->getClientOriginalExtension();
-                $path = 'Thumbnails/';
-                $filename = $this->Name.'_'.time().'.'.$extension;
-                $url = $this->Image->storePubliclyAs($path,$filename,'public');
-                $this->NewImage = $url;
-            }
-        }
-        else
-        {
-            $this->NewImage = $this->OldImage;
-        }
-
+        $this->ImageUpload();
         $update_source = DB::update('update credit_source set Name = ?, Thumbnail=? where Id = ?', [$this->Name,$this->NewImage,$Id]);
         $update_sources = DB::update('update credit_sources set CS_Name = ?  where CS_Id = ?', [$this->Name,$Id]);
         $update_CL = DB::update('update credit_ledger set Category = ? where Category = ?', [$this->Name,$oldname]);
@@ -290,6 +333,7 @@ class AddCreditSource extends Component
     }
      public function EditSub($id) # Function to Fetch Sub Category Fields
      {
+        $this->Type = "Sub Category";
          $this->Update = 2;
          $fetch = CreditSources::Where('Id','=',$id)->get();
          foreach($fetch as $key)
@@ -300,7 +344,12 @@ class AddCreditSource extends Component
             $this->Unit_Price = $key['Unit_Price'];
          }
      }
-     public function UpdateSub($Id) # Function to Update Main Category Record
+     public function Capitalize()
+    {
+        $this->Name = ucwords($this->Name);
+        $this->SubCategoryName = ucwords($this->SubCategoryName);
+    }
+     public function UpdateSub($Id) # Function to Update Sub Category Record
      {
         $fetch = CreditSources::Wherekey($Id)->get();
         foreach($fetch as $key)
@@ -319,21 +368,22 @@ class AddCreditSource extends Component
                 $category = $key['Category'];
                 $subcategory = $key['Sub_Category'];
             }
-            if($category == "" && $subcategory == $Source)
-            {
-                $update_CL = DB::update('update credit_ledger set Category = ?, Sub_Category=? where Sub_Category =?', [$this->CategoryList,$this->SubCategoryName,$Source]);
-                if($update_CL)
-                {
-                    session()->flash('SuccessMsg',$this->CategoryList.' Has been Updated in'. $count.' Records for '.$category .'values');
-                }
-                else
-                {
-                    session()->flash('Error',$this->CategoryList.' Unable to Updated in'. $count.' Records for '.$category .'values');
-                }
-            }
         }
-        $update = DB::update('update credit_sources set Source = ?, Unit_Price=? where Id = ?', [$this->SubCategoryName,$this->Unit_Price,$Id]);
-        $update_CL = DB::update('update credit_ledger set Category = ?, Sub_Category=? where Sub_Category =?', [$this->CategoryList,$this->SubCategoryName,$Source]);
+        $data = array();
+        $data['Category'] = $this->CategoryList;
+        $data['Sub_Category'] = $this->SubCategoryName;
+        $update_CL = DB::table('credit_ledger')->where('Sub_Category',$Source)->update($data);
+        $revenue = DB::table('credit_ledger')->where('Sub_Category',$this->SubCategoryName)->SUM('Total_Amount');
+        $data = array();
+        $data['Source'] = $this->SubCategoryName;
+        $data['Unit_Price'] = $this->Unit_Price;
+        $data['Total_Revenue'] = $revenue;
+        $update = DB::table('credit_sources')->where('Id',$Id)->update($data);
+
+        $data = array();
+        $data['Category'] = $this->CategoryList;
+        $data['Sub_Category'] = $this->SubCategoryName;
+        $update_CL = DB::table('credit_ledger')->where('Sub_Category',$Source)->update($data);
 
         if($update && $update_CL)
         {
@@ -396,6 +446,7 @@ class AddCreditSource extends Component
 
     public function render() # Default Function to View Blade File In Livewire
     {
+        $this->Capitalize();
         $Exist_Main_Category = CreditSource::orderby('Name')->get();
         if($this->Type == 'Main Category')
         {
