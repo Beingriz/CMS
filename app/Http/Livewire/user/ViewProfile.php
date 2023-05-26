@@ -78,6 +78,7 @@ class ViewProfile extends Component
             'address'=>'required']);
 
         $id = Auth::user()->id;
+        $cid = Auth::user()->Client_Id ;
         $data = array();
 
         $data['name'] = $this->name;
@@ -95,7 +96,7 @@ class ViewProfile extends Component
                 }
             }
             $filename = date('Ymd').'_'.$this->profile_image->getClientOriginalName();
-            $data['profile_image'] = $this->profile_image->storePubliclyAs('Uploads/Admin/Profile/'.$this->name,$filename,'public');
+            $data['profile_image'] = $this->profile_image->storePubliclyAs('Users/'.$this->name.' '.$cid.'/Profile/',$filename,'public');
         } // New Profile Image Uploaded Successfully
 
         $update_profile = DB::table('users')->where('id',$id)->update($data);
@@ -108,6 +109,7 @@ class ViewProfile extends Component
         $data['Address'] = $this->address;
         $data['updated_at'] = Carbon::now();
         $data['Profile_Image'] = Auth::user()->profile_image;;
+        $data['updated_at'] = Carbon::now();
         $update_client = DB::table('client_register')->where('Id',Auth::user()->Client_Id)->update($data);
         if($update_profile > 0 || $update_client > 0 )
         {
@@ -125,8 +127,15 @@ class ViewProfile extends Component
         }
         return redirect()->route('view.profile')->with($notification);
     }
+    public function Capitalize()
+    {
+        $this->name = ucwords($this->name);
+        $this->email = ucwords($this->email);
+        $this->address = ucwords($this->address);
+    }
     public function render()
     {
+        $this->Capitalize();
         $id = Auth::user()->id;
         $this->profiledata = User::find($id);
 

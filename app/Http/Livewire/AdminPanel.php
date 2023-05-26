@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -78,13 +79,15 @@ class AdminPanel extends Component
             'address'=>'required']);
 
         $id = Auth::user()->id;
+        $cid = Auth::user()->Client_Id;
         $data = array();
 
-        $data['name'] = $this->name;
-        $data['email'] = $this->email;
-        $data['mobile_no'] = $this->mobile_no;
-        $data['dob'] = $this->dob;
-        $data['address'] = $this->address;
+        $data['name'] = trim($this->name);
+        $data['email'] = trim($this->email);
+        $data['mobile_no'] = trim($this->mobile_no);
+        $data['dob'] = trim($this->dob);
+        $data['address'] = trim($this->address);
+        $data['updated_at'] = Carbon::now();
         if(!is_NUll($this->profile_image)) // if New Profile Images is Selected-- Uploading file
         {
             if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
@@ -95,7 +98,7 @@ class AdminPanel extends Component
                 }
             $filename = date('Ymd').'_'.$this->profile_image->getClientOriginalName();
 
-            $data['profile_image'] = $this->profile_image->storePubliclyAs('Uploads/Admin/Profile/'.$this->name,$filename,'public');
+            $data['profile_image'] = $this->profile_image->storePubliclyAs('Admin/'.$cid.' '.$this->name.'/Profile/',$filename,'public');
         } // New Profile Image Uploaded Successfully
 
         $update = DB::table('users')->where('id',$id)->update($data);
@@ -116,8 +119,15 @@ class AdminPanel extends Component
 
         return redirect()->route('admin.profile_view')->with($notification);
     }
+    public function Capitalize()
+    {
+        $this->name = ucwords($this->name);
+        $this->email = ucwords($this->email);
+        $this->address = ucwords($this->address);
+    }
     public function render()
     {
+        $this->Capitalize();
         $id = Auth::user()->id;
         $this->profiledata = User::find($id);
 

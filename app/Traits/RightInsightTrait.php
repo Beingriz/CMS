@@ -57,6 +57,8 @@ trait RightInsightTrait
     private $SubServices;
     private $services_count;
     private $services_list;
+    private $No;
+    private $N;
 
 
 

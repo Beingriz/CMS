@@ -159,6 +159,7 @@ class EditProfile extends Component
         $data['Profile_Image'] = $this->New_Profile_Image;
         $data['Email_Id'] = trim($this->Email);
         $data['DOB'] = trim($this->Dob);
+        $data['updated_at'] = Carbon::now();
         ClientRegister::Where([['Id','=',$Id]])->update($data);
         $notification = array(
             'message'=>'Profile Updated Sucessfully',

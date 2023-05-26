@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Admin Dashboard</h4>
+                    <h4 class="mb-sm-0">{{$Name}} Dashboard</h4>
 
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
@@ -34,8 +34,8 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Total Sales</p>
-                                <h4 class="mb-2">{{$totalSales}}</h4>
+                                <p class="text-truncate font-size-14 mb-2">{{$Tittle1}}</p>
+                                <h4 class="mb-2"></h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>9.23%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
@@ -47,13 +47,13 @@
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
             </div><!-- end col -->
-            <a class="col-xl-3 col-md-6" href="{{route('update.dashboard','Orders')}}" title="New User Dashboard">
+            <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">New Orders</p>
-                                <h4 class="mb-2">{{$totalOrders}}</h4>
+                                <p class="text-truncate font-size-14 mb-2">{{$Tittle2}}</p>
+                                <h4 class="mb-2"></h4>
                                 <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="ri-arrow-right-down-line me-1 align-middle"></i>1.09%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
@@ -64,14 +64,14 @@
                         </div>
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
-            </a><!-- end col -->
-            <a class="col-xl-3 col-md-6" href="{{route('update.dashboard','User')}}" title="New User Dashboard">
+            </div><!-- end col -->
+            <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">New Users</p>
-                                <h4 class="mb-2">{{$newUsers}}</h4>
+                                <p class="text-truncate font-size-14 mb-2">{{$Tittle3}}</p>
+                                <h4 class="mb-2"></h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>16.2%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
@@ -82,14 +82,14 @@
                         </div>
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
-            </a><!-- end col -->
-            <a class="col-xl-3 col-md-6" href="{{route('update.dashboard','Callback')}}" title="New User Dashboard">
+            </div><!-- end col -->
+            <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Call Back </p>
-                                <h4 class="mb-2">{{$callBack}}</h4>
+                                <p class="text-truncate font-size-14 mb-2">{{$Tittle4}}</p>
+                                <h4 class="mb-2"></h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>11.7%</span>from previous period</p>
                             </div>
                             <div class="avatar-sm">
@@ -100,12 +100,11 @@
                         </div>
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
-            </a><!-- end col -->
+            </div><!-- end col -->
         </div><!-- end row -->
 
-        @livewire('admin.admin.dashboardinsight')
         <!-- end row -->
-
+        @livewire('admin.admin.dashboard-update',['Key'=>$Name])
 
         <!-- end row -->
     </div>

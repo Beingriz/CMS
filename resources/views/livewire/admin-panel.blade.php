@@ -51,7 +51,7 @@
                                     <div class="row mb-3">
                                         <label for="name" class="col-sm-3 col-form-label">Name </label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" type="text"  wire:model="name"placeholder="Name" id="name">
+                                            <input class="form-control" type="text"  wire:model.lazy="name"placeholder="Name" id="name">
                                             <span class="error">@error('name'){{$message}}@enderror</span>
                                         </div>
                                     </div>
@@ -60,7 +60,7 @@
                                     <div class="row mb-3">
                                         <label for="email" class="col-sm-3 col-form-label">Email</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" type="text"  wire:model="email"placeholder="Name" id="email">
+                                            <input class="form-control" type="text"  wire:model.lazy="email"placeholder="Name" id="email">
                                             <span class="error">@error('email'){{$message}}@enderror</span>
                                         </div>
                                     </div>
@@ -84,7 +84,7 @@
                                     <div class="row mb-3">
                                         <label for="address" class="col-sm-3 col-form-label">Address</label>
                                         <div class="col-sm-9">
-                                            <textarea class="form-control" type="number"  wire:model="address" id="dob"></textarea>
+                                            <textarea class="form-control" type="number"  wire:model.lazy="address" id="dob"></textarea>
                                             <span class="error">@error('address'){{$message}}@enderror</span>
                                         </div>
                                     </div>

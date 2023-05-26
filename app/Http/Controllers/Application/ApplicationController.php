@@ -7,6 +7,7 @@ use App\Models\Application;
 use App\Models\DocumentFiles;
 use App\Models\Status;
 use App\Models\SubServices;
+use App\Models\User;
 use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -347,9 +348,10 @@ class ApplicationController extends Controller
     }
     public function SelectedDateList($date)
     {
+        $no = 'No';
         $Id =  "DCA".date("Y") .date("m").mt_rand(100, 999);
-        $daily_applications=DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $date],['Recycle_Bin','=' ,$this->no] ])->paginate(5);
-        $sl_no=DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $date],['Recycle_Bin','=' ,$this->no] ])->count();
+        $daily_applications=DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $date],['Recycle_Bin','=' ,$no] ])->paginate(5);
+        $sl_no=DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $date],['Recycle_Bin','=' ,$no] ])->count();
         if($sl_no>0)
         {
             $total=0;
@@ -373,9 +375,9 @@ class ApplicationController extends Controller
     }
     public function BalanceList()
     {
-
-        $balance_list = DB::table('digital_cyber_db')->where([['Balance','>',0],['Recycle_Bin','=',$this->no]])->paginate(10);
-        $sl_no = DB::table('digital_cyber_db')->where([['Balance','>',1],['Recycle_Bin','=',$this->no]])->count();
+        $no='No';
+        $balance_list = DB::table('digital_cyber_db')->where([['Balance','>',0],['Recycle_Bin','=',$no]])->paginate(10);
+        $sl_no = DB::table('digital_cyber_db')->where([['Balance','>',1],['Recycle_Bin','=',$no]])->count();
          // Code for insight Data Records
 
 
@@ -421,6 +423,82 @@ class ApplicationController extends Controller
         $status='';
         return view('admin.Status.status',['EditId'=>$id,'DeleteId'=>$Id,'VeiwStatus'=>$status]);
     }
+    public function DashboardUpdate ($name)
+    {
+        if($name == 'User'){
+            $Tittle1 = 'Total Users';
+            $Tittle2 = 'New User';
+            $Tittle3 = 'Converted';
+            $Tittle4 = 'Pending';
+
+        }elseif($name == 'Orders')
+        {
+            $Tittle1 = 'Total Orders';
+            $Tittle2 = 'New Orders';
+            $Tittle3 = 'Delivered';
+            $Tittle4 = 'Pending';
+
+        }elseif($name == 'Callback'){
+            $Tittle1 = 'Total Requests';
+            $Tittle2 = 'New Requests';
+            $Tittle3 = 'Converted';
+            $Tittle4 = 'Pending';
+
+        }else{
+            $Tittle1 = '';
+            $Tittle2 = '';
+            $Tittle3 = '';
+            $Tittle4 = '';
+
+        }
+        return view('admin.Dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function AppStatusList($service)
     {
 

@@ -118,7 +118,9 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
         Route::get('List/App/status/{status}', 'ViewStatus')->name('view.status');
         Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
-        // Route::get('Application/Status{service}','AppStatusList')->name('app.status');
+        // ------------------------------------------------------------------
+        Route::get('{name}/dashboard', 'DashboardUpdate')->name('update.dashboard');
+
 
     });
 });
