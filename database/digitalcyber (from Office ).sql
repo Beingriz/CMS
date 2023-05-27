@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2023 at 09:48 AM
+-- Generation Time: May 27, 2023 at 10:03 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -98,7 +98,8 @@ INSERT INTO `applynow` (`Id`, `Application`, `Application_Type`, `Name`, `App_Mo
 ('AN23-05-2023-15:31:00', 'Aadhar Card', 'Name Correction', 'Nigar', '9066673291', '9066673291', 'Saleem', '2023-05-10', 'sdasd', NULL, '', 'Submitted', '2023-05-23 10:01:11', '2023-05-23 10:01:11'),
 ('AN23-05-2023-15:31:32', 'Aadhar Card', 'Name Correction', 'Nigar', '9066673291', '9066673291', 'Saleem', '2023-05-20', 'sdadasas', NULL, '', 'Submitted', '2023-05-23 10:01:39', '2023-05-23 10:01:39'),
 ('AN23-05-2023-15:41:34', 'Agreement Paper', 'Shop Renatal Agreement', 'Nigar', '9066673291', '9066673291', 'Saleem', '2023-05-03', 'dsasdsa', NULL, '', 'Submitted', '2023-05-23 10:11:43', '2023-05-23 10:11:43'),
-('AN23-05-2023-17:36:16', 'Agreement Paper', 'House Renatal Agreement', 'Nigar', '9066673291', '9066673291', 'Saleem', '2023-05-08', 'dfsd', 'C:\\Users\\Digital Cyber\\AppData\\Local\\Temp\\phpE047.tmp', 'Dear Sir I amNigar C/o Saleem Phone No 9066673291 hereby give my explicit consent for sharing my Aadhaar related information for the following purpose Agreement Paper,  House Renatal Agreement I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely , this is Digitally Signed on 2023-05-23 17:37:26', 'Submitted', '2023-05-23 12:07:28', '2023-05-23 12:07:28');
+('AN23-05-2023-17:36:16', 'Agreement Paper', 'House Renatal Agreement', 'Nigar', '9066673291', '9066673291', 'Saleem', '2023-05-08', 'dfsd', 'C:\\Users\\Digital Cyber\\AppData\\Local\\Temp\\phpE047.tmp', 'Dear Sir I amNigar C/o Saleem Phone No 9066673291 hereby give my explicit consent for sharing my Aadhaar related information for the following purpose Agreement Paper,  House Renatal Agreement I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely , this is Digitally Signed on 2023-05-23 17:37:26', 'Submitted', '2023-05-23 12:07:28', '2023-05-23 12:07:28'),
+('AN26-05-2023-15:49:58', 'Aadhar Card', 'Smart Card', 'Nigar', '9066673291', '9066673291', 'sadasd', '2023-05-08', 'df', 'C:\\Users\\Digital Cyber\\AppData\\Local\\Temp\\phpA69C.tmp', 'Dear Sir I amNigar C/o sadasd Phone No 9066673291 hereby give my explicit consent for sharing my Aadhaar related information for the following purpose Aadhar Card,  Smart Card I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely , this is Digitally Signed on 2023-05-26 15:50:10', 'Submitted', '2023-05-26 10:20:18', '2023-05-26 10:20:18');
 
 -- --------------------------------------------------------
 
@@ -246,6 +247,7 @@ CREATE TABLE `callback` (
   `Service_Type` varchar(225) NOT NULL,
   `Status` varchar(250) NOT NULL DEFAULT 'Pending',
   `Message` varchar(250) NOT NULL DEFAULT 'Please Call Customer',
+  `Profile_Image` varchar(250) NOT NULL DEFAULT 'no_image.jpg',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -254,26 +256,12 @@ CREATE TABLE `callback` (
 -- Dumping data for table `callback`
 --
 
-INSERT INTO `callback` (`Id`, `Client_Id`, `Name`, `Mobile_No`, `Username`, `Service`, `Service_Type`, `Status`, `Message`, `created_at`, `updated_at`) VALUES
-('CB05-10-2023-10:20:41PM', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:50:41', '2023-05-10 16:50:41'),
-('CB05-10-2023-10:21:51', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:51:51', '2023-05-10 16:51:51'),
-('CB05-10-2023-22:22:47', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:52:47', '2023-05-10 16:52:47'),
-('CB05-10-2023-22:23:23', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:53:23', '2023-05-10 16:53:23'),
-('CB05-10-2023-22:23:50', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:53:50', '2023-05-10 16:53:50'),
-('CB05-10-2023-22:24:17', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:54:17', '2023-05-10 16:54:17'),
-('CB05-10-2023-22:24:56', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:54:56', '2023-05-10 16:54:56'),
-('CB05-10-2023-22:31:05', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'Aadhar Card', 'Smart Card', 'Pending', 'Please Call Customer', '2023-05-10 17:01:05', '2023-05-10 17:01:05'),
-('CB05-10-2023-22:31:37', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'Aadhar Card', 'Address Correction', 'Pending', 'Please Call Customer', '2023-05-10 17:01:37', '2023-05-10 17:01:37'),
-('CB05-10-2023-22:32:30', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'Agreement Paper', 'Shop Renatal Agreement', 'Pending', 'Please Call Customer', '2023-05-10 17:02:30', '2023-05-10 17:02:30'),
-('CB05-10-2023-22:33:00', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'Agreement Paper', 'House Lease Agreement', 'Pending', 'Please Call Customer', '2023-05-10 17:03:00', '2023-05-10 17:03:00'),
-('CB05-10-2023-22:34:33', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'Aadhar Card', 'Name Correction', 'Pending', 'Please Call Customer', '2023-05-10 17:04:33', '2023-05-10 17:04:33'),
-('CB05-11-2023-01:24:41', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'From Carousel', 'Aadhar Card', 'Pending', 'Please Call Customer', '2023-05-10 19:54:41', '2023-05-10 19:54:41'),
-('CB05-20-2023-15:27:10', '2', 'Md Rizwan', '8951775912', 'Beingriz', 'Aadhar Card', 'Smart Card', 'Pending', 'Please Call Customer', '2023-05-20 09:57:10', '2023-05-20 09:57:10'),
-('CB05/10/2023 10:19:53 PM', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:49:53', '2023-05-10 16:49:53'),
-('CB10-05-2023:22:0505:4848', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:45:48', '2023-05-10 16:45:48'),
-('CB10-05-2023:22:May:th', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:45:18', '2023-05-10 16:45:18'),
-('CB10052023:05:47', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:43:47', '2023-05-10 16:43:47'),
-('CB10052023:22:05:41', '2', 'Md Rizwan', '8951775912', 'Beingriz', '', '', 'Pending', 'Please Call Customer', '2023-05-10 16:44:41', '2023-05-10 16:44:41');
+INSERT INTO `callback` (`Id`, `Client_Id`, `Name`, `Mobile_No`, `Username`, `Service`, `Service_Type`, `Status`, `Message`, `Profile_Image`, `created_at`, `updated_at`) VALUES
+('CB05-27-2023-13:50:15', '2', 'Nigar', '9066673291', 'Nigar', 'From Carousel', 'Aadhar Card', 'Pending', 'Please Call Customer', 'no_image.jpg', '2023-05-27 08:20:15', '2023-05-27 08:20:15'),
+('CB05-27-2023-14:06:23', '2', 'Nigar', '9066673291', 'Nigar', 'Agreement Paper', 'Shop Renatal Agreement', 'Pending', 'Please Call Customersad', 'no_image.jpg', '2023-05-27 08:36:23', '2023-05-27 08:36:23'),
+('CB05-27-2023-14:09:36', '2', 'Nigar', '9066673291', 'Nigar', 'APL Ration Card', 'Cancellation Application', 'Scheduled', 'Call back Scheduled.', 'Users/Nigar DC1684825747/Profile//20230526_Nigar Sultana -F.jpg', '2023-05-27 08:39:36', '2023-05-27 08:39:36'),
+('CB05-27-2023-14:23:42', '3', 'Salman Khan', '8892719056', 'Beingsalman', 'Aadhar Card', 'Name Correction', 'Pending', 'Please Call Customer', 'Uploads/Admin/Profile/Salman Khan/20230526_Photo.jpg', '2023-05-27 08:53:42', '2023-05-27 08:53:42'),
+('CB05-27-2023-14:29:01', '4', 'Md Rizwan', '9663468797', 'Bushra', 'Aadhar Card', 'Address Correction', 'Completed', 'Please Call Customer', 'Users/Md Rizwan DC1685168883/Profile//20230527_Aatifa.jpg', '2023-05-27 08:59:01', '2023-05-27 08:59:01');
 
 -- --------------------------------------------------------
 
@@ -327,6 +315,7 @@ CREATE TABLE `client_register` (
 --
 
 INSERT INTO `client_register` (`Id`, `Name`, `Relative_Name`, `Gender`, `DOB`, `Mobile_No`, `Email_Id`, `Address`, `Profile_Image`, `Client_Type`, `created_at`, `updated_at`) VALUES
+('DC1685168883', 'Md Rizwan', 'Not Available', 'Female', '2023-03-05', '9663468797', 'Bushrajannat@gmail.com', 'No 37\nChikkabasthi, Ramasandra MAin Raon', 'account.png', 'New Client', '2023-05-27 08:58:03', '2023-05-27 08:58:50'),
 ('DC1685084371', 'Salman Khan', 'Not Available', 'Male', '1993-07-18', '8892719056', 'salman@gmail.com', 'Chikkabasthi', 'account.png', 'New Client', '2023-05-26 09:29:32', '2023-05-26 09:31:37'),
 ('DC1684824543', 'Md Rizwan', 'Not Available', 'Not Available', NULL, '8951775912', 'mdrizwan.blr@yahoo.com', 'Not Available', 'account.png', 'New Client', '2023-05-23 09:19:03', '2023-05-23 09:19:03'),
 ('DC1684825596', 'Md Rizwan', 'Not Available', 'Not Available', '1993-07-18', '8951775912', 'mdrizwan.blr@yahoo.com', 'Not Available', 'Client_DB/Md Rizwan 1684942000/Profile PhotoMd Rizwan20230524_zainu-PhotoRoom-PhotoRoom.png', 'Old Client', '2023-05-23 09:36:36', '2023-05-23 09:36:36'),
@@ -5613,7 +5602,8 @@ INSERT INTO `digital_cyber_db` (`Id`, `Client_Id`, `Received_Date`, `Name`, `Gen
 ('AN23-05-2023-15:31:32', 'DC1684825747', '2023-05-23', 'Nigar', 'Not Available', 'Saleem', '2023-05-20', '9066673291', 'Aadhar Card', 'Name Correction', NULL, 0, 0, 0, 'Not Available', 'Not Available', 'Submitted', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'account.png', NULL, 'No', 'Yes', '2023-05-23 10:01:39', '2023-05-23 10:01:39'),
 ('AN23-05-2023-15:41:34', 'DC1684825747', '2023-05-23', 'Nigar', 'Not Available', 'Saleem', '2023-05-03', '9066673291', 'Agreement Paper', 'Shop Renatal Agreement', '2023-05-23', 250, 0, 250, 'Not Available', 'Not Available', 'Submitted ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Not Available', '2023-05-23', 'No', 'Yes', '2023-05-23 10:11:43', '2023-05-23 10:16:02'),
 ('AN23-05-2023-17:36:16', 'DC1684825747', '2023-05-23', 'Nigar', 'Male', 'Saleem', '2023-05-08', '9066673291', 'Agreement Paper', 'House Renatal Agreement', NULL, 0, 0, 0, 'Not Available', 'Not Available', 'Submitted', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Uploads/Admin/Profile/Nigar/20230523_Photo.jpg', NULL, 'No', 'Yes', '2023-05-23 12:07:28', '2023-05-23 12:07:28'),
-('DCA20231684941947', 'DC1684825596', '2023-05-24', 'Md Rizwan', 'Male', 'Salman', '1993-07-18', '8951775912', 'Agreement Paper', 'House Renatal Agreement', '2023-05-25', 300, 300, 0, 'Cash', 'Not Available', 'Received', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Client_DB/Md Rizwan_DC1684825596/Md Rizwan/Aadhar Card/Address Correction/Md Rizwan_DC1684825596.png', NULL, 'No', 'Yes', '2023-05-24 17:56:40', '2023-05-24 18:43:54');
+('DCA20231684941947', 'DC1684825596', '2023-05-24', 'Md Rizwan', 'Male', 'Salman', '1993-07-18', '8951775912', 'Agreement Paper', 'House Renatal Agreement', '2023-05-25', 300, 300, 0, 'Cash', 'Not Available', 'Received', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Client_DB/Md Rizwan_DC1684825596/Md Rizwan/Aadhar Card/Address Correction/Md Rizwan_DC1684825596.png', NULL, 'No', 'Yes', '2023-05-24 17:56:40', '2023-05-24 18:43:54'),
+('AN26-05-2023-15:49:58', 'DC1684825747', '2023-05-26', 'Nigar', 'Male', 'Sadasd', '2023-05-08', '9066673291', 'Aadhar Card', 'Smart Card', '2023-05-26', 100, 100, 0, 'Not Available', 'Not Available', 'Received ', 'Not Available', 'Not Available', 'Not Available', 'Not Available', 'Users/Nigar DC1684825747/Profile//20230526_Nigar Sultana -F.jpg', '2023-05-26', 'No', 'Yes', '2023-05-26 10:20:18', '2023-05-26 10:21:35');
 
 -- --------------------------------------------------------
 
@@ -6119,7 +6109,7 @@ CREATE TABLE `service_list` (
 --
 
 INSERT INTO `service_list` (`Sl_No`, `Id`, `Name`, `Service_Type`, `Description`, `Details`, `Features`, `Specification`, `Order_By`, `Total_Count`, `Total_Amount`, `Temp_Count`, `Thumbnail`, `Image`, `Recycle_Bin`, `updated_at`, `created_at`) VALUES
-(1, 'DCAC001', 'Aadhar Card', 'Public', 'It serves as a proof of identity and is required for availing various government  services.', 'Aadhaar number is verifiable in an online, cost-effective way. It is unique and robust enough to eliminate duplicates and fake identities and may be used as a basis/primary identifier to roll out several Government welfare schemes and programmes for effective service delivery thereby promoting transparency and good governance. This is the only program of its kind globally, wherein a state-of-the-art digital and online Id is being provided free of cost at such a large scale to people, and has the potential to change the way service delivery functions in the country.', 'Uniqueness\nThis is achieved through the process of demographic and biometric de-duplication. The de-duplication process compares the resident’s demographic and biometric information, collected during the process of enrolment, with the records in the UIDAI database to verify if the resident is already in the database or not. An individual needs to enrol for Aadhaar only once and after de-duplication only one Aadhaar shall be generated. In case, the resident enrols more than once, the subsequent enrolments will be rejected.\n\nPortability\nAadhaar gives nationwide portability as it can be authenticated anywhere on-line. This is critical as millions of Indians migrate from one state to another or from rural area to urban centres etc.\n\nRandom number\nAadhaar number is a random number devoid of any intelligence. Person willing to enrol has to provide minimal demographic along with biometric information during the enrolment process. The Aadhaar enrolment process does not capture details like caste, religion, income, health, geography, etc.', 'Aadhar Updates as Follows:\r\n1. Name \r\n2. Father Name \r\n3. Address\r\n4.Gender\r\n5. DOB\r\n\r\nUsing Valid Proof ..', 'A', 99, 22375, 23, 'Thumbnails/Services/Aadhar Card/MS_Aadhar Card_1682694342.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(1, 'DCAC001', 'Aadhar Card', 'Public', 'It serves as a proof of identity and is required for availing various government  services.', 'Aadhaar number is verifiable in an online, cost-effective way. It is unique and robust enough to eliminate duplicates and fake identities and may be used as a basis/primary identifier to roll out several Government welfare schemes and programmes for effective service delivery thereby promoting transparency and good governance. This is the only program of its kind globally, wherein a state-of-the-art digital and online Id is being provided free of cost at such a large scale to people, and has the potential to change the way service delivery functions in the country.', 'Uniqueness\nThis is achieved through the process of demographic and biometric de-duplication. The de-duplication process compares the resident’s demographic and biometric information, collected during the process of enrolment, with the records in the UIDAI database to verify if the resident is already in the database or not. An individual needs to enrol for Aadhaar only once and after de-duplication only one Aadhaar shall be generated. In case, the resident enrols more than once, the subsequent enrolments will be rejected.\n\nPortability\nAadhaar gives nationwide portability as it can be authenticated anywhere on-line. This is critical as millions of Indians migrate from one state to another or from rural area to urban centres etc.\n\nRandom number\nAadhaar number is a random number devoid of any intelligence. Person willing to enrol has to provide minimal demographic along with biometric information during the enrolment process. The Aadhaar enrolment process does not capture details like caste, religion, income, health, geography, etc.', 'Aadhar Updates as Follows:\r\n1. Name \r\n2. Father Name \r\n3. Address\r\n4.Gender\r\n5. DOB\r\n\r\nUsing Valid Proof ..', 'A', 100, 22475, 23, 'Thumbnails/Services/Aadhar Card/MS_Aadhar Card_1682694342.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (6, 'DCAP006', 'Agreement Paper', 'Public', 'Agreements are mean to avoid the dispute between two  parties at any point of time.', 'We undertake the Agreement work in our Branches to ensure the Leagal Terms and Conditions to be maintained', '1. Agreement Avoid Violations\n2. Agreement in E-Stam makes Secure with Govt Bond', 'Aadhar and Electricity Bill is Required to Get Agreement Done', 'A', 97, 19220, 21, 'Thumbnails/Services/Agreement Paper/MS_Agreement Paper_1682696469.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (5, 'DCAPL005', 'APL Ration Card', 'Public', 'Above Poverty Line, The card is issued to households that do not fall under the BPL category', '', '', '', 'B', 2, 520, 0, 'Thumbnails/Services/APL Ration Card/MS_APL Ration Card_1682696303.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (9, 'DCBA009', 'SBI Kiosk', 'Public', 'A bank is a financial institution licensed to receive deposits and make loans. Banks may also provide financial services.', 'KEY TAKEAWAYS\nA bank is a financial institution licensed to receive deposits and make loans.\nThere are several types of banks including retail, commercial, and investment banks.\nIn most countries, banks are regulated by the national government or central bank.', 'We Provide State SBI bank Services along with Kotak and Canara Bank Account Opening Facility', '', 'A', 12, 3300, 0, 'Thumbnails/Services/SBI Kiosk/MS_SBI Kiosk_1682693942.jpg', NULL, 'No', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
@@ -6163,22 +6153,30 @@ INSERT INTO `status` (`Id`, `Orderby`, `Status`, `Total_Count`, `Relation`, `Cla
 ('4', 'N', 'ID No Alloted', 2, 'Election Card', 'table-success', 1050, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('5', 'J', 'Pan Alloted', 22, 'Pan Card', 'table-success', 7300, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('7', 'O', 'Passport No', 0, 'Passport', 'table-success', 0, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
-('8', 'E', 'In Office', 16, 'General', 'table-success', 7750, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
-('9', 'F', 'Delivered to Client', 414, 'General', 'table-success', 174248, 1, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
-('10', 'H', 'Rejected', 296, 'General', 'table-danger', 13200, 127, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
+('8', 'E', 'In Office', 16, 'General', 'table-success', 7750, 1, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
+('9', 'F', 'Delivered to Client', 414, 'General', 'table-success', 174248, 9, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
+('10', 'H', 'Rejected', 296, 'General', 'table-danger', 13200, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('11', 'G', 'On Hold', 9, 'General', 'table-warning', 7203, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('12', 'I', 'Returned', 3, 'General', 'table-danger', 1700, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
-('14', 'M', 'Accepted', 58, 'Election Card', 'table-success', 2200, 56, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
-('15', 'P', 'Aadhar Updated', 42, 'Aadhar Card', 'table-success', 11510, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
+('14', 'M', 'Accepted', 58, 'Election Card', 'table-success', 2200, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
+('15', 'P', 'Aadhar Updated', 42, 'Aadhar Card', 'table-success', 11510, 29, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('18', 'K', 'BLO Appointed', 2, 'Election Card', 'table-warning', 250, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('19', 'L', 'Field Verified', 0, 'Election Card', 'table-success', 0, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('25', 'R', 'Journey Completed', 0, 'Train Reservation', 'table-success', 0, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('26', 'S', 'Cancelled', 1, 'Train Reservation', 'table-danger', 100, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('23', 'Q', 'Payment Success', 33, 'Covid-19', 'table-success', 2900, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
 ('24', 'R', 'Aadhar Not Linked', 11, 'Covid-19', 'table-warning', 1100, 0, NULL, '2023-05-22 12:26:25', '2023-05-22 12:26:25'),
-('ST1684829301', 'A', 'Under Process', 82, 'General', NULL, 14415, 4, 'Thumbnails/Status/Under Process/ST_Under Process_1684829376.jpg', '2023-05-23 08:09:36', '2023-05-23 08:09:36'),
-('ST1684829216', 'A', 'Received', 306, 'General', NULL, 51907, 7, 'Thumbnails/Status/Received/ST_Received_1684829231.jpg', '2023-05-23 08:07:11', '2023-05-23 08:07:11'),
-('ST1684829466', 'B', 'Submitted', 23, 'General', NULL, 8170, 0, 'Thumbnails/Status/Submitted/ST_Submitted_1684829480.jpg', '2023-05-23 08:11:20', '2023-05-23 08:11:20');
+('ST1685171189', 'A', 'Pending', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/Pending/ST_Pending_1685171266.jpg', '2023-05-27 07:07:46', '2023-05-27 07:07:46'),
+('ST1684829301', 'A', 'Under Process', 82, 'General', NULL, 14415, 10, 'Thumbnails/Status/Under Process/ST_Under Process_1684829376.jpg', '2023-05-23 08:09:36', '2023-05-23 08:09:36'),
+('ST1684829216', 'A', 'Received', 307, 'General', NULL, 52007, 22, 'Thumbnails/Status/Received/ST_Received_1684829231.jpg', '2023-05-23 08:07:11', '2023-05-23 08:07:11'),
+('ST1684829466', 'B', 'Submitted', 23, 'General', NULL, 8170, 0, 'Thumbnails/Status/Submitted/ST_Submitted_1684829480.jpg', '2023-05-23 08:11:20', '2023-05-23 08:11:20'),
+('ST1685171266', 'A', 'Scheduled', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/Scheduled/ST_Scheduled_1685171388.png', '2023-05-27 07:09:48', '2023-05-27 07:09:48'),
+('ST1685171388', 'B', 'In Progress', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/In Progress/ST_In Progress_1685171444.png', '2023-05-27 07:10:44', '2023-05-27 07:10:44'),
+('ST1685171444', 'B', 'Completed', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/Completed/ST_Completed_1685171475.jpg', '2023-05-27 07:11:15', '2023-05-27 07:11:15'),
+('ST1685171475', 'B', 'Rescheduled', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/Rescheduled/ST_Rescheduled_1685171506.jpg', '2023-05-27 07:11:46', '2023-05-27 07:11:46'),
+('ST1685171506', 'B', 'Cancelled', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/Cancelled/ST_Cancelled_1685171537.jpg', '2023-05-27 07:12:17', '2023-05-27 07:12:17'),
+('ST1685171537', 'C', 'No Answer', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/No Answer/ST_No Answer_1685171578.png', '2023-05-27 07:12:58', '2023-05-27 07:12:58'),
+('ST1685171578', 'C', 'Follow-up Required', NULL, 'Callback', NULL, NULL, NULL, 'Thumbnails/Status/Follow-up Required/ST_Follow-up Required_1685171611.jpg', '2023-05-27 07:13:31', '2023-05-27 07:13:31');
 
 -- --------------------------------------------------------
 
@@ -6208,7 +6206,7 @@ CREATE TABLE `sub_service_list` (
 --
 
 INSERT INTO `sub_service_list` (`Sl_No`, `Service_Id`, `Id`, `Name`, `Service_Type`, `Description`, `Unit_Price`, `Service_Fee`, `Total_Count`, `Total_Amount`, `Thumbnail`, `Recycle_Bin`, `updated_at`, `created_at`) VALUES
-(75, 'DCAC001', 'DC16KW', 'Smart Card', 'Public', 'The Aadhaar Smart Card is a physical card that contains an individual\'s Aadhaar details in a chip format. It serves as a convenient way to carry and present your Aadhaar information when required, without having to carry your original Aadhaar card. The card is available to anyone who has an Aadhaar number and can be ordered online through the UIDAI website or from authorized centers.', 150, '50', 2, NULL, 'Thumbnails/Services/Smart Card/SS_Smart Card_1683385058.jpg', 'No', '2022-08-11 18:18:55', '2022-08-11 18:18:55'),
+(75, 'DCAC001', 'DC16KW', 'Smart Card', 'Public', 'The Aadhaar Smart Card is a physical card that contains an individual\'s Aadhaar details in a chip format. It serves as a convenient way to carry and present your Aadhaar information when required, without having to carry your original Aadhaar card. The card is available to anyone who has an Aadhaar number and can be ordered online through the UIDAI website or from authorized centers.', 150, '50', 3, NULL, 'Thumbnails/Services/Smart Card/SS_Smart Card_1683385058.jpg', 'No', '2022-08-11 18:18:55', '2022-08-11 18:18:55'),
 (71, 'DC81PFL', 'DC41UXQ', 'New Applicaiton', 'Public', 'As a part of decentralisation through the Indian Constitutional Amendment Act 1993, the implementation of Widow Pension, which were handled by the Soc', 200, NULL, 0, NULL, NULL, 'No', '2021-10-03 00:10:22', '2021-10-03 00:10:22'),
 (1, 'DCAC001', 'DCAC01', 'Name Correction', 'Public', 'Correcting your name in documents is an essential task that should not be taken lightly. Whether you\'ve recently changed your name due to marriage, divorce, or personal reasons, or your name has been misspelled or incorrectly recorded in official documents, it\'s important to take the necessary steps to ensure that your name is accurately reflected in all your important paperwork.', 200, '50', 11, 0, 'Thumbnails/Services/Name Correction/SS_Name Correction_1683384363.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
 (2, 'DCAC001', 'DCAC02', 'DOB Correction', 'Public', 'Correcting your date of birth in documents is an important task that should not be ignored. Whether your date of birth was recorded incorrectly, or you need to update it due to legal or personal reasons, \n\nIt can result in delays or rejections in processing important applications, including passport and visa applications,', 250, '50', 10, 0, 'Thumbnails/Services/DOB Correction/SS_DOB Correction_1683384528.png', 'No', '2021-09-30 09:19:19', '2021-09-30 09:19:19'),
@@ -6309,7 +6307,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `Client_Id`, `name`, `email`, `gender`, `email_verified_at`, `password`, `username`, `role`, `mobile_no`, `dob`, `address`, `profile_image`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'DC1684825596', 'Md Rizwan', 'Mdrizwan.blr@yahoo.com', 'Not Available', NULL, '$2y$10$9VCzVuqN8g36gtBmLJL7.O2uo2yLXumyKznV/i4HsP3ojgaEIQquu', 'Beingriz', 'admin', '8951775912', '2023-05-09', 'No 37 Chikkabasthi, Ramasandra Main Road', 'Admin/DC1684825596 Md Rizwan/Profile//20230526_Md Rizwan New .jpg', NULL, '2023-05-23 09:36:36', '2023-05-26 09:57:08'),
 (2, 'DC1684825747', 'Nigar', 'Nigarsp@gmail.com', 'Male', NULL, '$2y$10$tK5RTJuIFH1XPklPx7YZHeUOACudPgMujNo8B6rk48ntlBTVcUlom', 'Nigar', 'user', '9066673291', '2023-05-08', 'No 4/1 Ittige Anjanappa Lane, Behind Vinayaka Talkies, Old Pension Mohalla, Mysore Road, Bangalore 560018', 'Users/Nigar DC1684825747/Profile//20230526_Nigar Sultana -F.jpg', NULL, '2023-05-23 09:39:07', '2023-05-26 10:02:54'),
-(3, 'DC1685084371', 'Salman Khan', 'salman@gmail.com', 'Male', NULL, '$2y$10$qHTYw2MOQ.IyHio0kABzeed5IrIYE8kwaOt5mEc6WOAqiAF9Lks7W', 'Beingsalman', 'user', '8892719056', '1993-07-18', 'Chikkabasthi', 'Uploads/Admin/Profile/Salman Khan/20230526_Photo.jpg', NULL, '2023-05-26 09:29:32', '2023-05-26 09:37:04');
+(3, 'DC1685084371', 'Salman Khan', 'salman@gmail.com', 'Male', NULL, '$2y$10$qHTYw2MOQ.IyHio0kABzeed5IrIYE8kwaOt5mEc6WOAqiAF9Lks7W', 'Beingsalman', 'user', '8892719056', '1993-07-18', 'Chikkabasthi', 'Uploads/Admin/Profile/Salman Khan/20230526_Photo.jpg', NULL, '2023-05-26 09:29:32', '2023-05-26 09:37:04'),
+(4, 'DC1685168883', 'Md Rizwan', 'Bushrajannat@gmail.com', 'Female', NULL, '$2y$10$HO2DiwC5bXm2NgsTL15Oge0PcSrEijbqeXxjqOprSNypBiEZserg.', 'Bushra', 'user', '9663468797', '2023-03-05', 'No 37\nChikkabasthi, Ramasandra MAin Raon', 'Users/Md Rizwan DC1685168883/Profile//20230527_Aatifa.jpg', NULL, '2023-05-27 08:58:03', '2023-05-27 08:58:50');
 
 -- --------------------------------------------------------
 
@@ -6609,7 +6608,7 @@ ALTER TABLE `sub_service_list`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
