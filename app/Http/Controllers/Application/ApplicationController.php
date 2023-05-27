@@ -453,7 +453,54 @@ class ApplicationController extends Controller
         }
         return view('admin.Dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,]);
     }
+    public function waGreat($mobile){
+        $message = urlencode("Hello and welcome to *Digital Cyber* We're excited to have you as a new customer. With our wide range of government-related services, from passport assistance to train reservations, we aim to make your life easier. Don't forget to join our community group for the latest updates !
+        https://chat.whatsapp.com/DVMSuz7P1BeFzqoqmUJIcw "); // URL-encode the greeting message
+        // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
 
+        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        return redirect($whatsappLink);
+    }
+    public function waCallBack($mobile,$name,$service,$servicetype){
+        $message = urlencode("Hello *".$name."*,
+
+        Thank you for requesting a call back on *".$service." ".$servicetype."* I'll be happy to assist you. Please provide me with your preferred date and time for the call, along with any specific details or questions you have. I'll make sure to get back to you as soon as possible.
+
+        Best regards,
+        *Digital Cyber* "); // URL-encode the greeting message
+        // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
+
+        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        return redirect($whatsappLink);
+    }
+    public function UpdateCallbackStatus($Id,$Client_Id,$name){
+        $Tittle1 = 'Total Orders';
+        $Tittle2 = 'New Orders';
+        $Tittle3 = 'Delivered';
+        $Tittle4 = 'Pending';
+        $editId='';$deleteId='';
+        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId]);
+    }
+    public function EditCBStatus($editId,$Client_Id,$name){
+        $Tittle1 = 'Total Orders';
+        $Tittle2 = 'New Orders';
+        $Tittle3 = 'Delivered';
+        $Tittle4 = 'Pending';
+
+
+        $Id='';$deleteId='';
+        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId]);
+    }
+    public function DeleteCBStatus($deleteId,$Client_Id,$name){
+        $Tittle1 = 'Total Orders';
+        $Tittle2 = 'New Orders';
+        $Tittle3 = 'Delivered';
+        $Tittle4 = 'Pending';
+
+
+        $Id='';$editId='';
+        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId]);
+    }
 
 
 

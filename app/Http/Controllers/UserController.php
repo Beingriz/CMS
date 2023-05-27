@@ -200,12 +200,13 @@ class UserController extends Controller
         $time = Carbon::now();
         $save = new Callback_Db();
         $save['Id'] = 'CB'.$time->format('m-d-Y-H:i:s');
-        $save['Client_Id'] = $user->id;
+        $save['Client_Id'] = $user->Client_Id;
         $save['Name'] = $user->name;
         $save['Mobile_No'] = $user->mobile_no;
         $save['Username'] = $user->username;
         $save['Service'] = $service;
         $save['Service_Type'] = $servicetype;
+        $save['Profile_Image'] = Auth::user()->profile_image;
         $save->save();
         $notification = array(
             'message'=> $user->name.' your Callback Request for : '.$service.' -> '.$servicetype.' is Sent! Thank you!.',

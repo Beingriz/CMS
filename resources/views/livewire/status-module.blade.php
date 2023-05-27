@@ -63,6 +63,7 @@
                             <select class="form-control" id="Statusfor" wire:model="Relation" name="Relation" wire:change="Change(event.target.value)">
                                 <option value="">---Select---</option>
                                 <option value="General">General</option>
+                                <option value="Callback">Callback</option>
                                 @foreach ($MainServices as $item)
                                     <option value="{{$item->Name}}">{{$item->Name}}</option>
                                 @endforeach

@@ -37,6 +37,7 @@ class DashboardUpdate extends Component
         );
         return redirect()->back()->with($notification);
     }
+
     public function render()
     {
         $table = 'digtial_cyber_db';

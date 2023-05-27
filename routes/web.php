@@ -120,6 +120,11 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
         // ------------------------------------------------------------------
         Route::get('{name}/dashboard', 'DashboardUpdate')->name('update.dashboard');
+        Route::get('Whatsapp/Chat/{mobile}', 'waGreat')->name('wa.great');
+        Route::get('Whatsapp/Callback/{mobile}/{name}/{service}/{servicetype}', 'waCallBack')->name('wa.callback');
+        Route::get('Callback/Status/Update/{id}/{client_id}/{name}', 'UpdateCallBackStatus')->name('update.cb.status');
+        Route::get('Callback/Status/Edit/{id}/{client_id}/{name}', 'EditCBStatus')->name('edit.status.callback');
+        Route::get('Callback/Status/Delete/{id}/{client_id}/{name}', 'DeleteCBStatus')->name('delete.status.callback');
 
 
     });
