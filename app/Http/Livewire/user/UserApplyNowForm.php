@@ -104,7 +104,7 @@ class UserApplyNowForm extends Component
         $app_field->Balance =  0;
         $app_field->Payment_Mode= 'Not Available';
         $app_field->Payment_Receipt= 'Not Available';
-        $app_field->Status= 'Submitted';
+        $app_field->Status= 'Received';
         $app_field->Ack_No= 'Not Available';
         $app_field->Ack_File= 'Not Available';
         $app_field->Document_No= 'Not Available';

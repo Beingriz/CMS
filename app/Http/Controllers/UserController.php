@@ -206,7 +206,7 @@ class UserController extends Controller
         $save['Username'] = $user->username;
         $save['Service'] = $service;
         $save['Service_Type'] = $servicetype;
-        $save['Profile_Image'] = Auth::user()->profile_image;
+        $save['Profile_Image'] = $user->profile_image;
         $save->save();
         $notification = array(
             'message'=> $user->name.' your Callback Request for : '.$service.' -> '.$servicetype.' is Sent! Thank you!.',

@@ -887,9 +887,12 @@
                                         <th>SL. No</th>
                                         <th>Check</th>
                                         <th>Name</th>
-                                        <th>Application</th>
                                         <th>Mobile No</th>
-                                        <th>Amount</th>
+                                        <th>Application</th>
+                                        <th>Status</th>
+                                        <th>Total | Paid | Bal. </th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -901,9 +904,12 @@
                                         <td>{{$daily_applications->firstItem()+$loop->index}}</td>
                                         <td><input type="checkbox" id="checkbox" name="checkbox" value="{{$data->Id}}" wire:model="Checked"></td>
                                         <td>{{ $data->Name }}</td>
-                                        <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
                                         <td>{{ $data->Mobile_No }}</td>
-                                        <td>{{ $data->Amount_Paid }}</td>
+                                        <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
+                                        <td>{{ $data->Status }}</td>
+                                        <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }}  | {{ $data->Balance }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
                                         <td>
                                             <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                                 <div class="btn-group" role="group">

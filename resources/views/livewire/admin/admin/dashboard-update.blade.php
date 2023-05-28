@@ -3,6 +3,13 @@
     <div class="row">
         {{-- For User Data records --}}
         @if ($User)
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">{{$records->total()}} Users for this Month</h4
+                </div>
+            </div>
+        </div>
         @foreach ($records as $item)
             <div class="col-lg-6">
                 <div class="card">
@@ -45,6 +52,13 @@
 
         {{-- For Apply now Data records --}}
         @elseif($Orders)
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">{{$records->total()}} Orders for this Month</h4
+                </div>
+            </div>
+        </div>
         @foreach ($records as $item)
             <div class="col-lg-6">
                 <div class="card">
@@ -74,6 +88,13 @@
 
         {{-- For Callback Data records --}}
         @elseif($Callback)
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">{{$records->total()}} Callback Requests for this Month</h4
+                </div>
+            </div>
+        </div>
          @foreach ($records as $item)
             <div class="col-lg-6">
                 <div class="card">
@@ -116,6 +137,54 @@
         @endforeach
         {{$records->links()}}
 
+        {{-- For Enquiry Data records --}}
+        @elseif($Enquiry)
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">{{$records->total()}} Enquiries for this Month</h4
+                </div>
+            </div>
+        </div>
+         @foreach ($records as $item)
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                        <h5 class="card-title ">{{$item->Name}}</h5>
+                        <h5 class="card-title ">{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}</h5>
+                        <h5 class="card-title">{{$item->Id  }}</h5>
+                    </div>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <h5 class="card-title">Phone No : {{$item->Phone_No }}</h5>
+                                <h5 class="card-title">Service : {{$item->Service }}</h5>
+                                <h5 class="card-title">Status : {{$item->Status  }}</h5>
+                                <h5 class="card-title">Lead Status : {{$item->Lead_Status  }}</h5>
+                                <p class="card-text">Conversion : {{$item->Conversion }}</p>
+                                    {{-- <a href="{{route('update.cb.status',[$item->Id,$item->Client_Id,$item->Name])}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-primary"  data-bs-original-title="Change Use role to User" aria-label="Info">Status</a> --}}
+
+                                    <a href="{{route('update.enquiry.dashboard',$item->Id)}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-primary"  data-bs-original-title="Update Status" aria-label="Info" >Status</a>
+                                    <a href="{{route('global_search',$item->Phone_No)}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-info"  data-bs-original-title="Get {{$item->Name}} Details" aria-label="Info" >Details</a>
+
+                                    <a href="{{route('wa.enquiry',[$item->Phone_No,$item->Name, $item->Service,\Carbon\Carbon::parse($item->created_at)->diffForHumans()])}}"  data-bs-placement="top" data-bs-toggle="tooltip"  class="btn btn-sm btn-rounded btn-success"  data-bs-original-title="Send Whatsapp Message to {{$item->Name}}" aria-label="Info" >Whatsapp</a>
+
+                                    <a href="tel:+91{{$item->Phone_No}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-warning"  data-bs-original-title="Call {{$item->Name}}" aria-label="Info" >Call</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <p class="card-text">Message : {{$item->Message }}</p>
+                                <p class="card-text">Feedback : {{$item->Feedback }}</p>
+
+                                <p class="card-text"><small class="text-muted">Updated : {{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}} ago</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        {{$records->links()}}
         {{-- For Appliaitons Data records --}}
         @else
         @foreach ($records as $item)

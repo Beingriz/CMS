@@ -26,10 +26,10 @@ class DynamicDashboard extends Component
    public  $status_count;
    protected  $StatusDetails=[];
    public  $n=1;
-   public  $count;
+   public  $ShowTable = false;
    public  $temp_count=0;
    public  $ChangedStaus;
-   public  $status_name;
+   public  $status_name,$paginate=5,$filterby;
    public function mount($MainServiceId)
    {
        $this->MainServiceId = $MainServiceId;
@@ -69,26 +69,27 @@ class DynamicDashboard extends Component
 
             }
         }
-        $this->count=0;
+        $this->ShowTable=false;
         $this->temp_count=1;
 
     }
 
     public function ShowDetails($name)
     {
+        // dd($name);
         $fetch_details = NULL;
         $No = 'No';
-        $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',trim($name)],['Recycle_Bin',$No]])->get();
-        $this->StatusDetails = $fetch_details;
-        $this->count = count($fetch_details);
+        // $fetch_details = Application::Where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name],['Status',trim($name)],['Recycle_Bin',$No]])->get();
+        // $this->StatusDetails = $fetch_details;
+        // $this->count = count($fetch_details);
         $this->status_name = $name;
+        $this->ShowTable = true;
     }
-    public function UpdateStatus($Id,$pstatus,$ustatus)
+    public function UpdateStatus($Id,$pstatus,$ustatus,$subserv)
     {
-
        DB::update('update digital_cyber_db set Status = ? where Id = ?', [$ustatus,$Id]);
        session()->flash('SuccessMsg', 'The Status has been Changed From '.$pstatus.' to ' .$ustatus.' Successfully');
-       $this->count=0;
+       $this->ShowTable=false;
 
         $MainServices = MainServices::all();
         $today = date("Y-m-d");
@@ -114,8 +115,8 @@ class DynamicDashboard extends Component
                 }
             }
         }
-
-        return redirect('../dynamic_dashboard/'.$this->MainServiceId);
+        $this->ChangeService($subserv);
+        $this->ShowDetails($pstatus);
 
 
     }
@@ -130,9 +131,7 @@ class DynamicDashboard extends Component
         'alert-type' =>'success'
        );
 
-       $this->count=0;
-        return redirect()->route('DynamicDashboard')->with($notification);
-
+        $this->ShowTable=true;
 
     }
 
@@ -154,9 +153,12 @@ class DynamicDashboard extends Component
 
         $bookmarks = Bookmark::Where('Relation',$this->Serv_Name)->orderby('Name','asc')->get();
 
-        return view('livewire.dynamic-dashboard',[
+        $StatusDetails = Application::where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name]])
+                                ->Where([['Status',trim($this->status_name)],['Recycle_Bin','No']])
+                                ->filter(trim($this->filterby))->paginate($this->paginate);
+        return view('livewire.dynamic-dashboard',compact('StatusDetails'),[
            'status'=>$this->status, 'ServName'=>$this->Serv_Name,'bookmarks'=>$bookmarks,
-           'SubServices'=>$this->SubServices, 'n'=>$this->n, 'StatusDetails' =>$this->StatusDetails
+           'SubServices'=>$this->SubServices, 'n'=>$this->n,
        ]);
    }
 

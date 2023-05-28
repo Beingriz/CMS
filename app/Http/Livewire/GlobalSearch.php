@@ -42,7 +42,7 @@ class GlobalSearch extends Component
     public $Search_Count = 0;
     public $filtered;
     public $Balance_Collection =[];
-    public $Status =NULL,$byStatus,$StatusCount;
+    public $Status =NULL,$byStatus,$StatusCount,$FilterChecked;
 
     public function mount($key)
     {

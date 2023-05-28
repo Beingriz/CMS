@@ -17,7 +17,7 @@
                         <div class="row mb-3">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Client Id</label>
                             <div class="col-sm-8">
-                                <label for="example-text-input" class="col-sm-8 col-form-label">{{$Client_Id}}</label>
+                                <label for="example-text-input" class="col-sm-8 col-form-label">{{$Id}}</label>
                             </div>
                         </div>
                         <form wire:submit.prevent="CreditEntry">
@@ -57,7 +57,7 @@
                                 <label for="Message" class="col-sm-4 col-form-label">Message</label>
                                 <div class="col-sm-8">
                                     <textarea id="Message" wire:model="Message" name="Description" class="form-control"
-                                        placeholder="Credit Description" rows="3" resize="none"></textarea>
+                                        placeholder="Credit Description" rows="3" resize="none" disabled></textarea>
                                     <span class="error">@error('Message'){{$message}}@enderror</span>
                                 </div>
                             </div>
@@ -74,7 +74,49 @@
                                     <span class="error">@error('Status'){{$message}}@enderror</span>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label for="Feedback" class="col-sm-4 col-form-label">Feedback</label>
+                                <div class="col-sm-8">
+                                    <textarea id="Feedback" wire:model="Feedback" name="Feedback" class="form-control"
+                                        placeholder="Service Feedback" rows="3" resize="none"></textarea>
+                                    <span class="error">@error('Feedback'){{$message}}@enderror</span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="LeadStatus" class="col-sm-4 col-form-label">Lead Status</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="LeadStatus" wire:model="LeadStatus" name="LeadStatus">
+                                        <option value="">---Select---</option>
+                                        <option value="Hot">Hot</option>
+                                        <option value="Warm">Warm</option>
+                                        <option value="Cold">Cold</option>
+                                        <option value="Not Intrested">Not Intrested</option>
 
+                                    </select>
+                                    <span class="error">@error('LeadStatus'){{$message}}@enderror</span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="Conversion" class="col-sm-4 col-form-label">Conversion</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="Conversion" wire:model="Conversion" name="Conversion">
+                                        <option value="">---Select---</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="Not Intrested">Not Intrested</option>
+
+                                    </select>
+                                    <span class="error">@error('Conversion'){{$message}}@enderror</span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="Amount" class="col-sm-4 col-form-label">Amount</label>
+                                <div class="col-sm-8">
+                                    <input id="Amount" type="number" wire:model="Amount" name="Amount" class="form-control"
+                                    placeholder="Enter Amount"  >
+                                <span class="error">@error('Amount'){{$message}}@enderror</span>
+                                </div>
+                            </div>
                             <div class="form-data-buttons"> {{--Buttons--}}
                                 <div class="row">
                                     <div class="col-100">
@@ -105,9 +147,12 @@
                             <tr>
                                 <th>SL.No</th>
                                 <th>Service</th>
-                                <th>Type</th>
-                                <th>Status</th>
                                 <th>Message</th>
+                                <th>Status</th>
+                                <th>Feedback</th>
+                                <th>Lead</th>
+                                <th>Conversion</th>
+                                <th>Amount</th>
                                 <th>created</th>
                                 <th>updated</th>
                                 <th>Action</th>
@@ -118,36 +163,37 @@
                             @foreach($requests as $data)
                             <tr>
                                 <td>{{$requests->firstItem()+$loop->index}}</td>
-                                <td>{{ $data->Service }}</td>
-                                <td>{{ $data->Service_Type }}</td>
-                                <td>{{ $data->Status }}</td>
+                                <td>{{ $data->Service }} | {{ $data->Service_Type }}</td>
                                 <td>{{ $data->Message }}</td>
+                                <td>{{ $data->Status }}</td>
+                                <td>{{ $data->Feedback }}</td>
+                                <td>{{ $data->Lead_Status }}</td>
+                                <td>{{ $data->Conversion }}</td>
+                                <td>{{ $data->Amount }}</td>
                                 <td>{{\Carbon\Carbon::parse($data->created_at)->diffForHumans()}}</td>
                                 <td>{{\Carbon\Carbon::parse($data->updated_at)->diffForHumans()}}</td>
                                 <td>
-                                    <a href="{{route('edit.status.callback',[$data->Id,$data->Client_Id,$data->Name])}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                    <a href="{{route('edit.status.enquiry',$data->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                    <a href="{{route('delete.status.callback',[$data->Id,$data->Client_Id,$data->Name])}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
+                                    <a href="{{route('delete.status.enquiry',[$data->Id,$data->Id,$data->Name])}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
-
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-md-8">
-                            <p class="text-muted">Showing {{count($requests)}} of {{$requests->total()}} entries</p>
-                            </div>
-                            <div class="col-md-4">
-                                <span class=" pagination pagination-rounded float-end" >
-                                    {{$requests->links()}}
-                                </span>
-                            </div>
-                        </div>
                         </table>
                     </div>
                     <p class="card-text"><small class="text-bold">Last Entry at  {{$lastRecTime}} </small></p>
                 </div>
-                <span> {{$requests->links()}} </span>
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-8">
+                    <p class="text-muted">Showing {{count($requests)}} of {{$requests->total()}} entries</p>
+                    </div>
+                    <div class="col-md-4">
+                        <span class=" pagination pagination-rounded float-end" >
+                            {{$requests->links()}}
+                        </span>
+                    </div>
+                </div>
                 @endif
             </div>
         </div>

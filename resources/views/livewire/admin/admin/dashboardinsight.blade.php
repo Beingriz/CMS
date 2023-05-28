@@ -103,7 +103,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-8">
+        <div class="col-xl-9">
             <div class="card">
                 <div class="card-body">
                     <div class="dropdown float-end">
@@ -134,6 +134,8 @@
                                     <th>Service</th>
                                     <th>Amount</th>
                                     <th>Balance</th>
+                                    <th>Created</th>
+                                    <th>Upated</th>
                                     <th>Action</th>
                                     {{-- <th>Start date</th> --}}
                                     {{-- <th style="width: 120px;">Salary</th> --}}
@@ -148,6 +150,8 @@
                                     <td>{{$item->Application}} | {{$item->Application_Type}}</td>
                                     <td>{{$item->Amount_Paid}} </td>
                                     <td>{{$item->Balance}} </td>
+                                    <td>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}</td>
+                                    <td>{{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}}</td>
                                     <td>
                                         <a href="{{route('edit_application',$item->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
                                     </td>
@@ -201,17 +205,7 @@
                                     <td>{{$item->Balance}} </td>
                                     <td class="text-wrap">{{$item->Description}} </td>
                                     <td>
-                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Action <i class="mdi mdi-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                    <a class="dropdown-item" title="View" href=""id="editData">View</a>
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                        <a href="{{route('Credit')}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="open"><i class="mdi mdi-circle-edit-outline" ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -293,6 +287,8 @@
                         </div>
                     </div>
                     @endif
+
+
                     {{-- Call Back Report Start --}}
                     @if($callBackReport)
                     <p class="text-truncate font-size-20 mb-2">Callback Requests</p>
@@ -305,7 +301,9 @@
                                     <th>Name</th>
                                     <th>Mobile No</th>
                                     <th>Service</th>
-                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Updated</th>
                                     <th>Action</th>
                                 </tr>
                             </thead><!-- end thead -->
@@ -315,20 +313,12 @@
                                     <td>{{$callbacks->firstItem()+$loop->index}}</td>
                                     <td><h6 class="mb-0">{{$item->Name}}</h6></td>
                                     <td>{{$item->Mobile_No}}</td>
-                                    <td>{{$item->Service}}</td>
-                                    <td>{{$item->Service_Type}} </td>
+                                    <td>{{$item->Service}} | {{$item->Service_Type}} </td>
+                                    <td>{{$item->Status}} </td>
+                                    <td>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}</td>
+                                    <td>{{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}}</td>
                                     <td>
-                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Action <i class="mdi mdi-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                    <a class="dropdown-item" title="View" href=""id="editData">View</a>
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                        <a href="{{route('edit.status.callback',[$item->Id,$item->Client_Id,$item->Name])}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -350,6 +340,8 @@
                     </div>
                     @endif
                     {{-- Call Back Report End --}}
+
+
                     {{-- Feedback Report Start --}}
                     @if($feedbackReport)
                         <p class="text-truncate font-size-20 mb-2">Feedbacks</p>
@@ -360,8 +352,9 @@
                                         <th>Sl No</th>
                                         <th>Name</th>
                                         <th>Phone No</th>
-                                        <th>Messahe</th>
-                                        <th>Action</th>
+                                        <th>Message</th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
@@ -371,19 +364,8 @@
                                         <td><h6 class="mb-0">{{$item->Name}}</h6></td>
                                         <td>{{$item->Phone_No}}</td>
                                         <td class="text-wrap">{{$item->Message}} </td>
-                                        <td>
-                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                <div class="btn-group" role="group">
-                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Action <i class="mdi mdi-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                        <a class="dropdown-item" title="View" href=""id="editData">View</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </td>
+                                        <td>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}} </td>
+                                        <td>{{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}} </td>
                                     </tr>
                                     @endforeach
                                     <!-- end -->
@@ -418,11 +400,10 @@
                                         <th>Mobile No	</th>
                                         <th>Application</th>
                                         <th>Message</th>
-                                        <th>Balance</th>
-                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
                                         <th>Action</th>
-                                        {{-- <th>Start date</th> --}}
-                                        {{-- <th style="width: 120px;">Salary</th> --}}
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
@@ -430,23 +411,14 @@
                                     <tr>
                                         <td>{{$leads->firstItem()+$loop->index}}</td>
                                         <td><h6 class="mb-0">{{$item->Name}}</h6></td>
-                                        <td>{{$item->App_MobileNo}}</td>
+                                        <td>{{$item->App_MobileNo}} | {{$item->Mobile_No}}</td>
                                         <td>{{$item->Application}} | {{$item->Application_Type}}</td>
-                                        <td>{{$item->Message}} </td>
-                                        <td>{{$item->Balance}} </td>
-                                        <td class="text-wrap">{{$item->Description}} </td>
+                                        <td class="text-wrap">{{$item->Message}} </td>
+                                        <td>{{$item->Status}} </td>
+                                        <td>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}} </td>
+                                        <td>{{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}} </td>
                                         <td>
-                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                <div class="btn-group" role="group">
-                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Action <i class="mdi mdi-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                        <a class="dropdown-item" title="View" href=""id="editData">View</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
+                                            <a href="{{route('edit_application',$item->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -473,7 +445,7 @@
             </div><!-- end card -->
         </div>
         <!-- end col -->
-        <div class="col-xl-4">
+        <div class="col-xl-3">
             <div class="card">
                 <div class="card-body">
                     <div class="float-end">

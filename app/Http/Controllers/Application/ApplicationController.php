@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Application;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Models\Callback_Db;
 use App\Models\DocumentFiles;
+use App\Models\EnquiryDB;
 use App\Models\Status;
 use App\Models\SubServices;
 use App\Models\User;
@@ -45,17 +47,24 @@ class ApplicationController extends Controller
     {
         if($this->applications_served>0)
         {
-
             foreach($this->MainServices as $key)
             {
-                $application_total_count = DB::table('digital_cyber_db')->where ('Application', '=', $key['Name'])->count();
-                DB::update('update service_list set  Total_Count = ? where Id = ?',[$application_total_count, $key['Id']]);
-                $application_amount = DB::table('digital_cyber_db')->where('Application','=', $key['Name'])->count();
+                $application_total_count = DB::table('digital_cyber_db')->where ('Application',$key['Name'])->count();
+                $total_amount = DB::table('digital_cyber_db')->where('Application','=', $key['Name'])->SUM('Amount_Paid');
+
                 $notification = 0;
+                $data = array();
+                $data['Total_Count'] = $application_total_count;
+                $data['Temp_Count'] =  $notification;
+                $data['Total_Amount'] =  $total_amount;
+                DB::table('service_list')->where('Id',$key['Id'])->update($data);
+                $application_amount = DB::table('digital_cyber_db')->where('Application','=', $key['Name'])->count();
+
                 $No='No';
                 $app = $key['Name'];
                 $chechk_status = DB::table('digital_cyber_db')->where([['Application',$key['Name']],['Status','Received'],['Recycle_Bin',$No]])->get();
-                DB::update('update service_list set Temp_Count = ? where Name = ?', [$notification,$app]);
+
+
                 foreach($chechk_status as $count)
                 {
 
@@ -70,20 +79,6 @@ class ApplicationController extends Controller
                         DB::update('update service_list set Temp_Count = ? where Name = ?', [$notification,$app]);
                     }
                 }
-
-                $total_amount = 0;
-                if($application_amount>0)
-                {
-                     $add_amount = DB::table('digital_cyber_db')->where('Application','=', $key['Name'])->get();
-                     foreach($add_amount as $total)
-                     {
-                         $total  = get_object_vars($total);
-                         {
-                             $total_amount+= $total['Amount_Paid'];
-                         }
-                     }
-                }
-                DB::update('update service_list set Total_Amount=? where Id=?',[$total_amount, $key['Id']]);
             }
 
         }
@@ -444,6 +439,11 @@ class ApplicationController extends Controller
             $Tittle3 = 'Converted';
             $Tittle4 = 'Pending';
 
+        }elseif($name == 'Enquiry'){
+            $Tittle1 = 'New Enquiry';
+            $Tittle2 = 'Hot';
+            $Tittle3 = 'Warm';
+            $Tittle4 = 'Total';
         }else{
             $Tittle1 = '';
             $Tittle2 = '';
@@ -452,6 +452,75 @@ class ApplicationController extends Controller
 
         }
         return view('admin.Dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,]);
+    }
+    public function UpdateEnquiryDashboard ($Id)
+    {
+        $name = 'Enquiry';
+        if($name == 'Enquiry'){
+            $Tittle1 = 'New Enquiry';
+            $Tittle2 = 'Hot';
+            $Tittle3 = 'Warm';
+            $Tittle4 = 'Total';
+        }else{
+            $Tittle1 = '';
+            $Tittle2 = '';
+            $Tittle3 = '';
+            $Tittle4 = '';
+        }
+        $EditId='';$DeleteId='';
+        $totalRequests = EnquiryDB::all()->count();
+        $delivered = EnquiryDB::where('Lead_Status','Hot')->count();
+        $pending = EnquiryDB::where('Lead_Status','Warm')->count();
+        $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
+        $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+        $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
+        return view('admin.Dashboard.update_enquiry_status',['Name'=>$name,'Id'=>$Id,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered ,'DeleteId'=>$DeleteId,'EditId'=>$EditId]);
+    }
+    public function EditEnquiryStatus ($eidtId)
+    {
+        $name = 'Enquiry';
+        if($name == 'Enquiry'){
+            $Tittle1 = 'New Enquiry';
+            $Tittle2 = 'Hot';
+            $Tittle3 = 'Warm';
+            $Tittle4 = 'Total';
+        }else{
+            $Tittle1 = '';
+            $Tittle2 = '';
+            $Tittle3 = '';
+            $Tittle4 = '';
+        }
+        $DeleteId='';$Id='';
+        $totalRequests = EnquiryDB::all()->count();
+        $delivered = EnquiryDB::where('Lead_Status','Hot')->count();
+        $pending = EnquiryDB::where('Lead_Status','Warm')->count();
+        $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
+        $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+        $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
+        return view('admin.Dashboard.update_enquiry_status',['Name'=>$name,'Id'=>$Id,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered,'DeleteId'=>$DeleteId,'EditId'=>$eidtId]);
+    }
+    public function DeleteEnquiryStatus ($DeleteId)
+    {
+        $name = 'Enquiry';
+        if($name == 'Enquiry'){
+            $Tittle1 = 'New Enquiry';
+            $Tittle2 = 'Hot';
+            $Tittle3 = 'Warm';
+            $Tittle4 = 'Total';
+        }else{
+            $Tittle1 = '';
+            $Tittle2 = '';
+            $Tittle3 = '';
+            $Tittle4 = '';
+        }
+        $EditId='';$Id='';
+        $totalRequests = EnquiryDB::all()->count();
+        $delivered = EnquiryDB::where('Lead_Status','Hot')->count();
+        $pending = EnquiryDB::where('Lead_Status','Warm')->count();
+        $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
+        $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+        $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
+        return view('admin.Dashboard.update_enquiry_status',['Name'=>$name,'Id'=>$Id,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered,'DeleteId'=>$DeleteId,'EditId'=>$EditId]);
     }
     public function waGreat($mobile){
         $message = urlencode("Hello and welcome to *Digital Cyber* We're excited to have you as a new customer. With our wide range of government-related services, from passport assistance to train reservations, we aim to make your life easier. Don't forget to join our community group for the latest updates !
@@ -473,33 +542,70 @@ class ApplicationController extends Controller
         $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
         return redirect($whatsappLink);
     }
+    public function waEnquiry($mobile,$name,$service,$time){
+        $message = urlencode("Dear *".$name."*,
+
+        Thank you for reaching out to us through our website with your inquiry *".$time."* We appreciate your interest and would be more than happy to assist you.
+
+        Our team is currently reviewing your inquiry and will provide you with a detailed response as soon as possible. We understand the importance of your questions and aim to address them thoroughly and accurately.
+
+        In the meantime, if you have any additional information or specific details related to your inquiry, please feel free to share them with us. This will help us better understand your needs and provide you with a comprehensive response.
+
+        Once again, thank you for contacting us. We value your interest in our services, and we assure you that we are dedicated to providing you with the best possible assistance. We will be in touch shortly with a detailed response to your inquiry.
+
+        Best regards,
+        *Digital Cyber*
+        *Call : +91 8892988334*"); // URL-encode the greeting message
+        // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
+
+        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        return redirect($whatsappLink);
+
+
+
+    }
     public function UpdateCallbackStatus($Id,$Client_Id,$name){
-        $Tittle1 = 'Total Orders';
-        $Tittle2 = 'New Orders';
-        $Tittle3 = 'Delivered';
-        $Tittle4 = 'Pending';
+        $Tittle1 = 'Total Requests';
+        $Tittle2 = 'New ';
+        $Tittle3 = 'Pending';
+        $Tittle4 = 'Delivered';
         $editId='';$deleteId='';
-        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId]);
+        $totalRequests = Callback_Db::all()->count();
+        $delivered = Callback_Db::where('Status','Completed')->count();
+        $pending = Callback_Db::where('Status','!=','Completed')->count();
+        $new =   Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->count();
+        $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+        $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
+
+        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered]);
     }
     public function EditCBStatus($editId,$Client_Id,$name){
-        $Tittle1 = 'Total Orders';
-        $Tittle2 = 'New Orders';
-        $Tittle3 = 'Delivered';
-        $Tittle4 = 'Pending';
-
-
+        $Tittle1 = 'Total Requests';
+        $Tittle2 = 'New ';
+        $Tittle3 = 'Pending';
+        $Tittle4 = 'Delivered';
+        $totalRequests = Callback_Db::all()->count();
+        $delivered = Callback_Db::where('Status','Completed')->count();
+        $pending = Callback_Db::where('Status','!=','Completed')->count();
+        $new =   Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->count();
+        $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+        $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
         $Id='';$deleteId='';
-        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId]);
+        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered]);
     }
     public function DeleteCBStatus($deleteId,$Client_Id,$name){
-        $Tittle1 = 'Total Orders';
-        $Tittle2 = 'New Orders';
-        $Tittle3 = 'Delivered';
-        $Tittle4 = 'Pending';
-
-
+        $Tittle1 = 'Total Requests';
+        $Tittle2 = 'New ';
+        $Tittle3 = 'Pending';
+        $Tittle4 = 'Delivered';
+        $totalRequests = Callback_Db::all()->count();
+        $delivered = Callback_Db::where('Status','Completed')->count();
+        $pending = Callback_Db::where('Status','!=','Completed')->count();
+        $new =   Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->count();
+        $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+        $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
         $Id='';$editId='';
-        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId]);
+        return view('admin.Dashboard.update_callback_status',['Id'=>$Id,'Client_Id'=>$Client_Id,'Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'EditId'=>$editId,'DeleteId'=>$deleteId,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered]);
     }
 
 

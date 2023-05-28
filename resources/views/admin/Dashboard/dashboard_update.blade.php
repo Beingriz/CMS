@@ -24,7 +24,6 @@
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a href="{{route('new.application')}}">New Application</a></li>
                 <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
-                <li class="breadcrumb-item"><a href="{{route('update_application')}}">Debit</a></li>
             </ol>
         </div>{{-- End of Page Tittle --}}
 

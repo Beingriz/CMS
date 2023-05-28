@@ -4,17 +4,19 @@ namespace App\Http\Livewire;
 
 use App\Models\EnquiryDB;
 use App\Models\MainServices;
+use App\Models\SubServices;
 use Livewire\Component;
 
 class EnquiryForm extends Component
 {
     public $Id,$Name,$Email,$Message,$Service,$Phone_No,$Callback='No',$Feedback='Not Available',$Action='No',$Amount,$Conversion='No';
-    public $Msg_template;
+    public $Msg_template,$SubService;
     protected $rules = [
         'Name'=>'Required',
         'Email'=>'Required|email',
         'Phone_No'=>'Required | min:10 | max:10',
         'Service'=>'Required',
+        'SubService'=>'Required',
         'Message'=>'Required | min:20'
     ];
 
@@ -22,7 +24,8 @@ class EnquiryForm extends Component
         'Name'=>'Name cannot be blank',
         'Email'=>'Please enter valid email',
         'Phone_No'=>'Mobile Number is Mandatory',
-        'Service'=>'Please select the Service type for callback',
+        'Service'=>'Please select the Service for callback',
+        'SubServices'=>'Please select the Service type for callback',
         'Message'=>'Please Write your message'
     ];
 
@@ -38,14 +41,19 @@ class EnquiryForm extends Component
     }
     public function Save(){
         $this->validate();
+        $mainservice = MainServices::where('Id',$this->Service)->get();
+        foreach($mainservice as $item){
+            $serviceName = $item['Name'];
+        }
         $save = new EnquiryDB();
         $save->Id = $this->Id;
         $save->Name = $this->Name;
         $save->Phone_No = $this->Phone_No;
         $save->Email = $this->Email;
         $save->Message = $this->Message;
-        $save->Service = $this->Service;
-        $save->Callback = $this->Callback;
+        $save->Service = $serviceName;
+        $save->Service_Type = $this->SubService;
+        $save->Status = 'Pending';
         $save->Feedback = $this->Feedback;
         $save->Amount = $this->Amount;
         $save->Conversion = $this->Conversion;
@@ -70,6 +78,8 @@ class EnquiryForm extends Component
         }
         $this->Msg_template = "Thank you ".ucwords($this->Name).$name." for your interest in contacting us! Please use the this form to send us your message and we will get back to you as soon as possible. Please provide as much detail as possible so that we can assist you effectively. Thank you for taking the time to contact us, and we look forward to hearing from you!";
         $services = MainServices::where('Service_Type','Public')->get();
-        return view('livewire.enquiry-form',compact('services'));
+        $subservices = SubServices::where('Service_Id',$this->Service)->get();
+
+        return view('livewire.enquiry-form',compact('services','subservices'));
     }
 }

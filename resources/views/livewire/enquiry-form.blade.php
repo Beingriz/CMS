@@ -38,11 +38,24 @@
                                         <select class="form-select border-0" style="height: 55px;" wire:model.lazy="Service" name="Service">
                                             <option selected="">Select A Service</option>
                                             @foreach ($services as $item )
-                                            <option value="{{$item['Name']}}">{{$item['Name']}}</option>
+                                            <option value="{{$item['Id']}}">{{$item['Name']}}</option>
                                             @endforeach
                                         </select>
                                         @error('Service') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
+                                    @if (!empty($Service))
+
+
+                                    <div class="col-12">
+                                        <select class="form-select border-0" style="height: 55px;" wire:model.lazy="SubService" name="SubService">
+                                            <option selected="">Category</option>
+                                            @foreach ($subservices as $item )
+                                            <option value="{{$item['Name']}}">{{$item['Name']}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('SubService') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                     @endif
                                     <div class="col-12">
                                         <textarea class="form-control border-0" placeholder="{{$Msg_template}}" wire:model="Message" cols="10" rows="10"></textarea>
                                         @error('Message') <span class="text-danger">{{ $message }}</span> @enderror
