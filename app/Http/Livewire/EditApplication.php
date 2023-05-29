@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Application;
+use App\Models\ApplyServiceForm;
 use App\Models\DocumentFiles;
 use App\Models\MainServices;
 use App\Models\PaymentMode;
@@ -397,8 +398,23 @@ class EditApplication extends Component
         $update_data['Payment_Receipt']=$this->Payment_Path;
         $update_data['Delivered_Date']=$this->Updated_Date;
         $update_data['Applicant_Image']=$this->Applicant_Image;
+        $update_data['updated_at']=Carbon::now();
         $update_App = Application::where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($update_data);
 
+        $find = ApplyServiceForm::where('Id',$Id)->get();
+        if(!empty($find)){
+            $data = array();
+            $data['Name'] = $this->Name;
+            $data['Application']=$this->ServiceName;
+            $data['Application_Type']=$this->SubSelected;
+            $data['Dob']=$this->Dob;
+            $data['Relative_Name']=$this->RelativeName;
+            $data['Mobile_No']=$this->Mobile_No;
+            $data['Status']=$this->Status;
+            $data['Profile_Image'] = $this->Applicant_Image;
+            $data['updated_at']=Carbon::now();
+            ApplyServiceForm::where('Id',$Id)->Update($data);
+        }
         if($this->Doc_Yes == 1 ) // if more documents to upload
         {
             if(count($this->Document_Files)>0)
@@ -476,6 +492,7 @@ class EditApplication extends Component
         $bal_data['Payment_Mode']=$this->PaymentMode;
         $bal_data['Attachment']=$this->Payment_Path;
         $bal_data['Description']=$Description;
+        $bal_data['updated_at']=Carbon::now();
 
         $update_Bal = DB::table('balance_ledger')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($bal_data);
 

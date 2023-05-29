@@ -29,7 +29,7 @@
         </div>{{-- End of Page Tittle --}}
 
         <div class="row">
-            <div class="col-xl-3 col-md-6">
+            <a class="col-xl-3 col-md-6" href="{{route('update.dashboard','Callback')}}" title="Callback Dashboard">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex">
@@ -46,7 +46,7 @@
                         </div>
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
-            </div><!-- end col -->
+            </a><!-- end col -->
             <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">

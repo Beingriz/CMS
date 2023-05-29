@@ -10,6 +10,6 @@ class ApplyServiceForm extends Model
     use HasFactory;
     public $table = 'applynow';
     protected $guard=[];
-    protected $connection ='mysql';
+    // protected $connection ='mysql';
 
 }

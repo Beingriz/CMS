@@ -15,6 +15,7 @@
                 <div class="card">
                     <div class="card-header d-sm-flex align-items-center justify-content-between"">
                         <h5 class="card-title {{$item->role=='admin' ? 'text-info text-bold' : '' }}">{{$item->name}}: {{$item->role}}</h5>
+                        <h5 class="card-title">{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}</h5>
                         <h5 class="card-title {{$item->role=='admin' ? 'text-info text-bold' : '' }}">{{$item->Client_Id }}</h5>
                     </div>
                     <div class="row no-gutters align-items-center">
@@ -55,29 +56,44 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">{{$records->total()}} Orders for this Month</h4
+                    <h4 class="mb-sm-0">{{$records->total()}} Orders Pending for this Month</h4
                 </div>
             </div>
         </div>
         @foreach ($records as $item)
             <div class="col-lg-6">
                 <div class="card">
+                    <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                        <h5 class="card-title">{{$item->Name}}</h5>
+                        <h5 class="card-title">{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}</h5>
+                        <h5 class="card-title">{{$item->Id }}</h5>
+                    </div>
                     <div class="row no-gutters align-items-center">
                         <div class="col-md-3">
-                            <img class="img-thumbnail rounded-circle avatar-xl" alt="100x100" src="{{asset('storage/no_image.jpg')}}" data-holder-rendered="true">
+                            <img class="img-thumbnail rounded-circle avatar-xl" alt="100x100" src="{{!empty($item->Profile_Image)?asset('storage/'.$item->Profile_Image): url('storage/no_image.jpg')}}" data-holder-rendered="true">
                         </div>
                         <div class="col-md-5">
                             <div class="card-body">
-                                <h5 class="card-title">{{$item->Name}}</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <h5 class="card-title">Name : {{$item->Name}}</h5>
+                                <h5 class="card-title">Relative Name : {{$item->Relative_Name}}</h5>
+                                <h5 class="card-title">Mobile No : {{$item->Mobile_No}}</h5>
+                                <h5 class="card-title">Date of Birth : {{$item->Dob}}</h5>
+
+                                <a href="{{route('edit_application',$item->Id)}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-primary"  data-bs-original-title="Edit {{$item->Application}} Details" aria-label="Info" >Eidt</a>
+                                <a href="{{route('global_search',$item->Mobile_No)}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-info"  data-bs-original-title="Get {{$item->Name}} Details" aria-label="Info" >Details</a>
+                                <a href="{{route('wa.applynow',[$item->Mobile_No,$item->Name, $item->Application, $item->Application_Type])}}"  data-bs-placement="top" data-bs-toggle="tooltip"  class="btn btn-sm btn-rounded btn-success"  data-bs-original-title="Send Whatsapp Message to {{$item->Name}}" aria-label="Info" >Whatsapp</a>
+                                <a href="tel:+91{{$item->Mobile_No}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-warning"  data-bs-original-title="Call {{$item->Name}}" aria-label="Info" >Call</a>
+
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="card-body">
-                                <h5 class="card-title">{{$item->Name}}</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <h5 class="card-title">Service : {{$item->Application}}</h5>
+                                <h5 class="card-title">Type : {{$item->Application_Type}}</h5>
+                                <p class="card-text">Message : {{$item->Message}}</p>
+                                <h5 class="card-title">Status : {{$item->Status}}</h5>
+
+                                <p class="card-text"><small class="text-muted">{{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}}</small></p>
                             </div>
                         </div>
                     </div>

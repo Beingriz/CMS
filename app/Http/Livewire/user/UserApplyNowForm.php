@@ -85,6 +85,7 @@ class UserApplyNowForm extends Component
         $apply->Message = trim($this->Description);
         $apply->File = $this->File;
         $apply->Consent = $consent;
+        $apply->Profile_Image = Auth::user()->profile_image;
         $apply->save();
 
         $app_field = new Application();

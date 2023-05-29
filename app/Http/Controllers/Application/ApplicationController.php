@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Application;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Models\ApplyServiceForm;
 use App\Models\Callback_Db;
 use App\Models\DocumentFiles;
 use App\Models\EnquiryDB;
@@ -423,19 +424,26 @@ class ApplicationController extends Controller
         if($name == 'User'){
             $Tittle1 = 'Total Users';
             $Tittle2 = 'New User';
-            $Tittle3 = 'Converted';
-            $Tittle4 = 'Pending';
+            $Tittle3 = 'Pedning';
+            $Tittle4 = 'Converted';
+            $totalRequests = User::all()->count();
+            $delivered = User::where('Status','Completed')->count();
+            $pending = User::where('Status','!=','Completed')->count();
+            $new =   User::whereDate('created_at',DB::raw('CURDATE()'))->count();
+            $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+            $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
+
 
         }elseif($name == 'Orders')
         {
             $Tittle1 = 'Total Orders';
             $Tittle2 = 'New Orders';
-            $Tittle3 = 'Delivered';
-            $Tittle4 = 'Pending';
-            $totalRequests = User::all()->count();
-            $delivered = Callback_Db::where('Status','Completed')->count();
-            $pending = Callback_Db::where('Status','!=','Completed')->count();
-            $new =   Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->count();
+            $Tittle3 = 'Pending';
+            $Tittle4 = 'Delivered';
+            $totalRequests = ApplyServiceForm::all()->count();
+            $delivered = ApplyServiceForm::where('Status','Delivered to Client')->count();
+            $pending = ApplyServiceForm::where('Status','!=','Delivered to Client')->count();
+            $new =   ApplyServiceForm::whereDate('created_at',DB::raw('CURDATE()'))->count();
             $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
             $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
 
@@ -555,6 +563,24 @@ class ApplicationController extends Controller
 
         Best regards,
         *Digital Cyber* "); // URL-encode the greeting message
+        // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
+
+        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        return redirect($whatsappLink);
+    }
+    public function waApplyNow($mobile,$name,$service,$servicetype){
+        $message = urlencode("Hello *".$name."*,
+
+        Thank you for Applying *".$service." ".$servicetype."* Service,
+        I'll be happy to assist you.
+
+        Please provide me with your preferred date and time for the call, along with any specific details or questions you have.
+
+        I'll make sure to get back to you as soon as possible.
+
+         Best regards,
+        *Digital Cyber*
+        *+91 8892988334*"); // URL-encode the greeting message
         // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
 
         $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;

@@ -126,8 +126,6 @@
                                 <td>{{\Carbon\Carbon::parse($data->updated_at)->diffForHumans()}}</td>
                                 <td>
                                     <a href="{{route('edit.status.callback',[$data->Id,$data->Client_Id,$data->Name])}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
-
-                                    <a href="{{route('delete.status.callback',[$data->Id,$data->Client_Id,$data->Name])}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
                                 </td>
                             </tr>
                             @endforeach
