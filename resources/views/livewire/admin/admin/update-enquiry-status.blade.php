@@ -90,6 +90,7 @@
                                         <option value="Hot">Hot</option>
                                         <option value="Warm">Warm</option>
                                         <option value="Cold">Cold</option>
+                                        <option value="Converted">Converted</option>
                                         <option value="Not Intrested">Not Intrested</option>
 
                                     </select>
@@ -134,7 +135,7 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header d-sm-flex align-items-center justify-content-between"">
-                    <h5>Previous Requests</h5>
+                    <h5>Previous  {{$requests->total()}} Requests Found</h5>
                     <h5>{{$Name}}</h5>
                 </div>
                 <div class="card-body">
@@ -161,13 +162,13 @@
 
                         <tbody>
                             @foreach($requests as $data)
-                            <tr>
+                            <tr >
                                 <td>{{$requests->firstItem()+$loop->index}}</td>
                                 <td>{{ $data->Service }} | {{ $data->Service_Type }}</td>
-                                <td>{{ $data->Message }}</td>
+                                <td class="text-wrap">{{ $data->Message }}</td>
                                 <td>{{ $data->Status }}</td>
-                                <td>{{ $data->Feedback }}</td>
-                                <td>{{ $data->Lead_Status }}</td>
+                                <td class="text-wrap">{{ $data->Feedback }}</td>
+                                <td class="{{ ($data->Lead_Status == 'Hot') ? 'text-danger fw-bold font-size-18' : 'text-warning fw-bold font-size-16 me-2'}}">{{ $data->Lead_Status }}</td>
                                 <td>{{ $data->Conversion }}</td>
                                 <td>{{ $data->Amount }}</td>
                                 <td>{{\Carbon\Carbon::parse($data->created_at)->diffForHumans()}}</td>

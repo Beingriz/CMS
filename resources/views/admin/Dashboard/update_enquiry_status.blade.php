@@ -35,7 +35,7 @@
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">{{$Tittle1}}</p>
-                                <h4 class="mb-2">{{$new}}</h4>
+                                <h4 class="mb-2">{{$totalRequests}}</h4>
                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>{{$totalRequests}}</span>Requests Received till now</p>
                             </div>
                             <div class="avatar-sm">
@@ -53,7 +53,7 @@
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">{{$Tittle2}}</p>
-                                <h4 class="mb-2">{{$delivered}}</h4>
+                                <h4 class="mb-2">{{$new}}</h4>
                                 <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="ri-arrow-right-down-line me-1 align-middle"></i>{{$new}}</span>for Toady</p>
                             </div>
                             <div class="avatar-sm">

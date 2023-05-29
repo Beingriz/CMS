@@ -91,7 +91,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">{{$records->total()}} Callback Requests for this Month</h4
+                    <h4 class="mb-sm-0">{{$records->total()}} Callback Requests Pending for this Month</h4
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">{{$records->total()}} Enquiries for this Month</h4
+                    <h4 class="mb-sm-0">{{$records->total()}} Enquiries Pending for this Month</h4
                 </div>
             </div>
         </div>
@@ -159,8 +159,8 @@
                             <div class="card-body">
                                 <h5 class="card-title">Phone No : {{$item->Phone_No }}</h5>
                                 <h5 class="card-title">Service : {{$item->Service }}</h5>
-                                <h5 class="card-title">Status : {{$item->Status  }}</h5>
-                                <h5 class="card-title">Lead Status : {{$item->Lead_Status  }}</h5>
+                                <h5 class="card-title {{ ($item->Status == 'Completed') ? 'text-success fw-bold font-size-16' : 'text-warning fw-bold font-size-16'}}" >Status : {{$item->Status  }}</h5>
+                                <h5 class="card-title {{ ($item->Lead_Status == 'Hot') ? 'text-danger fw-bold font-size-18' : 'text-warning fw-bold font-size-16 me-2'}}">Lead Status : {{$item->Lead_Status  }}</h5>
                                 <p class="card-text">Conversion : {{$item->Conversion }}</p>
                                     {{-- <a href="{{route('update.cb.status',[$item->Id,$item->Client_Id,$item->Name])}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-primary"  data-bs-original-title="Change Use role to User" aria-label="Info">Status</a> --}}
 
@@ -177,7 +177,7 @@
                                 <p class="card-text">Message : {{$item->Message }}</p>
                                 <p class="card-text">Feedback : {{$item->Feedback }}</p>
 
-                                <p class="card-text"><small class="text-muted">Updated : {{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}} ago</small></p>
+                                <p class="card-text  text-success text-bold font-italic font-size-18"><small class="text-primary">Updated : {{\Carbon\Carbon::parse($item->updated_at)->diffForHumans()}} ago</small></p>
                             </div>
                         </div>
                     </div>

@@ -432,18 +432,36 @@ class ApplicationController extends Controller
             $Tittle2 = 'New Orders';
             $Tittle3 = 'Delivered';
             $Tittle4 = 'Pending';
+            $totalRequests = User::all()->count();
+            $delivered = Callback_Db::where('Status','Completed')->count();
+            $pending = Callback_Db::where('Status','!=','Completed')->count();
+            $new =   Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->count();
+            $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+            $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
 
         }elseif($name == 'Callback'){
             $Tittle1 = 'Total Requests';
             $Tittle2 = 'New Requests';
             $Tittle3 = 'Converted';
             $Tittle4 = 'Pending';
+            $totalRequests = Callback_Db::all()->count();
+            $delivered = Callback_Db::where('Status','Completed')->count();
+            $pending = Callback_Db::where('Status','!=','Completed')->count();
+            $new =   Callback_Db::whereDate('created_at',DB::raw('CURDATE()'))->count();
+            $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+            $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
 
         }elseif($name == 'Enquiry'){
-            $Tittle1 = 'New Enquiry';
-            $Tittle2 = 'Hot';
-            $Tittle3 = 'Warm';
-            $Tittle4 = 'Total';
+            $Tittle1 = 'Total Enquiries';
+            $Tittle2 = 'New Enquiries';
+            $Tittle3 = 'Hot';
+            $Tittle4 = 'Completed';
+            $totalRequests = EnquiryDB::all()->count();
+            $delivered = EnquiryDB::where('Status','Completed')->count();
+            $pending = EnquiryDB::where('Lead_Status','Hot')->count();
+            $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
+            $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
+            $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
         }else{
             $Tittle1 = '';
             $Tittle2 = '';
@@ -451,16 +469,16 @@ class ApplicationController extends Controller
             $Tittle4 = '';
 
         }
-        return view('admin.Dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,]);
+        return view('admin.Dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered]);
     }
     public function UpdateEnquiryDashboard ($Id)
     {
         $name = 'Enquiry';
         if($name == 'Enquiry'){
-            $Tittle1 = 'New Enquiry';
-            $Tittle2 = 'Hot';
-            $Tittle3 = 'Warm';
-            $Tittle4 = 'Total';
+            $Tittle1 = 'Total Enquiries';
+            $Tittle2 = 'New Enquiries';
+            $Tittle3 = 'Hot';
+            $Tittle4 = 'Completed';
         }else{
             $Tittle1 = '';
             $Tittle2 = '';
@@ -469,8 +487,8 @@ class ApplicationController extends Controller
         }
         $EditId='';$DeleteId='';
         $totalRequests = EnquiryDB::all()->count();
-        $delivered = EnquiryDB::where('Lead_Status','Hot')->count();
-        $pending = EnquiryDB::where('Lead_Status','Warm')->count();
+        $delivered = EnquiryDB::where('Status','Completed')->count();
+        $pending = EnquiryDB::where('Lead_Status','Hot')->count();
         $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
         $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
         $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
@@ -480,10 +498,10 @@ class ApplicationController extends Controller
     {
         $name = 'Enquiry';
         if($name == 'Enquiry'){
-            $Tittle1 = 'New Enquiry';
-            $Tittle2 = 'Hot';
-            $Tittle3 = 'Warm';
-            $Tittle4 = 'Total';
+            $Tittle1 = 'Total Enquiries';
+            $Tittle2 = 'New Enquiries';
+            $Tittle3 = 'Hot';
+            $Tittle4 = 'Completed';
         }else{
             $Tittle1 = '';
             $Tittle2 = '';
@@ -492,8 +510,8 @@ class ApplicationController extends Controller
         }
         $DeleteId='';$Id='';
         $totalRequests = EnquiryDB::all()->count();
-        $delivered = EnquiryDB::where('Lead_Status','Hot')->count();
-        $pending = EnquiryDB::where('Lead_Status','Warm')->count();
+        $delivered = EnquiryDB::where('Status','Completed')->count();
+        $pending = EnquiryDB::where('Lead_Status','Hot')->count();
         $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
         $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
         $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');
@@ -503,10 +521,10 @@ class ApplicationController extends Controller
     {
         $name = 'Enquiry';
         if($name == 'Enquiry'){
-            $Tittle1 = 'New Enquiry';
-            $Tittle2 = 'Hot';
-            $Tittle3 = 'Warm';
-            $Tittle4 = 'Total';
+            $Tittle1 = 'Total Enquiries';
+            $Tittle2 = 'New Enquiries';
+            $Tittle3 = 'Hot';
+            $Tittle4 = 'Completed';
         }else{
             $Tittle1 = '';
             $Tittle2 = '';
@@ -515,8 +533,8 @@ class ApplicationController extends Controller
         }
         $EditId='';$Id='';
         $totalRequests = EnquiryDB::all()->count();
-        $delivered = EnquiryDB::where('Lead_Status','Hot')->count();
-        $pending = EnquiryDB::where('Lead_Status','Warm')->count();
+        $delivered = EnquiryDB::where('Status','Completed')->count();
+        $pending = EnquiryDB::where('Lead_Status','Hot')->count();
         $new =   EnquiryDB::whereDate('created_at',DB::raw('CURDATE()'))->count();
         $percentpending = number_format(($pending*100)/$totalRequests,1,'.','');
         $percentdelivered = number_format( ($delivered*100)/$totalRequests, 1,'.','');

@@ -11,7 +11,7 @@ class DashboardUpdate extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $Records,$Key,$User = false,$Orders = false,$Callback = false,$created,$Enquiry = false;
+    public $Records,$Key,$key,$User = false,$Orders = false,$Callback = false,$created,$Enquiry = false;
     public function mount($Key){
        $this->Key = $Key;
     }
@@ -57,22 +57,26 @@ class DashboardUpdate extends Component
             $this->Orders = true;
             $this->Callback = false;
             $this->Enquiry = false;
-
+            $this->key = 'Delivered to Client';
         }elseif($this->Key == 'Callback'){
             $table = 'callback';
             $this->User = false;
             $this->Orders = false;
             $this->Callback = true;
             $this->Enquiry = false;
+            $this->key = 'Completed';
         }elseif($this->Key == 'Enquiry'){
             $table = 'enquiry_form';
             $this->User = false;
             $this->Orders = false;
             $this->Callback = false;
             $this->Enquiry = true;
+            $this->key = 'Completed';
 
         }
-        $records = DB::table($table)->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')->orderBy('created_at','desc')->paginate(10);
+        $records = DB::table($table)->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                                    ->where('Status','!=',$this->key)
+                                    ->orderBy('created_at','desc')->paginate(10);
         $this->created =  Carbon::parse($records['created_at'])->diffForHumans();
         return view('livewire.admin.admin.dashboard-update',compact('records'));
     }
