@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Debit;
 use App\Models\DebitSource;
 use App\Models\DebitSources;
+use App\Models\PaymentMode;
 use App\Traits\RightInsightTrait;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -18,23 +19,18 @@ class DebitLedger extends Component
     protected $paginationTheme = 'bootstrap';
     use WithPagination;
     public $transaction_id = 'Debit';
-    public $ParticularSelected = NULL, $Category='Expenses';
-    public $Sources = NULL,$Source= NULL;
-    public $SelectedSources  = NULL;
-    public $Date;
+    public $Category,$SubCategory,$Particular;
+    public $Date,$Name,$Source;
     public $Unit_Price;
     public $Quantity;
     public $Total_Amount = NULL;
     public $Amount_Paid;
     public $Balance;
-    public $Description= 'Walk in Customer';
+    public $Description;
     public $Payment_Mode = 'Cash';
     public $Attachment ,$itteration;
     public $Old_Attachment,$New_Attachment;
     public $SourceFormDisplay=0,$DebitFormDisplay=1;
-
-
-    public $Name,$Category_Type,$Type, $Budget,$UpdateId;
 
     protected  $DSList = [];
     public $paginate = 10;
@@ -49,34 +45,34 @@ class DebitLedger extends Component
     public $update = 0;
 
 
-    protected $rules = [
-        'Sources' =>'required',
-        'Date' =>'required',
-        'Total_Amount' =>'required',
-        'Description' =>'required',
-        'Category' =>'required',
-        'Name' =>'required',
-        'Budget' =>'required',
-    ];
-    protected $messages = [
-        'Sources.required' =>'Please Select the Debit Source.',
-        'Date.required' =>'Date Field Cannot be empty.',
-        'Total_Amount.required' =>'Please Enter the Total Amount.',
-        'Description.required' =>'Please Enter the Proper Description.',
-        'Payment_Mode.required' =>'Please SelectPayment Method. ',
-    ];
+    // protected $rules = [
+    //     'Sources' =>'required',
+    //     'Date' =>'required',
+    //     'Total_Amount' =>'required',
+    //     'Description' =>'required',
+    //     'Category' =>'required',
+    //     'Name' =>'required',
+    //     'Budget' =>'required',
+    // ];
+    // protected $messages = [
+    //     'Sources.required' =>'Please Select the Debit Source.',
+    //     'Date.required' =>'Date Field Cannot be empty.',
+    //     'Total_Amount.required' =>'Please Enter the Total Amount.',
+    //     'Description.required' =>'Please Enter the Proper Description.',
+    //     'Payment_Mode.required' =>'Please SelectPayment Method. ',
+    // ];
 
-    public function updated($propertyName)
-    {
-        $this->validateOnly($propertyName);
-    }
+    // public function updated($propertyName)
+    // {
+    //     $this->validateOnly($propertyName);
+    // }
     public function mount()
     {
         $this->transaction_id = 'DE'.time();
         $this->Date = date("Y-m-d");
-        $this->Total = 0;
         $this->Quantity = 1;
-        $this->Total_Amount = 0;
+
+
     }
     public function DebitEntry()
     {
@@ -419,90 +415,125 @@ class DebitLedger extends Component
 
 
 
+    public function Save(){
+        $debitsource = DebitSources::where('Id',$this->Particular)->get();
+        foreach($debitsource as $item){
+            $this->Source = $item->DS_Name;
+            $this->Name = $item->Name;
+        }
+        if($this->Balance > 0){
+            $debitentry  = new Debit();
+            $debitentry->Id = 'DE'.time();
+            $debitentry->Client_Id = 'EX'.time();
+            $debitentry->Date = $this->Date;
+            $debitentry->Category = $this->Category;
+            $debitentry->Source =  $this->Source;
+            $debitentry->Name = $this->Name;
+            $debitentry->Unit_Price = $this->Unit_Price;
+            $debitentry->Quantity = $this->Quantity;
+            $debitentry->Total_Amount = $this->Total_Amount;
+            $debitentry->Amount_Paid =$this->Amount_Paid;
+            $debitentry->Balance = $this->Balance;
+            $debitentry->Description =$Desc;
+            $debitentry->Payment_Mode = $this->Payment_Mode;
+            $debitentry->Attachment =$Attachment;
+            $debitentry->save();//Debit Ledger Entry
+        }else{
 
+        }
+
+
+
+    }
 
 
     public function render()
     {
-        if(!is_null($this->Select_Date))
-        {
-            $todays_list = Debit::where('Date',$this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
-            $sl_no = $todays_list->total();
-            if(sizeof($todays_list)==0)
-            {
-                session()->flash('Error','Sorry!! No Record Available for '.$this->Select_Date);
+        // if(!is_null($this->Select_Date))
+        // {
+        //     $todays_list = Debit::where('Date',$this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
+        //     $sl_no = $todays_list->total();
+        //     if(sizeof($todays_list)==0)
+        //     {
+        //         session()->flash('Error','Sorry!! No Record Available for '.$this->Select_Date);
+        //     }
+        // }
+        // else
+        // {
+        //     $todays_list = Debit::where('Date',$this->today)->filter(trim($this->filterby))->paginate($this->paginate);
+        //     $sl_no = $todays_list->total();
+        // }
+        // // To Fetch Debit Source / Particular based on Category Selected
+        // if(!is_null($this->Category))
+        // {
+        //     $this->Source = DebitSource::orderby('Name')->where('Category','=',$this->Category_Type)->get();
+        // }
+        // // To Fetch Sources based on Selected Debit Source
+        // if(!is_null($this->ParticularSelected))
+        // {
+        //     $this->Sources = DebitSources::orderby('Name')->where('DS_Id',$this->ParticularSelected)->get();
+        // }
+
+        // $Unit_Price = 0;
+        // if(!empty($this->ParticularSelected))
+        // {
+        //     if(!empty($this->SelectedSources))
+        //     {
+        //         $this->Unit_Price = DebitSources::where('Name','=',$this->SelectedSources)->get();
+        //         foreach($this->Unit_Price as $unit)
+        //         {
+        //             $Unit_Price += $unit['Outstanding'];
+        //         }
+        //     }
+        // }
+        // $this->Unit_Price = $Unit_Price;
+        // $this->Total_Amount = ( intval($Unit_Price)* intval($this->Quantity));
+        // // Credit Insight Code
+        // $name = Debit::Where('Name',$this->ParticularSelected)->get();
+        // $prev_earning = Debit::Where([['Date','=', $this->previous_day],['Name','=',$this->ParticularSelected]])->paginate($this->paginate);
+        // $total_prev_earnings = 0;
+        // $source_total=0;
+        // $today_total=0;
+        // foreach($name as $key)
+        // {
+        //     $source_total += $key['Amount_Paid'];
+        // }
+        // foreach($todays_list as $key)
+        // {
+        //     $today_total += $key['Amount_Paid'];
+        // }
+        // foreach($prev_earning as $key)
+        // {
+        //     $total_prev_earnings += $key['Amount_Paid'];
+        // }
+        // $total_revenue = $this->sum;
+
+        // $contribution =  (($source_total*100)/$total_revenue);
+        // $contribution = number_format($contribution, 2,);
+        // $percentage = number_format(($today_total/1500)*100) ;
+        // $debit_source = DebitSource::all();
+        // if($this->Type == 'Debit Source')
+        // {
+        //     $this->DSList = DebitSource::Paginate(5);
+        // }
+        // elseif($this->Type == 'Particular')
+        // {
+        //     $this->DSList = DebitSources::Where('DS_Id',$this->ParticularSelected)->Paginate(10);
+        // }
+        $DebitSource = DebitSource::where('Category',$this->Category)->get();
+        $DebitSources = DebitSources::where('DS_Id',$this->SubCategory)->get();
+        $PaymentMode = PaymentMode::all();
+
+        if(!empty($this->Particular)){
+            $debitsources = DebitSources::where('Id',$this->Particular)->get();
+            foreach($debitsources as $item){
+                $this->Unit_Price = $item->Unit_Price;
+                $this->Description = $item->DS_Name.' '.$item->Name;
             }
-        }
-        else
-        {
-            $todays_list = Debit::where('Date',$this->today)->filter(trim($this->filterby))->paginate($this->paginate);
-            $sl_no = $todays_list->total();
-        }
-        // To Fetch Debit Source / Particular based on Category Selected
-        if(!is_null($this->Category))
-        {
-            $this->Source = DebitSource::orderby('Name')->where('Category','=',$this->Category_Type)->get();
-        }
-        // To Fetch Sources based on Selected Debit Source
-        if(!is_null($this->ParticularSelected))
-        {
-            $this->Sources = DebitSources::orderby('Name')->where('DS_Id',$this->ParticularSelected)->get();
-        }
+            $this->Total_Amount = intval($this->Unit_Price) * intval($this->Quantity);
+            $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
 
-        $Unit_Price = 0;
-        if(!empty($this->ParticularSelected))
-        {
-            if(!empty($this->SelectedSources))
-            {
-                $this->Unit_Price = DebitSources::where('Name','=',$this->SelectedSources)->get();
-                foreach($this->Unit_Price as $unit)
-                {
-                    $Unit_Price += $unit['Outstanding'];
-                }
-            }
         }
-        $this->Unit_Price = $Unit_Price;
-        $this->Total_Amount = ( intval($Unit_Price)* intval($this->Quantity));
-        // Credit Insight Code
-        $name = Debit::Where('Name',$this->ParticularSelected)->get();
-        $prev_earning = Debit::Where([['Date','=', $this->previous_day],['Name','=',$this->ParticularSelected]])->paginate($this->paginate);
-        $total_prev_earnings = 0;
-        $source_total=0;
-        $today_total=0;
-        foreach($name as $key)
-        {
-            $source_total += $key['Amount_Paid'];
-        }
-        foreach($todays_list as $key)
-        {
-            $today_total += $key['Amount_Paid'];
-        }
-        foreach($prev_earning as $key)
-        {
-            $total_prev_earnings += $key['Amount_Paid'];
-        }
-        $total_revenue = $this->sum;
-
-        $contribution =  (($source_total*100)/$total_revenue);
-        $contribution = number_format($contribution, 2,);
-        $percentage = number_format(($today_total/1500)*100) ;
-        $debit_source = DebitSource::all();
-        if($this->Type == 'Debit Source')
-        {
-            $this->DSList = DebitSource::Paginate(5);
-        }
-        elseif($this->Type == 'Particular')
-        {
-            $this->DSList = DebitSources::Where('DS_Id',$this->ParticularSelected)->Paginate(10);
-        }
-
-        return view('livewire.debit-ledger',[
-            'source'=>$this->Source,'debit_source'=>$debit_source,'debit_sources'=>$this->Sources,
-            'payment_mode'=>$this->payment_mode,'DSList'=>$this->DSList,
-            'total_revenue'=>$this->sum,
-            'previous_revenue'=>$this->previous_revenue,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'today'=>$this->today, 'total'=>$today_total, 'percentage'=>$percentage,'creditdata'=>$todays_list,
-            'sl_no'=>$sl_no,'n'=>$this->n,'source_total'=>$source_total,'contribution'=>$contribution,
-            'prev_earning'=>$total_prev_earnings,'Total' =>$this->Total_Amount,'Total_Amount'=>$this->Total_Amount,
-        ]);
+        return view('livewire.debit-ledger',compact('DebitSource','DebitSources','PaymentMode'));
     }
 }

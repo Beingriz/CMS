@@ -1,4 +1,4 @@
-<div>
+<div> {{--Main Div--}}
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -35,6 +35,7 @@
         </div>
     </div>{{-- End of Row --}}
 
+
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
@@ -44,12 +45,15 @@
         </ol>
     </div>{{-- End of Page Tittle --}}
 
+    {{-- Form Row --}}
     <div class="row">
         <div class="col-lg-5">{{--Start of Form Column --}}
             <div class="card">
+                <form wire:submit.prevent="Save">
+                    @csrf
                 <div class="card-header d-sm-flex align-items-center justify-content-between"">
                     <h5>Debit Ledger</h5>
-                    <h5><a href="{{route('Credit')}}" title="Click here for New Transaction">New Entry</a></h5>
+                    <h5><a href="{{route('Debit')}}" title="Click here for New Transaction">New Entry</a></h5>
                 </div>
                 <div class="card-body">
                         <div class="row mb-3">
@@ -58,100 +62,113 @@
                                 <label for="example-text-input" class="col-sm-4 col-form-label">{{$transaction_id}}</label>
                             </div>
                         </div>
-                        <form wire:submit.prevent="DebitEntry">
-                            @csrf
+                        <div class="row mb-3">
+                            <label for="Date" class="col-sm-4 col-form-label">Date</label>
+                            <div class="col-sm-8">
+                                <input type="date" id="date" name="Date" wire:model="Date" value="{{ date('Y-m-d') }}"
+                                    class="form-control" />
+                                <span class="error">@error('Date'){{$message}}@enderror</span>
+                            </div>
+                        </div>
+
                             <div class="row mb-3">
                                 <label for="example-search-input" class="col-sm-4 col-form-label">Category</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="Category_Type" wire:model="Category_Type" name="Category">
+                                    <select class="form-control" id="Particular" wire:model="Category" name="Particular">
                                         <option value="">---Select---</option>
                                         <option value="Expenses">Expenses</option>
-                                        <option value="Savings">Savings</option>
-                                        <option value="Loans">Loans</option>
+                                        <option value="Repayments">Repayments</option>
                                     </select>
-                                    <span class="error">@error('Category_Type'){{$message}}@enderror</span>                 </div>
-                            </div> {{-- Category --}}
-
-                            <div class="row mb-3">
-                                <label for="example-search-input" class="col-sm-4 col-form-label">Source</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" id="Particular" wire:model="ParticularSelected" name="Particular">
-                                        <option value="">---Select---</option>
-                                        @foreach($source as $key)
-                                        <option value="{{ $key->Id }}">{{ $key->Name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="error">@error('ParticularSelected'){{$message}}@enderror</span>
+                                    <span class="error">@error('Category'){{$message}}@enderror</span>
                                 </div>
-                            </div> {{-- Particular --}}
+                            </div>
 
-                            @if(!empty($ParticularSelected))
-                            <div class="row mb-3">
-                                <label for="example-search-input" class="col-sm-4 col-form-label">Name</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" id="Particular" wire:model="SelectedSources" name="Particular">
-                                        <option value="">---Select---</option>
-                                        @foreach($debit_sources as $key)
-                                        <option value="{{ $key->Name }}">
-                                            {{ $key->Name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="error">@error('SelectedSources'){{$message}}@enderror</span>
+                                <div class="row mb-3">
+                                    <label for="example-search-input" class="col-sm-4 col-form-label">Sub Category</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="Particular" wire:model="SubCategory" name="Particular">
+                                            <option value="">---Select---</option>
+                                            @if(!empty($Category))
+                                                @foreach($DebitSource as $item)
+                                                <option value="{{ $item->Id }}">{{ $item->Name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <span class="error">@error('SubCategory'){{$message}}@enderror</span>
+                                    </div>
                                 </div>
-                            </div> {{-- Source --}}
-                            @endif
+
+
+                                <div class="row mb-3">
+                                    <label for="example-search-input" class="col-sm-4 col-form-label">Particular</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="Particular" wire:model="Particular" name="Particular">
+                                            <option value="">---Select---</option>
+                                            @if(!empty($SubCategory))
+                                                @foreach($DebitSources as $item)
+                                                <option value="{{ $item->Id }}">{{ $item->Name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <span class="error">@error('Particular'){{$message}}@enderror</span>
+                                    </div>
+                                </div>
+
+
 
                             <div class="row mb-3">
                                 <label for="Date" class="col-sm-4 col-form-label">Payment Details</label>
-                                <div class="col-sm-2">
-                                    <input type="number"  wire:model="Unit_Price"  name="Total_Amount" class="form-control"
+                                <div class="col-sm-3">
+                                    <input type="number"  wire:model="Unit_Price"  name="Unit_Price" class="form-control"
                                         placeholder="Amount" pattern="[0-9]" readonly>
                                     <span class="error">@error('Unit_Price'){{$message}}@enderror</span>
+                                    <p><small class="text-muted">Per Exps. Cost</small></p>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <input type="number" id=""  wire:model="Quantity"  name="Total_Amount" class="form-control"
                                         placeholder="Quantity" pattern="[0-9]">
                                     <span class="error">@error('Quantity'){{$message}}@enderror</span>
+                                    <p><small class="text-muted">Quantity</small></p>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <input type="number" id="amount"  value="{{$Total_Amount}}"  name="Total_Amount" class="form-control"
                                     placeholder="Total" pattern="[0-9]" readonly>
+                                    <p><small class="text-muted">Amount Payable</small></p>
                                 </div>
-                            </div> {{-- Payment --}}
-
+                            </div>
                             <div class="row mb-3">
                                 <label for="Date" class="col-sm-4 col-form-label">Paid / Bal </label>
                                 <div class="col-sm-4">
                                     <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid" class="form-control" placeholder="Paid"
                                     <span class="error">@error('Amount_Paid'){{$message}}@enderror</span>
+                                    <p><small class="text-muted">to Pay Now</small></p>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="number" id="bal" name="Balance" wire:model="Balance" class="form-control" placeholder="Bal" readonly>
+                                    <p><small class="text-muted">Balance</small></p>
                                 </div>
-                            </div> {{-- Amount --}}
-
+                            </div>
                             <div class="row mb-3">
                                 <label for="Date" class="col-sm-4 col-form-label">Description</label>
                                 <div class="col-sm-8">
                                     <textarea id="Description" wire:model="Description" name="Description" class="form-control"
-                                        placeholder="Credit Description" rows="3" resize="none"></textarea>
+                                        placeholder="Debit Description" rows="3" resize="none"></textarea>
                                     <span class="error">@error('Description'){{$message}}@enderror</span>
                                 </div>
-                            </div>{{-- Description --}}
-
+                            </div>
                             <div class="row mb-3">
                                 <label for="example-search-input" class="col-sm-4 col-form-label">Payment</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" id="Payment_mode" wire:model="Payment_Mode" name="Payment_mode" wire:change="Change($event.target.value)">
                                         <option value="">---Select---</option>
-                                        @foreach ($payment_mode as $payment_mode)
-                                        <option value="{{$payment_mode->Payment_Mode}}">
-                                            {{$payment_mode->Payment_Mode}}</option>
+                                        @foreach ($PaymentMode as $item)
+                                        <option value="{{$item->Payment_Mode}}">
+                                            {{$item->Payment_Mode}}</option>
                                         @endforeach
                                     </select>
                                     <span class="error">@error('Payment_mode'){{$message}}@enderror</span>
                                 </div>
-                            </div>{{-- Payment Mode --}}
+                            </div>
                             @if ($Payment_Mode!="Cash")
                                 <div class="row mb-3">
                                     <label for="example-search-input" class="col-sm-4 col-form-label">Payment</label>
@@ -199,406 +216,187 @@
                     </div>
             </div>
         </div> {{-- End of Form Column --}}
-    </div>
 
-
-
-{{-- Source Form   --}}
-                @if ($SourceFormDisplay==1)
-                <form >
-                @csrf
-                <div class="form-data box-border">
-                    <p class="heading2">Add Source form
-                    <a href="#" class="btn-sm btn-danger"  onclick="confirm('Do you Want ot Close Source Form? !!') || event.stopImmediatePropagation()"  wire:click="CloseSourceForm('No')">Close</a></p>
-
-                    <div class="row"> {{--Category Type--}}
-                        <div class="col-45">
-                            <label class="label" for="Type">Source Type </label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <select class="form-control" id="Type" wire:model="Type" name="Type" wire:change="ChangeSource($event.target.value)">
-                                <option value="">---Select---</option>
-                                <option value="Debit Source">Debit Source</option>
-                                <option value="Particular">Particular</option>
-                            </select>
-                            <span class="error">@error('Category'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-
-                    @if($Type == "Debit Source")
-                        <div class="row"> {{--Source Name--}}
-                            <div class="col-45">
-                                <label class="label" for="Name">Name</label>
-                                <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                            <input type="text"  class="form-control" name="Name" wire:model="Name" id="Name" placeholder="Enter Name">
-                                <span class="error">@error('Name'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-                        <div class="row"> {{--Category--}}
-                            <div class="col-45">
-                                <label class="label" for="Category_Type">Category_Type </label>
-                                <span class="important">*</span>
-                            </div>
-                            <div class="col-55">
-                                <select class="form-control" id="Category_Type" wire:model="Category_Type" name="Category_Type">
-                                    <option value="---Select---">---Select---</option>
-                                    <option value="Expenses">Expenses</option>
-                                    <option value="Savings">Savings</option>
-                                    <option value="Loans">Loans</option>
-                                </select>
-                                <span class="error">@error('Category_Type'){{$message}}@enderror</span>
-                            </div>
-                        </div>
-                    @elseif ($Type == "Particular")
-                    <div class="row"> {{--Category--}}
-                        <div class="col-45">
-                            <label class="label" for="Category_Type">Category_Type </label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <select class="form-control" id="Category_Type" wire:model="Category_Type" name="Category_Type">
-                                <option value="">---Select---</option>
-                                <option value="Expenses">Expenses</option>
-                                <option value="Savings">Savings</option>
-                                <option value="Loans">Loans</option>
-                            </select>
-                            <span class="error">@error('Category_Type'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    <div class="row"> {{--Particular--}}
-                        <div class="col-45">
-                            <label class="label" for="Particular">Source</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                            <select class="form-control" id="Particular" wire:model="ParticularSelected" name="Particular">
-                                <option value="">---Select---</option>
-                                @foreach($source as $key)
-                                <option value="{{ $key->Id }}">
-                                    {{ $key->Name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="error">@error('ParticularSelected'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    <div class="row"> {{--Source Name--}}
-                        <div class="col-45">
-                            <label class="label" for="Name">Name</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                        <input type="text"  class="form-control" name="Name" wire:model="Name" id="Name" placeholder="Enter Name" >
-                            <span class="error">@error('Name'){{$message}}@enderror</span>
-                        </div>
-                    </div>
-                    <div class="row"> {{--Budget--}}
-                        <div class="col-45">
-                            <label class="label" for="Budget">Budget</label>
-                            <span class="important">*</span>
-                        </div>
-                        <div class="col-55">
-                        <input type="number"  class="form-control" name="Budget" wire:model="Budget" id="Budget" placeholder="Enter Amount" >
-                            <span class="error">@error('Budget'){{$message}}@enderror</span>
-                        </div>
-                    </div>
+    {{-- Daily Transaction Display Panel --}}
+        {{-- <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                    <h5>Debit Transactions</h5>
+                    <h5>&#x20B9 {{$total}}</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                    Earnings as on
+                    @if (empty($Select_Date)) {{ \Carbon\Carbon::parse($today)->format('d-M-Y'); }} is &#x20B9 {{$total}} @endif
+                    @if (!empty($Select_Date))
+                        {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y'); }}
+                        <strong>
+                            {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
+                        </strong>
+                        {{$total}}
                     @endif
-
-
-                <div class="form-data-buttons">
-                    <div class="row">
-                        <div class="col-100">
-                            @if ($UpdateButton == 0 )
-                            <button type="submit"wire:click.prevent="SaveSource()"name="submit"
-                                class="btn btn-primary btn-rounded btn-sm">Add Source</button>
-                                @elseif ($UpdateButton == 1 )
-                                <a href='#' id="UpdateButton" class="btn btn-success btn-rounded btn-sm" wire:click.prevent="UpdateSource('{{$UpdateId}}')">Update</a>
-                            @else
-
-
-                            @endif
-                            <a href="#" wire:click.prevent="CancelUpdate()"class="btn btn-rounded btn-sm">Cancel</a>
+                    </h5>
+                    @if (session('Error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{session('Error')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    </div>
-                </div>
-                </div>
-            </form>
-{{-- Available Source List  --}}
-                <div class="form-data">
-                    <p class="heading2">Debit Source List </p>
-                        <table>
-                            <thead>
+                        @if ($clearButton)
+
+                        @endif
+                    @endif
+                    @if ($clearButton)
+                       <div class="row">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-tittle">
+                                    <h5>Balance Update</h5>
+                                </div>
+                            </div>
+                            <span class="info-text">Balance Due Found for {{count($balCollection)}} Records!.</span>
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>SL.No</th>
-                                    <th>Name</th>
-                                    @if($Type == 'Debit Source')
-                                    <th>Category</th>
-                                    @elseif($Type == 'Particular')
-                                    <th>Budget</th>
-                                    @endif
-                                    <th>Action</th>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                    <th>Total Amount</th>
+                                    <th>Amount Paid</th>
+                                    <th>Balance</th>
+                                    <th>Update</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($DSList as $key)
+                                @foreach ($balCollection as $item)
                                 <tr>
-                                    <td>{{ $n++ }}</td>
-                                    <td style="width:30%">{{ $key->Name }}</td>
-                                    @if($Type == 'Debit Source')
-                                    <td style="width:30%">{{ $key->Category }}</td>
-                                    @elseif($Type == 'Particular')
-                                    <td style="width:30%">{{ $key->Total }}</td>
-                                    @endif
-                                    <td style="width:15%">
-                                        <div class="btn-group" role="group"
-                                            aria-label="Button group with nested dropdown">
-                                            <div class="btn-group btn-group-sm " role="group">
-                                                <button id="btnGroupDrop2" type="button"
-                                                    class="btn btn-info dropdown-toggle" data-mdb-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                    Edit
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-                                                    <li>
-                                                        <a class="dropdown-item " href='#' onclick="confirm('Are you sure you want to Edit {{$key->Name}}?') || event.stopImmediatePropagation()" wire:click="Edit('{{$key->Id}}')">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class=" dropdown-item" onclick="confirm('Are you sure you want to Delete {{$key->Name}} Permanently!!') || event.stopImmediatePropagation()"
-                                                        wire:click="Delete('{{$key->Id}}')">Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                    <td style="width:25%">{{$item['Id']}}</td>
+                                    <td style="width:25%">{{$item['Description']}}</td>
+                                    <td style="width:25%">&#x20B9; {{$item['Total_Amount']}}</td>
+                                    <td style="width:25%">&#x20B9; {{$item['Amount_Paid']}}</td>
+                                    <td style="width:25%">&#x20B9; {{$item['Balance']}}</td>
+                                    <td style="width:25%">
+                                        <a class="btn-sm btn-primary" href="#" title="Clear Balance" wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Clear</a>
                                     </td>
-
                                 </tr>
-
                                 @endforeach
+                                <span class="info-text">Total Balance Due : &#x20B9;{{
+                                    $balCollection->sum('Balance') }}</span>
                             </tbody>
                         </table>
-                        <span>
-                            {{$DSList->links()}}
-                        </span>
+                        </div>
+                       </div>
 
+                    @endif
 
-                </div>
-
-                @endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-{{--Form Insight--}}
-                @if ($DebitFormDisplay==1)
-                <div class="form-data">
-                    <div class="right-menu">
-                        <p class="heading2">Revenue Insight</p>
-                        <div class="form-insight-section">
-                            <img src="\digital/cyber/photo_gallery\insight.jpg" alt="" >
-                            <div class="form-sec-data">
-                                <p class="section-heading">Revenue Generated</p>
-                                <p class="section-value">Gross &#x20B9; {{$total_revenue}}/-</p>
-                                <p class="section-pre-values">Yesterday &#x20B9; <span>{{$previous_revenue}}</span></p>
+                    <div class="progress" style="height: 15px">
+                        <div class="progress-bar" role="progressbar" style="width:{{$percentage}}%"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            {{$percentage}}%
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <label class="form-label" for="paginate">Show Pages</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <select name="datatable_length"  wire:model="paginate" aria-controls="datatable" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-insight-section" >
-                            <img src="\digital/cyber/photo_gallery\insight-2.png" alt="" >
-                            <div class="form-sec-data">
-                                <p class="section-heading">Reveniue From </p>
-                                <p class="section-value">{{$SelectedSources}}</p>
-                                <p class="section-value"> &#x20B9; <span style="color:green">{{$source_total}} </span>/-</p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label class="form-label" for="paginate">Filter By</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input  type="text"  wire:model="filterby" class="form-control form-control-sm" placeholder="Filter">
                             </div>
                         </div>
-                        <div class="form-insight-section" >
-                            <img src="\digital/cyber/photo_gallery\insight-3.png" alt="" >
-                            <div class="form-sec-data">
-                                <p class="section-heading">Percentage Contribution</p>
-                                <p class="section-value"><span style="color:red">{{$contribution}}</span> %  Percentage </p>
-                                <p class="section-pre-values">Yesterday Earned &#x20B9; <span>{{$prev_earning}}/-</span> By {{$SelectedSources}}</p>
-
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="form-label" for="paginate">Search By Date</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="date" id="date" name="Select_Date" wire:model="Select_Date" class="form-control form-control-sm"/>
                             </div>
                         </div>
                     </div>
-                </div>
-                @endif
-            </div>
+                    @if (count($Debitdata)>0)
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <div class="row">
+                                    <div class="d-flex align-items-center ml-4">
+                                        @if ($Checked)
+                                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                                <div class="btn-group btn-group-sm btn-rounded" role="group">
+                                                    <button id="btnGroupDrop1" type="button"
+                                                        class="btn btn-danger btn-sm dropdown-toggle" data-mdb-toggle="dropdown"
+                                                        aria-expanded="false">
+                                                        Cheched ({{count($Checked)}})
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
 
-
-
-
-
-
-
-
-
-
-
-
-
-@if (count($creditdata)>0)
-
-
-        <div class="table-container"> {{--Table Container--}}
-            <div class="form-header">
-                <p class="heading">Daily Expenses </p>
-            </div>
-            <div class="table-information">
-                <span class="info-text">Total Expense as on
-                @if (empty($Select_Date))
-                    {{ $today }} is
-                    &#x20B9; {{ $total }}
-                @endif
-                @if (!empty($Select_Date))
-                    {{ $Select_Date }} is
-                    &#x20B9; {{ $total }}
-                @endif</span>
-                <!-- Quick List Button -->
-                <div class="d-flex justify-content-between align-content-center mb-2">
-                    <div class="d-flex">
-                        <div>
-                            <div class="d-flex align-items-center ml-4">
-                                @if ($Checked)
-                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                    <div class="btn-group btn-group-sm btn-rounded" role="group">
-                                        <button id="btnGroupDrop1" type="button"
-                                            class="btn btn-danger btn-sm dropdown-toggle" data-mdb-toggle="dropdown"
-                                            aria-expanded="false">
-                                            Cheched ({{count($Checked)}})
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-
-                                            <li><a class=" dropdown-item" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
-                                            </li>
-                                            </ul>
+                                                        <li><a class=" dropdown-item" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
+                                                        </li>
+                                                        </ul>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
-                                <div class="row"></div>
 
+                            </tr>
+                            <tr>
+                                <th>SL.No</th>
+                                <th>Check</th>
+                                <th>Particular</th>
+                                <th>Amount &#x20B9;</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-                                @endif
+                        <tbody>
+                            @foreach($Debitdata as $data)
+                            <tr>
+                                <td>{{$Debitdata->firstItem()+$loop->index}}</td>
+                                <td><input type="checkbox" id="checkbox" name="checkbox" value="{{$data->Id}}" wire:model="Checked"></td>
+                                <td>{{ $data->Category }},{{ $data->Sub_Category }}</td>
+                                <td>{{ $data->Amount_Paid }}</td>
+                                <td>{{ $data->Description }}</td>
+                                <td>
+                                    <a href="{{route('edit.Debit',$data->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                <label for="paginate" class="text-nowrap mr-2 mb-0">Per Page</label>
-                                <select wire:model="paginate" name="paginate" id="paginate" class="form-control form-control-sm">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                </select>
-                                <div class="row"></div>
-                                <label for="paginate" class="text-nowrap mr-2 mb-0">Sort By</label>
-                                <input  type="text"  wire:model="filterby" class="form-control form-control-sm" placeholder="Filter">
-                                <div class="row"></div>
-                                <label for="paginate" class="text-nowrap mr-2 mb-0">Search By Date</label>
+                                    <a href="{{route('delete.Debit',$data->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
 
-                                <input type="date" id="date" name="Select_Date" wire:model="Select_Date" class="form-control form-control-sm"/>
-
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                            <p class="text-muted">Showing {{count($Debitdata)}} of {{$Debitdata->total()}} entries</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class=" pagination pagination-rounded float-end" >
+                                    {{$Debitdata->links()}}
+                                </span>
                             </div>
                         </div>
+                        </table>
                     </div>
+                    <p class="card-text"><small class="text-bold">Last Entry at  {{$lastRecTime}} </small></p>
                 </div>
-                @if (sizeof($collection)>0)
-                                    <br>
-                                    <span class="info-text">Balance Due Found for {{count($collection)}} Records!.</span>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Description</th>
-                                                <th>Total Amount</th>
-                                                <th>Amount Paid</th>
-                                                <th>Balance</th>
-                                                <th>Update</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($collection as $item)
-                                            <tr>
-                                                <td style="width:25%">{{$item['Id']}}</td>
-                                                <td style="width:25%">{{$item['Description']}}</td>
-                                                <td style="width:25%">&#x20B9; {{$item['Total_Amount']}}</td>
-                                                <td style="width:25%">&#x20B9; {{$item['Amount_Paid']}}</td>
-                                                <td style="width:25%">&#x20B9; {{$item['Balance']}}</td>
-                                                <td style="width:25%">
-                                                    <a class="btn-sm btn-primary"  wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Update</a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                            <span class="info-text">Total Balance Due : &#x20B9;{{
-                                             $collection->sum('Balance') }}</span>
-                                        </tbody>
-                                    </table>
-                                    <div class="row"></div>
-                                    @endif
-
+                <span> {{$Debitdata->links()}} </span>
+                @endif
             </div>
+        </div> --}}
 
-            <div class="progress" style="height: 15px">
-                <div class="progress-bar" role="progressbar" style="width:{{$percentage}}%"
-                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                    {{$percentage}}%
-                </div>
-            </div>
-            <br>
-            <table>
-                <thead>
-                    <tr>
-                        <th>SL.No</th>
-                        <th>Check</th>
-                        <th>Particular</th>
-                        <th>Amount &#x20B9;</th>
-                        <th>Description</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($creditdata as $data)
-                    <tr>
-                        <td>{{ $n++ }}</td>
-                        <td><input type="checkbox" name="checked" id="checked" value="{{$data->Id}}" wire:model="Checked"></td>
-                        <td style="width:30%">{{ $data->Source }}, {{ $data->Name }}</td>
-                        <td style="width:14%">{{ $data->Amount_Paid }}</td>
-                        <td style="width:50%">{{ $data->Description }}</td>
-                        <td style="width:15%">
-                            <div class="btn-group" role="group"
-                                aria-label="Button group with nested dropdown">
-                                <div class="btn-group btn-group-sm " role="group">
-                                    <button id="btnGroupDrop2" type="button"
-                                        class="btn btn-info dropdown-toggle" data-mdb-toggle="dropdown"
-                                        aria-expanded="false">
-                                        Edit
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-                                        <li>
-                                            <a class="dropdown-item " href='#' onclick="confirm('Are you sure you want to Edit this Recored ?') || event.stopImmediatePropagation()" wire:click="Edit('{{$data->Id}}')">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class=" dropdown-item" onclick="confirm('Are you sure you want to Delete this Recored Permanently!!') || event.stopImmediatePropagation()"
-                                            wire:click="Delete('{{$data->Id}}')">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-
-                    </tr>
-
-                    @endforeach
-                </tbody>
-            </table>
-            <span>
-                {{$creditdata->links()}}
-            </span>
-        </div>
-        @endif
     </div>
+
 </div>
