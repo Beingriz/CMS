@@ -154,8 +154,8 @@ class UserController extends Controller
         return view('user.user_account.pages.user_view_profile',compact('profiledata'),['services_count'=>$this->services_count,'service_list'=>$this->services_list]);
     }
 
-    public function MyServiceHistory($mobile_no){
-        return view('user.user_account.pages.user_service_history',['mobile_no'=>$mobile_no,'services_count'=>$this->services_count,'service_list'=>$this->services_list]);
+    public function MyServiceHistory($id){
+        return view('user.user_account.pages.user_service_history',['id'=>$id,'services_count'=>$this->services_count,'service_list'=>$this->services_list]);
     }
 
     public function ServiceList()
@@ -174,17 +174,17 @@ class UserController extends Controller
         $aboutus = About_Us::where('Selected','Yes')->get();
         return view('user.user_account.pages.about-page',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list]);
     }
-    public function ApplyNow($Id)
+    public function ApplyNow($Id,$price)
     {
         $services = MainServices::where('Service_Type','Public')->get();
         $aboutus = About_Us::where('Selected','Yes')->get();
-        return view('user.user_account.pages.apply_now_form',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id]);
+        return view('user.user_account.pages.apply_now_form',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id,'Price'=>$price]);
     }
-    public function ApplyNowCarousel($Id)
+    public function ApplyNowCarousel($Id,$price)
     {
         $services = MainServices::where('Service_Type','Public')->get();
         $aboutus = About_Us::where('Selected','Yes')->get();
-        return view('user.user_account.pages.apply_now_form',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id]);
+        return view('user.user_account.pages.apply_now_form',compact('services','aboutus'),['services_count'=>$this->services_count,'service_list'=>$this->services_list,'Id'=>$Id,'Price'=>$price]);
     }
 
     public function Acknowledgment($Id)
@@ -230,6 +230,17 @@ class UserController extends Controller
         $time =  Carbon::parse($applied_on['created_at'])->diffForHumans();
 
         return view('user.user_account.pages.track_application',['time'=>$time,'records'=>$records,'Id'=>$Id,'services_count'=>$this->services_count,'service_list'=>$this->services_list]);
+    }
+    public function viewDocument($Id){
+        $record = ApplyServiceForm::where('Id',$Id)->get();
+        $file ='';
+        foreach($record as $item){
+            if(!empty($item->Consent)){
+            $file = $item->File;
+        }
+        }
+
+        return view('user.user_account.pages.user_view_document',compact('record'),['File'=>$file,'services_count'=>$this->services_count,'service_list'=>$this->services_list]);
     }
 
 

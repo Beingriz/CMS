@@ -65,8 +65,8 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Application for {{$ServiceName}}</h4>
-                    <p class="card-title-desc">Description</p>
+                    <h4 class="card-title">Appying for {{$mainServiceName}} | {{$ServiceName}}</h4>
+                    <p class="card-title-desc">The application for the above service is considered once the verification is completed. </p>
                     <div class="row mb-3">
                         <label for="example-text-input" class="col-sm-2 col-form-label">Application Id</label>
                         <div class="col-sm-10">
@@ -87,25 +87,32 @@
                     <!-- end row -->
                         <div class="row mb-3">
                             <label for="example-url-input" class="col-sm-2 col-form-label">Service Type</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-4">
                                 <select class="form-control" id="Service_Type" wire:model="Service_Type" name="Service_Type">
                                     <option value="{{$ServiceName}}">{{$ServiceName}}</option>
                                 </select>
                                 <span class="error">@error('Service_Type'){{$message}}@enderror</span>
                             </div>
+                            <label for="example-url-input" class="col-sm-2 col-form-label">Amount </label>
+
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" disabled placeholder="Amount Payable"  wire:model.lazy="Amount"  id="Amount">
+                            </div>
+                            <p class="card-text"><small class="text-muted">The Total Amount Payable for this Service is Agreed by you once verification is completed.</small></p>
+
                         </div>
 
                     <div class="row mb-3">
                         <label for="Name" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input class="form-control" type="text" placeholder="Your Name"  wire:model="Name" id="Name">
+                            <input class="form-control" type="text" placeholder="Your Name"  wire:model.lazy="Name" id="Name">
                             <span class="error">@error('Name'){{$message}}@enderror</span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="FatherName" class="col-sm-2 col-form-label">Father Name</label>
                         <div class="col-sm-10">
-                            <input class="form-control" type="text" placeholder="Your Father Name"  wire:model="FatherName" id="FatherName">
+                            <input class="form-control" type="text" placeholder="Your Father Name"  wire:model.lazy="FatherName" id="FatherName">
                             <span class="error">@error('FatherName'){{$message}}@enderror</span>
                         </div>
                     </div>
@@ -131,7 +138,7 @@
                     <div class="row mb-3">
                         <label for="Description" class="col-sm-2 col-form-label">Description</label>
                         <div class="col-sm-10">
-                            <textarea id="Description" wire:model="Description" name="Description" class="form-control"
+                            <textarea id="Description" wire:model.lazy="Description" name="Description" class="form-control"
                                 placeholder="Hey! {{$Name}}!, Give your Message on what your applying for, our team will healp you soon." rows="3" id="Description"></textarea>
                                         <span class="error">@error('Description'){{$message}}@enderror</span>
                         </div>
@@ -139,9 +146,10 @@
                     <!-- end row -->
                     <!-- end row -->
                     <div class="row mb-3">
-                        <label for="File" class="col-sm-2 col-form-label">Aadhar Copy</label>
+                        <label for="File" class="col-sm-2 col-form-label">Document</label>
                         <div class="col-sm-10">
                             <input class="form-control" type="file"   wire:model="File" id="File" accept="image/*">
+                            <p class="card-text"><small class="text-muted">Select ,jpg  or ,png format only</small></p>
                             <span class="error">@error('File'){{$message}}@enderror</span>
                         </div>
                     </div>
@@ -187,7 +195,7 @@
 
         {{-- Consent Details --}}
         @if ($Read_Consent==1)
-        <div class="col-md-6" id="Consent">
+        <div class="col-lg-6" id="Consent">
             <div class="card card-body">
                 <h3 class="card-title">Consent for Sharing Document</h3>
                 <p class="card-text">
@@ -214,10 +222,92 @@
                 @endif
             </div>
         </div>
-        @endif
-
         {{-- Consent Details End--}}
 
+        @else
+         {{-- Start of Search Result Details Row --}}
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title"> {{$service_count}} Services Applied </h4>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0">
+
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th >Applied</th>
+                                        <th >Name</th>
+                                        <th >Mobile</th>
+                                        <th >Service</th>
+                                        <th >Category</th>
+                                        <th >Message</th>
+                                        <th >Consent</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse( $applied as $data )
+                                    <tr>
+                                        <td>{{$applied->firstItem()+$loop->index }}</td>
+                                        <td class="text-wrap">{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
+                                        <td>{{ $data->Name }}</td>
+                                        <td>{{ $data->Mobile_No}}</td>
+                                        <td>{{ $data->Application}}</td>
+                                        <td>{{$data->Application_Type}}</td>
+                                        <td>{{$data->Message}}</td>
+                                        <td>{{!empty($data->Consent)?'Yes':'No'}}</td>
+                                        <td>
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Action <i class="mdi mdi-chevron-down"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                        <a class="dropdown-item" title="Open Applicatin" href="{{route('view.applicaiton',$data->Id)}}"id="editData">Open</a>
+                                                        @if (!empty($data->Consent))
+                                                        <a class="dropdown-item" title="Open Applicatin" href="{{route('view.document',$data->Id)}}"id="open">View Document</a>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="11">
+                                                <img class=" avatar-xl" alt="No Result" src="{{asset('storage/no_result.png')}}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                    @endforelse()
+                                </tbody>
+
+                            </table>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                <p class="text-muted">Showing {{count($applied)}} of {{$applied->total()}} entries</p>
+                                </div>
+                                {{-- <span>{{$services->links()}}</span> --}}
+                                <div class="col-md-4">
+                                    <span class="pagination pagination-rounded float-end" >
+                                        {{$applied->links()}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        @endif
     </div>
 </div>
 

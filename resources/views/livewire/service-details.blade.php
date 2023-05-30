@@ -45,7 +45,7 @@
 
                                 @if (Auth::check())
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('apply.now',$item->Id)}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
+                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('apply.now',[$item->Id,$item->Unit_Price])}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
                                 </li>
                                 <li class="list-inline-item">
                                     <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('callback',[Auth::user()->id,$ServiceName,$item['Name']])}}" data-bs-original-title="Callback" aria-label="@skypename"><i class="fas fa-phone"></i></a>
@@ -141,7 +141,7 @@
                             <div class="p-lg-5 pe-lg-0">
                                 <a href="#showDoc" wire:click="GetDocuments('{{$item['Id']}}')" class="btn btn-primary py-3 px-3">View Documents</a>
                                 @if (Auth::check())
-                                    <a href="{{route('apply.now',$item['Id'])}}" class="btn btn-primary py-3 px-3">Apply Now</a>
+                                    <a href="{{route('apply.now',[$item['Id'],$item->Unit_Price])}}" class="btn btn-primary py-3 px-3">Apply Now</a>
                                     <a href="{{route('callback',[Auth::user()->id,$ServiceName,$item['Name']])}}" class="btn btn-primary py-3 px-3">Get Callback</a>
                                 @else
                                     <a href="{{route('login')}}" class="btn btn-primary py-3 px-3">Apply Now</a>

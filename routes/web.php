@@ -66,10 +66,11 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/About/Company','About')->name('about.us');
         Route::get('/Serivce/List','ServiceList')->name('service.list');
         Route::get('/Serivce/Details/{id}','ServDetails')->name('serv.details');
-        Route::get('/ApplyNow/{id}','ApplyNow')->name('apply.now');
+        Route::get('/ApplyNow/{id}/{price}','ApplyNow')->name('apply.now');
         Route::get('/Acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
         Route::get('/Track/{id}','Track')->name('track');
         Route::get('/View/Application{id}','viewApplication')->name('view.applicaiton');
+        Route::get('/View/Document/{id}','viewDocument')->name('view.document');
         Route::get('/Feedback/{id}','Feedback')->name('feedback');
 
         Route::get('/callback/{id}/{service}/{service_type}','CallBack')->name('callback');
@@ -78,7 +79,7 @@ Route::middleware('auth','auth.role:user')->group(function(){
 });
 Route::middleware('auth','auth.role:user','prevent.back')->group(function(){
     Route::controller(UserController::class)->group(function(){
-        Route::get('/applynow/{id}','ApplyNow')->name('apply.now');
+        Route::get('/ApplyNow/{id}/{price}','ApplyNow')->name('apply.now');
     });
 });
 Route::controller(UserController::class)->group(function(){

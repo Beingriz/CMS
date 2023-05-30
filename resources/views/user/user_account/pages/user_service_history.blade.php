@@ -2,7 +2,7 @@
 @section('UserAccount')
 <div class="page-content" style="margin-top: -25px">
     <div class="container-fluid">
-        @livewire('user.service-history',['id'=> $mobile_no])
+        @livewire('user.service-history',['id'=> $id])
     </div>
 </div>
 

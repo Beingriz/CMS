@@ -43,6 +43,7 @@
                                     <th>SlNo</th>
                                     <th >Applied</th>
                                     <th >Name</th>
+                                    <th >Mobile</th>
                                     <th >Service</th>
                                     <th >Category</th>
                                     <th >Message</th>
@@ -68,7 +69,10 @@
                                                     Action <i class="mdi mdi-chevron-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                    <a class="dropdown-item" title="Open Applicatin" href="{{route('view.applicaiton',$data->Id)}}"id="editData">View</a>
+                                                    <a class="dropdown-item" title="Open Applicatin" href="{{route('view.applicaiton',$data->Id)}}"id="editData">Open</a>
+                                                    @if (!empty($data->Consent))
+                                                    <a class="dropdown-item" title="Open Applicatin" href="{{route('view.document',$data->Id)}}"id="open">View Document</a>
+                                                    @endif
                                                 </div>
                                             </div>
 
