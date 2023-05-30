@@ -54,6 +54,10 @@ class AdminController extends Controller
                             ->select(DB::raw('COUNT(*) as new_users'))
                             ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
                             ->value('new_users');
+        $totalEnquiries = DB::table('enquiry_form')
+                            ->select(DB::raw('COUNT(*) as new_enquiries'))
+                            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                            ->value('new_enquiries');
         $callBack = DB::table('callback')
                             ->select(DB::raw('COUNT(*) as callback'))
                             ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
@@ -72,7 +76,7 @@ class AdminController extends Controller
 
         // Status Count and Amount Update
 
-        return view('admin.index',['totalSales'=> $totalSales,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
+        return view('admin.index',['totalSales'=>$totalSales,'totalEnquiries'=> $totalEnquiries,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
 
     }
     public function destroy(Request $request)

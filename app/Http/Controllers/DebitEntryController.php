@@ -13,13 +13,10 @@ use App\Traits\RightInsightTrait;
 class DebitEntryController extends Controller
 {
  use RightInsightTrait;
-   public function index()
+   public function Home()
     {
-        // return view('DigitalLedger.DebitLedger.debit_entry',[
-        //     'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'today'=>$this->today,
-        // ]);
-
-        return view('DigitalLedger.DebitLedger.debit_entry' , ['applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'today'=>$this->today, ]);
+        $EditData='';$DeleteData='';
+        return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
     }
 
 // Finction to save the Entry

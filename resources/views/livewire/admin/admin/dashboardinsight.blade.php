@@ -1,7 +1,7 @@
 <div>
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
     <div class="row">
-        <div class="col-xl-6">
+        <div class="col-xl-8">
 
             <div class="card">
                 <div class="card-body pb-0">
@@ -18,9 +18,18 @@
                     </div>
                     <h4 class="card-title mb-4">Revenue Insight</h4>
 
-                    <div class="text-center pt-3">
+                    <div class="text-center pt-4">
                         <div class="row">
-                            <div class="col-sm-4 mb-3 mb-sm-0">
+                            <div class="col-sm-3 mb-3 mb-sm-0">
+                                <div class="d-inline-flex">
+                                    <h5 class="me-2">&#x20B9;{{$totalSales}}</h5>
+                                    <div class="text-success font-size-12">
+                                        {{-- <i class="mdi mdi-menu-up font-size-14"> </i>2.2 % --}}
+                                    </div>
+                                </div>
+                                <p class="text-muted text-truncate mb-0">Monthly</p>
+                            </div><!-- end col -->
+                            <div class="col-sm-3 mb-3 mb-sm-0">
                                 <div class="d-inline-flex">
                                     <h5 class="me-2">&#x20B9;{{$totalRevenue}}</h5>
                                     <div class="text-success font-size-12">
@@ -29,7 +38,7 @@
                                 </div>
                                 <p class="text-muted text-truncate mb-0">{{$Caption}}</p>
                             </div><!-- end col -->
-                            <div class="col-sm-4 mb-3 mb-sm-0">
+                            <div class="col-sm-3 mb-3 mb-sm-0">
                                 <div class="d-inline-flex">
                                     <h5 class="me-2"> &#x20B9; {{$lastWeekAmount[0]->lastWeekamount}}</h5>
                                     <div class="text-success font-size-12">
@@ -38,7 +47,7 @@
                                 </div>
                                 <p class="text-muted text-truncate mb-0">Last Week</p>
                             </div><!-- end col -->
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="d-inline-flex">
                                     <h5 class="me-2"> &#x20B9;{{$lastMonthAmount}}</h5>
                                     <div class="text-success font-size-12">
@@ -54,7 +63,7 @@
             </div><!-- end card -->
         </div>
         <!-- end col -->
-        <div class="col-xl-6">
+        <div class="col-xl-4">
             <div class="card">
                 <div class="card-body pb-0">
                     <div class="float-end d-none d-md-inline-block">
@@ -103,7 +112,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-9">
+        <div class="col-xl-12">
             <div class="card">
                 <div class="card-body">
                     <div class="dropdown float-end">
@@ -132,7 +141,7 @@
                                     <th>Name</th>
                                     <th>Phone No</th>
                                     <th>Service</th>
-                                    <th>Amount</th>
+                                    <th>Paid</th>
                                     <th>Balance</th>
                                     <th>Created</th>
                                     <th>Upated</th>
@@ -445,7 +454,7 @@
             </div><!-- end card -->
         </div>
         <!-- end col -->
-        <div class="col-xl-3">
+        {{-- <div class="col-xl-3">
             <div class="card">
                 <div class="card-body">
                     <div class="float-end">
@@ -488,6 +497,6 @@
                     </div>
                 </div>
             </div><!-- end card -->
-        </div><!-- end col -->
+        </div><!-- end col --> --}}
     </div>
 </div>

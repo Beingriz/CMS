@@ -134,7 +134,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="Date" class="col-sm-4 col-form-label">Date</label>
+                                <label for="Date" class="col-sm-4 col-form-label">Description</label>
                                 <div class="col-sm-8">
                                     <textarea id="Description" wire:model="Description" name="Description" class="form-control"
                                         placeholder="Credit Description" rows="3" resize="none"></textarea>

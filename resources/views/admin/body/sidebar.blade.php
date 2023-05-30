@@ -114,6 +114,14 @@
                                 <li><a href="#">Report</a></li>
                             </ul>
                         </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="{{route('Debit')}}">New Entry</a></li>
+                                <li><a href="#">Add Category</a></li>
+                                <li><a href="#">Report</a></li>
+                            </ul>
+                        </li>
 
                         {{-- <li>
                             <a href="javascript: void(0);" class="has-arrow">Debit Book</a>

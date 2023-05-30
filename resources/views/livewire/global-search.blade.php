@@ -36,8 +36,8 @@
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{route('add_services')}}">Services</a></li>
-            <li class="breadcrumb-item"><a href="{{url('add_status')}}">Status</a></li>
-            <li class="breadcrumb-item"><a href="{{route('update_application')}}">Update</a></li>
+            <li class="breadcrumb-item"><a href="{{route('new.status')}}">Status</a></li>
+            <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
     <div class="row">{{-- Start of Insight Row --}}

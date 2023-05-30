@@ -46,6 +46,7 @@ class DebitLedger extends Component
     public $collection = [];
     public $bal_id = NULL;
     public $UpdateButton = 0;
+    public $update = 0;
 
 
     protected $rules = [

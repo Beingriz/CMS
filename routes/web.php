@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Creditentry;
+use App\Http\Controllers\DebitEntryController;
 use App\Http\Controllers\Home\HomeSlideController;
 use App\Http\Controllers\UserController;
 use FontLib\Table\Type\name;
@@ -147,6 +148,13 @@ Route::middleware('auth','auth.role:admin')->group(function(){
     Route::get('delete/credit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
     Route::get('edit/credit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
     Route::get('delete/credit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
+    });
+});
+
+
+Route::middleware('auth','auth.role:admin')->group(function(){
+    Route::controller(DebitEntryController::class)->group(function(){
+        Route::get('Debit','Home')->name('Debit');
     });
 });
 // Global  Search  Routes start
