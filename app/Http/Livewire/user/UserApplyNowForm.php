@@ -15,7 +15,7 @@ class UserApplyNowForm extends Component
 {
     use WithFileUploads;
     public $App_Id,$Category_Type,$Service_Type,$Name,$PhoneNo,$FatherName,$Dob,$Description,$File,$ServiceId,$ServiceName,$subServices,$Read_Consent,$signature,$Address,$mobile;
-    public $Update=0,$mainServiceId,$mainServiceName,$Signed=true,$Recived,$disabled,$DigitallySigned;
+    public $Update=0,$mainServiceId,$mainServiceName,$Signed=true,$Recived,$disabled,$DigitallySigned,$New_File;
     protected $rules = [
         'Name' =>'required',
         'PhoneNo' =>'required | min:10 | max:10',
@@ -66,11 +66,16 @@ class UserApplyNowForm extends Component
                 ['Read_Consent' => 'Consent',
                 'DigitallySigned' => 'Digitally'],
             );
+            $extension = $this->File->getClientOriginalExtension();
+            $path = 'Client_DB/'.$this->Name.'_'.Auth::user()->Client_Id.'/'.$this->Name.'/Direct Application/Documents';
+            $filename = 'Profile'.$this->Name.'_'.time().'.'.$extension;
+            $url = $this->File->storePubliclyAs($path,$filename,'public');
+            $this->New_File = $url;
         }
         $this->validate();
         $consent = "";
         if($this->Read_Consent == 1 ){
-            $consent ='Dear Sir I am' .$this->Name.' C/o '.$this->FatherName. ' Phone No '.$this->PhoneNo. ' hereby give my explicit consent for sharing my Aadhaar related information for the following purpose ' .$this->mainServiceName.',  ' .$this->ServiceName. ' I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely , this is Digitally Signed on ' .$this->signature;
+            $consent ='Dear Sir I am' .$this->Name.' C/o '.$this->FatherName. ' Phone No '.$this->PhoneNo. ' hereby give my explicit consent for sharing my Document for the following purpose ' .$this->mainServiceName.',  ' .$this->ServiceName. ' I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely , this is Digitally Signed on ' .$this->signature;
         }
         $apply = new ApplyServiceForm();
 
@@ -83,7 +88,7 @@ class UserApplyNowForm extends Component
         $apply->Relative_Name = trim($this->FatherName);
         $apply->Dob = trim($this->Dob);
         $apply->Message = trim($this->Description);
-        $apply->File = $this->File;
+        $apply->File = $this->New_File;
         $apply->Consent = $consent;
         $apply->Profile_Image = Auth::user()->profile_image;
         $apply->save();
@@ -109,7 +114,8 @@ class UserApplyNowForm extends Component
         $app_field->Ack_No= 'Not Available';
         $app_field->Ack_File= 'Not Available';
         $app_field->Document_No= 'Not Available';
-        $app_field->Doc_File= 'Not Available';
+        $app_field->Message= trim($this->Description);
+        $app_field->Doc_File= $this->New_File;
         $app_field->Delivered_Date= NULL;
         $app_field->Applicant_Image= Auth::user()->profile_image;
         $app_field->save(); // Application Form Saved
@@ -151,7 +157,7 @@ class UserApplyNowForm extends Component
             $this->mainServiceName = $key['Name'];
 
         }
-        $this->ConsentMatter = 'Dear Sir I am' .$this->Name. ' hereby give my explicit consent for sharing my Aadhaar related information for the following purpose ' .$this->mainServiceName.',  ' .$this->ServiceName. ' I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely';
+        $this->ConsentMatter = 'Dear Sir I am' .$this->Name. ' hereby give my explicit consent for sharing my Documents for the following purpose ' .$this->mainServiceName.',  ' .$this->ServiceName. ' I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely';
 
         $services = MainServices::where('Service_Type','Public')->get();
         return view('livewire.user.user-apply-now-form',compact('services'));

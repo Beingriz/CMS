@@ -40,11 +40,13 @@
 
                             <thead class="table-light text-center">
                                 <tr>
-                                    <th>Sl.No</th>
-                                    <th >Received</th>
+                                    <th>SlNo</th>
+                                    <th >Applied</th>
                                     <th >Name</th>
                                     <th >Service</th>
-                                    <th >Service_Type</th>
+                                    <th >Category</th>
+                                    <th >Message</th>
+                                    <th >Consent</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -52,10 +54,13 @@
                                 @forelse( $Services as $data )
                                 <tr>
                                     <td>{{$Services->firstItem()+$loop->index }}</td>
-                                    <td class="text-wrap">{{ $data->Received_Date }}</td>
+                                    <td class="text-wrap">{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
                                     <td>{{ $data->Name }}</td>
+                                    <td>{{ $data->Mobile_No}}</td>
                                     <td>{{ $data->Application}}</td>
                                     <td>{{$data->Application_Type}}</td>
+                                    <td>{{$data->Message}}</td>
+                                    <td>{{!empty($data->Consent)?'Yes':'No'}}</td>
                                     <td>
                                         <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                             <div class="btn-group" role="group">
