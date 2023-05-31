@@ -139,7 +139,7 @@
                             <div class="row mb-3">
                                 <label for="Date" class="col-sm-4 col-form-label">Paid / Bal </label>
                                 <div class="col-sm-4">
-                                    <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid" class="form-control" placeholder="Paid"
+                                    <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid" class="form-control" placeholder="Paid">
                                     <span class="error">@error('Amount_Paid'){{$message}}@enderror</span>
                                     <p><small class="text-muted">to Pay Now</small></p>
                                 </div>
@@ -199,12 +199,12 @@
                             <div class="form-data-buttons"> {{--Buttons--}}
                                 <div class="row">
                                     <div class="col-100">
-                                        @if ($update==0)
+                                        @if (!$update)
                                             <button type="submit" value="submit" name="submit"
                                             class="btn btn-primary btn-rounded btn-sm">Save</button>
                                             <a href="{{route('Debit')}}" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                        @elseif($update==1)
-                                            <a  href="#" class="btn btn-success btn-rounded btn-sm" wire:click.prevent="Update('{{$transaction_id}}')">Update</button>
+                                        @elseif($update)
+                                            <a  href="#" class="btn btn-success btn-rounded btn-sm" wire:click.prevent="UpdateLedger('{{$transaction_id}}')">Update</button>
                                             <a href="{{route('Debit')}}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                         @endif
 
@@ -218,7 +218,8 @@
         </div> {{-- End of Form Column --}}
 
     {{-- Daily Transaction Display Panel --}}
-        {{-- <div class="col-lg-7">
+        {{-- Daily Transaction Display Panel --}}
+        <div class="col-lg-7">
             <div class="card">
                 <div class="card-header d-sm-flex align-items-center justify-content-between"">
                     <h5>Debit Transactions</h5>
@@ -226,7 +227,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">
-                    Earnings as on
+                    Expeneses on
                     @if (empty($Select_Date)) {{ \Carbon\Carbon::parse($today)->format('d-M-Y'); }} is &#x20B9 {{$total}} @endif
                     @if (!empty($Select_Date))
                         {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y'); }}
@@ -246,7 +247,7 @@
                         @endif
                     @endif
                     @if ($clearButton)
-                       <div class="row">
+                       {{-- <div class="row">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-tittle">
@@ -283,22 +284,15 @@
                             </tbody>
                         </table>
                         </div>
-                       </div>
+                       </div> --}}
 
                     @endif
-
-                    <div class="progress" style="height: 15px">
-                        <div class="progress-bar" role="progressbar" style="width:{{$percentage}}%"
-                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                            {{$percentage}}%
-                        </div>
-                    </div>
                     <div class="d-flex flex-wrap gap-2">
                         <div class="row">
-                            <div class="col-sm-7">
-                                <label class="form-label" for="paginate">Show Pages</label>
-                            </div>
                             <div class="col-sm-5">
+                                <label class="form-label" for="paginate">Pages</label>
+                            </div>
+                            <div class="col-sm-7">
                                 <select name="datatable_length"  wire:model="paginate" aria-controls="datatable" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
@@ -323,79 +317,105 @@
                                 <input type="date" id="date" name="Select_Date" wire:model="Select_Date" class="form-control form-control-sm"/>
                             </div>
                         </div>
+                        @if ($clearButton)
+                        <div class="row">
+                         <div class="card">
+                             <div class="card-body">
+                                 <div class="card-tittle">
+                                     <h5>Balance Update</h5>
+                                 </div>
+                             </div>
+                             <span class="info-text">Balance Due Found for {{count($balCollection)}} Records!.</span>
+                         <table class="table table-hover mb-0">
+                             <thead class="table-light">
+                                 <tr>
+                                     <th>ID</th>
+                                     <th>Description</th>
+                                     <th>Total Amount</th>
+                                     <th>Amount Paid</th>
+                                     <th>Balance</th>
+                                     <th>Update</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 @foreach ($balCollection as $item)
+                                 <tr>
+                                     <td style="width:25%">{{$item['Id']}}</td>
+                                     <td style="width:25%">{{$item['Description']}}</td>
+                                     <td style="width:25%">&#x20B9; {{$item['Total_Amount']}}</td>
+                                     <td style="width:25%">&#x20B9; {{$item['Amount_Paid']}}</td>
+                                     <td style="width:25%">&#x20B9; {{$item['Balance']}}</td>
+                                     <td style="width:25%">
+                                         <a class="btn-sm btn-primary" href="#" title="Clear Balance" wire:click="UpdateBalance('{{$item['Id']}}')" style = "color: white">Clear</a>
+                                     </td>
+                                 </tr>
+                                 @endforeach
+                                 <span class="info-text">Total Balance Due : &#x20B9;{{
+                                     $balCollection->sum('Balance') }}</span>
+                             </tbody>
+                         </table>
+                         </div>
+                        </div>
+
+                     @endif
+
                     </div>
-                    @if (count($Debitdata)>0)
+                    @if (count($Transactions)>0)
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <div class="row">
-                                    <div class="d-flex align-items-center ml-4">
-                                        @if ($Checked)
-                                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                                <div class="btn-group btn-group-sm btn-rounded" role="group">
-                                                    <button id="btnGroupDrop1" type="button"
-                                                        class="btn btn-danger btn-sm dropdown-toggle" data-mdb-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        Cheched ({{count($Checked)}})
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-
-                                                        <li><a class=" dropdown-item" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
-                                                        </li>
-                                                        </ul>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-
-                            </tr>
-                            <tr>
                                 <th>SL.No</th>
-                                <th>Check</th>
                                 <th>Particular</th>
-                                <th>Amount &#x20B9;</th>
+                                <th>Name</th>
+                                <th>Amount</th>
                                 <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            @foreach($Debitdata as $data)
+                            @forelse($Transactions as $data)
                             <tr>
-                                <td>{{$Debitdata->firstItem()+$loop->index}}</td>
-                                <td><input type="checkbox" id="checkbox" name="checkbox" value="{{$data->Id}}" wire:model="Checked"></td>
-                                <td>{{ $data->Category }},{{ $data->Sub_Category }}</td>
+                                <td>{{$Transactions->firstItem()+$loop->index}}</td>
+                                <td>{{ $data->Category }}| {{ $data->Source }}</td>
+                                <td> {{$data->Name}}</td>
                                 <td>{{ $data->Amount_Paid }}</td>
                                 <td>{{ $data->Description }}</td>
                                 <td>
-                                    <a href="{{route('edit.Debit',$data->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                    <a href="{{route('edit.debit',$data->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                    <a href="{{route('delete.Debit',$data->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
+                                    <a href="{{route('delete.debit',$data->Id)}}" title="Delete" class="btn btn-sm btn-danger font-size-15" id="delete"><i class=" mdi mdi-trash-can"></i></a>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="11">
+                                    <img class=" avatar-xl" alt="No Result" src="{{asset('storage/no_result.png')}}">
+                                    <p>No Result Found</p>
+                                </td>
+                            </tr>
+                        @endforelse()
                         </tbody>
-
+                    </table>
                         <div class="row no-gutters align-items-center">
                             <div class="col-md-8">
-                            <p class="text-muted">Showing {{count($Debitdata)}} of {{$Debitdata->total()}} entries</p>
+                            <p class="text-muted">Showing {{count($Transactions)}} of {{$Transactions->total()}} entries</p>
                             </div>
                             <div class="col-md-4">
                                 <span class=" pagination pagination-rounded float-end" >
-                                    {{$Debitdata->links()}}
+                                    {{$Transactions->links()}}
                                 </span>
                             </div>
                         </div>
-                        </table>
+
                     </div>
                     <p class="card-text"><small class="text-bold">Last Entry at  {{$lastRecTime}} </small></p>
                 </div>
-                <span> {{$Debitdata->links()}} </span>
+                <span> {{$Transactions->links()}} </span>
                 @endif
             </div>
-        </div> --}}
+        </div>
 
     </div>
 

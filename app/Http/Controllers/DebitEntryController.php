@@ -18,6 +18,16 @@ class DebitEntryController extends Controller
         $EditData='';$DeleteData='';
         return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
     }
+   public function EditDebit($Id)
+    {
+        $EditData=$Id;$DeleteData='';
+        return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
+    }
+   public function DeleteDebit($Id)
+    {
+        $EditData='';$DeleteData=$Id;
+        return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
+    }
 
 // Finction to save the Entry
       public function save(Request $request)

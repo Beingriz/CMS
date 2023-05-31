@@ -214,7 +214,7 @@
                                     <td>{{$item->Balance}} </td>
                                     <td class="text-wrap">{{$item->Description}} </td>
                                     <td>
-                                        <a href="{{route('Credit')}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="open"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                        <a href="{{route('edit.credit',$item->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -259,23 +259,13 @@
                                 <tr>
                                     <td>{{$DebitLedger->firstItem()+$loop->index}}</td>
                                     <td><h6 class="mb-0">{{$item->Category}}</h6></td>
-                                    <td>{{$item->Sub_Category}}</td>
+                                    <td>{{$item->Source}} | {{$item->Name}}</td>
                                     <td>{{$item->Total_Amount}}</td>
                                     <td>{{$item->Amount_Paid}} </td>
                                     <td>{{$item->Balance}} </td>
                                     <td class="text-wrap">{{$item->Description}} </td>
                                     <td>
-                                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Action <i class="mdi mdi-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                    <a class="dropdown-item" title="View" href=""id="editData">View</a>
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                        <a href="{{route('edit.debit',$item->Id)}}" title="Edit" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach

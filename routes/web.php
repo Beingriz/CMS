@@ -155,6 +155,9 @@ Route::middleware('auth','auth.role:admin')->group(function(){
 Route::middleware('auth','auth.role:admin')->group(function(){
     Route::controller(DebitEntryController::class)->group(function(){
         Route::get('Debit','Home')->name('Debit');
+        Route::get('edit/debit/entry/{Id}', 'EditDebit')->name('edit.debit');
+        Route::get('delete/debit/entry/{Id}', 'DeleteDebit')->name('delete.debit');
+
     });
 });
 // Global  Search  Routes start

@@ -435,7 +435,6 @@ class Credit extends Component
         $baldata = array();
         $baldata['Amount_Paid'] = $total;
         $baldata['Balance'] = 0;
-        $baldata['Balance'] = 0;
 
         $creditdata = array();
         $creditdata['Amount_Paid'] = $total;
@@ -490,7 +489,6 @@ class Credit extends Component
             $todays_list = CreditLedger::where('Date',$this->today)->filter(trim($this->filterby))->paginate($this->paginate);
             $sl_no = $todays_list->total();
         }
-
         if(!is_null($this->SourceSelected))
         {
             $this->Sources = CreditSources::orderby('Source')->where('CS_Id',$this->SourceSelected)->get();
