@@ -178,4 +178,8 @@ class AdminController extends Controller
         $editId="";
         return view('user.admin_forms.header_footer_form',['EditData'=>$editId,]);
     }//End Function
+
+    public function DataMigration(){
+        return view('admin.Data_Migration.data_migration');
+    }
 }

@@ -43,6 +43,11 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('/delete/carousel/{id}','DeleteCarousel')->name('delete.carousel');
 
 
+        // --------------------Data Migration Routes -----------------
+        Route::get('/data/migration','DataMigration')->name('data.migration');
+
+
+
     });
 });
 Route::controller(AdminController::class)->group(function(){

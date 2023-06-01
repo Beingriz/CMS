@@ -91,16 +91,7 @@
                 </li> --}}
 
 
-
-
-
-
-
-
-
-
-
-                <li>
+               <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-layout-3-line"></i>
                         <span>Ledger</span>
@@ -132,6 +123,13 @@
                             </ul>
                         </li> --}}
                     </ul>
+                </li>
+
+                <li>
+                    <a href="{{route('data.migration')}}" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span>Migration</span>
+                    </a>
                 </li>
 
                 {{-- <li class="menu-title">Report</li>
