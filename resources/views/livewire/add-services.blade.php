@@ -44,9 +44,12 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                    <h5 class="card-title">New Service Section</h5>
+                    <h5 class="card-title"><a href="{{route('add_services')}}" title="Click here for New Transaction">Add New</a></h5>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">Services Section</h4>
-                    <p class="card-title-desc">Add New Services</p>
+                    <p class="card-title-desc">Adding of New Services to the Existing List of Services. </p>
                     <div class="row mb-3">
                         <label for="example-text-input" class="col-sm-2 col-form-label">Service Id</label>
                         <div class="col-sm-10">
@@ -170,8 +173,8 @@
                                     <button type="submit" value="submit" name="submit"
                                     class="btn btn-primary btn-rounded btn-sm">Update Service</button>
                                 @endif
-                                <a href="#" wire:click.prevent="ResetFields()" class="btn btn-warning btn-rounded btn-sm">Reset</a>
-                                <a href='admin_home' class="btn btn-rounded btn-sm">Cancel</a>
+                                <a href="#" wire:click.prevent="ResetFields()" class="btn btn-warning btn-rounded btn-sm btn-info">Reset</a>
+                                <a href="{{route('dashboard')}}" class="btn btn-rounded btn-sm">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -276,10 +279,10 @@
         @if (count($Existing_Sevices)>0)
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">#{{$Existing_Sevices->total()}}  Existing Services Available </h5>
+                <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                    <h5 class="card-title" >{{$Existing_Sevices->total()}}  Existing Services Available</h5>
+                    <h5 class="card-title" ><a href="{{route('add_services')}}" title="Click here for New Transaction">Add New</a></h5>
                 </div>
-
                 <div class="row">
                     <div class="col-lg-12" >
                         <table id="datatable" class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid" aria-describedby="datatable_info">
@@ -315,8 +318,6 @@
                                 <span class=" pagination pagination-rounded float-end" >
                                     {{$Existing_Sevices->links()}}
                                 </span>
-
-
                             </div>
                             <p class="card-text"><small class="text-muted">Last Service Created </small></p>
                         </div>

@@ -8,6 +8,7 @@ use App\Models\ApplyServiceForm;
 use App\Models\Callback_Db;
 use App\Models\DocumentFiles;
 use App\Models\EnquiryDB;
+use App\Models\MainServices;
 use App\Models\Status;
 use App\Models\SubServices;
 use App\Models\User;
@@ -46,42 +47,49 @@ class ApplicationController extends Controller
     }
     public function Dashboard()
     {
-        if($this->applications_served>0)
-        {
-            foreach($this->MainServices as $key)
-            {
-                $application_total_count = DB::table('digital_cyber_db')->where ('Application',$key['Name'])->count();
-                $total_amount = DB::table('digital_cyber_db')->where('Application','=', $key['Name'])->SUM('Amount_Paid');
-
+        if($this->applications_served>0){
+            foreach($this->MainServices as $key){
+                $application_total_count = Application::where('Application',$key['Name'])->count();
+                $total_amount = DB::table('digital_cyber_db')->where('Application',$key['Name'])->SUM('Amount_Paid');
                 $notification = 0;
                 $data = array();
                 $data['Total_Count'] = $application_total_count;
                 $data['Temp_Count'] =  $notification;
                 $data['Total_Amount'] =  $total_amount;
-                DB::table('service_list')->where('Id',$key['Id'])->update($data);
-                $application_amount = DB::table('digital_cyber_db')->where('Application','=', $key['Name'])->count();
+                // dd($data);
+                MainServices::where('Id','=',$key['Id'])->Update($data);
+
+                // $application_amount = Application::where('Application','=', $key['Name'])->count();
 
                 $No='No';
                 $app = $key['Name'];
-                $chechk_status = DB::table('digital_cyber_db')->where([['Application',$key['Name']],['Status','Received'],['Recycle_Bin',$No]])->get();
+                $chechk_status = Application::where([['Application',$key['Name']],['Status','Received'],['Recycle_Bin',$No]])->get();
 
 
-                foreach($chechk_status as $count)
-                {
-
-                    $count = get_object_vars($count);
+                foreach($chechk_status as $count){
+                    // $count = get_object_vars($count);
                     $received_date = $count['Received_Date'];
                     $start_time = new Carbon($received_date);
                     $finish_time = new Carbon($this->today);
                     $diff_days = $start_time->diffInDays($finish_time);
-                    if(($diff_days)>=2)
-                    {
+                    if(($diff_days)>=2){
                         $notification += 1;
                         DB::update('update service_list set Temp_Count = ? where Name = ?', [$notification,$app]);
                     }
                 }
             }
-
+        }else{
+            foreach($this->MainServices as $key)
+            {
+                $total_amount = 0;
+                $notification = 0;
+                $data = array();
+                $data['Total_Count'] = 0;
+                $data['Temp_Count'] =  $notification;
+                $data['Total_Amount'] =  0;
+                MainServices::where('Id',$key['Id'])->Update($data);
+                $application_amount = Application::where('Application','=', $key['Name'])->count();
+            }
         }
         // Code for insight Data Records are fetched from RightInsight Trait
         $status = Status::all();
