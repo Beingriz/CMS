@@ -105,7 +105,22 @@ class AdminController extends Controller
     }
     public function AddServices()
     {
-        return view('admin.Services.add_service');
+        $EditData='';
+        $DeleteData='';
+        $type = '';
+        return view('admin.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
+    }
+    public function EditServices($Id,$type)
+    {
+        $EditData=$Id;
+        $DeleteData='';
+        return view('admin.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
+    }
+    public function DeleteServices($Id,$type)
+    {
+        $EditData='';
+        $DeleteData=$Id;
+        return view('admin.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
     }
     public function UserTopBar()
     {

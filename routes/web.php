@@ -32,6 +32,8 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('/admin/profile_view', 'ProfileView')->name('admin.profile_view');
         Route::get('/admin/change_password', 'ChangePassword')->name('change_password');
         Route::get('/add/services', 'AddServices')->name('add_services');
+        Route::get('/Edit/Services/{id}/{type}', 'EditServices')->name('edit.services');
+        Route::get('/Delete/Services/{id}/{type}', 'DeleteServices')->name('delete.services');
         Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
         Route::get('/New/Carousel','Carousel')->name('new.carousel');
         Route::get('/abous_us','AboutUs')->name('new.about_us');

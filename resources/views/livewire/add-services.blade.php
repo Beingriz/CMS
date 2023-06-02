@@ -297,11 +297,11 @@
                                     <td>{{$Existing_Sevices->firstItem()+$loop->index}}</td>
                                     <td>{{$key->Name}}</td>
                                     <td>
-                                        <img class="avatar-sm"  src="{{url('storage/'.$key->Thumbnail)}}" alt="Bookmark"></td>
+                                        <img class="avatar-sm"  src="{{!empty($key->Thumbnail)? asset('storage/'.$key->Thumbnail): url('storage/no_image.jpg')}}" alt="Bookmark"></td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary font-size-15" onclick="confirm('Do you want to Edit {{$key->Name}} Service?') || event.stopImmediatePropagation()" wire:click.prevent="EditMainservice('{{$key->Id}}')"><i class="mdi mdi-circle-edit-outline" ></i></a>
+                                        <a href="{{route('edit.services',[$key->Id,$Category_Type])}}" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                        <a href ="#"class="btn btn-sm btn-danger font-size-15"  onclick="confirm('Do you Delete {{$key->Name}} Service Permanently?')|| event.stopImmediatePropagation()" wire:click.prevent="Delete('{{$key->Id}}')"><i class="mdi mdi-delete-alert-outline"  ></i></a>
+                                        <a href ="{{route('delete.services',[$key->Id,$Category_Type])}}"class="btn btn-sm btn-danger font-size-15" id="deleteData"><i class="mdi mdi-delete-alert-outline"  ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach

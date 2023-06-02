@@ -44,12 +44,19 @@ class AddServices extends Component
        $this->validateOnly($propertyName);
    }
 
-   public function mount()
+   public function mount($EditData,$DeleteData,$Type)
    {
         $length = mt_rand(2,3);
         $Char = strtoupper(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, $length));
         $this->Service_Id = 'DC'.mt_rand(1,99).$Char;
-
+        if(!empty($EditData)){
+            $this->Edit($EditData,$Type);
+            $this->Category_Type = $Type;
+        }
+        if(!empty($DeleteData)){
+            $this->Delete($DeleteData,$Type);
+            $this->Category_Type = $Type;
+        }
 
    }
 
@@ -168,10 +175,11 @@ class AddServices extends Component
             $this->ResetFields();
         }
    }
-    public function EditMainservice($Id)
+    public function Edit($Id,$Type)
     {
 
-        if($this->Category_Type=='Main')
+
+        if($Type == 'Main')
         {
             $this->Update = 1;
             $fetch = MainServices::Wherekey($Id)->get();
@@ -188,12 +196,14 @@ class AddServices extends Component
                  $this->Old_Thumbnail = $service['Thumbnail'];
             }
         }
-        elseif($this->Category_Type=='Sub')
+        elseif($Type == 'Sub')
         {
             $this->Update = 1;
             $fetch = SubServices::Wherekey($Id)->get();
             foreach($fetch as $service)
             {
+                // $serName = MainServices::where('Id',$service['Service_Id'])->first();
+                $this->Main_ServiceId = $service['Service_Id'];
                  $this->Service_Id = $service['Id'];
                  $this->Name = $service['Name'];
                  $this->Description = $service['Description'];

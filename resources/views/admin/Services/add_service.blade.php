@@ -3,7 +3,7 @@
 
     <div class="page-content" style="margin-top: -45px">
         <div class="container-fluid">
-            @livewire('add-services')
+            @livewire('add-services',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$Type])
         </div>
     </div>
 
