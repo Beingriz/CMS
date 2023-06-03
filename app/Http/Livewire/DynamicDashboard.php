@@ -120,21 +120,64 @@ class DynamicDashboard extends Component
 
 
     }
-    public function UpdateServiceType($Id,$ptype,$utype)
+    public function UpdateServiceType($Id,$ptype,$utype,$pstatus)
     {
+        // Updating the Applcation Database with New Sub Service.
+        $data = array();
+        $data['Application_Type'] = $utype;
+        $data['updated_at'] = Carbon::now();
+        Application::where('Id',$Id)->update($data);
+        session()->flash('SuccessMsg', 'The Service Type has been Changed From '.$ptype. ' to ' .$utype.' Successfully');
 
-       DB::update('update digital_cyber_db set Application_Type = ? where Id = ?', [$utype,$Id]);
-       session()->flash('SuccessMsg', 'The Service Type has been Changed From '.$ptype. ' to ' .$utype.' Successfully');
-
-       $notification = array(
-        'message'=>'The Service Type has been Changed From '.$ptype. ' to ' .$utype.' Successfully',
-        'alert-type' =>'success'
-       );
-
+        $this->updateMainSerivcesNotification();
+        $this->updateSubServiceCount($this->MainServiceId);
+        $this->ChangeService($ptype);
+        $this->ShowDetails($pstatus);
         $this->ShowTable=true;
-
+    }
+    
+    public function updateMainSerivcesNotification(){
+        $MainServices = MainServices::all();
+        $today = date("Y-m-d");
+        foreach($MainServices as $service)
+        {
+            // Setting Notification to 0
+            $notification = 0;
+            $app = $service['Name'];
+            $chechk_status = DB::table('digital_cyber_db')->where([['Application',$service['Name']],['Status','Received'],['Recycle_Bin','No']])->get();
+            foreach($chechk_status as $count){
+                $count = get_object_vars($count);
+                $received_date = $count['Received_Date'];
+                $start_time = new Carbon($received_date);
+                $finish_time = new Carbon($today);
+                $diff_days = $start_time->diffInDays($finish_time);
+                if(($diff_days)>=2)
+                {
+                    $notification += 1;
+                    $data = array();
+                    $data['Temp_Count'] = $notification;
+                    MainServices::where('Name',$app)->update($data);
+                }
+            }
+        }
     }
 
+    public function updateSubServiceCount($MainServiceId){
+        $Sub_Services = SubServices::Where('Service_Id',$MainServiceId)->get();
+        if(count($Sub_Services)>0)
+        {
+            foreach($Sub_Services as $item)
+            {
+                {
+                    $name = $item['Name'];
+                    $count = Application::Where([['Application_Type',$name],['Recycle_Bin','No']])->count();
+                    $data = array();
+                    $data['Total_Count'] = $count;
+                    SubServices::where('Name',$name)->update($data);
+                }
+            }
+        }
+    }
     public function render()
    {
         $servicename = MainServices::Where('Id',$this->MainServiceId)->get();
@@ -155,7 +198,7 @@ class DynamicDashboard extends Component
 
         $StatusDetails = Application::where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name]])
                                 ->Where([['Status',trim($this->status_name)],['Recycle_Bin','No']])
-                                ->filter(trim($this->filterby))->paginate($this->paginate);
+                                ->filter(trim($this->filterby))->Orderby('updated_at', 'desc')->paginate($this->paginate);
         return view('livewire.dynamic-dashboard',compact('StatusDetails'),[
            'status'=>$this->status, 'ServName'=>$this->Serv_Name,'bookmarks'=>$bookmarks,
            'SubServices'=>$this->SubServices, 'n'=>$this->n,

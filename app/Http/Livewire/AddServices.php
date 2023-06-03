@@ -7,6 +7,7 @@ use App\Models\Bookmark;
 use App\Models\MainServices;
 use App\Models\SubServices;
 use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use COM;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +22,7 @@ class AddServices extends Component
     protected $paginationTheme='bootstrap';
     use WithFileUploads;
     public $Service_Id,$Name , $Service_Type,$Services=[],  $Description , $Details, $Specification , $Features,$Service_Fee;
-    public $Thumbnail, $Order_By , $paginate,$pos, $filterby,$Update = 0;
+    public $Thumbnail, $Order_By , $paginate,$pos, $filterby,$Update = 0,$lastRecTime;
     public $Category_Type, $Main_ServiceId,$Unit_Price ,$Old_Thumbnail,$New_Thumbnail;
     protected $Existing_Sevices=[];
 
@@ -393,7 +394,11 @@ class AddServices extends Component
             $find = Application::where('Application',$name)->count();
             if($find>0) // Application is Served. Cannot Delete this Service. Use Edit Function to Modify.
             {
-                session()->flash('Error','Sorry Unable to Delete '.$name.'Service. '.$find. ' Applications Served' );
+                $notification = array(
+                    'message'=>'Sorry Unable to Delete '.$name.'Service. '.$find. ' Applications Served',
+                    'alert-type'=>'error'
+                );
+                return redirect()->back()->with($notification);
             }
             else // No Application is Servered for this Service so Delete All its Sub Services & Delete Main Service
             {
@@ -422,9 +427,18 @@ class AddServices extends Component
                         }elseif($Thumbnail=='Not Available' ||$Thumbnail==NULL ){
                             $delete_sub = SubServices::Where('Service_Id',$Id)->Delete();
                             if($delete_sub){
-                                session()->flash('SuccessMsg', $subSerDelCount.' Sub Services of '.$name. ' Deleted Successfully!');
+                                session()->flash('SuccessMsg', );
+                                $notification = array(
+                                    'message'=> $subSerDelCount.' Sub Services of '.$name. ' Deleted Successfully!',
+                                    'alert-type'=>'success'
+                                );
+                                return redirect()->back()->with($notification);
                             }else{
-                                session()->flash('Error', 'Unable to Sub Service');
+                                $notification = array(
+                                    'message'=>'Unable to Sub Service',
+                                    'alert-type'=>'error'
+                                );
+                                return redirect()->back()->with($notification);
                             }
                         }
                     }
@@ -436,16 +450,27 @@ class AddServices extends Component
                         unlink(public_path('storage/'.$this->Old_Thumbnail));
                         $delete_main = MainServices::Wherekey($Id)->Delete();
                         if($delete_main){
-                            session()->flash('SuccessMsg',$name.' Service &  all Sub Services Deleted Successfully!');
-                            $this->ResetFields();
+                            $notification = array(
+                                'message'=> $name.' Service &  all Sub Services Deleted Successfully!',
+                                'alert-type'=>'success'
+                            );
+                            return redirect()->route('add_services')->with($notification);
+
                         }else{
-                            session()->flash('Error', 'Unable to Delete Bookmark');
+                            $notification = array(
+                                'message'=>'Unable to Sub Service',
+                                'alert-type'=>'error'
+                            );
+                            return redirect()->back()->with($notification);
                         }
                     }else{
                         $delete_main = MainServices::Wherekey($Id)->Delete();
                         if($delete_main){
-                            session()->flash('SuccessMsg',$name.' Service &  all Sub Services Deleted Successfully!');
-                            $this->ResetFields();
+                            $notification = array(
+                                'message'=> $name.' Service &  all Sub Services Deleted Successfully!',
+                                'alert-type'=>'success'
+                            );
+                            return redirect()->route('add_services')->with($notification);
                         }
                     }
                 }
@@ -453,7 +478,6 @@ class AddServices extends Component
         }
         elseif($type == 'Sub')
         {
-            dd('Sub');
             $service_id = $this->Service_Id;
             $fetch = SubServices::Wherekey($Id)->get();
             foreach($fetch as $item)
@@ -462,44 +486,68 @@ class AddServices extends Component
                 $this->Old_Thumbnail = $item['Thumbnail'];
             }
             $find = Application::where('Application_Type',$name)->count();
-            if($find>0)
-            {
-                session()->flash('Error','Sorry Unable to Delete '.$name.'Sub Service. '.$find. ' Applications Served' );
-            }
-            else
-            {
-                if($this->Old_Thumbnail !='Not Available')
-                {
-                    if (Storage::disk('public')->exists($this->Old_Thumbnail))
-                    {
+            if($find>0){
+                $notification = array(
+                    'message'=>'Sorry Unable to Delete '.$name.'Service. '.$find. ' Applications Served',
+                    'alert-type'=>'error'
+                );
+                return redirect()->back()->with($notification);
+            }else{
+                if($this->Old_Thumbnail !='Not Available' || $this->Old_Thumbnail != NULL){
+                    if (Storage::disk('public')->exists($this->Old_Thumbnail)){
                         unlink(public_path('storage/'.$this->Old_Thumbnail));
-                        $delete_main = SubServices::Wherekey($Id)->Delete();
-                        if($delete_main)
-                        {
+                        $delete_sub = SubServices::Wherekey($Id)->Delete();
+                        if($delete_sub){
                             session()->flash('SuccessMsg',$name.'  Services Deleted Successfully!');
+                            $notification = array(
+                                'message'=>$name.'  Services Deleted Successfully!',
+                                'alert-type'=>'success'
+                            );
+                            return redirect()->back()->with($notification);
                             $this->ResetFields();
                             $this->Category_Type='Sub';
                             $this->Service_Id=$service_id;
-
+                        }else{
+                            $notification = array(
+                                'message'=>'Unable to Sub Service',
+                                'alert-type'=>'error'
+                            );
+                            return redirect()->back()->with($notification);
                         }
-                        else
-                        {
-                            session()->flash('Error', 'Unable to Delete Bookmark');
+                    }else{
+                        $delete_sub = SubServices::Wherekey($Id)->Delete();
+                        if($delete_sub){
+                            $notification = array(
+                                'message'=>$name.'  Services Deleted Successfully!',
+                                'alert-type'=>'success'
+                            );
+                            return redirect()->back()->with($notification);
+                            $this->ResetFields();
+                            $this->Category_Type='Sub';
+                            $this->Service_Id=$service_id;
                         }
-                    }
-                    else
-                    {
-                        session()->flash('Error', 'File Not Available');
                     }
                 }
-
-
             }
         }
-        // delete working
+    }
+    public function LastUpdate()
+    {
+        # code...
+        if($this->Category_Type == 'Main'){
+            $latest_app = MainServices::latest('created_at')->first();
+            $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+
+        }elseif($this->Category_Type == 'Sub'){
+            $latest_app = SubServices::latest('created_at')->first();
+            $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+
+        }
+
     }
     public function render()
     {
+        $this->LastUpdate();
 
         if($this->Category_Type == 'Main')
         {

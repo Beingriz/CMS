@@ -101,12 +101,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                                <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?asset('storage/'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="">
 
                                 <div class="flex-grow-1">
                                     <h5 class="mt-0 font-size-18 mb-1">{{$item->Status}}</h5>
                                     @if ($item->Temp_Count > 0)
-                                    <p class="text-muted font-size-14">Applications <span class="badge rounded-pill bg-danger font-size-14" >{{$item->Temp_Count}}</span></p>
+                                    <p class="text-muted font-size-14">Found <span class="badge rounded-pill bg-danger font-size-14" >{{$item->Temp_Count}}</span> App.</p>
+                                    @else
+                                    <p class="text-muted font-size-14">No Pending Applications Found for this Status.</p>
                                     @endif
 
 

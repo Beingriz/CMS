@@ -283,9 +283,14 @@
                     <h5 class="card-title" >{{$Existing_Sevices->total()}}  Existing Services Available</h5>
                     <h5 class="card-title" ><a href="{{route('add_services')}}" title="Click here for New Transaction">Add New</a></h5>
                 </div>
+                <div class="card-body">
+                    <p class="card-text"><small class="text-muted">Last Service Created {{$lastRecTime}}</small></p>
+
+                </div>
+
                 <div class="row">
                     <div class="col-lg-12" >
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid" aria-describedby="datatable_info">
+                        <table id="datatable" class="table table-bordered dt-responsive"role="grid" aria-describedby="datatable_info">
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
@@ -304,7 +309,7 @@
                                     <td>
                                         <a href="{{route('edit.services',[$key->Id,$Category_Type])}}" class="btn btn-sm btn-primary font-size-15" id="editData"><i class="mdi mdi-circle-edit-outline" ></i></a>
 
-                                        <a href ="{{route('delete.services',[$key->Id,$Category_Type])}}"class="btn btn-sm btn-danger font-size-15" id="deleteData"><i class="mdi mdi-delete-alert-outline"  ></i></a>
+                                        <a href ="{{route('delete.services',[$key->Id,$Category_Type])}}"class="btn btn-sm btn-danger font-size-15" id="delete"><i class="mdi mdi-delete-alert-outline"  ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -319,7 +324,6 @@
                                     {{$Existing_Sevices->links()}}
                                 </span>
                             </div>
-                            <p class="card-text"><small class="text-muted">Last Service Created </small></p>
                         </div>
                     </div>
                 </div>

@@ -111,7 +111,7 @@ class DataMigration extends Component
                     $data['Message'] = 'Not Available';
                     $data['Consent'] = 'No';
                     $data['Recycle_Bin'] = 'No';
-                    $data['Registered'] = date('Y-m-d');
+                    $data['Registered'] = 'Yes';
                     $data->save();
                     $this->appReg++;
                 }else{ // Registered just Save Application
@@ -172,8 +172,8 @@ class DataMigration extends Component
                     }
                     $data['Message'] = 'Not Available';
                     $data['Consent'] = 'No';
-                    $data['Recycle_Bin'] = 'Yes';
-                    $data['Registered'] = date('Y-m-d');
+                    $data['Recycle_Bin'] = 'No';
+                    $data['Registered'] = 'Yes';
                     $data->save();
                     $this->appReg++;
                 }

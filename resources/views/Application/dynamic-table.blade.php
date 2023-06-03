@@ -62,7 +62,7 @@
                                     <td>{{ $data->Mobile_No }}</td>
                                     <td>{{ $data->Application }}</td>
                                     <td>
-                                        <select name="ChangeSType" id="ChangeSType" class="form-control-sm form-control" wire:change="UpdateServiceType('{{$data->Id}}','{{$data->Application_Type}}',$event.target.value)">
+                                        <select name="ChangeSType" id="ChangeSType" class="form-control-sm form-control" wire:change="UpdateServiceType('{{$data->Id}}','{{$data->Application_Type}}',$event.target.value,'{{$data->Status}}')">
                                             <option selected>{{ $data->Application_Type }}</option>
                                             @foreach ($SubServices as $item)
                                                 <option value="{{$item->Name}}">{{$item->Name}}</option>
