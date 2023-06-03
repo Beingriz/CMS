@@ -84,7 +84,7 @@ class DataMigration extends Component
                     $data['Amount_Paid'] = $item['amount_paid'];
                     $data['Balance'] = $item['balance'];
                     $data['Payment_Mode'] = $item['payment_mode'];
-                    $data['Payment_Receipt'] = '';
+                    $data['Payment_Receipt'] = 'Not Available';
                     if( $item['status'] == ''){
                         $data['Status'] = 'Received';
                     }else{
@@ -95,13 +95,13 @@ class DataMigration extends Component
                     }else{
                         $data['Ack_No'] = $item['ack_no'];
                     }
-                    $data['Ack_File'] = '';
+                    $data['Ack_File'] = 'Not Available';
                     if( $item['document_no'] == ''){
                         $data['Document_No'] = 'Not Available';
                     }else{
                         $data['Document_No'] = $item['document_no'];
                     }
-                    $data['Doc_File'] = '';
+                    $data['Doc_File'] = 'Not Available';
                     $data['Applicant_Image'] = 'account.png';
                     if( $item['delivered_on'] == '' ||  $item['delivered_on'] == '0000-00-00'){
                         $data['Delivered_Date'] = date('Y-m-d');

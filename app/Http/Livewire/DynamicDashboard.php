@@ -87,7 +87,10 @@ class DynamicDashboard extends Component
     }
     public function UpdateStatus($Id,$pstatus,$ustatus,$subserv)
     {
-       DB::update('update digital_cyber_db set Status = ? where Id = ?', [$ustatus,$Id]);
+        $data = array();
+        $data['Status'] = $ustatus;
+        $data['updated_at'] = Carbon::now();
+        Application::where('Id',$Id)->update($data);
        session()->flash('SuccessMsg', 'The Status has been Changed From '.$pstatus.' to ' .$ustatus.' Successfully');
        $this->ShowTable=false;
 
@@ -135,7 +138,7 @@ class DynamicDashboard extends Component
         $this->ShowDetails($pstatus);
         $this->ShowTable=true;
     }
-    
+
     public function updateMainSerivcesNotification(){
         $MainServices = MainServices::all();
         $today = date("Y-m-d");
@@ -198,7 +201,7 @@ class DynamicDashboard extends Component
 
         $StatusDetails = Application::where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name]])
                                 ->Where([['Status',trim($this->status_name)],['Recycle_Bin','No']])
-                                ->filter(trim($this->filterby))->Orderby('updated_at', 'desc')->paginate($this->paginate);
+                                ->filter(trim($this->filterby))->Orderby('Received_Date', 'desc')->paginate($this->paginate);
         return view('livewire.dynamic-dashboard',compact('StatusDetails'),[
            'status'=>$this->status, 'ServName'=>$this->Serv_Name,'bookmarks'=>$bookmarks,
            'SubServices'=>$this->SubServices, 'n'=>$this->n,

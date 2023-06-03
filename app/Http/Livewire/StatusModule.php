@@ -174,6 +174,7 @@ class StatusModule extends Component
     }
     public function UpdateStatus($Id, $Status)
     {
+
         $data = array();
         $data['Status'] = trim($Status);
         Application::Where('Id',$Id)->update($data);
@@ -196,6 +197,7 @@ class StatusModule extends Component
 
     public function Update()
     {
+        $relation = $this->Relation;
         if(!is_Null($this->Thumbnail)) // Check if new image is selected
         {
             if(!is_Null($this->Old_Thumbnail))
@@ -223,6 +225,11 @@ class StatusModule extends Component
                 $this->validate([
                     'Thumbnail'=>'required|image',
                 ]);
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Status/'.$this->Name;
+                    $filename = 'St_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
             }
         }
         else // check old is exist
@@ -239,6 +246,11 @@ class StatusModule extends Component
                     $this->validate([
                         'Thumbnail'=>'required|image',
                     ]);
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Status/'.$this->Name;
+                    $filename = 'St_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
                 }
             }
             else
@@ -246,9 +258,24 @@ class StatusModule extends Component
                 $this->validate([
                     'Thumbnail'=>'required|image',
                 ]);
+                    $extension = $this->Thumbnail->getClientOriginalExtension();
+                    $path = 'Thumbnails/Status/'.$this->Name;
+                    $filename = 'St_'.$this->Name.'_'.time().'.'.$extension;
+                    $url = $this->Thumbnail->storePubliclyAs($path,$filename,'public');
+                    $this->New_Thumbnail = $url;
             }
 
         }
+        $fetch = Status::Where('Id',$this->Id)->get();
+        foreach($fetch as $item)
+        {
+
+            $oldName = $item['Status'];
+
+        }
+        $data = array();
+        $data['Status'] = $this->Name;
+        $getApp =  Application::where('Status',$oldName)->update($data);
         if(!empty($this->ChangeRelation))
         {
             $this->Relation = $this->ChangeRelation;
@@ -260,11 +287,12 @@ class StatusModule extends Component
         $Update = DB::table('status')->where('Id','=',$this->Id)->Update($data);
         if($Update)
         {
-            session()->flash('SuccessMsg',$this->Name.' Status is Updated for '.$this->Relation);
+            session()->flash('SuccessMsg','Status '.$this->Name.' Updated in '.$getApp. ' Apps, for '.$this->Relation);
             $this->ResetFields();
             $this->Thumbnail=Null;
             $this->iteration++;
             $this->Update = 0;
+            $this->Relation  = $relation;
         }
     }
     public function Delete($Id)

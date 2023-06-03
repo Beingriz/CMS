@@ -45,7 +45,7 @@ class EditApplication extends Component
     public $show_app=[];
     public $Ack,$Doc,$Pay,$subservice,$mainservice;
     public $Ack_Path,$Doc_Path,$Payment_Path,$Profile_Image,$RelativeName,$Gender;
-    public $created,$updated,$AckFileDownload='Disable',$DocFileDownload='Disable',$PayFileDownload='Disable',$SubSelected  ;
+    public $created,$updated,$AckFileDownload='Disable',$DocFileDownload='Disable',$PayFileDownload='Disable',$SubSelected,$key, $ShowTable = false,$paginate,$Sub_Serv_Name  ;
 
 
     public $i=1,$Pro_Yes='off' ;
@@ -109,7 +109,6 @@ class EditApplication extends Component
             $this->Ack_No = $key['Ack_No'];
             $this->Document_No = $key['Document_No'];
             $this->Status = $key['Status'];
-            $this->Document_No = $key['Document_No'];
             $this->Total_Amount = $key['Total_Amount'];
             $this->Amount_Paid = $key['Amount_Paid'];
             $this->Balance = $key['Balance'];
@@ -228,31 +227,30 @@ class EditApplication extends Component
         if(!is_null($this->MainService))
         {
             $fetch = MainServices::wherekey($this->MainService)->get();
-            foreach($fetch as $key)
-            {
+            foreach($fetch as $key){
                 $this->ServiceName = $key['Name'];
             }
         }else{
             $this->ServiceName = $this->mainservice;
         }
+
+
         if(!is_null($this->SubService))
         {
-
             $this->SubSelected = $this->SubService;
         }else{
             $this->SubSelected = $this->subservice;
         }
-            // Attept to Delete the Old file Before Updating New File for Perticular Application Id
+
+        // Attept to Delete the Old file Before Updating New File for Perticular Application Id
         if(!empty($this->Applicant_Image))
         {
-            if($old_App_Image != 'Not Available' )
-            {
+            if($old_App_Image != 'Not Available' ){
                 if (Storage::disk('public')->exists($old_App_Image)) // Check for existing File
                 {
                     unlink(storage_path('app/public/'.$old_App_Image)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();
-
                     $data['Applicant_Image']=$url;
                     DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->update($data);
                 }
@@ -260,115 +258,85 @@ class EditApplication extends Component
                 {
                     $this->Applicant_Image = 'Not Available';
                 }
-            }
-            else
-            {
+            }else{
                 $extension = $this->Applicant_Image->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/Photo';
+                $path = 'Client_DB/'.$name.' '.$client_Id.'/'.trim($this->Name).'/Photo';
                 $filename = 'Profile'.$this->Name.'_'.time().'.'.$extension;
                 $url = $this->Applicant_Image->storePubliclyAs($path,$filename,'public');
                 $this->Applicant_Image = $url;
             }
-        }
-        else
-        {
+        }else{
             $this->Applicant_Image = $old_App_Image;
         }
-        if(!empty($this->Ack_File))
-        {
-            if($old_Ack_File != 'Not Available'  )
-            {
-                dd($old_Ack_File);
-                if (Storage::disk('public')->exists($old_Ack_File)) // Check for existing File
-                {
 
+
+        // Ack File Upload.
+        if(!empty($this->Ack_File)){
+            if($old_Ack_File != 'Not Available'){
+                if (Storage::disk('public')->exists($old_Ack_File)){ // Check for existing File
                     unlink(storage_path('app/public/'.$old_Ack_File)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();
-
                     $data['Ack_File']=$url;
                     DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->update($data);
-                }
-                else
-                {
+                }else{
                     $this->Ack_Path='Not Available';
                 }
-            }
-            else
-            {
+            }else{
                 $extension = $this->Ack_File->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Digtial Cyber/'.$name.' '.$client_Id.'/'.trim($this->Name).'/'.trim($this->ServiceName).'/'.trim($this->SubSelected);
                 $filename = 'AF_'.$this->Ack_No.'_'.time().'.'.$extension;
                 $url = $this->Ack_File->storePubliclyAs($path,$filename,'public');
                 $this->Ack_Path = $url;
             }
-        }
-        else
-        {
+        }else{
             $this->Ack_Path = $old_Ack_File;
         }
 
-        if(!empty($this->Doc_File))
-        {
-            if($old_Doc_File != 'Not Available' )
-            {
-                if (Storage::disk('public')->exists($old_Doc_File)) // Check for existing File
-                {
+        // Doc File Upload.
+        if(!empty($this->Doc_File)){
+            if($old_Doc_File != 'Not Available' ){
+                if (Storage::disk('public')->exists($old_Doc_File)){ // Check for existing File
                     unlink(storage_path('app/public/'.$old_Doc_File)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();
-
                     $data['Doc_File']=$url;
                     DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->update($data);
                 }
-                else
-                {
+                else{
                     $this->Doc_Path='Not Available';
                 }
-            }
-            else
-            {
+            }else{
                 $extension = $this->Doc_File->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Digtial Cyber/'.$name.' '.$client_Id.'/'.trim($this->Name).'/'.trim($this->ServiceName).'/'.trim($this->SubSelected);
                 $filename = 'DF_'.$this->Document_No.'_'.time().'.'.$extension;
                 $url = $this->Doc_File->storePubliclyAs($path,$filename,'public');
                 $this->Doc_Path = $url;
             }
-        }
-        else
-        {
+        }else{
             $this->Doc_Path = $old_Doc_File;
         }
 
-        if(!empty($this->Payment_Receipt))
-        {
-            if($old_Pay_File != 'Not Available' )
-            {
-                if (Storage::disk('public')->exists($old_Pay_File)) // Check for existing File
-                {
+        // Payment File Upload
+        if(!empty($this->Payment_Receipt)){
+            if($old_Pay_File != 'Not Available' ){
+                if (Storage::disk('public')->exists($old_Pay_File)){ // Check for existing File
                     unlink(storage_path('app/public/'.$old_Pay_File)); // Deleting Existing File
                     $url='Not Available';
                     $data = array();
-
                     $data['Payment_Receipt']=$url;
                     DB::table('digital_cyber_db')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->update($data);
-                }
-                else
-                {
+                }else{
                     $this->Payment_Path='Not Available';
                 }
-            }
-            else
-            {
+            }else{
                 $extension = $this->Payment_Receipt->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Digtial Cyber/'.$name.' '.$client_Id.'/'.trim($this->Name).'/'.trim($this->ServiceName).'/'.trim($this->SubSelected);
                 $filename = 'PR_'.$this->PaymentMode.'_'.time().'.'.$extension;
                 $url = $this->Payment_Receipt->storePubliclyAs($path,$filename,'public');
                 $this->Payment_Path = $url;
             }
-        }
-        else
-        {
+        }else{
             $this->Payment_Path = $old_Pay_File;
         }
 
@@ -415,23 +383,20 @@ class EditApplication extends Component
             $data['updated_at']=Carbon::now();
             ApplyServiceForm::where('Id',$Id)->Update($data);
         }
-        if($this->Doc_Yes == 1 ) // if more documents to upload
-        {
-            if(count($this->Document_Files)>0)
-            {
-                if($this->Doc_Names =='')
-                    {
-                        $this->Doc_Names = $this->Name.' Document';
-                    }
-                foreach($this->Document_Files as $Docs => $Path)
-                {
+
+        // if more documents to upload
+        if($this->Doc_Yes == 1 ){
+            if(count($this->Document_Files)>0){
+                if($this->Doc_Names ==''){
+                    $this->Doc_Names = $this->Name.' Document';
+                }
+                foreach($this->Document_Files as $Docs => $Path){
                     $this->n++;
                     $extension = $Path->getClientOriginalExtension();
-                    $directory = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                    $directory = 'Digtial Cyber/'.$name.' '.$client_Id.'/'.trim($this->Name).'/'.trim($this->ServiceName).'/'.trim($this->SubSelected);
                     $filename = $this->Name.' '.$this->Doc_Names[$Docs].'_'.time().'.'.$extension;
                     $url = $Path->storePubliclyAs($directory,$filename,'public');
                     $file = $url;
-
 
                     $save_doc = new DocumentFiles();
                     $save_doc->Id = 'DOC'.mt_rand(0, 9999);
@@ -443,7 +408,7 @@ class EditApplication extends Component
                 }
 
                 $extension =  $this->Document_Name->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Digtial Cyber/'.$name.' '.$client_Id.'/'.trim($this->Name).'/'.trim($this->ServiceName).'/'.trim($this->SubSelected);
                 $filename = $this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
                 $url = $this->Document_Name->storePubliclyAs($path,$filename,'public');
                 $file = $url;
@@ -457,10 +422,11 @@ class EditApplication extends Component
                 $save_doc->save();
                 session()->flash('SuccessMsg', $this->n.' Documents Added to '.$this->Name.' Folder Successfully!');
             }
-            elseif(!empty($this->Document_Name)) //if only 1 document to be upload
+            //if only 1 document to be upload
+            elseif(!empty($this->Document_Name))
             {
                 $extension =  $this->Document_Name->getClientOriginalExtension();
-                $path = 'Client_DB/'.$name.'_'.$client_Id.'/'.$this->Name.'/'.$this->ServiceName.'/'.trim($this->SubSelected);
+                $path = 'Digtial Cyber/'.$name.' '.$client_Id.'/'.trim($this->Name).'/'.trim($this->ServiceName).'/'.trim($this->SubSelected);
                 $filename = $this->Name.' '.$this->Doc_Name.'_'.time().'.'.$extension;
                 $url = $this->Document_Name->storePubliclyAs($path,$filename,'public');
                 $file = $url;
@@ -475,11 +441,8 @@ class EditApplication extends Component
                 session()->flash('SuccessMsg', 'Document Uploaded Successfully!');
             }
         }
-        if( $update_App)
-        {
-            session()->flash('SuccessUpdate', 'Application Details for '.$this->Name.' is Updated Successfully');
-        }
 
+        // Balance Ledger Update.
         $bal_data = array();
         $bal_data['Name']=$this->Name;
         $bal_data['Mobile_No']=$this->Mobile_No;
@@ -495,11 +458,14 @@ class EditApplication extends Component
         $bal_data['updated_at']=Carbon::now();
 
         $update_Bal = DB::table('balance_ledger')->where([['Id','=',$Id],['Client_Id','=',$this->Client_Id]])->Update($bal_data);
-
-        if($update_Bal)
-        {
+        if( $update_App && $update_Bal){
+            session()->flash('SuccessUpdate', 'Application Details for '.$this->Name.' Updated Successfully');
+        }elseif($update_Bal){
             session()->flash('SuccessMsg', 'Balance Ledger Updated for '.$this->Name);
+        }elseif($update_App){
+            session()->flash('SuccessUpdate', 'Application Details for '.$this->Name.' Updated Successfully');
         }
+
 
         $update_Credit = DB::update('update credit_ledger set Category=?, Sub_Category=?,Total_Amount =?, Amount_Paid=?, Balance=?,Payment_Mode=?,Attachment=?, Description=? where Id = ? && Client_Id=?', [$this->Application,$this->Application_Type,$this->Total_Amount,$this->Amount_Paid,$this->Balance,$this->PaymentMode, $this->Payment_Path,$Description,$Id, $this->Client_Id]);
         if($update_Credit)
@@ -507,13 +473,11 @@ class EditApplication extends Component
             session()->flash('SuccessMsg', 'Credit Ledger Updated for '.$this->Name);
         }
         return redirect()->route('edit_application',$Id);
-        // if($update_App && $update_Bal)
-        // {
-        //     session()->flash('SuccessUpdate', 'Application Details for '.$this->Name.' is Updated Successfully');
-        //
-        // }
     }
-
+    public function ShowApplications($mobile){
+        $this->ShowTable = true;
+        $this->key = $mobile;
+    }
     public function Delete_Doc($Id)
     {
         $fetch = DocumentFiles::Wherekey($Id)->get();
@@ -612,8 +576,8 @@ class EditApplication extends Component
                 $this->balance =  $amt['Balance'];
             }
         }
-        $status_list = DB::table('status')
-        ->Where('Relation',$this->ServiceName)
+        $status = DB::table('status')
+        ->Where('Relation',$this->mainservice)
         ->orWhere('Relation','General')
         ->orderBy('Orderby', 'asc')
         ->get();
@@ -621,7 +585,11 @@ class EditApplication extends Component
         $this->Balance = (intval($this->Total_Amount) - intval($this->Amount_Paid));
 
         $Doc_Files = DocumentFiles::Where([['App_Id',$this->Id],['Client_Id',$this->Client_Id]])->paginate(5);
-        return view('livewire.edit-application',compact('payment_mode','status_list','Doc_Files'));
+
+
+        $StatusDetails = Application::where([['Mobile_No',$this->key],['Recycle_Bin','No']])
+                                ->filter(trim($this->filterby))->Orderby('Received_Date', 'desc')->paginate($this->paginate);
+        return view('livewire.edit-application',compact('payment_mode','status','Doc_Files','StatusDetails'));
     }
 
 }

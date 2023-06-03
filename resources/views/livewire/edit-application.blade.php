@@ -35,7 +35,7 @@
     </div>{{-- End of Row --}}
 
     <div class="row"> {{-- Start of Services Row --}}
-        <a href="#" class="col-xl-3 col-md-10" wire:click.prevent="ShowApplicatins('{{$Mobile_No}}')">
+        <a href="#" class="col-xl-3 col-md-10" wire:click.prevent="ShowApplications('{{$Mobile_No}}')">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -54,29 +54,16 @@
                                 </div>
                             </div>
                         </div>
-
-                        @if($old_Applicant_Image != 'Not Available')
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage">
-                        @else
-                        <img class="rounded avatar-md" src="{{asset('storage/no_image.jpg')}}" alt="no_image" />
-                        @endif
-
-
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{($old_Applicant_Image !='Not Available')?asset('storage/'.$old_Applicant_Image):url('storage/no_image.jpg')}}" alt="Profile">
                     </div>
                 </div>
             </div>
         </a>
-
+    {{-- Applications Deliverd --}}
         <a href="#" class="col-xl-3 col-md-10" >
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
-
-                        {{-- <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-primary rounded-3">
-                                <i class="fas fa-edit"></i></i>
-                            </span>
-                        </div> --}}
                         <div class="flex-grow-1 align-items-center">
                             <h5 class="text-truncate text-warning font-size-20 mb-2">Applications Deliverd</h5>
                             <div class="col-8">
@@ -86,25 +73,17 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{-- <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($item->Thumbnail))?url('storage/Admin/Services/Thumbnail'.$item->Thumbnail):url('storage/no_image.jpg')}}" alt="Generic placeholder image"> --}}
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/delivered.png')}}" alt="">
 
                     </div>
                 </div>
             </div>
         </a>
-
+    {{-- Revenue Earned --}}
         <a href="#" class="col-xl-3 col-md-10">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
-
-                        {{-- <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-primary rounded-3">
-                                <i class="fas fa-edit"></i></i>
-                            </span>
-                        </div> --}}
                         <div class="flex-grow-1 align-items-center">
                             <h5 class="text-truncate text-info font-size-20 mb-2">Revenue Earned</h5>
                             <div class="col-8">
@@ -114,35 +93,26 @@
                                 </div>
                             </div>
                         </div>
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/no_image.jpg')}}" alt="Generic placeholder image">
-
-
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{url('storage/Revenue.png')}}" alt="">
                     </div>
                 </div>
             </div>
         </a>
-
+    {{-- Balance Due --}}
         <a href="#" class="col-xl-3 col-md-10">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
-
-                        {{-- <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-primary rounded-3">
-                                <i class="fas fa-edit"></i></i>
-                            </span>
-                        </div> --}}
                         <div class="flex-grow-1 align-items-center">
                             <h5 class="text-truncate text-danger font-size-20 mb-2">Balance Due</h5>
                             <div class="col-8">
                                 <div class="text-center mt-8">
-                                    <h5>Payble &#x20B9; {{$total}}/-</h5>
-                                    <p class="mb-2 text-truncate">Balance <span> &#x20B9;{{$balance}}</span></p></p>
+                                    <h5>Payble &#x20B9; {{$balance}}/-</h5>
+                                    <p class="mb-2 text-truncate">Paid <span> &#x20B9;{{$total}}</span></p></p>
                                 </div>
                             </div>
                         </div>
-
-                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/'.$Profile_Image):url('storage/no_image.jpg')}}" alt="Generic placeholder image">
+                        <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{ (!empty($Profile_Image))?url('storage/'.$Profile_Image):url('storage/balance.png')}}" alt="">
 
                     </div>
                 </div>
@@ -429,9 +399,9 @@
                                                     <label>Current Status</label>
                                                     <select class="form-select" wire:model.lazy="Status">
                                                         <option selected="">Select Status</option>
-                                                        @foreach ($status_list as $status)
-                                                            <option value="{{ $status->Status }} ">
-                                                                {{ $status->Status }}</option>
+                                                        @foreach ($status as $item)
+                                                            <option value="{{ $item->Status }} ">
+                                                                {{ $item->Status }}</option>
                                                             @endforeach
                                                     </select>
                                                     @error('Status') <span class="text-danger">{{ $message }}</span> @enderror
@@ -810,6 +780,16 @@
         @endif {{-- End of Table --}}
     </div>
 {{-- ------------------------------------------------------------------------------------------------------}}
+
+
+{{-- List of Applicaiton  Start--}}
+    @if ($ShowTable)
+    <div class="" id="table">
+        @include('Application.dynamic-table')
+    </div>
+    @endif
+{{-- List of Applicaiton  End--}}
+
 
 </div> {{--End of Livewire   --}}
 

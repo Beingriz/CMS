@@ -18,6 +18,8 @@ class Application extends Model
             $query->where('Name','Like',$key)
             ->orWhere('Amount_Paid','Like',$key)
             ->orWhere('Application','Like',$key)
+            ->orWhere('Ack_No','Like',$key)
+            ->orWhere('Document_No','Like',$key)
             ->orWhere('Received_Date','Like',$key)
             ->orWhere('Status','Like',$key)
             ->orWhere('Mobile_No','Like',$key)

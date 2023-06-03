@@ -83,10 +83,9 @@
                                 @foreach ($MainServices as $item)
                                     <option value="{{$item->Name}}">{{$item->Name}}</option>
                                 @endforeach
-
                             </select>
                             <span class="error">@error('ChangeRelation'){{$message}}@enderror</span>
-                        </div>Thumbnail
+                        </div>
                     </div>
                     @endif
                     <div class="row mb-3">

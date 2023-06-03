@@ -47,9 +47,10 @@
                                     <th>Doc. No</th>
                                     <th>Total</th>
                                     <th>Paid</th>
-                                    <th>Balance &#x20B9;</th>
+                                    <th>Balance</th>
                                     <th>Change Status</th>
                                     <th>Action</th>
+                                    <th>Updated</th>
                                 </tr>
                                 </tr>
                             </thead>
@@ -57,7 +58,7 @@
                                 @forelse( $StatusDetails as $data )
                                 <tr>
                                     <td>{{ $n++ }}</td>
-                                    <td>{{ $data->Received_Date }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($data->Received_Date)->diffForHumans() }}</td>
                                     <td>{{ $data->Name }}</td>
                                     <td>{{ $data->Mobile_No }}</td>
                                     <td>{{ $data->Application }}</td>
@@ -78,8 +79,8 @@
                                     <td>
                                         <select name="ChangeStatus" id="ChangeStatus" class="form-control-sm form-control" wire:change="UpdateStatus('{{$data->Id}}','{{$data->Status}}',$event.target.value,'{{$data->Application_Type}}')">
                                             <option selected>{{ $data->Status }}</option>
-                                            @foreach ($status as $status_list)
-                                                <option value="{{$status_list->Status}}">{{$status_list->Status}}</option>
+                                            @foreach ($status as $item)
+                                                <option value="{{$item->Status}}">{{$item->Status}}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -98,6 +99,8 @@
 
                                         </div>
                                     </td>
+                                    <td>{{\Carbon\Carbon::parse( $data->updated_at)->diffForHumans()}}</td>
+
                                 </tr>
                                 @empty
                                     <tr>
