@@ -4,7 +4,11 @@ namespace App\Http\Livewire\Admin\DataMigration;
 
 use App\Models\Application;
 use App\Models\ClientRegister;
+use App\Models\CreditLedger;
+use App\Models\CreditSource;
+use App\Models\CreditSources;
 use App\Models\MainServices;
+use App\Models\Old_CreditLedger;
 use App\Models\Old_Cyber_Data;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -13,7 +17,7 @@ use phpDocumentor\Reflection\Types\Null_;
 
 class DataMigration extends Component
 {
-    public $Table,$OldServiceList,$Application,$Application_Type,$App_Id,$clinetReg,$appReg;
+    public $Table,$OldServiceList,$Application,$Application_Type,$App_Id,$clinetReg,$appReg,$UnitPrice;
     public $digitalcyber=false,$creditsource=false,$debitsource=false,$bookmarks=false,$creditledger=false,$debitledger=false;
 
     public function Migrate(){
@@ -191,8 +195,56 @@ class DataMigration extends Component
 
         } // End of Digital Cyber DB
 
+        if($this->Table == 'old_credit_ledger'){
+
+            $fetchserv = CreditSources::where('Source',$this->Application_Type)
+                                        ->where('CS_Id',$this->Application)->get();
+            foreach($fetchserv as $item){
+                $this->UnitPrice = $item['Unit_Price'];
+            }
+            $fetchserv = CreditSource::where('Id',$this->Application)->get();
+            foreach($fetchserv as $item){
+                $this->Application = $item['Name'];
+            }
 
 
+            // Fetching the Records of old Digital cyber DB Based on Application Selected
+            $records = Old_CreditLedger::where('perticular',$this->OldServiceList)->get();
+            foreach($records as $item){
+                // Old Data of Each Record
+                $id = $item['transaction_id'];
+                $date = $item['date'];
+                $perticular = $item['perticular'];
+                $amount = $item['amount'];
+                $desc = $item['description'];
+                $paymentmode = $item['payment_mode'];
+
+                // Migration to new Table
+                $Client_Id = 'DC'.date('Y').strtoupper(Str::random(3)).rand(000,9999);
+                $data = new CreditLedger();
+                $data['Id'] = $id;
+                $data['Client_Id'] = $Client_Id;
+                $data['Date'] = $date;
+                $data['Category'] = $this->Application;
+                $data['Sub_Category'] = $this->Application_Type;
+                $data['Unit_Price'] = $this->UnitPrice;
+                $data['Quantity'] = ($amount / $this->UnitPrice);
+                $data['Total_Amount'] = $amount;
+                $data['Amount_Paid'] = $amount;
+                $data['Balance'] = 0;
+                $data['Description'] = $desc;
+                $data['Payment_Mode'] = $paymentmode;
+                $data['Attachment'] = 'no_image.jpg';
+                $data->save();
+                $this->appReg++;
+
+            }
+            session()->flash('SuccessMsg', 'Entries '. $this->appReg. ' Stored');
+            $data = array();
+            $data['Status'] = 'Done';
+            DB::table('old_credit_sources')->where('particular',$this->OldServiceList)->update($data);
+            $this->appReg=0;
+        }
     }
 
 
@@ -202,10 +254,53 @@ class DataMigration extends Component
         // $this->App_Id  = 'DCA'.date('Y').strtoupper(Str::random(3)).rand(000,9999);
         if($this->Table == 'old_digial_cyber_db'){
             $this->digitalcyber = true;
+            $this->creditsource = false;
+            $this->debitsource=false;
+            $this->bookmarks=false;
+            $this->creditledger=false;
+            $this->debitledger=false;
+        }elseif($this->Table == 'old_credit_source'){
+            $this->digitalcyber = false;
+            $this->creditsource =true;
+            $this->debitsource=false;
+            $this->bookmarks=false;
+            $this->creditledger=false;
+            $this->debitledger=false;
+        }elseif($this->Table == 'old_debit_source'){
+            $this->digitalcyber = false;
+            $this->creditsource =false;
+            $this->debitsource=true;
+            $this->bookmarks=false;
+            $this->creditledger=false;
+            $this->debitledger=false;
+        }elseif($this->Table == 'old_credit_ledger'){
+            $this->digitalcyber = false;
+            $this->creditsource =false;
+            $this->debitsource=false;
+            $this->bookmarks=false;
+            $this->creditledger=true;
+            $this->debitledger=false;
+        }elseif($this->Table == 'old_debit_ledger'){
+            $this->digitalcyber = false;
+            $this->creditsource =false;
+            $this->debitsource=false;
+            $this->bookmarks=false;
+            $this->creditledger=false;
+            $this->debitledger=true;
+        }elseif($this->Table == 'old_bookmark'){
+            $this->digitalcyber = false;
+            $this->creditsource =false;
+            $this->debitsource=false;
+            $this->bookmarks=true;
+            $this->creditledger=false;
+            $this->debitledger=false;
         }
         $old_servicelist = DB::table('old_service_list')->where('status','!=','Done')->get();
+        $old_creditsources = DB::table('old_credit_sources')->where('Status','!=','Done')->get();
         $mainservices = DB::table('service_list')->get();
+        $newSources = DB::table('credit_source')->get();
         $subservices = DB::table('sub_service_list')->where('Service_Id',$this->Application)->get();
-        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices'));
+        $subSources = DB::table('credit_sources')->where('CS_Id',$this->Application)->get();
+        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','newSources','subSources'));
     }
 }
