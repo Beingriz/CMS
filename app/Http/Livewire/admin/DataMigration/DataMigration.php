@@ -3,12 +3,15 @@
 namespace App\Http\Livewire\Admin\DataMigration;
 
 use App\Models\Application;
+use App\Models\Bookmark;
 use App\Models\ClientRegister;
 use App\Models\CreditLedger;
 use App\Models\CreditSource;
 use App\Models\CreditSources;
 use App\Models\MainServices;
+use App\Models\Old_Bookmarks;
 use App\Models\Old_CreditLedger;
+use App\Models\Old_CreditSources;
 use App\Models\Old_Cyber_Data;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -245,6 +248,40 @@ class DataMigration extends Component
             DB::table('old_credit_sources')->where('particular',$this->OldServiceList)->update($data);
             $this->appReg=0;
         }
+        if($this->Table == 'old_bookmark'){
+            $fetch = Old_Bookmarks::where('sl_no',$this->OldServiceList)->get();
+            foreach($fetch as $item){
+                $name = $item['name'];
+                $hyperlink = $item['hyperlink'];
+
+                // Adding New Bookmarks
+                $BM_Id = 'BM'.date('Y').strtoupper(Str::random(3)).rand(000,9999);
+                $save = new Bookmark();
+                $save['BM_Id'] = $BM_Id;
+                $save['Name'] = ucwords($name);
+                $save['Relation'] = $this->Application;
+                $save['Hyperlink'] = $hyperlink;
+                $save['Thumbnail'] = 'no_image.jpg';
+                $save->save();
+                $this->appReg++;
+            }
+            session()->flash('SuccessMsg', 'Bookmarks '. $this->appReg. ' Saved');
+            $data = array();
+            $data['status'] = 'Done';
+            DB::table('old_bookmarks')->where('sl_no',$this->OldServiceList)->update($data);
+            $this->appReg=0;
+        }
+        if($this->Table == 'old_credit_source'){
+            // Fetching the Records of old Digital cyber DB Based on Application Selected
+            $fetchsources = Old_CreditSources::where('sl_no',$this->OldServiceList)->get();
+            foreach($fetchserv as $item){
+                $name = $item['particular'];
+
+                // Storing Credit Sources with categories
+                $data = new 
+            }
+
+        }
     }
 
 
@@ -301,6 +338,7 @@ class DataMigration extends Component
         $newSources = DB::table('credit_source')->get();
         $subservices = DB::table('sub_service_list')->where('Service_Id',$this->Application)->get();
         $subSources = DB::table('credit_sources')->where('CS_Id',$this->Application)->get();
-        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','newSources','subSources'));
+        $old_bookmarks = DB::table('old_bookmarks')->where('status','!=','Done')->get();
+        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','newSources','subSources','old_bookmarks'));
     }
 }
