@@ -22,6 +22,7 @@ class UserApplyNowForm extends Component
         'FatherName' =>'required',
         'Dob' =>'required',
         'Description' =>'required',
+        'File' =>'required | image',
     ];
 
     public $ConsentMatter;

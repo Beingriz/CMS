@@ -37,25 +37,25 @@
 
                             <ul class="social-links list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="#details" wire:click="GetDetails('{{$item->Id}}')" data-bs-original-title="Details" aria-label="Info"><i class="fas fa-info"></i></a>
+                                    <a role="button" class="text-reset" title="Details" data-bs-placement="top" data-bs-toggle="tooltip" href="#details" wire:click="GetDetails('{{$item->Id}}')" data-bs-original-title="Details" aria-label="Info"><i class="fas fa-info"></i></a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="#showDoc" wire:click="GetDocuments('{{$item->Id}}')" data-bs-original-title="Required Documents" aria-label="File-Archive"><i class="fas fa-file-archive"></i></a>
+                                    <a role="button" class="text-reset" title="Required Documents" data-bs-placement="top" data-bs-toggle="tooltip" href="#showDoc" wire:click="GetDocuments('{{$item->Id}}')" data-bs-original-title="Required Documents" aria-label="File-Archive"><i class="fas fa-file-archive"></i></a>
                                 </li>
 
                                 @if (Auth::check())
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('apply.now',[$item->Id,$item->Unit_Price])}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
+                                    <a role="button" class="text-reset" title="Apply Now" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('apply.now',[$item->Id,$item->Unit_Price])}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('callback',[Auth::user()->id,$ServiceName,$item['Name']])}}" data-bs-original-title="Callback" aria-label="@skypename"><i class="fas fa-phone"></i></a>
+                                    <a role="button" class="text-reset" title="Call Back" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('callback',[Auth::user()->id,$ServiceName,$item['Name']])}}" data-bs-original-title="Callback" aria-label="@skypename"><i class="fas fa-phone"></i></a>
                                 </li>
                                 @else
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('login')}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
+                                    <a role="button" class="text-reset" title="Apply Now" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('login')}}" data-bs-original-title="Apply Now" aria-label="ApplyNow"><i class="far fa-address-card"></i></a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a role="button" class="text-reset" title="" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('login')}}" data-bs-original-title="Callback" aria-label="CallBack"><i class="fas fa-phone"></i></a>
+                                    <a role="button" class="text-reset" title="Call Back" data-bs-placement="top" data-bs-toggle="tooltip" href="{{route('login')}}" data-bs-original-title="Callback" aria-label="CallBack"><i class="fas fa-phone"></i></a>
                                 </li>
                                 @endif
 

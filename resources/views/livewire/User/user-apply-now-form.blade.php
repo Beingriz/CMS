@@ -148,7 +148,7 @@
                     <div class="row mb-3">
                         <label for="File" class="col-sm-2 col-form-label">Document</label>
                         <div class="col-sm-10">
-                            <input class="form-control" type="file"   wire:model="File" id="File" accept="image/*">
+                            <input class="form-control" type="file"   wire:model="File" id="File" accept="image/*" required>
                             <p class="card-text"><small class="text-muted">Select ,jpg  or ,png format only</small></p>
                             <span class="error">@error('File'){{$message}}@enderror</span>
                         </div>
@@ -223,90 +223,6 @@
             </div>
         </div>
         {{-- Consent Details End--}}
-
-        @else
-         {{-- Start of Search Result Details Row --}}
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h4 class="card-title"> {{$service_count}} Services Applied </h4>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0">
-
-                                <thead class="table-light text-center">
-                                    <tr>
-                                        <th>Sl No</th>
-                                        <th >Applied</th>
-                                        <th >Name</th>
-                                        <th >Mobile</th>
-                                        <th >Service</th>
-                                        <th >Category</th>
-                                        <th >Message</th>
-                                        <th >Consent</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse( $applied as $data )
-                                    <tr>
-                                        <td>{{$applied->firstItem()+$loop->index }}</td>
-                                        <td class="text-wrap">{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
-                                        <td>{{ $data->Name }}</td>
-                                        <td>{{ $data->Mobile_No}}</td>
-                                        <td>{{ $data->Application}}</td>
-                                        <td>{{$data->Application_Type}}</td>
-                                        <td>{{$data->Message}}</td>
-                                        <td>{{!empty($data->Consent)?'Yes':'No'}}</td>
-                                        <td>
-                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                <div class="btn-group" role="group">
-                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Action <i class="mdi mdi-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                        <a class="dropdown-item" title="Open Applicatin" href="{{route('view.applicaiton',$data->Id)}}"id="editData">Open</a>
-                                                        @if (!empty($data->Consent))
-                                                        <a class="dropdown-item" title="Open Applicatin" href="{{route('view.document',$data->Id)}}"id="open">View Document</a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="11">
-                                                <img class=" avatar-xl" alt="No Result" src="{{asset('storage/no_result.png')}}">
-                                                <p>No Result Found</p>
-                                            </td>
-                                        </tr>
-                                    @endforelse()
-                                </tbody>
-
-                            </table>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-md-8">
-                                <p class="text-muted">Showing {{count($applied)}} of {{$applied->total()}} entries</p>
-                                </div>
-                                {{-- <span>{{$services->links()}}</span> --}}
-                                <div class="col-md-4">
-                                    <span class="pagination pagination-rounded float-end" >
-                                        {{$applied->links()}}
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
         @endif
     </div>
 </div>
