@@ -271,14 +271,14 @@ class DataMigration extends Component
             DB::table('old_bookmarks')->where('sl_no',$this->OldServiceList)->update($data);
             $this->appReg=0;
         }
-        if($this->Table == 'old_credit_source'){
+        if($this->Table == 'old_debit_ledger'){
             // Fetching the Records of old Digital cyber DB Based on Application Selected
             $fetchsources = Old_CreditSources::where('sl_no',$this->OldServiceList)->get();
             foreach($fetchserv as $item){
                 $name = $item['particular'];
 
                 // Storing Credit Sources with categories
-                $data = new 
+
             }
 
         }
@@ -334,11 +334,14 @@ class DataMigration extends Component
         }
         $old_servicelist = DB::table('old_service_list')->where('status','!=','Done')->get();
         $old_creditsources = DB::table('old_credit_sources')->where('Status','!=','Done')->get();
+        $old_debitsources = DB::table('old_debit_source')->where('Status','!=','Done')->get();
         $mainservices = DB::table('service_list')->get();
         $newSources = DB::table('credit_source')->get();
+        $newDebitSources = DB::table('debit_source')->get();
         $subservices = DB::table('sub_service_list')->where('Service_Id',$this->Application)->get();
         $subSources = DB::table('credit_sources')->where('CS_Id',$this->Application)->get();
+        $subDebitSources = DB::table('debit_sources')->where('DS_Id',$this->Application)->get();
         $old_bookmarks = DB::table('old_bookmarks')->where('status','!=','Done')->get();
-        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','newSources','subSources','old_bookmarks'));
+        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','old_debitsources','newSources','newDebitSources','subSources','subDebitSources','old_bookmarks'));
     }
 }

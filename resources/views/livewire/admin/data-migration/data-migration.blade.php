@@ -65,8 +65,6 @@
                                     <select class="form-control" id="Table" wire:model="Table" name="Table">
                                         <option value="">---Select---</option>
                                         <option value="old_digial_cyber_db">Digtial Cyber</option>
-                                        <option value="old_credit_source">Credit Source</option>
-                                        <option value="old_debit_source">Debit Source</option>
                                         <option value="old_credit_ledger">Credit Ledger</option>
                                         <option value="old_debit_ledger">Debit Ledger</option>
                                         <option value="old_bookmark">Bookmarks</option>
@@ -109,43 +107,6 @@
                                     </div>
                                 </div>
 
-                            @elseif ($creditsource)
-                                {{-- Yet to Design --}}
-                                <div class="row mb-3">
-                                    <label for="OldServiceList" class="col-sm-4 col-form-label">Service List</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="OldServiceList" wire:model="OldServiceList" name="OldServiceList">
-                                            <option value="">---Select---</option>
-                                           @foreach ($old_creditsources as $item)
-                                           <option value="{{$item->sl_no}}">{{$item->particular}}</option>
-                                           @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="Application" class="col-sm-4 col-form-label">Application</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="Application" wire:model="Application" name="Application">
-                                            <option value="">---Select---</option>
-                                           @foreach ($newSources as $item)
-                                           <option value="{{$item->Id}}">{{$item->Name}}</option>
-                                           @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="Application_Type" class="col-sm-4 col-form-label">Application Type</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="Application_Type" wire:model="Application_Type" name="Application_Type">
-                                            <option value="">---Select---</option>
-                                           @foreach ($subSources as $item)
-                                           <option value="{{$item->CS_Id}}">{{$item->Source}}</option>
-                                           @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            @elseif ($debitsource)
-                            {{-- yet to Design --}}
                             @elseif ($creditledger)
                             <div class="row mb-3">
                                 <label for="OldServiceList" class="col-sm-4 col-form-label">Credit Source</label>
@@ -182,6 +143,39 @@
                             </div>
                             @elseif ($debitledger)
                             {{-- Yet to Design --}}
+                            <div class="row mb-3">
+                                <label for="OldServiceList" class="col-sm-4 col-form-label">Debit Source</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="OldServiceList" wire:model="OldServiceList" name="OldServiceList">
+                                        <option value="">---Select---</option>
+                                       @foreach ($old_debitsources as $item)
+                                       <option value="{{$item->particular}}">{{$item->particular}}</option>
+                                       @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="Application" class="col-sm-4 col-form-label">New Source</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="Application" wire:model="Application" name="Application">
+                                        <option value="">---Select---</option>
+                                       @foreach ($newDebitSources as $item)
+                                       <option value="{{$item->Id}}">{{$item->Name}}</option>
+                                       @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="Application_Type" class="col-sm-4 col-form-label">Sub Sources</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="Application_Type" wire:model="Application_Type" name="Application_Type">
+                                        <option value="">---Select---</option>
+                                       @foreach ($subDebitSources as $item)
+                                       <option value="{{$item->Name}}">{{$item->Name}}</option>
+                                       @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             @elseif ($bookmarks)
                                 {{-- Yet to Deign --}}
                                 <div class="row mb-3">
