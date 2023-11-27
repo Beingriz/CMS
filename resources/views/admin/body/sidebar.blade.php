@@ -23,21 +23,21 @@
                 <li>
                     <a href="{{route('dashboard')}}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
-                        <span>Dashboard</span>
+                        <span>Home</span>
                     </a>
                 </li>
                 {{-- Application Dashboard --}}
                 <li>
                     <a href="{{route('Dashboard')}}" >
                         <i class=" ri-profile-line"></i>
-                        <span>Home</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 {{-- Application Menu --}}
                 <li>
                     <a href="#" class="has-arrow waves-effect">
                         <i class="ri-account-circle-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">2</span>
-                        <span>Application Menu</span>
+                        <span>New App</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('new.application')}}">New Application</a></li>
@@ -46,6 +46,29 @@
 
                     </ul>
                 </li>
+
+               <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                    <i class="ri-layout-3-line"></i>
+                    <span>Ledger</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="true">
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">Credit Book</a>
+                        <ul class="sub-menu" aria-expanded="true">
+                            <li><a href="{{route('Credit')}}">New Entry</a></li>
+                            <li><a href="{{ route('CreditSource')}}">Add Category</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
+                        <ul class="sub-menu" aria-expanded="true">
+                            <li><a href="{{route('Debit')}}">New Entry</a></li>
+                            <li><a href="{{ route('DebitSource')}}">Add Category</a></li>                                <li><a href="#">Report</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
                 {{-- Admin Controls Menu --}}
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -91,39 +114,6 @@
                 </li> --}}
 
 
-               <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-layout-3-line"></i>
-                        <span>Ledger</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="true">
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">Credit Book</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{route('Credit')}}">New Entry</a></li>
-                                <li><a href="{{ route('CreditSource')}}">Add Category</a></li>
-                                <li><a href="#">Report</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{route('Debit')}}">New Entry</a></li>
-                                <li><a href="#">Add Category</a></li>
-                                <li><a href="#">Report</a></li>
-                            </ul>
-                        </li>
-
-                        {{-- <li>
-                            <a href="javascript: void(0);" class="has-arrow">Debit Book</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{ url('debit_entry') }}">New Entry</a></li>
-                                <a href="{{ url('add_payment')  }}">Add Sources</a>
-                                <li><a href="#">Refort</a></li>
-                            </ul>
-                        </li> --}}
-                    </ul>
-                </li>
 
                 <li>
                     <a href="{{route('data.migration')}}" class="waves-effect">

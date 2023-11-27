@@ -77,7 +77,9 @@
                                     <select class="form-control" id="Particular" wire:model="Category" name="Particular">
                                         <option value="">---Select---</option>
                                         <option value="Expenses">Expenses</option>
-                                        <option value="Repayments">Repayments</option>
+                                        <option value="Loan">Loan</option>
+                                        <option value="Credit Card Loan">Credit Card Loan</option>
+                                        <option value="CD Loan">CD Loan</option>
                                     </select>
                                     <span class="error">@error('Category'){{$message}}@enderror</span>
                                 </div>

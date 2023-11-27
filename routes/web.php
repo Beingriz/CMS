@@ -155,6 +155,8 @@ Route::middleware('auth','auth.role:admin')->group(function(){
     Route::get('delete/credit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
     Route::get('edit/credit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
     Route::get('delete/credit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
+
+
     });
 });
 
@@ -164,6 +166,12 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('Debit','Home')->name('Debit');
         Route::get('edit/debit/entry/{Id}', 'EditDebit')->name('edit.debit');
         Route::get('delete/debit/entry/{Id}', 'DeleteDebit')->name('delete.debit');
+        //Debit Ledger Routes
+        Route::get('DebitSource', 'DebitSource')->name('DebitSource');
+        Route::get('edit/debit/main/source{id}', 'EidtMainSource')->name('edit.mainsource');
+        Route::get('delete/debit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
+        Route::get('edit/debit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
+        Route::get('delete/debit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
 
     });
 });

@@ -70,6 +70,46 @@ class DebitEntryController extends Controller
         return view('DigitalLedger.DebitLedger.debit_entry' , ['list_data'=>$list_data ,'total'=>$total , 'sl_no'=>$sl_no, 'n'=>$n, 'debit_source'=>$debit_source, 'date'=>$today,'payment_mode'=>$payment_mode, 'percentage'=>$percentage,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered, 'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'today'=>$this->today, ]);
 
     }
+    public function DebitSource()
+    {
+        $EditData='';
+        $DeleteData='';
+        $editid='';
+        $deleteid='';
+        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function EidtMainSource($Id)
+    {
+        $EditData=$Id;
+        $DeleteData='';
+        $editid='';
+        $deleteid='';
+        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function DeleteMainSource($Id)
+    {
+        $EditData='';
+        $DeleteData=$Id;
+        $editid='';
+        $deleteid='';
+        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function EditsSubSource($Id)
+    {
+        $EditData='';
+        $DeleteData='';
+        $editid=$Id;
+        $deleteid='';
+        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
+    public function DeleteSubSource($Id)
+    {
+        $EditData='';
+        $DeleteData='';
+        $editid='';
+        $deleteid=$Id;
+        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+    }
     public function Previous()
     {   $total = 0;
         $n = 1;

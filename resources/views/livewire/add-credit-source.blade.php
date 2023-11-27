@@ -77,13 +77,14 @@
 
                         @if ($Type =='Main Category') {{--Main Category Fields--}}
                             <div class="row mb-3">
-                                <label for="Date" class="col-sm-4 col-form-label">Category Name</label>
+                                <label for="Date" class="col-sm-4 col-form-label">Name</label>
                                 <div class="col-sm-8">
                                     <input type="text"  wire:model="Name"  name="CategoryName" class="form-control"
                                     placeholder="Category Name" >
                                 <span class="error">@error('Name'){{$message}}@enderror</span>
                                 </div>
                             </div>
+
                             {{$pos}}
                             <div class="row mb-3">
                                 <label for="example-search-input" class="col-sm-4 col-form-label">Thumbnail</label>
