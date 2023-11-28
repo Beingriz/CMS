@@ -2,17 +2,22 @@
 
 namespace App\Http\Livewire\Admin\DataMigration;
 
+use App\Http\Livewire\DebitLedger;
 use App\Models\Application;
 use App\Models\Bookmark;
 use App\Models\ClientRegister;
 use App\Models\CreditLedger;
 use App\Models\CreditSource;
 use App\Models\CreditSources;
+use App\Models\Debit;
+use App\Models\DebitSource;
+use App\Models\DebitSources;
 use App\Models\MainServices;
 use App\Models\Old_Bookmarks;
 use App\Models\Old_CreditLedger;
 use App\Models\Old_CreditSources;
 use App\Models\Old_Cyber_Data;
+use App\Models\Old_DebitLedger;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -20,7 +25,7 @@ use phpDocumentor\Reflection\Types\Null_;
 
 class DataMigration extends Component
 {
-    public $Table,$OldServiceList,$Application,$Application_Type,$App_Id,$clinetReg,$appReg,$UnitPrice;
+    public $Table,$OldServiceList,$Application,$Application_Type,$App_Id,$clinetReg,$appReg,$UnitPrice,$Category;
     public $digitalcyber=false,$creditsource=false,$debitsource=false,$bookmarks=false,$creditledger=false,$debitledger=false;
 
     public function Migrate(){
@@ -272,15 +277,59 @@ class DataMigration extends Component
             $this->appReg=0;
         }
         if($this->Table == 'old_debit_ledger'){
-            // Fetching the Records of old Digital cyber DB Based on Application Selected
-            $fetchsources = Old_CreditSources::where('sl_no',$this->OldServiceList)->get();
+
+            // Fetching Name and Category from Debit Source table
+            $fetchserv = DebitSource::where('Id',$this->Application)->get();
             foreach($fetchserv as $item){
-                $name = $item['particular'];
-
-                // Storing Credit Sources with categories
-
+                $this->Application = $item['Name'];
+                $this->Category = $item['Category'];
             }
 
+            // Fetching Price from Debit Sources table
+            // dd($this->Application );
+            $fetchserv = DebitSources::where('Name',$this->Application_Type)
+                                        ->where('DS_Name',$this->Application)->get();
+            foreach($fetchserv as $item){
+                $this->UnitPrice = $item['Unit_Price'];
+            }
+
+            // Fetching the Records of old Digital cyber DB Based on Application Selected
+            $records = Old_DebitLedger::where('particular',$this->OldServiceList)->get();
+            foreach($records as $item){
+                // Old Data of Each Record
+                $id = $item['transaction_id'];
+                $date = $item['date'];
+                $perticular = $item['perticular'];
+                $amount = $item['amount'];
+                $desc = $item['description'];
+                $paymentmode = $item['payment_mode'];
+
+                // Migration to new Table
+                $Client_Id = 'DC'.date('Y').strtoupper(Str::random(3)).rand(000,9999);
+                $data = new Debit();
+                $data['Id'] = $id;
+                $data['Client_Id'] = $Client_Id;
+                $data['Date'] = $date;
+                $data['Category'] = $this->Category;
+                $data['Source'] = $this->Application;
+                $data['Name'] = $this->Application_Type;
+                $data['Unit_Price'] = $this->UnitPrice;
+                $data['Quantity'] = ($amount / ($this->UnitPrice==0?1:$this->UnitPrice));
+                $data['Total_Amount'] = $amount;
+                $data['Amount_Paid'] = $amount;
+                $data['Balance'] = 0;
+                $data['Description'] = $desc;
+                $data['Payment_Mode'] = $paymentmode;
+                $data['Attachment'] = 'no_image.jpg';
+                $data->save();
+                $this->appReg++;
+
+            }
+            session()->flash('SuccessMsg', 'Entries '. $this->appReg. ' Stored');
+            $data = array();
+            $data['Status'] = 'Done';
+            DB::table('old_debit_source')->where('particular',$this->OldServiceList)->update($data);
+            $this->appReg=0;
         }
     }
 

@@ -76,7 +76,7 @@ class AddDebitSource extends Component
     {
         $this->Type = 'Main Category';
         $time = substr(time() , 6 ,8 );
-        $this->DS_Id = 'CS'.$time;
+        $this->DS_Id = 'DS'.$time;
         $this->Name = Null;
         $this->Image = Null;
         $this->iteration++;
@@ -158,7 +158,7 @@ class AddDebitSource extends Component
     {
         $this->Update = 0;
         $time = substr(time() , 6 ,8 );
-        $this->DS_Id = 'CS'.$time;
+        $this->DS_Id = 'DS'.$time;
         $this->Name = NULL;
         $this->CategoryName = NULL;
         $this->SubCategoryName = NULL;
