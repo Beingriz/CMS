@@ -75,7 +75,7 @@ trait RightInsightTrait
         $this->payment_mode= PaymentMode::all();
         $this->MainServices= MainServices::orderby('Order_By','asc')->get();
         $this->SubServices= SubServices::all();
-        $this->application_type = DB::table('services')->get();
+        $this->application_type = DB::table('service_list')->get();
         $this->status_list =  Status::all();
         $this->applications_served = DB::table('digital_cyber_db')->count();
         $this->previous_day = date('Y-m-d', strtotime($this->today. ' - 1 days'));

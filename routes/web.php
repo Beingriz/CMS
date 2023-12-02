@@ -80,7 +80,6 @@ Route::middleware('auth','auth.role:user')->group(function(){
         Route::get('/View/Application{id}','viewApplication')->name('view.applicaiton');
         Route::get('/View/Document/{id}','viewDocument')->name('view.document');
         Route::get('/Feedback/{id}','Feedback')->name('feedback');
-
         Route::get('/callback/{id}/{service}/{service_type}','CallBack')->name('callback');
 
     });
@@ -121,7 +120,7 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('bookmarks', 'Bookmarks')->name('Bookmarks');
         Route::get('edit/bookmarks/{id}', 'EditBookmark')->name('edit.bookmark');
         Route::get('delete/bookmarks/{id}', 'DeleteBookmark')->name('delete.bookmark');
-        Route::get('global/search/{key}', 'GlobalSearch')->name('global_search');
+        Route::get('search/{key}', 'GlobalSearch')->name('global_search');
         Route::get('edit/profile/{id}', 'EditProfile')->name('edit_profile');
         Route::get('new/status', 'AddStatus')->name('new.status');
         Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
