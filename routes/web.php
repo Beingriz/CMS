@@ -108,12 +108,13 @@ Route::controller(UserController::class)->group(function(){
 // Application Authentic Routes start
 Route::middleware('auth','auth.role:admin')->group(function(){
     Route::controller(ApplicationController::class)->group(function(){
-        Route::get('Application/Home', 'Home')->name('app.home');
-        Route::get('App/Dashboard', 'Dashboard')->name('Dashboard');
+        Route::get('application/home', 'Home')->name('app.home');
+        Route::get('app/dashboard', 'Dashboard')->name('Dashboard');
         Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->name('DynamicDashboard');
-        Route::get('New/Application', 'index')->name('new.application');
+        Route::get('new/application', 'index')->name('new.application');
         Route::get('update/application', 'updateApplication')->name('update_application');
         Route::get('edit/application/{id}', 'Edit')->name('edit_application');
+        Route::get('/open_app/{id}', 'Open_Application')->name('open_applicaiton');
         Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');
@@ -124,7 +125,7 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('edit/profile/{id}', 'EditProfile')->name('edit_profile');
         Route::get('new/status', 'AddStatus')->name('new.status');
         Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
-        Route::get('List/App/status/{status}', 'ViewStatus')->name('view.status');
+        Route::get('list/app/status/{status}', 'ViewStatus')->name('view.status');
         Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
         // ------------------------------------------------------------------
         Route::get('{name}/dashboard', 'DashboardUpdate')->name('update.dashboard');

@@ -26,6 +26,7 @@
                 <li class="breadcrumb-item"><a href="{{route('Credit')}}">Credit</a></li>
             </ol>
         </div>{{-- End of Page Tittle --}}
+
         <div class="row">
             <a class="col-xl-3 col-md-6" href="{{route('update.dashboard',$Name)}}" title="{{$Name}} Dashboard">
                 <div class="card">
@@ -45,6 +46,7 @@
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
             </a><!-- end col -->
+
             <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -63,6 +65,7 @@
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
             </div><!-- end col -->
+
             <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -81,6 +84,7 @@
                     </div><!-- end cardbody -->
                 </div><!-- end card -->
             </div><!-- end col -->
+            
             <div class="col-xl-3 col-md-6">
                 <div class="card">
                     <div class="card-body">

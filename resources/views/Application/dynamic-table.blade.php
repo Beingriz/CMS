@@ -92,8 +92,10 @@
                                                     Action <i class="mdi mdi-chevron-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                    <a class="dropdown-item" title="View  Application" href='/digital/cyber/open_app/{{ $data->Id }}'>Open</a>
+                                                    <a class="dropdown-item" title="View  Application" id="open" href={{ route('open_applicaiton', [$data->Id]) }}>Open</a>
                                                     <a class="dropdown-item" title="Edit Application" id="update"href={{ route('edit_application',$data->Id) }}>Edit</a>
+                                                    <a class="dropdown-item" title="Call on {{$data->Mobile_No}}" href="tel:+91{{$data->Mobile_No}}">Call</a>
+                                                    <a class="dropdown-item" title="Send Message {{$data->Mobile_No}}"href="whatsapp://send?phone=+91{{$data->Mobile_No}}">Message</a>
                                                 </div>
                                             </div>
 

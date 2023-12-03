@@ -561,11 +561,11 @@ class ApplicationController extends Controller
         https://chat.whatsapp.com/DVMSuz7P1BeFzqoqmUJIcw "); // URL-encode the greeting message
         // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
 
-        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        $whatsappLink = 'whatsapp://send?phone=+91'. $mobile .'&text=' . $message;
         return redirect($whatsappLink);
     }
     public function waCallBack($mobile,$name,$service,$servicetype){
-        $message = urlencode("Hello *".$name."*,
+        $message = urlencode("Hello *".$name."* 👋🏻😍 ,
 
         Thank you for requesting a call back on *".$service." ".$servicetype."* I'll be happy to assist you. Please provide me with your preferred date and time for the call, along with any specific details or questions you have. I'll make sure to get back to you as soon as possible.
 
@@ -573,44 +573,44 @@ class ApplicationController extends Controller
         *Digital Cyber* "); // URL-encode the greeting message
         // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
 
-        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        $whatsappLink = 'whatsapp://send?phone=+91'. $mobile .'&text=' . $message;
         return redirect($whatsappLink);
     }
     public function waApplyNow($mobile,$name,$service,$servicetype){
-        $message = urlencode("Hello *".$name."*,
+        $message = urlencode("Hello *".$name."* 👋🏻😍 ,
 
         Thank you for Applying *".$service." ".$servicetype."* Service,
         I'll be happy to assist you.
 
-        Please provide me with your preferred date and time for the call, along with any specific details or questions you have.
+        Please provide us with your preferred date and time for the call back,
 
-        I'll make sure to get back to you as soon as possible.
+        our Team will make sure to get back to you as soon as possible.
 
          Best regards,
         *Digital Cyber*
         *+91 8892988334*"); // URL-encode the greeting message
         // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
 
-        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        $whatsappLink = 'whatsapp://send?phone=+91'. $mobile .'&text=' . $message;
         return redirect($whatsappLink);
     }
     public function waEnquiry($mobile,$name,$service,$time){
-        $message = urlencode("Dear *".$name."*,
+        $message = urlencode("Dear *".$name."* 👋🏻😍
+        ,
+        ▶ Thank you for reaching out to us through our website with your Enquiry *".$time."* We appreciate your interest and would be more than happy to assist you.
 
-        Thank you for reaching out to us through our website with your inquiry *".$time."* We appreciate your interest and would be more than happy to assist you.
+        ▶ Our team is currently reviewing your inquiry and will provide you with a detailed response as soon as possible. We understand the importance of your questions and aim to address them thoroughly and accurately.
 
-        Our team is currently reviewing your inquiry and will provide you with a detailed response as soon as possible. We understand the importance of your questions and aim to address them thoroughly and accurately.
-
-        In the meantime, if you have any additional information or specific details related to your inquiry, please feel free to share them with us. This will help us better understand your needs and provide you with a comprehensive response.
-
-        Once again, thank you for contacting us. We value your interest in our services, and we assure you that we are dedicated to providing you with the best possible assistance. We will be in touch shortly with a detailed response to your inquiry.
 
         Best regards,
         *Digital Cyber*
-        *Call : +91 8892988334*"); // URL-encode the greeting message
+        _The power to Empowe_
+        *Call : +91 8892988334*
+        *Call : +91 8951775912*"); // URL-encode the greeting message
         // $whatsappLink = 'https://web.whatsapp.com/send?phone=' . $mobile . '&text=' . $message;
 
-        $whatsappLink = 'https://wa.me/+91'. $mobile .'?text=' . $message;
+        $whatsappLink = 'whatsapp://send?phone=+91'. $mobile .'&text=' . $message;
+        // dd($whatsappLink);
         return redirect($whatsappLink);
 
 

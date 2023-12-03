@@ -196,13 +196,18 @@
                                         @else
                                         <td>{{$item['Gender']}}</td>
                                         @endif
-                                        <td>{{$item['Mobile_No']}}</td>
+                                        <td>
+                                            <a href="tel:+91{{$item['Mobile_No']}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-warning"  data-bs-original-title="Call {{$item['Name']}} on +91{{$item['Mobile_No']}}" aria-label="Info" >Call</a>
+
+                                            <a href="whatsapp://send?phone=+91{{$item['Mobile_No']}}"  data-bs-placement="top" data-bs-toggle="tooltip"  class="btn btn-sm btn-rounded btn-success"  data-bs-original-title="Send Whatsapp Message to {{$item['Name']}}" aria-label="Info" >Whatsapp</a>
+
+                                            </td>
                                         @if (is_null($item['Address']))
                                         <td>Not Available</td>
                                         @else
                                         <td>{{$item['Address']}}</td>
                                         @endif
-                                        <td>  <img src="{{ (!empty($item['Profile_Image']))?url('storage/'.$item['Profile_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md"></td>
+                                        <td>  <img src="{{ (!empty($item['Profile_Image']))?url('storage/'.$item['Profile_Image']):url('storage/no_image.jpg')}} " alt="" class="rounded-circle avatar-md"></td>
                                         <td>{{ \Carbon\Carbon::parse($item['created_at'])->diffForHumans() }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item['updated_at'])->diffForHumans() }}</td>
 
@@ -365,7 +370,7 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td>  <img src="{{ (!empty($data['Applicant_Image']))?url('storage/'.$data['Applicant_Image']):url('storage/no_image.jpg')}} " alt="avatar-4" class="rounded-circle avatar-md"></td>
+                                    <td>  <img src="{{ (!empty($data['Applicant_Image']))?url('storage/'.$data['Applicant_Image']):url('storage/no_image.jpg')}} " alt="" class="rounded-circle avatar-md"></td>
 
                                         <td>
                                             <div class="btn-group" role="group">
@@ -383,8 +388,18 @@
                                                     <li><a class="dropdown-item" title="Registration"  onclick="confirm('Are you sure you want Register. Mr /Mrs : {{$data->Name}} , for  Mobile No : {{$data->Mobile_No}} ?') || event.stopImmediatePropagation()" wire:click="Register('{{$data->Id}}')" >Register</a>
                                                     </li>
                                                     @endif
-                                                    <a class="dropdown-item" title="View Applicaiton" href="#">View</a>
+                                                    {{-- Open --}}
+                                                    <a class="dropdown-item" title="View  Application" id="open" href={{ route('open_applicaiton', [$data->Id]) }}>Open</a>
+
+                                                    {{-- Edit --}}
                                                     <a class="dropdown-item btn-primary" id="update" title="Edit Applicaiton" href="{{route('edit_application',$data->Id)}}">Edit</a>
+
+                                                    {{-- Call --}}
+                                                    <a class="dropdown-item" title="Call on {{$data->Mobile_No}}" href="tel:+91{{$data->Mobile_No}}">Call</a>
+
+                                                    {{-- WhatsApp --}}
+                                                    <a class="dropdown-item" title="Send Message {{$data->Mobile_No}}" href="whatsapp://send?phone=+91{{$data->Mobile_No}}">Message</a>
+
                                                 </div>
                                             </div>
                                         </td>
