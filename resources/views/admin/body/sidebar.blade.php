@@ -121,6 +121,12 @@
                         <span>Migration</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('marketing.dashboard')}}" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span>Marketing</span>
+                    </a>
+                </li>
 
                 {{-- <li class="menu-title">Report</li>
 

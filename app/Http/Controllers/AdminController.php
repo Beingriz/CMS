@@ -79,6 +79,10 @@ class AdminController extends Controller
         return view('admin.index',['totalSales'=>$totalSales,'totalEnquiries'=> $totalEnquiries,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
 
     }
+
+    public function MarketingDashboard(){
+        return view('admin.marketing.marketing');
+    }
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

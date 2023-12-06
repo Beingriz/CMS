@@ -43,6 +43,9 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('/Select/AboutUs/{id}','SelectAbout')->name('select.aboutus');
         Route::get('/Edit/Header/{id}','EditHeader')->name('edit.header');
         Route::get('/delete/carousel/{id}','DeleteCarousel')->name('delete.carousel');
+        Route::get('/marketing/dashboard/','MarketingDashboard')->name('marketing.dashboard');
+
+
 
 
         // --------------------Data Migration Routes -----------------
