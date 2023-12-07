@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Application extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
+
     public $table="digital_cyber_db";
     protected $guarded;
     public function scopeFilter($query, $key)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use App\Models\Bookmark;
@@ -202,7 +202,7 @@ class DynamicDashboard extends Component
         $StatusDetails = Application::where([['Application',$this->Serv_Name],['Application_Type',$this->Sub_Serv_Name]])
                                 ->Where([['Status',trim($this->status_name)],['Recycle_Bin','No']])
                                 ->filter(trim($this->filterby))->Orderby('Received_Date', 'desc')->paginate($this->paginate);
-        return view('livewire.dynamic-dashboard',compact('StatusDetails'),[
+        return view('livewire.admin-module.application.dynamic-dashboard',compact('StatusDetails'),[
            'status'=>$this->status, 'ServName'=>$this->Serv_Name,'bookmarks'=>$bookmarks,
            'SubServices'=>$this->SubServices, 'n'=>$this->n,
        ]);

@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminModule\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Creditentry;
 use App\Http\Controllers\DebitEntryController;
 use App\Http\Controllers\Home\HomeSlideController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserModule\UserController;
 use App\Http\Controllers\WhatsApp\WhatsappController;
 use FontLib\Table\Type\name;
 use GuzzleHttp\Middleware;

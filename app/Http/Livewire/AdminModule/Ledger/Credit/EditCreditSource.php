@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Ledger\Credit;
 
 use App\Models\CreditSource;
 use App\Models\CreditSources;

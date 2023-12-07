@@ -14,6 +14,6 @@
         </div>
     </div>
 <!-- Page Header End -->
-    @livewire('enquiry-form')
+    @livewire('user-module.enquiry-form')
 @endsection
 

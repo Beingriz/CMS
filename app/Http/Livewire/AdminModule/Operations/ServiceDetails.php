@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Operations;
 
 use App\Models\Application;
 use App\Models\DocumentList;
@@ -69,6 +69,6 @@ class ServiceDetails extends Component
         $subservices = SubServices::where('Service_Id',$this->Id)->get();
         $documents= DocumentList::where('Sub_Service_Id',$this->docId)->paginate(10);
         $this->SubServices = SubServices::Where('Id',$this->getId)->get();
-        return view('livewire.service-details',compact('subservices','records','documents'),['ServiceName',$this->ServiceName]);
+        return view('livewire.admin-module.operations.service-details',compact('subservices','records','documents'),['ServiceName',$this->ServiceName]);
     }
 }

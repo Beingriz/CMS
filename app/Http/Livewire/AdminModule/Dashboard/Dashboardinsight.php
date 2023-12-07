@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\AdminModule\Admin;
+namespace App\Http\Livewire\AdminModule\Dashboard;
 
 use App\Models\Application;
 use App\Models\ApplyServiceForm;
@@ -233,6 +233,6 @@ class DashboardInsight extends Component
         $feedback = Feedback::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
         $lead = ApplyServiceForm::whereDate('created_at',DB::raw('CURDATE()'))->paginate(10);
 
-        return view('livewire.admin.admin.dashboardinsight',['Applist'=>$applist,'CreditLedger'=>$creditledger,'DebitLedger'=>$DebitLedger,'callbacks'=>$callback,'feedbacks'=>$feedback,'leads'=>$lead]);
+        return view('livewire.admin-module.dashboard.dashboard-insight',['Applist'=>$applist,'CreditLedger'=>$creditledger,'DebitLedger'=>$DebitLedger,'callbacks'=>$callback,'feedbacks'=>$feedback,'leads'=>$lead]);
     }
 }

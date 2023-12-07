@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AdminModule;
 
+use App\Http\Controllers\Controller;
 use App\Http\Livewire\UserTopBar;
 use App\Models\About_Us;
 use App\Models\Carousel_DB;
@@ -76,7 +77,7 @@ class AdminController extends Controller
 
         // Status Count and Amount Update
 
-        return view('admin.index',['totalSales'=>$totalSales,'totalEnquiries'=> $totalEnquiries,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
+        return view('admin-module.index',['totalSales'=>$totalSales,'totalEnquiries'=> $totalEnquiries,'totalOrders'=>$totlaOrders,'newUsers'=>$newUsers,'callBack'=>$callBack,'totalRevenue'=>$totalRevenue,'lastWeekAmount'=>$lastWeekAmount[0]->lastWeekamount,'lastMonthAmount'=>$lastMonthAmount]);
 
     }
 
@@ -101,11 +102,11 @@ class AdminController extends Controller
     {
         $id = Auth::user()->id;
         $profiledata = User::find($id);
-        return view('admin.profile.profile_view',compact('profiledata'));
+        return view('admin-module.profile.profile_view',compact('profiledata'));
     }
     public function ChangePassword()
     {
-        return view('admin.profile.change_password');
+        return view('admin-module.profile.change_password');
     }
     public function AddServices()
     {

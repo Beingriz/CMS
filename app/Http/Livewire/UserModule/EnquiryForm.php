@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\UserModule;
 
 use App\Models\EnquiryDB;
 use App\Models\MainServices;
@@ -111,6 +111,6 @@ class EnquiryForm extends Component
         $services = MainServices::where('Service_Type','Public')->get();
         $subservices = SubServices::where('Service_Id',$this->Service)->get();
 
-        return view('livewire.enquiry-form',compact('services','subservices'));
+        return view('livewire.user-module.enquiry-form',compact('services','subservices'));
     }
 }

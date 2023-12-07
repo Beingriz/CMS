@@ -28,7 +28,7 @@
 
             <!-- App Search-->
 
-                     @livewire('global-search-bar')
+                     @livewire('admin-module.application.global-search-bar')
 
 
             {{-- Bookmark Menu Start --}}

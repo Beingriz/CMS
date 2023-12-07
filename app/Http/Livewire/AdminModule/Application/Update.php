@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\MainServices;
 use App\Models\Service;

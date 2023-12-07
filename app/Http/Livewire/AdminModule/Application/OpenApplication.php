@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use App\Models\DocumentFiles;

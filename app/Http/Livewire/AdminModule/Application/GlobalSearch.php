@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use App\Models\BalanceLedger;
@@ -354,7 +354,7 @@ class GlobalSearch extends Component
         $status_list = Status::all();
 
 
-        return view('livewire.global-search', [
+        return view('livewire.admin-module.application.global-search', [
             'search_data'=>$this->search_data, 'n'=>$this->n, 'status_list'=>$status_list,
         ]);
     }

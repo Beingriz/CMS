@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Operations;
 
 use App\Models\Bookmark;
 use App\Models\MainServices;

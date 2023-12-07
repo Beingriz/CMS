@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\UserModule;
 
 use App\Models\ClientRegister;
 use App\Models\User;

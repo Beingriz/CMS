@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\AdminModule\Admin;
+namespace App\Http\Livewire\AdminModule\Dashboard;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +78,6 @@ class DashboardUpdate extends Component
                                     ->where('Status','!=',$this->key)
                                     ->orderBy('created_at','desc')->paginate(10);
         $this->created =  Carbon::parse($records['created_at'])->diffForHumans();
-        return view('livewire.admin.admin.dashboard-update',compact('records'));
+        return view('livewire.admin-module.dashboard.dashboard-update',compact('records'));
     }
 }

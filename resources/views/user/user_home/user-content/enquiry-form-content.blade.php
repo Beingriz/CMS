@@ -1,5 +1,6 @@
 {{-- Enquiry Form Content Start --}}
 
-    @livewire('enquiry-form')
+    @livewire('user-module.enquiry-form')
+    {{-- <livewire:UserModule.enquiry-form /> --}}
 {{-- Content End --}}
 

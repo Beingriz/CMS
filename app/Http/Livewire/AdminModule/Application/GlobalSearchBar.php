@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use Livewire\Component;
@@ -28,6 +28,6 @@ class GlobalSearchBar extends Component
 
     public function render()
     {
-        return view('livewire.global-search-bar');
+        return view('livewire.admin-module.application.global-search-bar');
     }
 }

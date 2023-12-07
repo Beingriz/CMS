@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Ledger\Debit;
 
 use App\Models\Debit;
 use App\Models\DebitSource;

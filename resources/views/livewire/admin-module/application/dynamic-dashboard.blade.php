@@ -123,7 +123,7 @@
 
     @if ($ShowTable)
     <div class="" id="table">
-        @include('Application.dynamic-table')
+        @include('admin-module.application.dynamic-table')
     </div>
     @endif
         <div class="row">{{-- Start of Bookmark Row --}}

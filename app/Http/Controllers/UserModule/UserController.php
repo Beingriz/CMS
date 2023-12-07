@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\UserModule;
 
+use App\Http\Controllers\Controller;
 use App\Models\About_Us;
 use App\Models\Application;
 use App\Models\ApplyServiceForm;

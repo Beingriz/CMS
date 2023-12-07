@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\AdminModule\Admin;
+namespace App\Http\Livewire\AdminModule\Dashboard;
 
 use App\Models\Callback_Db;
 use App\Models\EnquiryDB;

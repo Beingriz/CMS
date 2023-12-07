@@ -1,36 +1,32 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Application;
 
-use Livewire\Component;
-use App\Traits\RightInsightTrait;
-use Illuminate\Support\Facades\Date;
-use App\Models\Service_List;
-use App\Models\Sub_Services;
-use App\Models\ClientRegister;
-use App\Models\BalanceLedger;
-use App\Models\CreditLedger;
 use App\Models\Application;
+use App\Models\BalanceLedger;
+use App\Models\ClientRegister;
+use App\Models\CreditLedger;
 use App\Models\MainServices;
+use App\Models\PaymentMode;
+use App\Models\Service_List;
+use App\Models\Status;
 use App\Models\SubServices;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Carbon;
 
-
-class SaveApplicationForm extends Component
+class ApplicationForm extends Component
 {
-    use RightInsightTrait;
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     use WithPagination;
 
 
 
-    public $App_Id;
+    public $App_Id,$today,$payment_mode;
     public $Name;
     public $Dob;
     public $Ack_No = 'Not Available';
@@ -39,10 +35,10 @@ class SaveApplicationForm extends Component
     public $ServiceName, $Profile_Show=0,$Profile_Update,$Records_Show=0;
     public $PaymentMode='Cash',$Gender,$RelativeName,$Service_Fee=NULL;
     public $Received_Date,$Mobile_Num,$Confirmation;
-    public $Ack_File,$Doc_File,$Payment_Receipt=NULL,$Status='Received', $Client_Type;
+    public $main_service,$Ack_File,$Doc_File,$Payment_Receipt=NULL,$Status='Received', $Client_Type;
     public $SubSelected ;
     public $MainSelected,$Application,$ApplicationType, $ApplicationId,$Application_Type  ;
-    public $main_service,$Applicant_Image,$lastRecTime;
+    public $Applicant_Image,$lastRecTime;
     public $sub_service = [],$old_Applicant_Image,$clear_button='Disable';
     public $Mobile_No = NULL;
     public $user_type = NULL;
@@ -54,7 +50,7 @@ class SaveApplicationForm extends Component
     public $Edit_Window =0;
     public $PaymentFile, $AckFile,$DocFile =0;
 
-    public $Yes ='off',$Client_Image,$Old_Profile_Image, $C_Id, $C_Name,$C_RName,$C_Gender,$C_Email, $C_Dob, $C_Mob,$Open=0;
+    public $Yes ='off',$Client_Image,$Old_Profile_Image, $C_Id, $C_Name,$C_RName,$C_Gender,$C_Email, $C_Dob, $C_Mob,$C_Ctype,$C_Address,$Open=0,$lastMobRecTime,$profileCreated,$lastProfUpdate,$status_list;
 
 
     protected $rules = [
@@ -88,20 +84,14 @@ class SaveApplicationForm extends Component
     {
         $this->App_Id  = 'DCA'.date('Y').time();
         $this->Received_Date  = date('Y-m-d');
-        $fetch = Application::Where('Received_Date','=',$this->Received_Date)->get();
-
-        $this->Daily_Income = $this->daily_total;
-
 
     }
     public function Validation()
     {
         $this->validate(['Name'=>'required']);
     }
-
     public function submit()
     {
-        $time = time();
         $this->validate();
         $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
         $service = Service_List::Where('Id',$this->MainSelected)->get();
@@ -213,7 +203,7 @@ class SaveApplicationForm extends Component
         {
             if($this->Balance>0)
             {
-                    $app_field = new Application;
+                    $app_field = new Application();
                     $app_field->Id = $this->App_Id;
                     $app_field->Client_Id = $client_Id;
                     $app_field->Received_Date = $this->Received_Date;
@@ -240,7 +230,7 @@ class SaveApplicationForm extends Component
                     $app_field->save(); // Application Form Saved
 
                     $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
-                    $save_credit  = new CreditLedger;
+                    $save_credit  = new CreditLedger();
                     $save_credit->Id = $this->App_Id;
                     $save_credit->Client_Id = $client_Id;
                     $save_credit->Category =  $service;
@@ -276,7 +266,7 @@ class SaveApplicationForm extends Component
                     }
 
 
-                    $save_balance = new BalanceLedger;
+                    $save_balance = new BalanceLedger();
                     $save_balance->Id = $this->App_Id;
                     $save_balance->Client_Id = $client_Id;
                     $save_balance->Date = $this->Received_Date;
@@ -297,7 +287,7 @@ class SaveApplicationForm extends Component
             else
             {
 
-                $app_field = new Application;
+                $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
                 $app_field->Received_Date = $this->Received_Date;
@@ -343,7 +333,7 @@ class SaveApplicationForm extends Component
                 }
 
                 $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
-                $save_credit  = new CreditLedger;
+                $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
                 $save_credit->Category =  $service;
@@ -367,7 +357,7 @@ class SaveApplicationForm extends Component
             if($this->Balance>0)
             {
                 // Client Registration
-                $user_data = new ClientRegister;
+                $user_data = new ClientRegister();
                 $user_data->Id= $client_Id;
                 $user_data->Name = $this->Name;
                 $user_data->Relative_Name = $this->RelativeName;
@@ -407,7 +397,7 @@ class SaveApplicationForm extends Component
                 $app_field->save(); // Application Form Saved
 
                 $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
-                $save_credit  = new CreditLedger;
+                $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
                 $save_credit->Category =  $service;
@@ -421,7 +411,7 @@ class SaveApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
 
-                $save_balance = new BalanceLedger;
+                $save_balance = new BalanceLedger();
                 $save_balance->Id = $this->App_Id;
                 $save_balance->Client_Id = $client_Id;
                 $save_balance->Date = $this->Received_Date;
@@ -442,7 +432,7 @@ class SaveApplicationForm extends Component
             else
             {
                 // Client Registration
-                $user_data = new ClientRegister;
+                $user_data = new ClientRegister();
                 $user_data->Id= $client_Id;
                 $user_data->Name = $this->Name;
                 $user_data->Relative_Name = $this->RelativeName;
@@ -455,7 +445,7 @@ class SaveApplicationForm extends Component
                 $user_data->Client_Type = $this->Client_Type;
                 $user_data->save(); // Client Registered
 
-                $app_field = new Application;
+                $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
                 $app_field->Received_Date = $this->Received_Date;
@@ -482,7 +472,7 @@ class SaveApplicationForm extends Component
                 $app_field->save(); // Application Form Saved
 
                 $Description = "Received Rs. ".$this->Amount_Paid."/- From  ".$this->Name." Bearing Client ID: ".$client_Id ." & Mobile No: ".$this->Mobile_No." for ".$service. " ".$this->SubSelected.", on ".$this->Received_Date." by  ". $this->PaymentMode.", Total: ".$this->Total_Amount.", Paid: ".$this->Amount_Paid.", Balance: ".$this->Balance;
-                $save_credit  = new CreditLedger;
+                $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
                 $save_credit->Category =  $service;
@@ -509,227 +499,83 @@ class SaveApplicationForm extends Component
         $this->Ack_No = ucwords($this->Ack_No);
         $this->Document_No = ucwords($this->Document_No);
     }
-    public function ResetFields()
+    public function UnitPrice()
     {
-        $this->Name = NULL;
-        $this->Mobile_No = NULL;
-        $this->Dob = NULL;
-        $this->Client_Type = NULL;
-        $this->Total_Amount = 0;
-        $this->Amount_Paid = 0;
-        $this->Status = 'Received';
-        $this->Ack_No = 'Not Available';
-        $this->Document_No = 'Not Available';
+         $main_id = $this->MainSelected;
+         $serv_name = $this->SubSelected;
+         $unitprice = SubServices::where([['Service_Id','=',$main_id],['Name','=',$serv_name]])->get();
+         foreach($unitprice as $key)
+         {
+             $this->Total_Amount = $key['Unit_Price'];
+             $this->Service_Fee = $key['Service_Fee'];
+         }
     }
-
-    public function Edit($Client_Id)
+    public function Clear()
     {
-        $this->Edit_Window  = 1;
-        $fetch = Application::Where('Client_Id',$Client_Id)->get();
-        foreach($fetch as $field)
-        {
-            $this->Name = $field['Name'];
-            $this->Application = $field['Application'];
-            $this->Application_Type = $field['Application_Type'];
-        }
-
+         $this->Dob = NULL;
+         $this->old_Applicant_Image = 'Not Available';
+         $this->Name = NULL;
+         $this->RelativeName = NULL;
+         $this->Gender = NULL;
+         $this->Client_Type = NULL;
+         $this->clear_button = 'Disable';
     }
-    public function Delete($Id)
+    public function ResetDefaults()
     {
-        $check_bal_app = DB::table('digital_cyber_db')->where('Id', '=', $Id)
-           ->where(function ($query){  $query->where('Balance', '>', 0);  })->get();
-
-        $check_bal = DB::table('balance_ledger')->where('Client_Id', '=', $Id)
-           ->where(function ($query){  $query->where('Balance', '>', 0);  })->get();
-
-        $check_bal_credit = DB::table('credit_ledger')->where('Client_Id', '=', $Id)
-           ->where(function ($query){  $query->where('Balance', '>', 0);  })->get();
-
-       if($check_bal && $check_bal_app && $check_bal_credit)
-       {
-           session()->flash('Error', 'Balance Due Found for this Application Id: '.$Id. ' Please Clear Due and try again!');
-       }
-       elseif($check_bal_app && $check_bal)
-       {
-            session()->flash('Error', 'Balance Due Found in Balance Ledger for this Application Id: '.$Id. ' Please Clear Due and try again!');
-       }
-       elseif($check_bal_app && $check_bal_credit)
-       {
-            session()->flash('Error', 'Balance Due Found in Credit Ledger for this Application Id: '.$Id. ' Please Clear Due and try again!');
-       }
-       elseif($check_bal_app)
-       {
-            session()->flash('Error', 'Balance Due Found only In Applicaiton for this Application Id: '.$Id. ' Please Clear Due and try again!');
-       }
-       else
-       {
-            $recyble_app = DB::table('digital_cyber_db')->where('Id', $Id)->update(['Recycle_Bin' => 'Yes']);
-            if($recyble_app)
-            {
-                session()->flash('SuccessMsg', 'Record for Application Id: '.$Id. ' Deleted!');
-            }
-       }
+         $this->Open = 0;
+         $this->Clear();
     }
-
-   public function MultipleDelete()
+    public function LatestUpdate()
     {
-       $check_bal = BalanceLedger::WhereIn('Id',$this->Checked)->get();
-       if(sizeof($check_bal)>0)
-       {
-            $temp = collect([]);
-           foreach($check_bal as $get_id )
-           {
-               $bal = 0;
-               $bal_ids = $get_id['Client_Id'];
-               $bal_id = $get_id['Id'];
-               $desc = $get_id['Description'];
-               $tot= $get_id['Total_Amount'];
-               $paid = $get_id['Amount_Paid'];
-               $bal += $get_id['Balance'];
-               if($bal>0)
-               {
-                   $temp->push(['Id'=>$bal_ids,'Description'=>$desc, 'Total_Amount'=>$tot, 'Amount_Paid'=>$paid, 'Balance'=>$bal]);
-                   $this->FilterChecked = [];
-                   foreach ($temp as $key)
-                   {
-                       $id = $key['Id'];
-                       array_push($this->FilterChecked, $id);
-                   }
-               }
-           }
+         $latest_app = Application::latest('created_at')->first();
+         $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
 
-           $this->collection = $temp;
-
-           $Checked= array_diff($this->Checked, $this->FilterChecked);
-           $del_credit = CreditLedger::wherekey($Checked)->delete();
-           $del_bal = BalanceLedger::wherekey($Checked)->delete();
-           $del_app = Application::wherekey($Checked)->delete();
-           if( $del_credit && $del_bal && $del_app)
-           {
-               session()->flash('SuccessMsg', count($Checked).' Records Deleted Successfully..');
-           }
-           else
-           {
-               session()->flash('Error', ' Records Unable to Delete..');
-           }
-       }
-       else
-       {
-           $del_credit = CreditLedger::wherekey($this->Checked)->delete();
-           $del_bal = BalanceLedger::wherekey($this->Checked)->delete();
-           $del_app = Application::wherekey($this->Checked)->delete();
-           if( $del_credit && $$del_bal && $del_app)
-            {
-               session()->flash('SuccessMsg', count($this->Checked).' Records Deleted Successfully..');
-            }
-            else
-           {
-               session()->flash('Error', count($this->Checked).' Records Unable to Delete..');
-           }
-
-       }
+         $applied = Application::Where('Mobile_No',$this->Mobile_No)->get();
+         if(count($applied)>0)
+         {
+             if(!empty($this->Mobile_No))
+             {
+                 $latest_mob_app = Application::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
+                 $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
+             }
+         }
+         $profile = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
+         if(count($profile)>0)
+         {
+             if(!empty($this->Mobile_No))
+             {
+                 $profile_created = ClientRegister::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
+                 $latest_profile_update = ClientRegister::where('Mobile_No',$this->Mobile_No)->latest('updated_at')->first();
+                 $this->profileCreated =  Carbon::parse($profile_created['created_at'])->diffForHumans();
+                 $this->lastProfUpdate =  Carbon::parse($latest_profile_update['updated_at'])->diffForHumans();
+             }
+         }
 
     }
-
-   public function UpdateBalance($Id)
-   {
-       $fetch = BalanceLedger::where('Id',$Id)->get();
-       $amount = 0;
-       foreach ($fetch as $key)
-       {
-           $amount = $key['Balance'];
-       }
-       $update_bal = DB::table('balance_ledger')->where('Client_Id',$Id)->update(['Balance'=>0]);
-       $update_credit = DB::table('credit_ledger')->where('Id',$Id)->update(['Balance'=>0]);
-       if($update_bal && $update_credit)
-       {
-          session()->flash('SuccessMsg', 'Balance Due of Rupees '.$amount. ' is Cleared'.$Id);
-       }
-       else
-       {
-           session()->flash('Error', 'unable to update');
-
-       }
-   }
-
-   public function UnitPrice()
-   {
-        $main_id = $this->MainSelected;
-        $serv_name = $this->SubSelected;
-        $unitprice = SubServices::where([['Service_Id','=',$main_id],['Name','=',$serv_name]])->get();
-        foreach($unitprice as $key)
-        {
-            $this->Total_Amount = $key['Unit_Price'];
-            $this->Service_Fee = $key['Service_Fee'];
-        }
-
-   }
-   public function LatestUpdate()
-   {
-        $latest_app = Application::latest('created_at')->first();
-        $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
-
-        $applied = Application::Where('Mobile_No',$this->Mobile_No)->get();
-        if(count($applied)>0)
-        {
-            if(!empty($this->Mobile_No))
-            {
-                $latest_mob_app = Application::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
-                $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
-            }
-        }
-        $profile = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
-        if(count($profile)>0)
-        {
-            if(!empty($this->Mobile_No))
-            {
-                $profile_created = ClientRegister::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
-                $latest_profile_update = ClientRegister::where('Mobile_No',$this->Mobile_No)->latest('updated_at')->first();
-                $this->profileCreated =  Carbon::parse($profile_created['created_at'])->diffForHumans();
-                $this->lastProfUpdate =  Carbon::parse($latest_profile_update['updated_at'])->diffForHumans();
-            }
-        }
-
-   }
-   public function Autofill()
-   {
-        $this->clear_button = 'Enable';
-        $Mobile_No = NULL;
-        $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
-        if(sizeof($Mobile_No)==1)
-        {
-            $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
-            if(sizeof($Mobile_No)==1)
-            {
-                foreach($Mobile_No as $key)
-                    {
-                        $this->Dob = $key['DOB'];
-                        $this->C_Id = $key['Id'];
-                        $this->old_Applicant_Image = $key['Profile_Image'];
-                        $this->Name = $key['Name'];
-                        $this->RelativeName = $key['Relative_Name'];
-                        $this->Gender = $key['Gender'];
-                        $this->Mobile_No = $key['Mobile_No'];
-                        $this->Client_Type = $key['Client_Type'];
-                    }
-                }
-            }
-   }
-   public function Clear()
-   {
-        $this->Dob = NULL;
-        $this->old_Applicant_Image = 'Not Available';
-        $this->Name = NULL;
-        $this->RelativeName = NULL;
-        $this->Gender = NULL;
-        $this->Client_Type = NULL;
-        $this->clear_button = 'Disable';
-   }
-   public function ResetDefaults()
-   {
-        $this->Open = 0;
-        $this->Clear();
-   }
+    public function Autofill()
+    {
+         $this->clear_button = 'Enable';
+         $Mobile_No = NULL;
+         $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
+         if(sizeof($Mobile_No)==1)
+         {
+             $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
+             if(sizeof($Mobile_No)==1)
+             {
+                 foreach($Mobile_No as $key)
+                     {
+                         $this->Dob = $key['DOB'];
+                         $this->C_Id = $key['Id'];
+                         $this->old_Applicant_Image = $key['Profile_Image'];
+                         $this->Name = $key['Name'];
+                         $this->RelativeName = $key['Relative_Name'];
+                         $this->Gender = $key['Gender'];
+                         $this->Mobile_No = $key['Mobile_No'];
+                         $this->Client_Type = $key['Client_Type'];
+                     }
+                 }
+             }
+    }
     public function render()
     {
         $this->LatestUpdate();
@@ -737,10 +583,10 @@ class SaveApplicationForm extends Component
 
 
         $this->main_service = MainServices::orderby('Name')->get();
-            if(!empty($this->MainSelected))
-            {
-                $this->sub_service = SubServices::orderby('Name')->Where('Service_Id', $this->MainSelected)->get();
-            }
+        if(!empty($this->MainSelected))
+        {
+            $this->sub_service = SubServices::orderby('Name')->Where('Service_Id', $this->MainSelected)->get();
+        }
 
             $Mobile_No = NULL;
             $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
@@ -759,8 +605,8 @@ class SaveApplicationForm extends Component
                             $this->C_Gender = $key['Gender'];
                             $this->C_Email = $key['Email'];
                             $this->C_Mob = $key['Mobile_No'];
-                            $this->C_Address = $key['Address'];
-                            $this->C_Ctype = $key['Client_Type'];
+                            // $this->C_Address = $key['Address'];
+                            // $this->C_Ctype = $key['Client_Type'];
                         }
                     }
                 $AppliedServices = Application::Where('Mobile_No',$this->Mobile_No)->get();
@@ -816,16 +662,27 @@ class SaveApplicationForm extends Component
             $this->Bal = (intval($this->Total_Amount) - intval($this->Amount_Paid));
             $AppliedServices = Application::latest()
                                             ->Where('Mobile_No',$this->Mobile_No)->paginate(8);
-            $this->status_list = DB::table('status')
-                                ->Where('Relation',$this->ServiceName)
+            $this->status_list = Status::Where('Relation',$this->ServiceName)
                                 ->orWhere('Relation','General')
                                 ->orderBy('Orderby', 'asc')
                                 ->get();
 
-        return view('livewire.save-application-form',[
+            $today = date("Y-m-d");
+            $status_list = $this->status_list;
+            $this->payment_mode= PaymentMode::all();
+
+            $daily_applications = Application::Where('Received_Date',$today)->filter($this->filterby)->paginate($this->paginate);
+
+        $this->main_service = MainServices::orderby('Name')->get();
+        if(!empty($this->MainSelected))
+        {
+            $this->sub_service = SubServices::orderby('Name')->Where('Service_Id', $this->MainSelected)->get();
+        }
+        $this->today = date("Y-m-d");
+        return view('livewire.admin-module.application.application-form',[
             'today'=>$this->today,'payment_mode'=>$this->payment_mode,
-            'daily_total'=>$this->daily_total,'daily_applications'=>$daily_applications,
-            'main_service'=>$this->main_service, 'sl_no'=>$this->sl_no, 'n'=>$this->n,
+            'daily_applications'=>$daily_applications,
+            'main_service'=>$this->main_service,
             'sub_service'=>$this->sub_service,'Application'=>$this->Application,
             'user_type'=>$this->user_type,'status_list'=>$this->status_list, 'AppliedServices'=>$AppliedServices,'lastRecTime'=>$this->lastRecTime
         ]);

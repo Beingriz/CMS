@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\HomePage;
 
 use App\Models\HomeSlide;
 use App\Models\User;

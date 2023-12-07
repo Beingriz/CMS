@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AdminModule\Profile;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +59,6 @@ class AdminChangePassword extends Component
     {
         $id = Auth::user()->id;
         $profiledata = User::find($id);
-        return view('livewire.admin-change-password',compact('profiledata'));
+        return view('livewire.admin-module.profile.admin-change-password',compact('profiledata'));
     }
 }

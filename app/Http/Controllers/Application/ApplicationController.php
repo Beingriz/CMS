@@ -25,16 +25,16 @@ class ApplicationController extends Controller
 
     public function index()
     {
-        return view('Application.new_app');
+        return view('admin-module.application.new_application');
     }
     public function updateApplication()
     {
-        return view('Application.update_application');
+        return view('admin-module.application.update_application');
     }
     public function Home()
     {
 
-        return view('Application\app_dashboard',);
+        return view('admin-module.application.app_dashboard',);
     }
     public function UpdateService()
     {
@@ -102,7 +102,7 @@ class ApplicationController extends Controller
             $data['Total_Count'] = $count;
             DB::table('status')->where('Status',$name)->update($data);
         }
-        return view('Application\app_dashboard',['total_applicaiton'=>$this->applications_served,'total_amount'=>$total_amount,'Mainservices'=>$this->MainServices,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'new_clients'=>$this->new_clients,'previous_day_new_clients'=>$this->previous_day_new_clients,'bookmarks'=>$this->bookmarks,]);
+        return view('admin-module.application.app_dashboard',['total_applicaiton'=>$this->applications_served,'total_amount'=>$total_amount,'Mainservices'=>$this->MainServices,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum,'new_clients'=>$this->new_clients,'previous_day_new_clients'=>$this->previous_day_new_clients,'bookmarks'=>$this->bookmarks,]);
     }
     public function DynamicDashboard($MainServiceId)
     {
@@ -123,7 +123,7 @@ class ApplicationController extends Controller
 
 
         DB::update('update status set Temp_Count=?  where?', [$a,$b]);
-        return view('Application\app_dynamic_dashboard',[
+        return view('admin-module.application.app_dynamic_dashboard',[
            'MainServiceId'=>$MainServiceId,
        ]);
 
@@ -485,7 +485,7 @@ class ApplicationController extends Controller
             $Tittle4 = '';
 
         }
-        return view('admin.Dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered]);
+        return view('admin-module.dashboard.dashboard_update',['Name'=>$name,'Tittle1'=>$Tittle1,'Tittle2'=>$Tittle2,'Tittle3'=>$Tittle3,'Tittle4'=>$Tittle4,'totalRequests'=>$totalRequests,'delivered'=>$delivered,'pending'=>$pending,'new'=>$new,'percentpending'=>$percentpending,'percentdelivered'=>$percentdelivered]);
     }
     public function UpdateEnquiryDashboard ($Id)
     {
