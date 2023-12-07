@@ -183,7 +183,7 @@
                                         <a href="{{route('update.enquiry.dashboard',$item->Id)}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-primary"  data-bs-original-title="Update Status" aria-label="Info" >Status</a>
                                         <a href="{{route('global_search',$item->Phone_No)}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-info"  data-bs-original-title="Get {{$item->Name}} Details" aria-label="Info" >Details</a>
 
-                                        <a href="{{route('wa.enquiry',[$item->Phone_No,$item->Name, $item->Service,\Carbon\Carbon::parse($item->created_at)->diffForHumans()])}}"  data-bs-placement="top" data-bs-toggle="tooltip"  class="btn btn-sm btn-rounded btn-success"  data-bs-original-title="Send Whatsapp Message to {{$item->Name}}" aria-label="Info" >Whatsapp</a>
+                                        <a href="{{route('send.message',[$item->Phone_No,$item->Name, $item->Service,\Carbon\Carbon::parse($item->created_at)->diffForHumans()])}}"  data-bs-placement="top" data-bs-toggle="tooltip"  class="btn btn-sm btn-rounded btn-success"  data-bs-original-title="Send Whatsapp Message to {{$item->Name}}" aria-label="Info" >Whatsapp</a>
 
                                         <a href="tel:+91{{$item->Phone_No}}"  data-bs-placement="top" data-bs-toggle="tooltip" class="btn btn-sm btn-rounded btn-warning"  data-bs-original-title="Call {{$item->Name}}" aria-label="Info" >Call</a>
                                 </div>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Creditentry;
 use App\Http\Controllers\DebitEntryController;
 use App\Http\Controllers\Home\HomeSlideController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WhatsApp\WhatsappController;
 use FontLib\Table\Type\name;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,10 @@ Route::middleware('auth','auth.role:admin')->group(function(){
 });
 Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/logout', 'destroy')->name('admin.logout');
+});
+Route::controller(WhatsappController::class)->group(function(){
+    // Route::get('/send/message/{phone}/{message}', 'sendMessage')->name('send.message');
+    Route::get('/send/message/{mobile}/{name}/{service}/{time}', 'sendMessage')->name('send.message');
 });
 Route::controller(ApplicationController::class)->group(function(){
     Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
