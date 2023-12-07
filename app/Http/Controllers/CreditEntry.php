@@ -11,7 +11,7 @@ use App\Models\CreditLedger;
 use App\Models\CreditSources;
 use App\Traits\RightInsightTrait;
 
-class Creditentry extends Controller
+class CreditEntry extends Controller
 {
     use RightInsightTrait;
     /**

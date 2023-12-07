@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\DataMigration;
+namespace App\Http\Livewire\AdminModule\DataMigration;
 
 use App\Http\Livewire\DebitLedger;
 use App\Models\Application;

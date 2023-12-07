@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Admin;
+namespace App\Http\Livewire\AdminModule\Admin;
 
 use App\Models\Application;
 use App\Models\ApplyServiceForm;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Dashboardinsight extends Component
+class DashboardInsight extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';

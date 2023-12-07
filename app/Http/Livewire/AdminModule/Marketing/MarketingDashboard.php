@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Marketing;
+namespace App\Http\Livewire\AdminModule\Marketing;
 
 use Livewire\Component;
 

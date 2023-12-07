@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\User;
+namespace App\Http\Livewire\AdminModule\User;
 
 use App\Models\Carousel_DB;
 use App\Models\MainServices;
