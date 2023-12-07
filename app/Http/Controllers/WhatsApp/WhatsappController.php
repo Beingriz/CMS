@@ -7,15 +7,13 @@ use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 
 
+
 class WhatsappController extends Controller
 {
     //
-    public function sendMessage($mobile,$name,$service,$time)
+    public function sendMessage($mobile,$name,$service,$time,$page)
     {
-        // $twilioSid = getenv("TWILIO_SID");;
-        // $twilioToken = getenv("TWILIO_AUTH_TOKEN");
-        // $twilioWhatsAppNumber = getenv("TWILIO_PHONE_NUMBER");
-        // $recipientNumber = "+91".$mobile; // Replace with the recipient's phone number in WhatsApp format (e.g., "whatsapp:+1234567890")
+
         $body = "Dear *".$name."* 👋🏻😍
         ,
         ▶ Thank you for reaching out to us through our website with your Enquiry on *".$service." ".$time."* We appreciate your interest and would be more than happy to assist you.
@@ -34,17 +32,21 @@ class WhatsappController extends Controller
         $from = getenv("TWILIO_PHONE_NUMBER");
         $twilio = new Client($sid, $token);
 
-        $message = $twilio->messages
-                        ->create("whatsapp:".$mobile, // to
-                                [
-                                    "from" => "whatsapp:".$from,
-                                    "body" => $body
-                                ]
-                        );
+        $to_no = "whatsapp:+91".$mobile;
+        $from_no = "whatsapp:$from";
+        $twilio->messages
+        ->create($to_no, // to
+            array(
+            "from" => $from_no,
+            "body" => $body ));
 
-        return response()->json(['message' => 'WhatsApp message sent successfully'.$message]);
+        $notification = array(
+            'message'=>'Message sent Successfully!',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('update.dashboard',$page)->with($notification);
+
     }
-
 
 
 }

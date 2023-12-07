@@ -61,7 +61,7 @@ Route::controller(AdminController::class)->group(function(){
 });
 Route::controller(WhatsappController::class)->group(function(){
     // Route::get('/send/message/{phone}/{message}', 'sendMessage')->name('send.message');
-    Route::get('/send/message/{mobile}/{name}/{service}/{time}', 'sendMessage')->name('send.message');
+    Route::get('/send/message/{mobile}/{name}/{service}/{time}/{page}', 'sendMessage')->name('send.message');
 });
 Route::controller(ApplicationController::class)->group(function(){
     Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');

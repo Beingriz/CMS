@@ -6,6 +6,8 @@ use App\Models\EnquiryDB;
 use App\Models\MainServices;
 use App\Models\SubServices;
 use Livewire\Component;
+use Twilio\Rest\Client;
+
 
 class EnquiryForm extends Component
 {
@@ -63,7 +65,36 @@ class EnquiryForm extends Component
             'message'=>$this->Name.' your Callback Request is Sent Seccessfully',
             'alert-type'=>'info'
         );
+        $this->sendNotification($this->Phone_No,$this->Name,$serviceName);
         return redirect()->route('home')->with($notification);
+
+    }
+    public function sendNotification($mobile,$name, $service,){
+        $body = "Dear *".$name."* 👋🏻😍
+        ,
+        ▶ Thank you for reaching out to us through our website with your Enquiry on *".$service." * We appreciate your interest and would be more than happy to assist you.
+
+        ▶ Our team is currently reviewing your inquiry and will provide you with a detailed response as soon as possible. We understand the importance of your questions and aim to address them thoroughly and accurately.
+
+
+        Best regards,
+        *Digital Cyber*
+        _The power to Empowe_
+        *Call : +91 8892988334*
+        *Call : +91 8951775912*";
+
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $from = getenv("TWILIO_PHONE_NUMBER");
+        $twilio = new Client($sid, $token);
+
+        $to_no = "whatsapp:+91".$mobile;
+        $from_no = "whatsapp:$from";
+        $twilio->messages
+        ->create($to_no, // to
+            array(
+            "from" => $from_no,
+            "body" => $body ));
 
     }
     public function Capitalize(){
