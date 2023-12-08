@@ -199,7 +199,7 @@
                             <div class="row mb-3">
                                 <label for="mobile_no" class="col-sm-3 col-form-label">Mobile No</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="number"  wire:model.lazy="Mobile_No"placeholder="Mobile Number" id="Mobile_No">
+                                    <input class="form-control" type="number"  wire:model.lazy="Mobile_No"placeholder="Mobile Number" id="Mobile_No" disabled>
                                     <span class="error">@error('Mobile_No'){{$message}}@enderror</span>
                                 </div>
                             </div>
@@ -299,9 +299,9 @@
                                 </tr>
                             </thead>
                                 <tbody>
-                                    @foreach ($AppliedServices as $key)
+                                    @foreach ($Services as $key)
                                     <tr>
-                                        <td>{{$AppliedServices->firstItem()+$loop->index}}</td>
+                                        <td>{{$Services->firstItem()+$loop->index}}</td>
                                         <td>{{$key->Received_Date}}</td>
                                         <td>{{$key->Name}}</td>
                                         <td>{{$key->Status}}</td>
@@ -309,18 +309,18 @@
                                         <td>
                                             <a href={{route('edit_application',$key->Id)}} class="btn btn-sm btn-primary font-size-15" id="update"><i class="mdi mdi-book-open-page-variant" ></i></a>
                                         </td>
-
                                     </tr>
+
                                     @endforeach
                                 </tbody>
                             </table>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-md-8">
-                                <p class="text-muted">Showing {{count($AppliedServices)}} of {{$AppliedServices->total()}} entries</p>
+                                <p class="text-muted">Showing {{count($Services)}} of {{$Services->total()}} entries</p>
                                 </div>
                                 <div class="col-md-4">
                                     <span class=" pagination pagination-rounded float-end" >
-                                        {{$AppliedServices->links()}}
+                                        {{$Services->links()}}
                                     </span>
                                 </div>
                             </div>

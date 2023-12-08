@@ -48,7 +48,7 @@ class ApplicationForm extends Component
     public $collection;
     public $Select_Date, $Daily_Income = 0;
     public $Edit_Window = 0;
-    public $PaymentFile, $AckFile, $DocFile = 0;
+    public $PaymentFile, $AckFile, $DocFile = 0, $FilterChecked;
 
     public $Yes = 'off', $Client_Image, $Old_Profile_Image, $C_Id, $C_Name, $C_RName, $C_Gender, $C_Email, $C_Dob, $C_Mob, $C_Ctype, $C_Address, $Open = 0, $lastMobRecTime, $profileCreated, $lastProfUpdate, $status_list;
 
@@ -520,6 +520,102 @@ class ApplicationForm extends Component
             }
         }
     }
+
+    public function Delete($Id)
+    {
+        $check_bal_app = DB::table('digital_cyber_db')->where('Id', '=', $Id)
+            ->where(function ($query) {
+                $query->where('Balance', '>', 0);
+            })->get();
+
+        $check_bal = DB::table('balance_ledger')->where('Client_Id', '=', $Id)
+            ->where(function ($query) {
+                $query->where('Balance', '>', 0);
+            })->get();
+
+        $check_bal_credit = DB::table('credit_ledger')->where('Client_Id', '=', $Id)
+            ->where(function ($query) {
+                $query->where('Balance', '>', 0);
+            })->get();
+
+        if ($check_bal && $check_bal_app && $check_bal_credit) {
+            session()->flash('Error', 'Balance Due Found for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } elseif ($check_bal_app && $check_bal) {
+            session()->flash('Error', 'Balance Due Found in Balance Ledger for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } elseif ($check_bal_app && $check_bal_credit) {
+            session()->flash('Error', 'Balance Due Found in Credit Ledger for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } elseif ($check_bal_app) {
+            session()->flash('Error', 'Balance Due Found only In Applicaiton for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } else {
+            $recyble_app = DB::table('digital_cyber_db')->where('Id', $Id)->update(['Recycle_Bin' => 'Yes']);
+            if ($recyble_app) {
+                session()->flash('SuccessMsg', 'Record for Application Id: ' . $Id . ' Deleted!');
+            }
+        }
+    }
+
+    public function MultipleDelete()
+    {
+        $check_bal = BalanceLedger::WhereIn('Id', $this->Checked)->get();
+        if (sizeof($check_bal) > 0) {
+            $temp = collect([]);
+            foreach ($check_bal as $get_id) {
+                $bal = 0;
+                $bal_ids = $get_id['Client_Id'];
+                $bal_id = $get_id['Id'];
+                $desc = $get_id['Description'];
+                $tot = $get_id['Total_Amount'];
+                $paid = $get_id['Amount_Paid'];
+                $bal += $get_id['Balance'];
+                if ($bal > 0) {
+                    $temp->push(['Id' => $bal_ids, 'Description' => $desc, 'Total_Amount' => $tot, 'Amount_Paid' => $paid, 'Balance' => $bal]);
+                    $this->FilterChecked = [];
+                    foreach ($temp as $key) {
+                        $id = $key['Id'];
+                        array_push($this->FilterChecked, $id);
+                    }
+                }
+            }
+
+            $this->collection = $temp;
+
+            $Checked = array_diff($this->Checked, $this->FilterChecked);
+            $del_credit = CreditLedger::wherekey($Checked)->delete();
+            $del_bal = BalanceLedger::wherekey($Checked)->delete();
+            $del_app = Application::wherekey($Checked)->delete();
+            if ($del_credit && $del_bal && $del_app) {
+                session()->flash('SuccessMsg', count($Checked) . ' Records Deleted Successfully..');
+            } else {
+                session()->flash('Error', ' Records Unable to Delete..');
+            }
+        } else {
+            $del_credit = CreditLedger::wherekey($this->Checked)->delete();
+            $del_bal = BalanceLedger::wherekey($this->Checked)->delete();
+            $del_app = Application::wherekey($this->Checked)->delete();
+            if ($del_credit && $$del_bal && $del_app) {
+                session()->flash('SuccessMsg', count($this->Checked) . ' Records Deleted Successfully..');
+            } else {
+                session()->flash('Error', count($this->Checked) . ' Records Unable to Delete..');
+            }
+        }
+    }
+
+    public function UpdateBalance($Id)
+    {
+        $fetch = BalanceLedger::where('Id', $Id)->get();
+        $amount = 0;
+        foreach ($fetch as $key) {
+            $amount = $key['Balance'];
+        }
+        $update_bal = DB::table('balance_ledger')->where('Client_Id', $Id)->update(['Balance' => 0]);
+        $update_credit = DB::table('credit_ledger')->where('Id', $Id)->update(['Balance' => 0]);
+        if ($update_bal && $update_credit) {
+            session()->flash('SuccessMsg', 'Balance Due of Rupees ' . $amount . ' is Cleared' . $Id);
+        } else {
+            session()->flash('Error', 'unable to update');
+        }
+    }
+
     public function render()
     {
         $this->LatestUpdate();

@@ -1,10 +1,10 @@
-@extends('admin.admin_master')
+@extends('admin-module.admin_master')
 @section('admin')
     ;
 
     <div class="page-content" style="margin-top: -45px">
         <div class="container=fluid">
-            @livewire('edit-application', ['Id' => $Id, 'ForceDelete' => $ForceDelete])
+            @livewire('admin-module.application.edit-application', ['Id' => $Id, 'ForceDelete' => $ForceDelete])
         </div>
     </div>
 @endsection

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\UserModule;
+namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use App\Models\ClientRegister;
@@ -29,7 +29,7 @@ class EditClientProfile extends Component
         'Relative_Name' => 'required',
         'Gender' => 'required',
         'Dob' => 'required',
-        'Mobile_No' => 'required | Min:10',
+        'Mobile_No' => 'required | Min:10 | Max:10',
         'Email' => 'required| email',
         'Address' => 'required',
 
@@ -65,6 +65,7 @@ class EditClientProfile extends Component
             $this->Address = $key['Address'];
             $this->Client_Type = $key['Client_Type'];
             $this->old_profile_image = $key['Profile_Image'];
+            $this->status = 'All';
         }
     }
     public function Capitalize()
@@ -110,34 +111,54 @@ class EditClientProfile extends Component
         $this->resetPage();
         $this->status = $key;
         $latest_mob_app = Application::where('Mobile_No', $this->Mobile_No)->latest('created_at')->first();
-        $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
+        if (!is_Null($latest_mob_app)) {
+            $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
+        }
     }
     public function UpdateProfile($Id)
     {
-        $this->validate();
-        if (!empty($this->Profile_Image)) {
-            if ($this->old_profile_image != 'Not Available') {
-                if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
-                {
-                    unlink(storage_path('app/public/' . $this->old_profile_image)); // Deleting Existing File
-                    $url = 'Not Available';
-                    $data = array();
 
-                    $data['Profile_Image'] = $url;
-                    DB::table('client_register')->where([['Id', '=', $Id]])->update($data);
+        if (!is_Null($this->Profile_Image)) // Check if new image is selected
+        {
+            if (!is_Null($this->old_profile_image)) {
+                if (Storage::disk('public')->exists($this->old_profile_image)) {
+                    unlink(storage_path('app/public/' . $this->old_profile_image));
+                    $extension = $this->Profile_Image->getClientOriginalExtension();
+                    $path = 'Client_DB/' . $this->Name . '_' . $Id . '/' . $this->Name . '/Photo';
+                    $filename = 'Profile' . $this->Name . '_' . time() . '.' . $extension;
+                    $url = $this->Profile_Image->storePubliclyAs($path, $filename, 'public');
+                    $this->New_Profile_Image = $url;
                 } else {
-                    $this->New_Profile_Image = 'Not Available';
+                    $extension = $this->Profile_Image->getClientOriginalExtension();
+                    $path = 'Client_DB/' . $this->Name . '_' . $Id . '/' . $this->Name . '/Photo';
+                    $filename = 'Profile' . $this->Name . '_' . time() . '.' . $extension;
+                    $url = $this->Profile_Image->storePubliclyAs($path, $filename, 'public');
+                    $this->New_Profile_Image = $url;
                 }
             } else {
-                $extension = $this->Profile_Image->getClientOriginalExtension();
-                $path = 'Client_DB/' . $this->Name . '_' . $Id . '/' . $this->Name . '/Photo';
-                $filename = 'Profile' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Profile_Image->storePubliclyAs($path, $filename, 'public');
-                $this->New_Profile_Image = $url;
+                $this->validate([
+                    'Profile_Image' => 'required|image',
+                ]);
             }
-        } else {
-            $this->New_Profile_Image = $this->old_profile_image;
+        } else // check old is exist
+        {
+            if (!is_Null($this->old_profile_image)) {
+                if (Storage::disk('public')->exists($this->old_profile_image)) {
+                    $this->New_Profile_Image = $this->old_profile_image;
+                } else {
+                    session()->flash('Error', 'File Does not Exist. Please Select New Profile Image');
+                    $this->validate([
+                        'Profile_Image' => 'required|image',
+                    ]);
+                }
+            } else {
+                $this->validate([
+                    'Profile_Image' => 'required|image',
+                ]);
+            }
         }
+
+        $this->validate();
         $data = array();
         $data['Name'] = trim($this->Name);
         $data['Relative_Name'] = trim($this->Relative_Name);
@@ -162,15 +183,16 @@ class EditClientProfile extends Component
     }
     public function render()
     {
+
         if ($this->status == 'All') {
             $Services = Application::where('Mobile_No', $this->Mobile_No)->paginate(10);
         } else {
-            $Services = Application::where([['Mobile_No', '=', $this->Mobile_No], ['Status', '=',      $this->status]])->paginate(10);
+            $Services = Application::where([['Mobile_No', '=', $this->Mobile_No], ['Status', '=', $this->status]])->paginate(10);
         }
 
         $this->Capitalize();
         $this->Insight($this->Mobile_No);
 
-        return view('livewire.edit-client-profile', ['AppliedServices' => $Services]);
+        return view('livewire.admin-module.application.edit-client-profile', compact('Services'));
     }
 }

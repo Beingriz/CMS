@@ -543,6 +543,6 @@ class EditApplication extends Component
 
         $StatusDetails = Application::where([['Mobile_No', $this->key], ['Recycle_Bin', 'No']])
             ->filter(trim($this->filterby))->Orderby('Received_Date', 'desc')->paginate($this->paginate);
-        return view('livewire.edit-application', compact('payment_mode', 'status', 'Doc_Files', 'StatusDetails'));
+        return view('livewire.admin-module.application.edit-application', compact('payment_mode', 'status', 'Doc_Files', 'StatusDetails'));
     }
 }
