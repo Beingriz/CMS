@@ -262,6 +262,6 @@ class Bookmarks extends Component
         $this->LastUpdate();
         $MainServices = MainServices::all();
         $Existing_Bm = DB::table('bookmark')->where('Relation',$this->Relation)->paginate(5);
-        return view('livewire.bookmarks',['MainServices'=>$MainServices,'Existing_Bm'=>$Existing_Bm]);
+        return view('livewire.admin-module.operations.bookmarks',['MainServices'=>$MainServices,'Existing_Bm'=>$Existing_Bm]);
     }
 }

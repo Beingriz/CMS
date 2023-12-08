@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SubDepart extends Model
 {
     use HasFactory;
-    public $table="sub_depart";
+    public $table="sub_depart";    protected $connection = 'mysql';
+
     public $timestamps=false;
 }

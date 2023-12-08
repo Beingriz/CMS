@@ -9,5 +9,6 @@ class Status extends Model
 {
     use HasFactory;
     public $table="status";
+    protected $connection = "mysql";
     public $timestamps=false;
 }

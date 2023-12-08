@@ -1,4 +1,4 @@
-@extends('admin.admin_master')
+@extends('admin-module.admin_master')
 @section('admin')
 
 <div class="page-content">
@@ -29,7 +29,7 @@
         </div>{{-- End of Page Tittle --}}
 
 
-        @livewire('admin.marketing.marketing-dashboard')
+        @livewire('admin-module.marketing.marketing-dashboard')
         <!-- end row -->
 
 

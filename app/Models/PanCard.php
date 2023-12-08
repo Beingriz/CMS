@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PanCard extends Model
 {
-    use HasFactory;
+    use HasFactory;    protected $connection = 'mysql';
+
     public $table='pan_card';
     public $timestamps=false;
 }

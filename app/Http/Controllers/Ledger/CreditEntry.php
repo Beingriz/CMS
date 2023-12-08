@@ -33,7 +33,7 @@ class CreditEntry extends Controller
     public function Home()
     {
         $editId='';$DeleteData='';
-        return view('DigitalLedger.CreditLedger.credit_entry',['EditData'=>$editId,'DeleteData'=>$DeleteData]);
+        return view('admin-module.ledger.credit.credit_entry',['EditData'=>$editId,'DeleteData'=>$DeleteData]);
     }
     public function CreditSource()
     {
@@ -41,7 +41,7 @@ class CreditEntry extends Controller
         $DeleteData='';
         $editid='';
         $deleteid='';
-        return view('DigitalLedger.CreditLedger.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+        return view('admin-module.ledger.credit.add-credit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function EidtMainSource($Id)
     {

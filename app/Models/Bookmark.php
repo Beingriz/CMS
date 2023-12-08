@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Bookmark extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
+
     public $table="bookmark";
 }

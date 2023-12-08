@@ -120,6 +120,6 @@ class UserTopBar extends Component
     public function render()
     {
         $Records = ModelsUserTopBar ::all();
-        return view('livewire.user-top-bar', compact('Records'));
+        return view('livewire.admin-module.home-page-top-bar', compact('Records'));
     }
 }

@@ -82,7 +82,7 @@ class AdminController extends Controller
     }
 
     public function MarketingDashboard(){
-        return view('admin.marketing.marketing');
+        return view('admin-module.marketing.marketing');
     }
     public function destroy(Request $request)
     {
@@ -113,19 +113,19 @@ class AdminController extends Controller
         $EditData='';
         $DeleteData='';
         $type = '';
-        return view('admin.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
+        return view('admin-module.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
     }
     public function EditServices($Id,$type)
     {
         $EditData=$Id;
         $DeleteData='';
-        return view('admin.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
+        return view('admin-module.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
     }
     public function DeleteServices($Id,$type)
     {
         $EditData='';
         $DeleteData=$Id;
-        return view('admin.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
+        return view('admin-module.Services.add_service',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'Type'=>$type]);
     }
     public function UserTopBar()
     {
@@ -147,7 +147,7 @@ class AdminController extends Controller
     public function ContactUs()
     {
         # code...
-        return view('user.user_dashboard.enquiry-form');
+        return view('user-module.enquiry-form');
     }
     public function DeleteCarousel($Id)
     {
@@ -200,6 +200,6 @@ class AdminController extends Controller
     }//End Function
 
     public function DataMigration(){
-        return view('admin.Data_Migration.data_migration');
+        return view('admin-module.Data_Migration.data_migration');
     }
 }

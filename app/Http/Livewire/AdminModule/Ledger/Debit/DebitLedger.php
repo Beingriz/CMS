@@ -468,6 +468,6 @@ class DebitLedger extends Component
         $this->total = $today_total;
         $this->balCollection = BalanceLedger::where('Id',$this->balId)->get();
 
-        return view('livewire.debit-ledger',compact('DebitSource','DebitSources','PaymentMode','Transactions'),['today'=>$this->today, ]);
+        return view('livewire.admin-module.ledger.debit.debit-ledger',compact('DebitSource','DebitSources','PaymentMode','Transactions'),['today'=>$this->today, ]);
     }
 }

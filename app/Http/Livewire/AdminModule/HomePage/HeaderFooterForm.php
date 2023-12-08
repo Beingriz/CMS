@@ -114,7 +114,7 @@ class HeaderFooterForm extends Component
     public function render()
     {
         $Records = UserTopBar ::all();
-        return view('livewire.admin.user.header-footer-form', compact('Records'));
+        return view('livewire.admin-module.home-page.header-footer-form', compact('Records'));
     }
 
 }

@@ -560,6 +560,6 @@ class AddServices extends Component
 
             $this->Existing_Sevices = SubServices::Where('Service_Id',$this->Main_ServiceId)->Paginate(10);
         }
-        return view('livewire.add-services',['MainServices'=>$this->MainServices,'n'=>$this->n,'Existing_Sevices'=>$this->Existing_Sevices]);
+        return view('livewire.admin-module.operations.add-services',['MainServices'=>$this->MainServices,'n'=>$this->n,'Existing_Sevices'=>$this->Existing_Sevices]);
     }
 }

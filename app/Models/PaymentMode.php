@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentMode extends Model
 {
     use HasFactory;
+    protected $connection = "mysql";
     public $table='payment_mode';
 }

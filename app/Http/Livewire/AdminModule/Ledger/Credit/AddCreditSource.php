@@ -465,7 +465,7 @@ class AddCreditSource extends Component
             }
             $this->exist_categories = CreditSources::Where([['CS_Name','=',$this->CategoryList],['CS_Id','=',$id]])->paginate(10);
         }
-        return view('livewire.add-credit-source',[
+        return view('livewire.admin-module.ledger.credit.add-credit-source',[
             'n'=>$this->n,
             'exist_main_categories'=>$this->exist_main_categories,
             'Categorys'=>$Exist_Main_Category,

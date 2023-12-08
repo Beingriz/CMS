@@ -167,7 +167,7 @@ class CarouselForm extends Component
         }
         $Records = Carousel_DB::all();
         $this->Services = MainServices::where('Service_Type','Public')->get();
-        return view('livewire.admin.user.carousel-form',compact('Records'));
+        return view('livewire.admin-module.home-page.carousel-form',compact('Records'));
     }
 
 }

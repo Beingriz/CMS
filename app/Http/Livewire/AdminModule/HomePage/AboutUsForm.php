@@ -185,7 +185,7 @@ class AboutUsForm extends Component
     public function render()
     {
         $Records = About_Us::all();
-        return view('livewire.admin.user.about-us-form',compact('Records'));
+        return view('livewire.admin-module.home-page.about-us-form',compact('Records'));
     }
 
 }

@@ -391,6 +391,6 @@ class DataMigration extends Component
         $subSources = DB::table('credit_sources')->where('CS_Id',$this->Application)->get();
         $subDebitSources = DB::table('debit_sources')->where('DS_Id',$this->Application)->get();
         $old_bookmarks = DB::table('old_bookmarks')->where('status','!=','Done')->get();
-        return view('livewire.admin.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','old_debitsources','newSources','newDebitSources','subSources','subDebitSources','old_bookmarks'));
+        return view('livewire.admin-module.data-migration.data-migration',compact('old_servicelist','mainservices','subservices','old_creditsources','old_debitsources','newSources','newDebitSources','subSources','subDebitSources','old_bookmarks'));
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CreditLedger extends Model
 {
     use HasFactory;
+    protected $connection = "mysql";
     public $table="credit_ledger";
 
     public function scopeFilter($query, $key)

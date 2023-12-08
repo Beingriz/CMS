@@ -480,7 +480,7 @@ class AddDebitSource extends Component
         if($this->CategoryType == "Loan"){
             $this->Unit_Price = $this->Loan_Amount/($this->Tenure==0?1:$this->Tenure);
         }
-        return view('livewire.add-debit-source',[
+        return view('livewire.admin-module.ledger.debit.add-debit-source',[
             'n'=>$this->n,
             'exist_main_categories'=>$this->exist_main_categories,
             'Categorys'=>$Exist_Main_Category,

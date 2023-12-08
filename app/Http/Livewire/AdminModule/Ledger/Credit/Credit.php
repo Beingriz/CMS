@@ -536,7 +536,7 @@ class Credit extends Component
 
 
         $percentage = number_format(($today_total/1500)*100) ;
-        return view('livewire.credit',[
+        return view('livewire.admin-module.ledger.credit.credit',[
             'credit_source'=>$creditsource,'credit_sources'=>$this->Sources,
             'payment_mode'=>$this->payment_mode,
             'total_revenue'=>$this->sum,

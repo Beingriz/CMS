@@ -1,8 +1,8 @@
-@extends('admin.admin_master')
+@extends('admin-module.admin_master')
 @section('admin')
 <div class="page-content" style="margin-top: -25px">
     <div class="container-fluid">
-        @livewire('admin.user.header-footer-form',['EditData'=>$EditData])
+        @livewire('admin-module.home-page.header-footer-form',['EditData'=>$EditData])
     </div>
 </div>
 

@@ -8,12 +8,12 @@ use App\Models\ClientRegister;
 use App\Models\CreditLedger;
 use App\Models\MainServices;
 use App\Models\PaymentMode;
-use App\Models\Service_List;
 use App\Models\Status;
 use App\Models\SubServices;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -94,7 +94,7 @@ class ApplicationForm extends Component
     {
         $this->validate();
         $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
-        $service = Service_List::Where('Id',$this->MainSelected)->get();
+        $service = MainServices::Where('Id',$this->MainSelected)->get();
         foreach($service as $name)
         {
             $service = $name['Name'];
@@ -370,7 +370,7 @@ class ApplicationForm extends Component
                 $user_data->Client_Type = $this->Client_Type;
                 $user_data->save(); // Client Registered
 
-                $app_field = new Application;
+                $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
                 $app_field->Received_Date = $this->Received_Date;
@@ -653,7 +653,7 @@ class ApplicationForm extends Component
 
 
             $this->ApplicationType = SubServices::where('Service_Id',$this->ApplicationId)->get();
-            $service = Service_List::Where('Id',$this->MainSelected)->get();
+            $service = MainServices::Where('Id',$this->MainSelected)->get();
             foreach($service as $name)
             {
                 $service = $name['Name'];

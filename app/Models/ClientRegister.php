@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientRegister extends Model
 {
     use HasFactory;
+    protected $connection = "mysql";
     public $table="client_register";
 
 }

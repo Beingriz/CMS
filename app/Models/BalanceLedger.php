@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BalanceLedger extends Model
 {
     use HasFactory;
+    protected $connection = "mysql";
     public $table = "Balance_ledger";
     public $timestamps=false;
 }

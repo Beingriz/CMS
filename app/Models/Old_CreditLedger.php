@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Old_CreditLedger extends Model
 {
-    use HasFactory;
+    use HasFactory;    protected $connection = 'mysql';
+
     public $table = 'old_credit_ledger';
 }

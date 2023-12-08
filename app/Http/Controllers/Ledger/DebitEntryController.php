@@ -17,17 +17,17 @@ class DebitEntryController extends Controller
    public function Home()
     {
         $EditData='';$DeleteData='';
-        return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
+        return view('admin-module.ledger.debit.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
     }
    public function EditDebit($Id)
     {
         $EditData=$Id;$DeleteData='';
-        return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
+        return view('admin-module.ledger.debit.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
     }
    public function DeleteDebit($Id)
     {
         $EditData='';$DeleteData=$Id;
-        return view('DigitalLedger.DebitLedger.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
+        return view('admin-module.ledger.debit.debit_entry' ,['EditData'=>$EditData,'DeleteData'=>$DeleteData]);
     }
 
 // Finction to save the Entry
@@ -77,7 +77,7 @@ class DebitEntryController extends Controller
         $DeleteData='';
         $editid='';
         $deleteid='';
-        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+        return view('admin-module.ledger.debit.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function EidtMainSource($Id)
     {
@@ -85,7 +85,7 @@ class DebitEntryController extends Controller
         $DeleteData='';
         $editid='';
         $deleteid='';
-        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+        return view('admin-module.ledger.debit.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function DeleteMainSource($Id)
     {
@@ -93,7 +93,7 @@ class DebitEntryController extends Controller
         $DeleteData=$Id;
         $editid='';
         $deleteid='';
-        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+        return view('admin-module.ledger.debit.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function EditsSubSource($Id)
     {
@@ -101,7 +101,7 @@ class DebitEntryController extends Controller
         $DeleteData='';
         $editid=$Id;
         $deleteid='';
-        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+        return view('admin-module.ledger.debit.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function DeleteSubSource($Id)
     {

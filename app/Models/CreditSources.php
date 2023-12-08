@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class CreditSources extends Model
 {
-    use HasFactory;
+    use HasFactory;    protected $connection = 'mysql';
+
     public $table="credit_sources";
     public $timestamp =  false;
 

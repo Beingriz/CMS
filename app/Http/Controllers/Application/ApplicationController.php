@@ -390,42 +390,42 @@ class ApplicationController extends Controller
     public function Bookmarks()
     {
         $editId ='';$deleteId='';
-        return view('Admin.Bookmark.bookmarks',['EditId'=>$editId,'DeleteId'=>$deleteId]);
+        return view('admin-module.Bookmark.bookmarks',['EditId'=>$editId,'DeleteId'=>$deleteId]);
     }
     public function EditBookmark($Id)
     {
         $deleteId='';
-        return view('Admin.Bookmark.bookmarks',['EditId'=>$Id,'DeleteId'=>$deleteId]);
+        return view('admin-module.Bookmark.bookmarks',['EditId'=>$Id,'DeleteId'=>$deleteId]);
     }
     public function DeleteBookmark($Id)
     {
         $editId ='';
-        return view('Admin.Bookmark.bookmarks',['EditId'=>$editId,'DeleteId'=>$Id]);
+        return view('admin-module.Bookmark.bookmarks',['EditId'=>$editId,'DeleteId'=>$Id]);
     }
     public function AddStatus()
     {
         $Id=''; $id='';
         $status='';
-        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id,'VeiwStatus'=>$status]);
+        return view('admin-module.Status.status',['EditId'=>$Id,'DeleteId'=>$id,'VeiwStatus'=>$status]);
 
     }
     public function EditStatus ($Id)
     {
         $id='';
         $status='';
-        return view('admin.Status.status',['EditId'=>$Id,'DeleteId'=>$id,'VeiwStatus'=>$status]);
+        return view('admin-module.Status.status',['EditId'=>$Id,'DeleteId'=>$id,'VeiwStatus'=>$status]);
     }
     public function ViewStatus ($status)
     {
         $eid='';
         $did='';
-        return view('admin.Status.status',['EditId'=>$eid,'DeleteId'=>$did,'VeiwStatus'=>$status]);
+        return view('admin-module.Status.status',['EditId'=>$eid,'DeleteId'=>$did,'VeiwStatus'=>$status]);
     }
     public function DeleteStatus ($Id)
     {
         $id='';
         $status='';
-        return view('admin.Status.status',['EditId'=>$id,'DeleteId'=>$Id,'VeiwStatus'=>$status]);
+        return view('admin-module.Status.status',['EditId'=>$id,'DeleteId'=>$Id,'VeiwStatus'=>$status]);
     }
     public function DashboardUpdate ($name)
     {

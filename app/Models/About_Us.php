@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class About_Us extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
+
     public $table = 'about_us';
 }

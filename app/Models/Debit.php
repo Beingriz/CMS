@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Debit extends Model
 {
-    use HasFactory;
+    use HasFactory;    protected $connection = 'mysql';
+
     public $table="debit_ledger";
     // public $timestamps=false;
 

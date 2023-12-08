@@ -11,6 +11,6 @@ class MarketingDashboard extends Component
     }
     public function render()
     {
-        return view('livewire.admin.marketing.marketing-dashboard');
+        return view('livewire.admin-module.marketing.marketing-dashboard');
     }
 }
