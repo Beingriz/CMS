@@ -9,6 +9,5 @@ class ClientRegister extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    public $table="client_register";
-
+    public $table = "client_register";
 }

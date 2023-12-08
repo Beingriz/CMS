@@ -2,7 +2,7 @@
     <div class="navbar-header" margin-bottom = "-40px">
         <div class="d-flex">
             <!-- LOGO -->
-            <a href="{{route('home')}}" class="navbar-brand d-flex align-items-center px-1 px-lg-2">
+            <a href="{{ route('home') }}" class="navbar-brand d-flex align-items-center px-1 px-lg-2">
                 <h6 class="m-0 text-black text-bold">Digital Cyber</h6>
             </a>
 
@@ -13,15 +13,15 @@
 
         <div class="d-flex">
 
-            {{-- Full Screen Button Start--}}
+            {{-- Full Screen Button Start --}}
             <div class="dropdown d-none d-lg-inline-block ms-1">
                 <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
                     <i class="ri-fullscreen-line"></i>
                 </button>
             </div>
-            {{-- Full Screen Button End--}}
+            {{-- Full Screen Button End --}}
 
-             {{-- Notification Button Start--}}
+            {{-- Notification Button Start --}}
             {{-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                       data-bs-toggle="dropdown" aria-expanded="false">
@@ -110,34 +110,42 @@
                     </div>
                 </div>
             </div> --}}
-            {{-- Notification Button End--}}
+            {{-- Notification Button End --}}
 
-             {{-- Profile Button Start--}}
+            {{-- Profile Button Start --}}
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @if (Auth::check())
-                    <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}" alt="Profile">
+                        <img class="rounded-circle header-profile-user"
+                            src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile">
                     @else
-                    <img class="rounded-circle header-profile-user" src="{{url('storage/no_image.jpg')}}" alt="Profile">
-
+                        <img class="rounded-circle header-profile-user" src="{{ url('storage/no_image.jpg') }}"
+                            alt="Profile">
                     @endif
 
-                    <span class="d-none d-xl-inline-block ms-1">{{Auth::user()->name}}</span>
+                    <span class="d-none d-xl-inline-block ms-1">{{ Auth::user()->name }}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{route('user.home',Auth::user()->id)}}"><i class="ri-dashboard-line"></i> Home</a>
-                    <a class="dropdown-item" href="{{route('view.profile')}}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
-                    <a class="dropdown-item" href="{{route('history',Auth::user()->mobile_no)}}"><i class="ri-lock-unlock-line align-middle me-1"></i> My Orders</a>
-                    <a class="dropdown-item d-block" href="{{route('service.list')}}"><span class="badge bg-success float-end mt-1">{{$services_count}}</span><i class="ri-settings-2-line align-middle me-1"></i> Services</a>
-                    <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i>Change Password</a>
+                    <a class="dropdown-item" href="{{ route('user.home', Auth::user()->id) }}"><i
+                            class="ri-dashboard-line"></i> Home</a>
+                    <a class="dropdown-item" href="{{ route('view.profile') }}"><i
+                            class="ri-user-line align-middle me-1"></i> Profile</a>
+                    <a class="dropdown-item" href="{{ route('history', Auth::user()->mobile_no) }}"><i
+                            class="ri-lock-unlock-line align-middle me-1"></i> My Orders</a>
+                    <a class="dropdown-item d-block" href="{{ route('service.list') }}"><span
+                            class="badge bg-success float-end mt-1">{{ $services_count }}</span><i
+                            class="ri-settings-2-line align-middle me-1"></i> Services</a>
+                    <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i>Change
+                        Password</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{{ route('admin.logout')}}" id="logout"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
+                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}" id="logout"><i
+                            class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>
-             {{-- Profile Button End--}}
+            {{-- Profile Button End --}}
         </div>
     </div>
 </header>

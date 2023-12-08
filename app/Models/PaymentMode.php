@@ -9,5 +9,5 @@ class PaymentMode extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    public $table='payment_mode';
+    public $table = 'payment_mode';
 }

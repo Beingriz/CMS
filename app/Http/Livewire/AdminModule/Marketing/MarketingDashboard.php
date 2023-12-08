@@ -6,7 +6,8 @@ use Livewire\Component;
 
 class MarketingDashboard extends Component
 {
-    public function show()  {
+    public function show()
+    {
         dd('working');
     }
     public function render()

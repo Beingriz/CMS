@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnquiryDB extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
     public $table = 'enquiry_form';
 }

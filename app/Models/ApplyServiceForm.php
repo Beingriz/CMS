@@ -11,7 +11,7 @@ class ApplyServiceForm extends Model
     protected $connection = 'mysql';
 
     public $table = 'applynow';
-    protected $guard=[];
+    protected $guard = [];
     // protected $connection ='mysql';
 
 }

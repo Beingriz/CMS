@@ -16,21 +16,23 @@ class UpdateEnquiryStatus extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $Name,$d,$Service,$SubService,$Message,$Status,$ServiceName,$lastRecTime,$Id;
-    public $Amount,$LeadStatus,$Feedback,$Conversion,$Mobile_No;
-    public function mount($Key,$Id,$EditId){
+    public $Name, $d, $Service, $SubService, $Message, $Status, $ServiceName, $lastRecTime, $Id;
+    public $Amount, $LeadStatus, $Feedback, $Conversion, $Mobile_No;
+    public function mount($Key, $Id, $EditId)
+    {
         $this->Name = $Key;
         $this->Id = $Id;
         // $this->Id = $Id;
         $this->Edit($Id);
-        if(!empty($EditId)){
+        if (!empty($EditId)) {
             $this->Edit($EditId);
         }
     }
-    public function Edit($Id){
+    public function Edit($Id)
+    {
         $this->Id = $Id;
-        $fetch= EnquiryDB::where('Id',$Id)->get();
-        foreach($fetch as $item){
+        $fetch = EnquiryDB::where('Id', $Id)->get();
+        foreach ($fetch as $item) {
             $this->Service = $item['Service'];
             $this->SubService = $item['Service_Type'];
             $this->Message = $item['Message'];
@@ -42,7 +44,8 @@ class UpdateEnquiryStatus extends Component
             $this->Amount = $item['Amount'];
         }
     }
-    public function Update($Id){
+    public function Update($Id)
+    {
         $data = array();
         $data['Service'] = $this->Service;
         $data['Service_Type'] = $this->SubService;
@@ -53,28 +56,26 @@ class UpdateEnquiryStatus extends Component
         $data['Amount'] = $this->Amount;
         $data['updated_at'] = Carbon::now();
 
-        DB::table('enquiry_form')->where('Id',$Id)->Update($data);
+        DB::table('enquiry_form')->where('Id', $Id)->Update($data);
         $notification = array(
-            'message'=>'Status Updated!.',
-            'alert-type'=>'info'
+            'message' => 'Status Updated!.',
+            'alert-type' => 'info'
         );
-        return redirect()->route('update.enquiry.dashboard',$Id)->with($notification);
+        return redirect()->route('update.enquiry.dashboard', $Id)->with($notification);
     }
     public function LastUpdate()
     {
         # code...
         $latest_app = EnquiryDB::latest('created_at')->first();
         $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
-
     }
     public function render()
     {
         $this->LastUpdate();
         $MainServices = MainServices::all();
-        $SubServices = SubServices::Where('Service_Id',$this->Service)->get();
-        $status = Status::where('Relation','Callback')->get();
-        $requests = EnquiryDB::where('Phone_No',$this->Mobile_No)->paginate(5);
-        return view('livewire.admin.admin.update-enquiry-status',compact('MainServices','SubServices','status','requests'));
+        $SubServices = SubServices::Where('Service_Id', $this->Service)->get();
+        $status = Status::where('Relation', 'Callback')->get();
+        $requests = EnquiryDB::where('Phone_No', $this->Mobile_No)->paginate(5);
+        return view('livewire.admin.admin.update-enquiry-status', compact('MainServices', 'SubServices', 'status', 'requests'));
     }
-
 }

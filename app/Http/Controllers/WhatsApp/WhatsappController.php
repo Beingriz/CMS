@@ -11,12 +11,12 @@ use Twilio\Rest\Client;
 class WhatsappController extends Controller
 {
     //
-    public function sendMessage($mobile,$name,$service,$time,$page)
+    public function sendMessage($mobile, $name, $service, $time, $page)
     {
 
-        $body = "Dear *".$name."* 👋🏻😍
+        $body = "Dear *" . $name . "* 👋🏻😍
         ,
-        ▶ Thank you for reaching out to us through our website with your Enquiry on *".$service." ".$time."* We appreciate your interest and would be more than happy to assist you.
+        ▶ Thank you for reaching out to us through our website with your Enquiry on *" . $service . " " . $time . "* We appreciate your interest and would be more than happy to assist you.
 
         ▶ Our team is currently reviewing your inquiry and will provide you with a detailed response as soon as possible. We understand the importance of your questions and aim to address them thoroughly and accurately.
 
@@ -32,21 +32,21 @@ class WhatsappController extends Controller
         $from = getenv("TWILIO_PHONE_NUMBER");
         $twilio = new Client($sid, $token);
 
-        $to_no = "whatsapp:+91".$mobile;
+        $to_no = "whatsapp:+91" . $mobile;
         $from_no = "whatsapp:$from";
         $twilio->messages
-        ->create($to_no, // to
-            array(
-            "from" => $from_no,
-            "body" => $body ));
+            ->create(
+                $to_no, // to
+                array(
+                    "from" => $from_no,
+                    "body" => $body
+                )
+            );
 
         $notification = array(
-            'message'=>'Message sent Successfully!',
-            'alert-type' =>'success'
+            'message' => 'Message sent Successfully!',
+            'alert-type' => 'success'
         );
-        return redirect()->route('update.dashboard',$page)->with($notification);
-
+        return redirect()->route('update.dashboard', $page)->with($notification);
     }
-
-
 }

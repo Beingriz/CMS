@@ -1,20 +1,21 @@
 @extends('Layouts\main')
 @section('content')
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<body>
-    <div class="container">
-        <section class="content">
-            <section class="work-area">
+    <body>
+        <div class="container">
+            <section class="content">
+                <section class="work-area">
 
-                <div class="pages">
+                    <div class="pages">
 
-                    @livewire('product-detials',['MainServiceId'=>$MainServiceId])
-                </div>
+                        @livewire('product-detials', ['MainServiceId' => $MainServiceId])
+                    </div>
+                </section>
             </section>
-        </section>
-    </div>
-</body>
-</html>
+        </div>
+    </body>
+
+    </html>
 @endsection

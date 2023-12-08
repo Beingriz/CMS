@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits;
 
 use App\Http\Controllers\ClientRegistration;
@@ -24,7 +25,7 @@ trait RightInsightTrait
 
     private $daily_applications;
     private $payment_mode;
-    private $ForceDelete='Disable';
+    private $ForceDelete = 'Disable';
     private $application_type;
     private $status_list;
     private $applications_served;
@@ -67,91 +68,80 @@ trait RightInsightTrait
         $this->today = date("Y-m-d");
         $this->no = 'No';
         $this->yes = 'Yes';
-        $this->n=1;
-        $this->info="";
+        $this->n = 1;
+        $this->info = "";
         $status = 'Delivered';
         $this->status = Status::all();
         $this->bookmarks = Bookmark::all();
-        $this->payment_mode= PaymentMode::all();
-        $this->MainServices= MainServices::orderby('Order_By','asc')->get();
-        $this->SubServices= SubServices::all();
+        $this->payment_mode = PaymentMode::all();
+        $this->MainServices = MainServices::orderby('Order_By', 'asc')->get();
+        $this->SubServices = SubServices::all();
         $this->application_type = DB::table('service_list')->get();
         $this->status_list =  Status::all();
         $this->applications_served = DB::table('digital_cyber_db')->count();
-        $this->previous_day = date('Y-m-d', strtotime($this->today. ' - 1 days'));
-        $this->previous_day_app = DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $this->previous_day],['Recycle_Bin','=' ,$this->no] ])->count();
+        $this->previous_day = date('Y-m-d', strtotime($this->today . ' - 1 days'));
+        $this->previous_day_app = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->count();
         $status = 'Delivered';
-        $this->applications_delivered = DB::table('digital_cyber_db')->where([ ['Status','=',
-        $status],['Recycle_Bin','=' ,$this->no] ])->count();
-        $this->previous_day_app_delivered = DB::table('digital_cyber_db')->where([ ['Status','=',
-         $status],['Recycle_Bin','=' ,$this->no],['Delivered_Date','=',$this->previous_day] ])->count();
-        $this->total_revenue=CreditLedger::all();
-        $this->balance_due=DB::table('digital_cyber_db')->where([['Recycle_Bin','=' ,$this->no] ])->get();
-        $this->previous_revenue=DB::table('digital_cyber_db')->where([['Received_Date','=',$this->previous_day],['Recycle_Bin','=' ,$this->no] ])->get();
-        $this->previous_bal=DB::table('digital_cyber_db')->where([['Received_Date','=',$this->previous_day],['Recycle_Bin','=' ,$this->no] ])->get();
-        $this->sl_no=DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $this->today],['Recycle_Bin','=' ,$this->no] ])->count();
-        $this->daily_app_amount = DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $this->today],['Recycle_Bin','=' ,$this->no] ])->get();
-        $this->daily_applications=DB::table('digital_cyber_db')->where([ ['Received_Date','=' , $this->today],['Recycle_Bin','=' ,$this->no] ])->paginate(10);
+        $this->applications_delivered = DB::table('digital_cyber_db')->where([[
+            'Status', '=',
+            $status
+        ], ['Recycle_Bin', '=', $this->no]])->count();
+        $this->previous_day_app_delivered = DB::table('digital_cyber_db')->where([[
+            'Status', '=',
+            $status
+        ], ['Recycle_Bin', '=', $this->no], ['Delivered_Date', '=', $this->previous_day]])->count();
+        $this->total_revenue = CreditLedger::all();
+        $this->balance_due = DB::table('digital_cyber_db')->where([['Recycle_Bin', '=', $this->no]])->get();
+        $this->previous_revenue = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->get();
+        $this->previous_bal = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->get();
+        $this->sl_no = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', $this->no]])->count();
+        $this->daily_app_amount = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', $this->no]])->get();
+        $this->daily_applications = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', $this->no]])->paginate(10);
         // $this->sum=0.00;
-        $this->previous_sum=0.00;
-        $this->balance_due_sum=0.00;
-        $this->previous_bal_sum=0.00;
+        $this->previous_sum = 0.00;
+        $this->balance_due_sum = 0.00;
+        $this->previous_bal_sum = 0.00;
 
         $this->credit_source = CreditSource::orderby('Name')->get();
         $this->debit_source = DebitSource::orderby('Name')->get();
-        $Id =  "DCA".date("Y") .date("m").mt_rand(100, 999);
-        $this->daily_total=0;
-        foreach ($this->daily_app_amount as $key)
-        {
-             $key  = get_object_vars($key);
-            {
+        $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);
+        $this->daily_total = 0;
+        foreach ($this->daily_app_amount as $key) {
+            $key  = get_object_vars($key); {
                 $this->daily_total += $key['Amount_Paid'];
             }
         }
 
-        $this->sum=0;
-        foreach ($this->total_revenue as $key)
-        {
-            {
+        $this->sum = 0;
+        foreach ($this->total_revenue as $key) { {
                 $this->sum += $key['Amount_Paid'];
             }
         }
-        $this->previous_sum=0.00;
-        foreach ($this->previous_revenue as $key)
-        {
-             $key  = get_object_vars($key);
-            {
+        $this->previous_sum = 0.00;
+        foreach ($this->previous_revenue as $key) {
+            $key  = get_object_vars($key); {
                 $this->previous_sum += $key['Amount_Paid'];
             }
         }
 
 
-        $this->balance_due_sum=0.00;
-        foreach ($this->balance_due as $key)
-        {
-             $key  = get_object_vars($key);
-            {
+        $this->balance_due_sum = 0.00;
+        foreach ($this->balance_due as $key) {
+            $key  = get_object_vars($key); {
                 $this->balance_due_sum += $key['Balance'];
             }
         }
 
-        $this->previous_bal_sum=0.00;
-        foreach ($this->previous_bal as $key)
-        {
-             $key  = get_object_vars($key);
-            {
+        $this->previous_bal_sum = 0.00;
+        foreach ($this->previous_bal as $key) {
+            $key  = get_object_vars($key); {
                 $this->previous_bal_sum += $key['Balance'];
             }
         }
 
         $this->status_list = Status::all();
 
-        $this->services_list = MainServices::where('Service_Type','Public')->get();
+        $this->services_list = MainServices::where('Service_Type', 'Public')->get();
         $this->services_count = count($this->services_list);
     }
-
 }
-
-
-
-

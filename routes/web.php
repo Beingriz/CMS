@@ -26,9 +26,9 @@ use Illuminate\Support\Facades\Auth;
 */
 
 // Admin Authenticated Routes
-Route::middleware('auth','auth.role:admin')->group(function(){
-    Route::controller(AdminController::class)->group(function(){
-        Route::get('/dashboard','AdminDashboard')->name('dashboard');
+Route::middleware('auth', 'auth.role:admin')->group(function () {
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/dashboard', 'AdminDashboard')->name('dashboard');
         Route::get('/admin/logout', 'destroy')->name('admin.logout');
         Route::get('/admin/profile_view', 'ProfileView')->name('admin.profile_view');
         Route::get('/admin/change_password', 'ChangePassword')->name('change_password');
@@ -36,34 +36,31 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('/Edit/Services/{id}/{type}', 'EditServices')->name('edit.services');
         Route::get('/Delete/Services/{id}/{type}', 'DeleteServices')->name('delete.services');
         Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
-        Route::get('/New/Carousel','Carousel')->name('new.carousel');
-        Route::get('/abous_us','AboutUs')->name('new.about_us');
-        Route::get('/eidt/carousel/{id}','EditCarousel')->name('edit.carousel');
-        Route::get('/Eidt/AboutUs/{id}','EditAboutUs')->name('edit.aboutus');
-        Route::get('/Delete/AboutUs/{id}','DeleteAboutUs')->name('delete.aboutus');
-        Route::get('/Select/AboutUs/{id}','SelectAbout')->name('select.aboutus');
-        Route::get('/Edit/Header/{id}','EditHeader')->name('edit.header');
-        Route::get('/delete/carousel/{id}','DeleteCarousel')->name('delete.carousel');
-        Route::get('/marketing/dashboard/','MarketingDashboard')->name('marketing.dashboard');
+        Route::get('/New/Carousel', 'Carousel')->name('new.carousel');
+        Route::get('/abous_us', 'AboutUs')->name('new.about_us');
+        Route::get('/eidt/carousel/{id}', 'EditCarousel')->name('edit.carousel');
+        Route::get('/Eidt/AboutUs/{id}', 'EditAboutUs')->name('edit.aboutus');
+        Route::get('/Delete/AboutUs/{id}', 'DeleteAboutUs')->name('delete.aboutus');
+        Route::get('/Select/AboutUs/{id}', 'SelectAbout')->name('select.aboutus');
+        Route::get('/Edit/Header/{id}', 'EditHeader')->name('edit.header');
+        Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
+        Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
 
 
 
 
         // --------------------Data Migration Routes -----------------
-        Route::get('/data/migration','DataMigration')->name('data.migration');
-
-
-
+        Route::get('/data/migration', 'DataMigration')->name('data.migration');
     });
 });
-Route::controller(AdminController::class)->group(function(){
+Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/logout', 'destroy')->name('admin.logout');
 });
-Route::controller(WhatsappController::class)->group(function(){
+Route::controller(WhatsappController::class)->group(function () {
     // Route::get('/send/message/{phone}/{message}', 'sendMessage')->name('send.message');
     Route::get('/send/message/{mobile}/{name}/{service}/{time}/{page}', 'sendMessage')->name('send.message');
 });
-Route::controller(ApplicationController::class)->group(function(){
+Route::controller(ApplicationController::class)->group(function () {
     Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
     Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
     Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
@@ -72,50 +69,47 @@ Route::controller(ApplicationController::class)->group(function(){
 
 // User Authenticated Routes
 
-Route::middleware('auth','auth.role:user')->group(function(){
-    Route::controller(UserController::class)->group(function(){
-        Route::get('/user/dashboard','UserDashboard')->name('user.dashboard');
-        Route::get('/User/Home/{id}','UserHome')->name('user.home');
-        Route::get('/View/Profile','ViewProfile')->name('view.profile');
-        Route::get('/Service/History/{mobile_no}','MyServiceHistory')->name('history');
-        Route::get('/Eidt/Profile','EditProfile')->name('edit.profile');
-        Route::get('/About/Company','About')->name('about.us');
-        Route::get('/Serivce/List','ServiceList')->name('service.list');
-        Route::get('/Serivce/Details/{id}','ServDetails')->name('serv.details');
-        Route::get('/ApplyNow/{id}/{price}','ApplyNow')->name('apply.now');
-        Route::get('/Acknowledgment/{id}','Acknowledgment')->name('acknowledgment');
-        Route::get('/Track/{id}','Track')->name('track');
-        Route::get('/View/Application{id}','viewApplication')->name('view.applicaiton');
-        Route::get('/View/Document/{id}','viewDocument')->name('view.document');
-        Route::get('/Feedback/{id}','Feedback')->name('feedback');
-        Route::get('/callback/{id}/{service}/{service_type}','CallBack')->name('callback');
-
+Route::middleware('auth', 'auth.role:user')->group(function () {
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/user/dashboard', 'UserDashboard')->name('user.dashboard');
+        Route::get('/User/Home/{id}', 'UserHome')->name('user.home');
+        Route::get('/View/Profile', 'ViewProfile')->name('view.profile');
+        Route::get('/Service/History/{mobile_no}', 'MyServiceHistory')->name('history');
+        Route::get('/Eidt/Profile', 'EditProfile')->name('edit.profile');
+        Route::get('/About/Company', 'About')->name('about.us');
+        Route::get('/Serivce/List', 'ServiceList')->name('service.list');
+        Route::get('/Serivce/Details/{id}', 'ServDetails')->name('serv.details');
+        Route::get('/ApplyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
+        Route::get('/Acknowledgment/{id}', 'Acknowledgment')->name('acknowledgment');
+        Route::get('/Track/{id}', 'Track')->name('track');
+        Route::get('/View/Application{id}', 'viewApplication')->name('view.applicaiton');
+        Route::get('/View/Document/{id}', 'viewDocument')->name('view.document');
+        Route::get('/Feedback/{id}', 'Feedback')->name('feedback');
+        Route::get('/callback/{id}/{service}/{service_type}', 'CallBack')->name('callback');
     });
 });
-Route::middleware('auth','auth.role:user','prevent.back')->group(function(){
-    Route::controller(UserController::class)->group(function(){
-        Route::get('/ApplyNow/{id}/{price}','ApplyNow')->name('apply.now');
+Route::middleware('auth', 'auth.role:user', 'prevent.back')->group(function () {
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/ApplyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
     });
 });
-Route::controller(UserController::class)->group(function(){
-    Route::get('/','Home')->name('user.index');
-    Route::get('/','HomeIndex')->name('home');
-    Route::get('/contact_us','ContactUs')->name('contact_us');
-    Route::get('/about_us','AboutUS')->name('aboutus');
-    Route::get('/services','Services')->name('services');
-    Route::get('/teams','Teams')->name('teams');
-    Route::get('/testimonials','Testimonials')->name('testimonials');
-    Route::get('/features','Feature')->name('features');
-    Route::get('/service/{id}','ServiceDetails')->name('service.details');
-
-
+Route::controller(UserController::class)->group(function () {
+    Route::get('/', 'Home')->name('user.index');
+    Route::get('/', 'HomeIndex')->name('home');
+    Route::get('/contact_us', 'ContactUs')->name('contact_us');
+    Route::get('/about_us', 'AboutUS')->name('aboutus');
+    Route::get('/services', 'Services')->name('services');
+    Route::get('/teams', 'Teams')->name('teams');
+    Route::get('/testimonials', 'Testimonials')->name('testimonials');
+    Route::get('/features', 'Feature')->name('features');
+    Route::get('/service/{id}', 'ServiceDetails')->name('service.details');
 });
 
 
 
 // Application Authentic Routes start
-Route::middleware('auth','auth.role:admin')->group(function(){
-    Route::controller(ApplicationController::class)->group(function(){
+Route::middleware('auth', 'auth.role:admin')->group(function () {
+    Route::controller(ApplicationController::class)->group(function () {
         Route::get('application/home', 'Home')->name('app.home');
         Route::get('app/dashboard', 'Dashboard')->name('Dashboard');
         Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->name('DynamicDashboard');
@@ -147,31 +141,25 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('Enquiry/dashboard/{id}', 'UpdateEnquiryDashboard')->name('update.enquiry.dashboard');
         Route::get('Enquiry/Status/Edit/{id}]', 'EditEnquiryStatus')->name('edit.status.enquiry');
         Route::get('Enquiry/Status/Delete/{id}/{client_id}/{name}', 'DeleteEnquiryStatus')->name('delete.status.enquiry');
-
-
-
-
     });
 });
-Route::middleware('auth','auth.role:admin')->group(function(){
-    Route::controller(CreditEntry::class)->group(function(){
-    Route::get('Credit', 'Home')->name('Credit');
-    Route::get('edit/credit/entry/{Id}', 'EditCredit')->name('edit.credit');
-    Route::get('delete/credit/entry/{Id}', 'DeleteCredit')->name('delete.credit');
-    Route::get('CreditSource', 'CreditSource')->name('CreditSource');
-    Route::get('edit/credit/main/source{id}', 'EidtMainSource')->name('edit.mainsource');
-    Route::get('delete/credit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
-    Route::get('edit/credit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
-    Route::get('delete/credit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
-
-
+Route::middleware('auth', 'auth.role:admin')->group(function () {
+    Route::controller(CreditEntry::class)->group(function () {
+        Route::get('Credit', 'Home')->name('Credit');
+        Route::get('edit/credit/entry/{Id}', 'EditCredit')->name('edit.credit');
+        Route::get('delete/credit/entry/{Id}', 'DeleteCredit')->name('delete.credit');
+        Route::get('CreditSource', 'CreditSource')->name('CreditSource');
+        Route::get('edit/credit/main/source{id}', 'EidtMainSource')->name('edit.mainsource');
+        Route::get('delete/credit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
+        Route::get('edit/credit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
+        Route::get('delete/credit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
     });
 });
 
 
-Route::middleware('auth','auth.role:admin')->group(function(){
-    Route::controller(DebitEntryController::class)->group(function(){
-        Route::get('Debit','Home')->name('Debit');
+Route::middleware('auth', 'auth.role:admin')->group(function () {
+    Route::controller(DebitEntryController::class)->group(function () {
+        Route::get('Debit', 'Home')->name('Debit');
         Route::get('edit/debit/entry/{Id}', 'EditDebit')->name('edit.debit');
         Route::get('delete/debit/entry/{Id}', 'DeleteDebit')->name('delete.debit');
         //Debit Ledger Routes
@@ -180,7 +168,6 @@ Route::middleware('auth','auth.role:admin')->group(function(){
         Route::get('delete/debit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
         Route::get('edit/debit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
         Route::get('delete/debit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
-
     });
 });
 // Global  Search  Routes start
@@ -214,4 +201,4 @@ Route::middleware('auth','auth.role:admin')->group(function(){
 //     return view('admin.index');
 // })->middleware(['auth','auth.role:admin'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

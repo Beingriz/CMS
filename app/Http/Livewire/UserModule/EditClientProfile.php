@@ -15,9 +15,9 @@ use Livewire\WithPagination;
 class EditClientProfile extends Component
 {
 
-    public $old_Applicant_Image,$Profile_Image,$Total_Rev,$Balance,$Paid,$app_pending,$Total_App,$Name,$App_Delivered,$Mobile_No,$Pedning_App,$Gender,$Relative_Name, $Dob, $Address, $Client_Type,$Client_Id,$Email;
-    public $profiledata, $old_profile_image,$New_Profile_Image,$Rest_App;
-    public $status = NULL,$lastMobRecTime;
+    public $old_Applicant_Image, $Profile_Image, $Total_Rev, $Balance, $Paid, $app_pending, $Total_App, $Name, $App_Delivered, $Mobile_No, $Pedning_App, $Gender, $Relative_Name, $Dob, $Address, $Client_Type, $Client_Id, $Email;
+    public $profiledata, $old_profile_image, $New_Profile_Image, $Rest_App;
+    public $status = NULL, $lastMobRecTime;
 
     use WithPagination;
     use WithFileUploads;
@@ -25,38 +25,37 @@ class EditClientProfile extends Component
 
     // use RightInsightTrait;
     protected $rules = [
-        'Name' =>'required',
-        'Relative_Name' =>'required',
-        'Gender' =>'required',
-        'Dob' =>'required',
-        'Mobile_No' =>'required | Min:10',
-        'Email' =>'required| email',
-        'Address' =>'required',
+        'Name' => 'required',
+        'Relative_Name' => 'required',
+        'Gender' => 'required',
+        'Dob' => 'required',
+        'Mobile_No' => 'required | Min:10',
+        'Email' => 'required| email',
+        'Address' => 'required',
 
     ];
     protected $messages = [
-       'Name.required' => 'Applicant Name Cannot be Empty',
-       'Relative_Name.required' => 'Enter Relative Name',
-       'Gender.required' => 'Please Select Gender',
-       'Dob.required' => 'Please Select Date of Birth',
-       'Mobile_No.required' => 'Mobile Number Cannot Be Empty',
-       'Address.required' => 'Enter Total Amount',
-       'Email.required' => 'Please Enter Email Id',
+        'Name.required' => 'Applicant Name Cannot be Empty',
+        'Relative_Name.required' => 'Enter Relative Name',
+        'Gender.required' => 'Please Select Gender',
+        'Dob.required' => 'Please Select Date of Birth',
+        'Mobile_No.required' => 'Mobile Number Cannot Be Empty',
+        'Address.required' => 'Enter Total Amount',
+        'Email.required' => 'Please Enter Email Id',
 
-   ];
+    ];
 
-   public function updated($propertyName)
-   {
-       $this->validateOnly($propertyName);
-   }
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function mount($Id)
     {
         $this->Client_Id = $Id;
         $this->Email = 'Not Available';
-        $fetch = ClientRegister::where('Id',$Id)->get();
+        $fetch = ClientRegister::where('Id', $Id)->get();
 
-        foreach($fetch as $key)
-        {
+        foreach ($fetch as $key) {
             $this->Name = $key['Name'];
             $this->Email = $key['Email_Id'];
             $this->Relative_Name = $key['Relative_Name'];
@@ -79,28 +78,24 @@ class EditClientProfile extends Component
     }
     public function Insight($mobile)
     {
-        $fetch = Application::where('Mobile_No',$mobile)->get();
-        $rev_total=0;
-        $paid=0;
-        $bal=0;
-        $pending =0;
-        $count =0;
-        $delivered =0;
-        foreach($fetch as $key)
-        {
+        $fetch = Application::where('Mobile_No', $mobile)->get();
+        $rev_total = 0;
+        $paid = 0;
+        $bal = 0;
+        $pending = 0;
+        $count = 0;
+        $delivered = 0;
+        foreach ($fetch as $key) {
             $count++;
             $rev_total += $key['Total_Amount'];
             $paid += $key['Amount_Paid'];
             $bal += $key['Balance'];
-            if($key['Status'] == 'Received')
-            {
-                $pending ++;
+            if ($key['Status'] == 'Received') {
+                $pending++;
             }
-            if($key['Status'] == 'Delivered to Client')
-            {
-                $delivered ++;
+            if ($key['Status'] == 'Delivered to Client') {
+                $delivered++;
             }
-
         }
         $this->Total_Rev = $rev_total;
         $this->Balance = $bal;
@@ -108,53 +103,44 @@ class EditClientProfile extends Component
         $this->Pedning_App = $pending;
         $this->App_Delivered = $delivered;
         $this->Total_App = $count;
-        $this->Rest_App = $count - ($pending+$delivered);
-
+        $this->Rest_App = $count - ($pending + $delivered);
     }
     public function Show($key)
     {
         $this->resetPage();
         $this->status = $key;
-        $latest_mob_app = Application::where('Mobile_No',$this->Mobile_No)->latest('created_at')->first();
-                $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
+        $latest_mob_app = Application::where('Mobile_No', $this->Mobile_No)->latest('created_at')->first();
+        $this->lastMobRecTime =  Carbon::parse($latest_mob_app['created_at'])->diffForHumans();
     }
     public function UpdateProfile($Id)
     {
         $this->validate();
-        if(!empty($this->Profile_Image))
-        {
-            if($this->old_profile_image != 'Not Available' )
-            {
+        if (!empty($this->Profile_Image)) {
+            if ($this->old_profile_image != 'Not Available') {
                 if (Storage::disk('public')->exists($this->old_profile_image)) // Check for existing File
                 {
-                    unlink(storage_path('app/public/'.$this->old_profile_image)); // Deleting Existing File
-                    $url='Not Available';
+                    unlink(storage_path('app/public/' . $this->old_profile_image)); // Deleting Existing File
+                    $url = 'Not Available';
                     $data = array();
 
-                    $data['Profile_Image']=$url;
-                    DB::table('client_register')->where([['Id','=',$Id]])->update($data);
-                }
-                else
-                {
+                    $data['Profile_Image'] = $url;
+                    DB::table('client_register')->where([['Id', '=', $Id]])->update($data);
+                } else {
                     $this->New_Profile_Image = 'Not Available';
                 }
-            }
-            else
-            {
+            } else {
                 $extension = $this->Profile_Image->getClientOriginalExtension();
-                $path = 'Client_DB/'.$this->Name.'_'.$Id.'/'.$this->Name.'/Photo';
-                $filename = 'Profile'.$this->Name.'_'.time().'.'.$extension;
-                $url = $this->Profile_Image->storePubliclyAs($path,$filename,'public');
+                $path = 'Client_DB/' . $this->Name . '_' . $Id . '/' . $this->Name . '/Photo';
+                $filename = 'Profile' . $this->Name . '_' . time() . '.' . $extension;
+                $url = $this->Profile_Image->storePubliclyAs($path, $filename, 'public');
                 $this->New_Profile_Image = $url;
             }
-        }
-        else
-        {
+        } else {
             $this->New_Profile_Image = $this->old_profile_image;
         }
         $data = array();
         $data['Name'] = trim($this->Name);
-        $data['Relative_Name'] =trim($this->Relative_Name);
+        $data['Relative_Name'] = trim($this->Relative_Name);
         $data['Gender'] = trim($this->Gender);
         $data['Mobile_No'] = trim($this->Mobile_No);
         $data['Address'] = trim($this->Address);
@@ -162,12 +148,12 @@ class EditClientProfile extends Component
         $data['Email_Id'] = trim($this->Email);
         $data['DOB'] = trim($this->Dob);
         $data['updated_at'] = Carbon::now();
-        ClientRegister::Where([['Id','=',$Id]])->update($data);
+        ClientRegister::Where([['Id', '=', $Id]])->update($data);
         $notification = array(
-            'message'=>'Profile Updated Sucessfully',
+            'message' => 'Profile Updated Sucessfully',
             'info-type' => 'success'
         );
-        return redirect()->route('edit_profile',$Id)->with($notification);
+        return redirect()->route('edit_profile', $Id)->with($notification);
     }
     public function ResetFields($Id)
     {
@@ -176,18 +162,15 @@ class EditClientProfile extends Component
     }
     public function render()
     {
-        if($this->status == 'All' )
-        {
-            $Services = Application::where('Mobile_No',$this->Mobile_No)->paginate(10);
-        }
-        else
-        {
-            $Services = Application::where([['Mobile_No','=',$this->Mobile_No],['Status','=',      $this->status]])->paginate(10);
+        if ($this->status == 'All') {
+            $Services = Application::where('Mobile_No', $this->Mobile_No)->paginate(10);
+        } else {
+            $Services = Application::where([['Mobile_No', '=', $this->Mobile_No], ['Status', '=',      $this->status]])->paginate(10);
         }
 
         $this->Capitalize();
         $this->Insight($this->Mobile_No);
 
-        return view('livewire.edit-client-profile',['AppliedServices'=>$Services]);
+        return view('livewire.edit-client-profile', ['AppliedServices' => $Services]);
     }
 }

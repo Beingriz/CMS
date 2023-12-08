@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
-    public $table="department";
-    public $timestamps=false;
+    public $table = "department";
+    public $timestamps = false;
 }

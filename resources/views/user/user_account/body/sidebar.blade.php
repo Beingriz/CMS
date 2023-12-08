@@ -5,11 +5,13 @@
         <!-- User details -->
         <div class="user-profile text-center mt-3">
             <div class="">
-                <img src="{{asset('storage/'.Auth::user()->profile_image)}}" alt="" class="avatar-md rounded-circle">
+                <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt=""
+                    class="avatar-md rounded-circle">
             </div>
             <div class="mt-3">
-                <h4 class="font-size-16 mb-1">{{Auth::user()->name}}</h4>
-                <span class="text-muted"><i class="ri-record-circle-line align-middle font-size-14 text-success"></i> Online</span>
+                <h4 class="font-size-16 mb-1">{{ Auth::user()->name }}</h4>
+                <span class="text-muted"><i class="ri-record-circle-line align-middle font-size-14 text-success"></i>
+                    Online</span>
             </div>
         </div>
 
@@ -20,7 +22,7 @@
                 <li class="menu-title">Menu</li>
 
                 <li>
-                    <a href="{{route('user.home',Auth::user()->id)}}" class="waves-effect">
+                    <a href="{{ route('user.home', Auth::user()->id) }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Home</span>
                     </a>
@@ -28,39 +30,40 @@
 
 
                 <li>
-                    <a href="{{route('history',Auth::user()->mobile_no)}}" >
+                    <a href="{{ route('history', Auth::user()->mobile_no) }}">
                         <i class="ri-lock-unlock-line align-middle me-1"></i>
                         <span>My Orders</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('service.list')}}" >
+                    <a href="{{ route('service.list') }}">
                         <i class="ri-profile-line"></i>
                         <span>All Services</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="has-arrow waves-effect">
-                        <i class="ri-file-paper-2-line"></i><span class="badge rounded-pill bg-primary float-end font-size-11">{{$services_count}}</span>
+                        <i class="ri-file-paper-2-line"></i><span
+                            class="badge rounded-pill bg-primary float-end font-size-11">{{ $services_count }}</span>
                         <span>List</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         @foreach ($service_list as $item)
-                        <li><a href="{{route('serv.details',$item->Id)}}">{{$item->Name}}</a></li>
+                            <li><a href="{{ route('serv.details', $item->Id) }}">{{ $item->Name }}</a></li>
                         @endforeach
-                        <li> <a href="{{route('update_application')}}">Update</a></li>
+                        <li> <a href="{{ route('update_application') }}">Update</a></li>
 
 
                     </ul>
                 </li>
                 <li>
-                    <a href="{{route('feedback',Auth::user()->id)}}" >
+                    <a href="{{ route('feedback', Auth::user()->id) }}">
                         <i class="ri-feedback-fill"></i>
                         <span>Feedback</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('admin.logout')}}" id="logout">
+                    <a href="{{ route('admin.logout') }}" id="logout">
                         <i class="ri-logout-circle-line"></i>
                         <span>Logout</span>
                     </a>

@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class HeaderFooterForm extends Component
 {
-    public $Id,$Company_Name,$Address,$Phone_No,$Facebook,$Instagram,$LinkedIn,$Twitter,$Time_From,$Time_To,$Update,$Youtube;
+    public $Id, $Company_Name, $Address, $Phone_No, $Facebook, $Instagram, $LinkedIn, $Twitter, $Time_From, $Time_To, $Update, $Youtube;
     protected $rules = [
         'Company_Name' => 'Required',
         'Address' => 'Required',
@@ -17,31 +17,31 @@ class HeaderFooterForm extends Component
         'Time_To' => 'Required',
     ];
 
-    Protected $messages = [
-        'Company_Name'=> 'Company Name Cannot be Blank',
-        'Address'=> 'Please Enter Company Address',
-        'Phone_No'=> 'Phone Number shuld not be empty',
-        'Time_From'=> 'Companys From Timming shuld not be blank ',
-        'Time_To'=> 'Companys To Timming shuld not be blank ',
+    protected $messages = [
+        'Company_Name' => 'Company Name Cannot be Blank',
+        'Address' => 'Please Enter Company Address',
+        'Phone_No' => 'Phone Number shuld not be empty',
+        'Time_From' => 'Companys From Timming shuld not be blank ',
+        'Time_To' => 'Companys To Timming shuld not be blank ',
     ];
     public function mount()
     {
-        $this->Id = 'UTB'.time();
+        $this->Id = 'UTB' . time();
     }
     public function ResetFields()
     {
 
-        $this->Company_Name="";
-        $this->Address="";
-        $this->Phone_No="";
-        $this->Time_From="";
-        $this->Time_To="";
-        $this->Facebook="";
-        $this->Instagram="";
-        $this->LinkedIn="";
-        $this->Twitter ="";
-        $this->Youtube ="";
-        $this->Update=0;
+        $this->Company_Name = "";
+        $this->Address = "";
+        $this->Phone_No = "";
+        $this->Time_From = "";
+        $this->Time_To = "";
+        $this->Facebook = "";
+        $this->Instagram = "";
+        $this->LinkedIn = "";
+        $this->Twitter = "";
+        $this->Youtube = "";
+        $this->Update = 0;
     }
     public function Save()
     {
@@ -58,22 +58,22 @@ class HeaderFooterForm extends Component
         $save->LinkedIn = $this->LinkedIn;
         $save->Twitter = $this->Twitter;
         $save->save();
-        session()->flash('SuccessMsg','Details Updated Successfully');
+        session()->flash('SuccessMsg', 'Details Updated Successfully');
         $this->ResetFields();
     }
     public function Edit($Id)
     {
         $fetch = UserTopBar::find($Id);
-        $this->Company_Name= $fetch['Company_Name'];
-        $this->Address=$fetch['Address'];
-        $this->Phone_No=$fetch['Phone_No'];
-        $this->Time_From=$fetch['Time_From'];
-        $this->Time_To=$fetch['Time_To'];
-        $this->Facebook=$fetch['Facebook'];
-        $this->Instagram=$fetch['Instagram'];
-        $this->LinkedIn=$fetch['LinkedIn'];
-        $this->Twitter =$fetch['Twitter'];
-        $this->Update=1;
+        $this->Company_Name = $fetch['Company_Name'];
+        $this->Address = $fetch['Address'];
+        $this->Phone_No = $fetch['Phone_No'];
+        $this->Time_From = $fetch['Time_From'];
+        $this->Time_To = $fetch['Time_To'];
+        $this->Facebook = $fetch['Facebook'];
+        $this->Instagram = $fetch['Instagram'];
+        $this->LinkedIn = $fetch['LinkedIn'];
+        $this->Twitter = $fetch['Twitter'];
+        $this->Update = 1;
         $this->Id = $fetch['Id'];
     }
     public function Select($Id)
@@ -82,12 +82,11 @@ class HeaderFooterForm extends Component
         $data['Selected'] = 'No';
         DB::table('user_top_bar')->Update($data);
         $data['Selected'] = 'Yes';
-        $Update = DB::table('user_top_bar')->where('Id','=',$Id)->Update($data);
-        if($Update)
-        {
-            session()->flash('SuccessMsg','Details Updated Successfully');
+        $Update = DB::table('user_top_bar')->where('Id', '=', $Id)->Update($data);
+        if ($Update) {
+            session()->flash('SuccessMsg', 'Details Updated Successfully');
             $this->ResetFields();
-            $this->Update=0;
+            $this->Update = 0;
         }
     }
     public function Update()
@@ -103,18 +102,15 @@ class HeaderFooterForm extends Component
         $data['LinkedIn'] =  $this->LinkedIn;
         $data['Twitter'] =  $this->Twitter;
         $data['Youtube'] =  $this->Youtube;
-        $Update = DB::table('user_top_bar')->where('Id','=',$this->Id)->Update($data);
-        if($Update)
-        {
-            session()->flash('SuccessMsg','Details Changed');
+        $Update = DB::table('user_top_bar')->where('Id', '=', $this->Id)->Update($data);
+        if ($Update) {
+            session()->flash('SuccessMsg', 'Details Changed');
         }
-
     }
 
     public function render()
     {
-        $Records = UserTopBar ::all();
+        $Records = UserTopBar::all();
         return view('livewire.admin-module.home-page.header-footer-form', compact('Records'));
     }
-
 }

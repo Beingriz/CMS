@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DebitSource extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
-     public $table="debit_source";
+    public $table = "debit_source";
 }

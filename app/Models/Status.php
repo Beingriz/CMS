@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Status extends Model
 {
     use HasFactory;
-    public $table="status";
+    public $table = "status";
     protected $connection = "mysql";
-    public $timestamps=false;
+    public $timestamps = false;
 }

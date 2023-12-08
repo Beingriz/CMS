@@ -5,19 +5,19 @@
             <div class="navbar-brand-box">
                 <a href="index.html" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="{{asset('backend/assets/images/dclogo.png')}}" alt="logo-sm" height="22">
+                        <img src="{{ asset('backend/assets/images/dclogo.png') }}" alt="logo-sm" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{asset('backend/assets/images/dclogo.png')}}" alt="logo-dark" height="20">
+                        <img src="{{ asset('backend/assets/images/dclogo.png') }}" alt="logo-dark" height="20">
                     </span>
                 </a>
 
-                <a href="{{route('dashboard')}}" class="logo logo-light">
+                <a href="{{ route('dashboard') }}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{asset('logo/dclogo.png')}}" alt="logo-sm-light" height="22">
+                        <img src="{{ asset('logo/dclogo.png') }}" alt="logo-sm-light" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{asset('logo/dclogo.png')}}" alt="logo-light" height="70" width="90">
+                        <img src="{{ asset('logo/dclogo.png') }}" alt="logo-light" height="70" width="90">
                     </span>
                 </a>
             </div>
@@ -28,12 +28,13 @@
 
             <!-- App Search-->
 
-                     @livewire('admin-module.application.global-search-bar')
+            @livewire('admin-module.application.global-search-bar')
 
 
             {{-- Bookmark Menu Start --}}
             <div class="dropdown dropdown-mega d-none d-lg-block ms-2">
-                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown"
+                    aria-haspopup="false" aria-expanded="false">
                     Bookmarks
                     <i class="mdi mdi-chevron-down"></i>
                 </button>
@@ -153,7 +154,8 @@
 
                                 <div class="col-sm-5">
                                     <div>
-                                        <img src="{{asset('backend/assets/images/megamenu-img.png')}}" alt="megamenu-img" class="img-fluid mx-auto d-block">
+                                        <img src="{{ asset('backend/assets/images/megamenu-img.png') }}"
+                                            alt="megamenu-img" class="img-fluid mx-auto d-block">
                                     </div>
                                 </div>
                             </div>
@@ -162,23 +164,23 @@
 
                 </div>
             </div>
-             {{-- Bookmark Menu End --}}
+            {{-- Bookmark Menu End --}}
         </div>
 
         <div class="d-flex">
 
-            {{-- Full Screen Button Start--}}
+            {{-- Full Screen Button Start --}}
             <div class="dropdown d-none d-lg-inline-block ms-1">
                 <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
                     <i class="ri-fullscreen-line"></i>
                 </button>
             </div>
-            {{-- Full Screen Button End--}}
+            {{-- Full Screen Button End --}}
 
-             {{-- Notification Button Start--}}
+            {{-- Notification Button Start --}}
             <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
-                      data-bs-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn header-item noti-icon waves-effect"
+                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ri-notification-3-line"></i>
                     <span class="noti-dot"></span>
                 </button>
@@ -213,8 +215,8 @@
                         </a>
                         <a href="" class="text-reset notification-item">
                             <div class="d-flex">
-                                <img src="assets/images/users/avatar-3.jpg"
-                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                <img src="assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs"
+                                    alt="user-pic">
                                 <div class="flex-1">
                                     <h6 class="mb-1">James Lemire</h6>
                                     <div class="font-size-12 text-muted">
@@ -243,8 +245,8 @@
 
                         <a href="" class="text-reset notification-item">
                             <div class="d-flex">
-                                <img src="assets/images/users/avatar-4.jpg"
-                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                <img src="assets/images/users/avatar-4.jpg" class="me-3 rounded-circle avatar-xs"
+                                    alt="user-pic">
                                 <div class="flex-1">
                                     <h6 class="mb-1">Salena Layfield</h6>
                                     <div class="font-size-12 text-muted">
@@ -264,16 +266,16 @@
                     </div>
                 </div>
             </div>
-            {{-- Notification Button End--}}
+            {{-- Notification Button End --}}
 
-             {{-- Profile Button Start--}}
+            {{-- Profile Button Start --}}
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @if (Auth::check())
-                        <img class="rounded-circle header-profile-user" src="{{asset('storage/'.Auth::user()->profile_image)}}"
-                        alt="Header Avatar">
-                        <span class="d-none d-xl-inline-block ms-1">{{Auth::user()->name}}</span>
+                        <img class="rounded-circle header-profile-user"
+                            src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Header Avatar">
+                        <span class="d-none d-xl-inline-block ms-1">{{ Auth::user()->name }}</span>
                     @endif
 
 
@@ -281,15 +283,21 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{route('admin.profile_view')}}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
-                    <a class="dropdown-item" href="{{route('change_password')}}"><i class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
-                    <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
+                    <a class="dropdown-item" href="{{ route('admin.profile_view') }}"><i
+                            class="ri-user-line align-middle me-1"></i> Profile</a>
+                    <a class="dropdown-item" href="{{ route('change_password') }}"><i
+                            class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
+                    <a class="dropdown-item d-block" href="#"><span
+                            class="badge bg-success float-end mt-1">11</span><i
+                            class="ri-settings-2-line align-middle me-1"></i> Settings</a>
+                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i>
+                        Lock screen</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{{ route('admin.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
+                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i
+                            class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>
-             {{-- Profile Button End--}}
+            {{-- Profile Button End --}}
         </div>
     </div>
 </header>

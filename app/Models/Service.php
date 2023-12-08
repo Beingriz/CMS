@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
-    public $table='services';
+    public $table = 'services';
 }

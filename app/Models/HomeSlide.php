@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class HomeSlide extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
 
-  protected $guarded = [];
+    protected $guarded = [];
 }

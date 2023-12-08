@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Carousel_DB extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
     public $table = 'carousel';
 }

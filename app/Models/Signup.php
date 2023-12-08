@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Signup extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
-    public $table="users";
+    public $table = "users";
 }

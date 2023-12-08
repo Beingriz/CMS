@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class CreditSources extends Model
 {
-    use HasFactory;    protected $connection = 'mysql';
+    use HasFactory;
+    protected $connection = 'mysql';
 
-    public $table="credit_sources";
+    public $table = "credit_sources";
     public $timestamp =  false;
 
     public function scopeFilter($query, $key)
     {
         $key = "%$key%";
-        $query->where(function($query) use ($key)
-        {
-            $query->where('Source','Like',$key)->orWhere('Total_Revenue','Like',$key);
+        $query->where(function ($query) use ($key) {
+            $query->where('Source', 'Like', $key)->orWhere('Total_Revenue', 'Like', $key);
         });
     }
 }

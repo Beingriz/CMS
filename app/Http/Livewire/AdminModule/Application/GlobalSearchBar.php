@@ -8,12 +8,12 @@ use Livewire\Component;
 class GlobalSearchBar extends Component
 {
     public $Search_key;
-    public $Search='';
-    protected $rules=[
-        'Search'=>'required | min:5',
+    public $Search = '';
+    protected $rules = [
+        'Search' => 'required | min:5',
     ];
     protected $message = [
-        'Search'=>'Please Enter to Search'
+        'Search' => 'Please Enter to Search'
     ];
 
     public function updated($propertyName)
@@ -21,9 +21,10 @@ class GlobalSearchBar extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function Search(){
+    public function Search()
+    {
         $this->validate();
-        return redirect()->route('global_search',$this->Search);
+        return redirect()->route('global_search', $this->Search);
     }
 
     public function render()

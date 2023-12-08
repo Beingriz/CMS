@@ -1,58 +1,58 @@
 @extends('Layouts.main')
 @section('content')
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-</head>
+    <head>
+    </head>
 
-<body>
-    <div class="container">
-        <section class="work-area">
-            <div class="sub-nav-menu">
-                <ul>
-                    <li><a href="{{ url('debit_entry') }}">New Debit Entry</a></li><span class="span">|</span>
-                </ul>
-            </div>
-            <div class="pages">
-                <div class="border">
+    <body>
+        <div class="container">
+            <section class="work-area">
+                <div class="sub-nav-menu">
+                    <ul>
+                        <li><a href="{{ url('debit_entry') }}">New Debit Entry</a></li><span class="span">|</span>
+                    </ul>
+                </div>
+                <div class="pages">
+                    <div class="border">
 
-                    <!-- Table List Code  -->
-                    <div class="search-table">
-                        <div class="data-table-header">
-                            <img src="./photo_gallery/recyclebin.png" alt="Application_image" class="header-image">
-                            <p class="heading">Recycle Bin</p>
-                        </div>
-                        <span class="info-text">Applications Avaialble in Recycble Bin are {{ $count }}
-                            &#x20B9;{{$total}}
-                            @if (session('RecycleMsg'))
-                            <span class="error">{{session('RecycleMsg')}}</span>
-                            @endif
-                        </span>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Sl.No</th>
-                                    <th>Name</th>
-                                    <th>Mobile No</th>
-                                    <th>Application</th>
-                                    <th>Ack_No</th>
-                                    <th>Document_No</th>
-                                    <th>Status</th>
-                                    <th>Amount</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($recycle_data as $data)
-                                @while ($sl_no>0)
-                                <tr>
-                                    <td>
-                                        {{ $n++ }}
-                                        @if($sl_no==$sl_no)
-                                        @break
-                                        @endif
-                                    </td>
+                        <!-- Table List Code  -->
+                        <div class="search-table">
+                            <div class="data-table-header">
+                                <img src="./photo_gallery/recyclebin.png" alt="Application_image" class="header-image">
+                                <p class="heading">Recycle Bin</p>
+                            </div>
+                            <span class="info-text">Applications Avaialble in Recycble Bin are {{ $count }}
+                                &#x20B9;{{ $total }}
+                                @if (session('RecycleMsg'))
+                                    <span class="error">{{ session('RecycleMsg') }}</span>
+                                @endif
+                            </span>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Name</th>
+                                        <th>Mobile No</th>
+                                        <th>Application</th>
+                                        <th>Ack_No</th>
+                                        <th>Document_No</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($recycle_data as $data)
+                                        @while ($sl_no > 0)
+                                            <tr>
+                                                <td>
+                                                    {{ $n++ }}
+                                                    @if ($sl_no == $sl_no)
+                                                    @break
+                                                @endif
+                                            </td>
                                     @endwhile
                                     <td style="width:15%">{{ $data->Name }}</td>
                                     <td style="width:15%">{{ $data->Mobile_No }}</td>
@@ -82,8 +82,7 @@
                                         </div>
                                     </td>
 
-                                </tr>
-
+                                    </tr>
                                 @endforeach
                             </tbody>
 
@@ -105,7 +104,7 @@
                             </tfoot> -->
                         </table>
                         <span>
-                            {{$recycle_data->links()}}
+                            {{ $recycle_data->links() }}
                         </span>
                     </div>
                 </div>
@@ -117,14 +116,4 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
 @endsection

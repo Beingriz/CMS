@@ -15,40 +15,41 @@ class ServiceDetails extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $Id,$SubServices,$Company_Name,$ServiceName,$display=false,$getId,$show=false;
+    public $Id, $SubServices, $Company_Name, $ServiceName, $display = false, $getId, $show = false;
     public function mount($Id)
     {
         # code...
         $this->Id = $Id;
     }
-    public $serviceName,$delivered,$Image,$docList;
-    public function GetDetails($Id){
-        $this->display=true;
+    public $serviceName, $delivered, $Image, $docList;
+    public function GetDetails($Id)
+    {
+        $this->display = true;
         $this->getId = $Id;
         $this->showDoc = false;
-        $subservices = SubServices::where('Id',$Id)->get();
-        foreach($subservices as $key){
+        $subservices = SubServices::where('Id', $Id)->get();
+        foreach ($subservices as $key) {
             $this->serviceName = $key['Name'];
         }
 
-        $this->delivered = Application::where('Application_Type',$this->serviceName)->where('Status','Delivered to Client')->get()->count();
+        $this->delivered = Application::where('Application_Type', $this->serviceName)->where('Status', 'Delivered to Client')->get()->count();
     }
-    public $sl=1,$showDoc = false,$docId='DCA001';
-    public function GetDocuments($Id){
+    public $sl = 1, $showDoc = false, $docId = 'DCA001';
+    public function GetDocuments($Id)
+    {
         $this->showDoc = true;
         $this->docId = $Id;
-        $this->display=false;
+        $this->display = false;
     }
     public function GetImage()
     {
-        $serviceName = MainServices::where('Id',$this->Id)->get();
-        foreach($serviceName as $key){
+        $serviceName = MainServices::where('Id', $this->Id)->get();
+        foreach ($serviceName as $key) {
             $this->Image = $key['Thumbnail'];
             if (Storage::disk('public')->exists($this->Image)) // Check for existing File
             {
                 $this->Image = $key['Thumbnail'];
-            }
-            else{
+            } else {
 
                 $this->Image = "Not Available";
             }
@@ -58,17 +59,17 @@ class ServiceDetails extends Component
     public function render()
     {
         $this->GetImage();
-        $records = UserTopBar::Where('Selected','Yes')->get();
-        foreach($records as $key){
+        $records = UserTopBar::Where('Selected', 'Yes')->get();
+        foreach ($records as $key) {
             $this->Company_Name = $key['Company_Name'];
         }
-        $serviceName = MainServices::where('Id',$this->Id)->get();
-        foreach($serviceName as $key){
+        $serviceName = MainServices::where('Id', $this->Id)->get();
+        foreach ($serviceName as $key) {
             $this->ServiceName = $key['Name'];
         }
-        $subservices = SubServices::where('Service_Id',$this->Id)->get();
-        $documents= DocumentList::where('Sub_Service_Id',$this->docId)->paginate(10);
-        $this->SubServices = SubServices::Where('Id',$this->getId)->get();
-        return view('livewire.admin-module.operations.service-details',compact('subservices','records','documents'),['ServiceName',$this->ServiceName]);
+        $subservices = SubServices::where('Service_Id', $this->Id)->get();
+        $documents = DocumentList::where('Sub_Service_Id', $this->docId)->paginate(10);
+        $this->SubServices = SubServices::Where('Id', $this->getId)->get();
+        return view('livewire.admin-module.operations.service-details', compact('subservices', 'records', 'documents'), ['ServiceName', $this->ServiceName]);
     }
 }

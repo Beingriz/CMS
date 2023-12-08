@@ -1,10 +1,10 @@
 @extends('admin-module.admin_master')
-@section('admin');
+@section('admin')
+    ;
 
     <div class="page-content" style="margin-top: -45px">
         <div class="container-fluid">
-             @livewire('admin-module.application.dynamic-dashboard',['MainServiceId'=>$MainServiceId])
+            @livewire('admin-module.application.dynamic-dashboard', ['MainServiceId' => $MainServiceId])
         </div>
     </div>
-
 @endsection
