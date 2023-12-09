@@ -82,7 +82,7 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
         Route::get('/ApplyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
         Route::get('/Acknowledgment/{id}', 'Acknowledgment')->name('acknowledgment');
         Route::get('/Track/{id}', 'Track')->name('track');
-        Route::get('/View/Application{id}', 'viewApplication')->name('view.applicaiton');
+        Route::get('/View/Application{id}', 'viewApplication')->name('view.application');
         Route::get('/View/Document/{id}', 'viewDocument')->name('view.document');
         Route::get('/Feedback/{id}', 'Feedback')->name('feedback');
         Route::get('/callback/{id}/{service}/{service_type}', 'CallBack')->name('callback');
@@ -116,7 +116,7 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('new/application', 'index')->name('new.application');
         Route::get('update/application', 'updateApplication')->name('update_application');
         Route::get('edit/application/{id}', 'Edit')->name('edit_application');
-        Route::get('/open_app/{id}', 'Open_Application')->name('open_applicaiton');
+        Route::get('view/application/{id}', 'ViewApplication')->name('view.application');
         Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');

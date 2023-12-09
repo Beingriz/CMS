@@ -132,34 +132,35 @@ class ApplicationController extends Controller
     public function Download_Ack($Id)
     {
         $fetch = Application::wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $file = $key['Ack_File'];
-        }
-        if ($file != NULL) {
+        if ($fetch != NULL) {
+            foreach ($fetch as $key) {
+                $file = $key['Ack_File'];
+            }
+
             if (Storage::disk('public')->exists($file)) {
                 return response()->download(public_path('storage/' . $file));
             } else {
-                return redirect()->route('edit_application', $Id)->with('Error', 'Acknowledgement File Not Available!');
-            }
+                session()->flash('Error', 'Acknowledgment File Not Available!');
+                return redirect()->back();            }
         } else {
-            return redirect()->route('edit_application', $Id)->with('Error', 'Acknowledgement File Not Available!');
-        }
+            session()->flash('Error', 'Acknowledgment File Not Available!');
+            return redirect()->back();        }
     }
     public function Download_Doc($Id)
     {
         $fetch = Application::wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $file = $key['Doc_File'];
-        }
-        if ($file != NULL) {
+        if ($fetch != NULL) {
+            foreach ($fetch as $key) {
+                $file = $key['Doc_File'];
+            }
             if (Storage::disk('public')->exists($file)) {
                 return response()->download(public_path('storage/' . $file));
             } else {
-                return redirect()->route('edit_application', $Id)->with('Error', 'Document File Not Available!');
-            }
+                session()->flash('Error', 'Document File Not Available!');
+                return redirect()->back();            }
         } else {
-            return redirect()->route('edit_application', $Id)->with('Error', 'Document File Not Available!');
-        }
+            session()->flash('Error', 'Document File Not Available!');
+            return redirect()->back();        }
     }
     public function Download_Pay($Id)
     {
@@ -171,11 +172,11 @@ class ApplicationController extends Controller
             if (Storage::disk('public')->exists($file)) {
                 return response()->download(public_path('storage/' . $file));
             } else {
-                return redirect()->route('edit_application', $Id)->with('Error', 'Payment Receipt Not Available!');
-            }
+                session()->flash('Error', 'Payment File Not Available!');
+                return redirect()->back();            }
         } else {
-            return redirect()->route('edit_application', $Id)->with('Error', 'Payment Receipt Not Available!');
-        }
+            session()->flash('Error', 'Payment File Not Available!');
+            return redirect()->back();        }
     }
     public function Download_Files($Doc_Id)
     {
@@ -188,7 +189,8 @@ class ApplicationController extends Controller
         if (Storage::disk('public')->exists($file)) {
             return response()->download(public_path('storage/' . $file));
         } else {
-            return redirect()->route('edit_application', $Id)->with('Error', 'Document File Not Available!');
+            session()->flash('Error', 'Document File Not Available!');
+            return redirect()->back();
         }
     }
 
@@ -637,7 +639,7 @@ class ApplicationController extends Controller
         return view('Application\balance_list', ['balance_list' =>
         $selected_ser_balance_list, 'sl_no' => $sl_count, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'application_type' => $this->application_type, 'info' => $info]);
     }
-    public function Open_Application($Client_Id)
+    public function ViewApplication($Client_Id)
     {
         $yes = 'Yes';
         $sl_no = DB::table('digital_cyber_db')->where([['Client_Id', '=', $Client_Id], ['Recycle_Bin', '=', $this->no]])->count();

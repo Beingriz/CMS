@@ -105,7 +105,7 @@
                                                         style="">
                                                         <a class="dropdown-item" title="View  Application"
                                                             id="open"
-                                                            href={{ route('open_applicaiton', [$data->Id]) }}>Open</a>
+                                                            href={{ route('view.application', [$data->Id]) }}>Open</a>
                                                         <a class="dropdown-item" title="Edit Application"
                                                             id="update"href={{ route('edit_application', $data->Id) }}>Edit</a>
                                                         <a class="dropdown-item" title="Call on {{ $data->Mobile_No }}"

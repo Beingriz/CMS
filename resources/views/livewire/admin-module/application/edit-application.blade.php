@@ -3,7 +3,7 @@
     <div class="row">{{-- Messags / Notification Row --}}
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Application Details of <span class="text-primary">{{ $Name }}</span> </h4>
+                <h4 class="mb-sm-0">Edit Application of <span class="text-primary">{{ $Name }}</span> </h4>
                 @if (session('SuccessMsg'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('SuccessMsg') }}
@@ -24,18 +24,28 @@
                 @endif
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('new.application') }}">Application</a></li>
                         <li class="breadcrumb-item active">Update</li>
-                        <li class="breadcrumb-item active">ID: {{ $Client_Id }}</li>
+                        <li class="breadcrumb-item active"> <a href="{{ route('view.application',$App_Id) }}" id="open">View</a></li>
                     </ol>
                 </div>
 
             </div>
         </div>
     </div>{{-- End of Row --}}
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{{ route('Dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('add_services') }}">Services</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('new.status') }}">Status</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('Credit') }}">Credit</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('Debit') }}">Debit</a></li>
+        </ol>
+    </div>{{-- End of Page Tittle --}}
 
     <div class="row"> {{-- Start of Services Row --}}
-        <a href="#" class="col-xl-3 col-md-10" wire:click.prevent="ShowApplications('{{ $Mobile_No }}')">
+        <a href="#table" class="col-xl-3 col-md-10" wire:click="ShowApplications('{{ $Mobile_No }}')">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex">
@@ -136,7 +146,7 @@
                 <div class="card-header d-sm-flex align-items-center justify-content-between">
                     <h3 class="card-title mb-4">Application ID: {{ $Client_Id }}</h3>
                     <h4 class="card-title mb-6">Update Section</h4>
-                    <h3 class="card-title mb-4">Mr / Mrs : {{ $Name }}</h3>
+                    <h3 class="card-title mb-4"> <a href="{{ route('view.application',$Id) }}">View : Mr / Mrs : {{ $Name }} App</a></h3>
                 </div>
                 <div class="card-body">
 
@@ -225,11 +235,9 @@
                                                 <select class="form-select" wire:model.lazy="Gender">
                                                     @if (!empty($Gender))
                                                         <option value="{{ $Gender }}">{{ $Gender }}
-                                                        </option>
-                                                    @else
-                                                        <option selected="">Select Gender</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
+                                                        </option>
                                                     @endif
                                                 </select>
                                                 @error('Gender')
@@ -978,13 +986,12 @@
     </div>
     {{-- ---------------------------------------------------------------------------------------------------- --}}
 
-
     {{-- List of Applicaiton  Start --}}
-    @if ($ShowTable)
-        <div class="" id="table">
-            @include('Application.dynamic-table')
-        </div>
-    @endif
+    <div id="table">
+        @if ($ShowTable)
+            @include('admin-module.application.dynamic-table')
+        @endif
+    </div>
     {{-- List of Applicaiton  End --}}
 
 

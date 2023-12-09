@@ -443,7 +443,7 @@ class EditApplication extends Component
         if ($update_Credit) {
             session()->flash('SuccessMsg', 'Credit Ledger Updated for ' . $this->Name);
         }
-        return redirect()->route('edit_application', $Id);
+        return redirect()->route('view.application', $Id);
     }
     public function ShowApplications($mobile)
     {

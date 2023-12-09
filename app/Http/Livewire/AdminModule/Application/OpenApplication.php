@@ -37,7 +37,7 @@ class OpenApplication extends Component
     public $filterby, $show = 0, $Checked, $collection, $Profile_Image,$paginate=5;
     public $Select_Date, $Daily_Income = 0;
     protected $show_app;
-    public $Doc_Files;
+    public $updated_at,$created;
 
     public function mount($Id)
     {
@@ -61,7 +61,8 @@ class OpenApplication extends Component
             $this->Status = $key['Status'];
             $this->Delivered_Date = $key['Delivered_Date'];
             $this->Registered = $key['Registered'];
-            $this->Profile_Image = $key['Profile_Image'];
+            $this->Profile_Image = $key['Applicant_Image'];
+            $this->updated_at = $key['updated_at'];
         }
     }
     public function ShowApplications($key)
@@ -118,9 +119,9 @@ class OpenApplication extends Component
                 $this->balance +=  $amt['Balance'];
             }
         }
-        $this->Doc_Files = DocumentFiles::Where([['App_Id', $this->Id], ['Client_Id', $this->Client_Id]])->get();
+        $Doc_Files = DocumentFiles::Where([['App_Id', $this->Id], ['Client_Id', $this->Client_Id]])->paginate(5);
         $status_list = Status::all();
 
-        return view('livewire.admin-module.application.open-application', ['show_app' => $this->show_app,'status_list' => $status_list]);
+        return view('livewire.admin-module.application.open-application', ['show_app' => $this->show_app,'status_list' => $status_list], compact('Doc_Files'));
     }
 }

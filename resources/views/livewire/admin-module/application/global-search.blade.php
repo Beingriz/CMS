@@ -442,7 +442,7 @@
                                                     @endif
                                                     {{-- Open --}}
                                                     <a class="dropdown-item" title="View  Application" id="open"
-                                                        href={{ route('open_applicaiton', [$data->Id]) }}>Open</a>
+                                                        href={{ route('view.application', [$data->Id]) }}>Open</a>
 
                                                     {{-- Edit --}}
                                                     <a class="dropdown-item btn-primary" id="update"

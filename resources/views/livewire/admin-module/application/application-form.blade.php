@@ -1074,6 +1074,9 @@
                                                         </button>
                                                         <div class="dropdown-menu"
                                                             aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                            <a class="dropdown-item" title="View  Application"
+                                                                href={{ route('view.application', $data->Id) }}
+                                                                id="open">View</a>
                                                             <a class="dropdown-item" title="Edit  Application"
                                                                 href={{ route('edit_application', $data->Id) }}
                                                                 id="update">Edit</a>
