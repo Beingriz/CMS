@@ -665,7 +665,7 @@ class ApplicationController extends Controller
         }
 
 
-        return view('Application\open_application', ['applicant_data' => $applicant_data, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'info' => $this->info, 'indi_total' => $tot, 'indi_amount' => $amnt, 'indi_bal' => $bal, 'indi_count' => $count_app, 'indi_data' => $get_app, 'indi_delivered' => $app_delivered, 'indi_pending' => $app_pending, 'indi_deleted' => $app_deleted, 'Client_Id' => $Client_Id]);
+        return view('admin-module.application.open_application', ['applicant_data' => $applicant_data, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'info' => $this->info, 'indi_total' => $tot, 'indi_amount' => $amnt, 'indi_bal' => $bal, 'indi_count' => $count_app, 'indi_data' => $get_app, 'indi_delivered' => $app_delivered, 'indi_pending' => $app_pending, 'indi_deleted' => $app_deleted, 'Client_Id' => $Client_Id]);
     }
     public function Update_Application($Id)
     {

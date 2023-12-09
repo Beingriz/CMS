@@ -4,6 +4,7 @@ namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use App\Models\DocumentFiles;
+use App\Models\Status;
 use App\Traits\RightInsightTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -33,9 +34,9 @@ class OpenApplication extends Component
     public $Status;
     public $Registered, $count_app = 0, $app_count, $app_pending, $app_delivered, $app_deleted;
     public $total, $paid, $balance = 0, $n = 1;
-    public $filterby, $show = 0, $Checked, $collection, $Profile_Image;
+    public $filterby, $show = 0, $Checked, $collection, $Profile_Image,$paginate=5;
     public $Select_Date, $Daily_Income = 0;
-    public $show_app = [];
+    protected $show_app;
     public $Doc_Files;
 
     public function mount($Id)
@@ -63,11 +64,17 @@ class OpenApplication extends Component
             $this->Profile_Image = $key['Profile_Image'];
         }
     }
-    public function ShowApplicatins($Mobile_No)
+    public function ShowApplications($key)
     {
         $this->show = 1;
-        $this->show_app = Application::Where('Mobile_No', $Mobile_No)->get();
+        $this->show_app  = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no]])
+        ->filter(trim($this->filterby))
+        // ->when($this->Status, function ($query, $status) {
+        //     return $query->where('Status', $status);
+        // })
+        ->paginate($this->paginate);
     }
+
     public function Delete_Doc($Id)
     {
         $fetch = DocumentFiles::Wherekey($Id)->get();
@@ -87,8 +94,10 @@ class OpenApplication extends Component
             session()->flash('Error', 'File Not Available');
         }
     }
+
     public function render()
     {
+        $this->resetPage();
         $yes = 'Yes';
         $applicant_data = DB::table('digital_cyber_db')->where([['Client_Id', '=', $this->Client_Id], ['Recycle_Bin', '=', $this->no]])->get();
         $mobile = '';
@@ -110,7 +119,8 @@ class OpenApplication extends Component
             }
         }
         $this->Doc_Files = DocumentFiles::Where([['App_Id', $this->Id], ['Client_Id', $this->Client_Id]])->get();
+        $status_list = Status::all();
 
-        return view('livewire.open-application', ['show_app' => $this->show_app]);
+        return view('livewire.admin-module.application.open-application', ['show_app' => $this->show_app,'status_list' => $status_list]);
     }
 }

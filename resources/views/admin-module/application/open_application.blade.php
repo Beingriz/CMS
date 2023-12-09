@@ -1,4 +1,4 @@
-@extends('admin.admin_master')
+@extends('admin-module.admin_master')
 @section('admin')
     ;
     <div class="page-content" style="margin-top: -45px">
@@ -26,6 +26,6 @@
                 </ol>
             </div>{{-- End of Page Tittle --}}
             {{-- @include('Layouts.left_menu') --}}
-            @livewire('open-application', ['Id' => $Client_Id])
+            @livewire('admin-module.application.open-application', ['Id' => $Client_Id])
             {{-- @include('Layouts.right_insight') --}}
         @endsection

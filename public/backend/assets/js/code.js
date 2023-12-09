@@ -144,11 +144,6 @@ $(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = link
-                Swal.fire(
-                    'File Opened!',
-                    'Your file has been Open Now.',
-                    'success'
-                )
             }
         })
 
