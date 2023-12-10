@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Livewire\UserModule;
+namespace App\Http\Livewire;
 
 use App\Models\ClientRegister;
 use App\Models\User;
+use App\Traits\WhatsappTrait;
 use Illuminate\Auth\Events\Registered;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,9 @@ use Illuminate\Validation\Rules\Password;
 
 class UserRegister extends Component
 {
+    use WhatsappTrait;
     public $name, $email, $username, $mobile_no, $password, $password_confirmation;
+
     protected $rules = [
         'name' => 'required',
         'mobile_no' => 'required | min:10 | max : 10 | unique:users',
@@ -65,10 +68,11 @@ class UserRegister extends Component
             'message' => $this->name . ' Login Successfull',
             'alert-type' => 'info'
         );
-        return redirect('/user/dashboard')->with($notification);
+        $this->UserRegisterAlert($this->name, $this->mobile_no, $this->username);
+        return redirect()->route('user.dashboard')->with($notification);
     }
     public function render()
     {
-        return view('livewire.user-register');
+        return view('livewire.user_module.user-register');
     }
 }

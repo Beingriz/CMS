@@ -2,7 +2,7 @@
 @section('UserAccount')
 <div class="page-content" style="margin-top: -15px">
     <div class="container-fluid">
-        @livewire('user.view-profile')
+        @livewire('user-module.view-profile')
     </div>
 </div>
 

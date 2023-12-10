@@ -78,7 +78,7 @@
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1"
                                                         style="">
                                                         <a class="dropdown-item" title="Open Applicatin"
-                                                            href="{{ route('view.applicaiton', $data->Id) }}"id="editData">Open</a>
+                                                            href="{{ route('view.user.application', $data->Id) }}"id="editData">Open</a>
                                                         @if (!empty($data->Consent))
                                                             <a class="dropdown-item" title="Open Applicatin"
                                                                 href="{{ route('view.document', $data->Id) }}"id="open">View

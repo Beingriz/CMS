@@ -29,6 +29,6 @@ class ServiceHistory extends Component
             ->select('digital_cyber_db.*')
             ->orderBy('digital_cyber_db.created_at', 'desc')->paginate(10);
         $this->service_count =  $Services->total();
-        return view('livewire.user.service-history', compact('Services'));
+        return view('livewire.user-module.service-history', compact('Services'));
     }
 }

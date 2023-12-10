@@ -27,24 +27,30 @@ class ApplicationController extends Controller
     {
         return view('admin-module.application.new_application');
     }
+
     public function updateApplication()
     {
         return view('admin-module.application.update_application');
     }
+
     public function Home()
     {
 
         return view('admin-module.application.app_dashboard',);
     }
+
     public function UpdateService()
     {
 
         return view('DigitalLedger\CreditLedger\update',);
     }
+
     public function Temp()
     {
         return view('Application\new_template');
     }
+
+
     public function Dashboard()
     {
         if ($this->applications_served > 0) {
@@ -103,6 +109,8 @@ class ApplicationController extends Controller
         }
         return view('admin-module.application.app_dashboard', ['total_applicaiton' => $this->applications_served, 'total_amount' => $total_amount, 'Mainservices' => $this->MainServices, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'new_clients' => $this->new_clients, 'previous_day_new_clients' => $this->previous_day_new_clients, 'bookmarks' => $this->bookmarks,]);
     }
+
+
     public function DynamicDashboard($MainServiceId)
     {
         $No = 'No';
@@ -124,10 +132,32 @@ class ApplicationController extends Controller
             'MainServiceId' => $MainServiceId,
         ]);
     }
+
     public function Edit($Id)
     {
 
         return view('admin-module.application.edit_app', ['application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'sl_no' => $this->sl_no, 'n' => $this->n, 'daily_applications' => $this->daily_applications, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'Id' => $Id, 'ForceDelete' => $this->ForceDelete]);
+    }
+    public function MovetoRecycleBin($Id)
+    {
+
+        $check_bal_app = DB::table('digital_cyber_db')->where('Id', '=', $Id)
+            ->where(function ($query) {
+                $query->where('Balance', '>', 0);
+            })->get();
+
+        if (count($check_bal_app) > 0) {
+            session()->flash('Error', 'Sorry! Balance due for : ' . $Id . ' Please Clear Due and try again!');
+            return redirect()->back();
+        } else {
+            
+            $data = array();
+            $data['Recycle_Bin'] = 'Yes';
+            $data['updated_at'] = Carbon::now();
+            Application::where('Id', $Id)->Update($data);
+            session()->flash('SuccessMsg', 'Record for Application Id: ' . $Id . ' Moved to recyble bin!');
+            return redirect()->back();
+        }
     }
     public function Download_Ack($Id)
     {
@@ -141,10 +171,12 @@ class ApplicationController extends Controller
                 return response()->download(public_path('storage/' . $file));
             } else {
                 session()->flash('Error', 'Acknowledgment File Not Available!');
-                return redirect()->back();            }
+                return redirect()->back();
+            }
         } else {
             session()->flash('Error', 'Acknowledgment File Not Available!');
-            return redirect()->back();        }
+            return redirect()->back();
+        }
     }
     public function Download_Doc($Id)
     {
@@ -157,10 +189,12 @@ class ApplicationController extends Controller
                 return response()->download(public_path('storage/' . $file));
             } else {
                 session()->flash('Error', 'Document File Not Available!');
-                return redirect()->back();            }
+                return redirect()->back();
+            }
         } else {
             session()->flash('Error', 'Document File Not Available!');
-            return redirect()->back();        }
+            return redirect()->back();
+        }
     }
     public function Download_Pay($Id)
     {
@@ -173,10 +207,12 @@ class ApplicationController extends Controller
                 return response()->download(public_path('storage/' . $file));
             } else {
                 session()->flash('Error', 'Payment File Not Available!');
-                return redirect()->back();            }
+                return redirect()->back();
+            }
         } else {
             session()->flash('Error', 'Payment File Not Available!');
-            return redirect()->back();        }
+            return redirect()->back();
+        }
     }
     public function Download_Files($Doc_Id)
     {
@@ -262,22 +298,22 @@ class ApplicationController extends Controller
         }
     }
 
-    public function List()
-    {
-        $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);
-        $total = 0;
-        foreach ($this->daily_app_amount as $key) {
-            $key  = get_object_vars($key); {
-                $total += $key['Amount_Paid'];
-            }
-        }
+    // public function List()
+    // {
+    //     $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);
+    //     $total = 0;
+    //     foreach ($this->daily_app_amount as $key) {
+    //         $key  = get_object_vars($key); {
+    //             $total += $key['Amount_Paid'];
+    //         }
+    //     }
 
-        // Code for insight Data Records are fetched from Right Insight Traits
+    //     // Code for insight Data Records are fetched from Right Insight Traits
 
 
-        // Returns the Values to New Form
-        return view('Application\new_app', ['daily_applications' => $this->daily_applications, 'daily_total' => $total, 'application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'Id' => $Id, 'sl_no' => $this->sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'today' => $this->today]);
-    }
+    //     // Returns the Values to New Form
+    //     return view('Application\new_app', ['daily_applications' => $this->daily_applications, 'daily_total' => $total, 'application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'Id' => $Id, 'sl_no' => $this->sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'today' => $this->today]);
+    // }
     public function PreviousDay()
     {
         $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);
@@ -358,18 +394,24 @@ class ApplicationController extends Controller
         $status = '';
         return view('admin-module.Status.status', ['EditId' => $Id, 'DeleteId' => $id, 'VeiwStatus' => $status]);
     }
+
+
     public function ViewStatus($status)
     {
         $eid = '';
         $did = '';
         return view('admin-module.Status.status', ['EditId' => $eid, 'DeleteId' => $did, 'VeiwStatus' => $status]);
     }
+
+
     public function DeleteStatus($Id)
     {
         $id = '';
         $status = '';
         return view('admin-module.Status.status', ['EditId' => $id, 'DeleteId' => $Id, 'VeiwStatus' => $status]);
     }
+
+
     public function DashboardUpdate($name)
     {
         if ($name == 'User') {
@@ -424,6 +466,8 @@ class ApplicationController extends Controller
         }
         return view('admin-module.dashboard.dashboard_update', ['Name' => $name, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered]);
     }
+
+
     public function UpdateEnquiryDashboard($Id)
     {
         $name = 'Enquiry';
@@ -448,6 +492,8 @@ class ApplicationController extends Controller
         $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
         return view('admin.Dashboard.update_enquiry_status', ['Name' => $name, 'Id' => $Id, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered, 'DeleteId' => $DeleteId, 'EditId' => $EditId]);
     }
+
+
     public function EditEnquiryStatus($eidtId)
     {
         $name = 'Enquiry';
@@ -472,6 +518,8 @@ class ApplicationController extends Controller
         $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
         return view('admin.Dashboard.update_enquiry_status', ['Name' => $name, 'Id' => $Id, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered, 'DeleteId' => $DeleteId, 'EditId' => $eidtId]);
     }
+
+
     public function DeleteEnquiryStatus($DeleteId)
     {
         $name = 'Enquiry';
@@ -496,6 +544,8 @@ class ApplicationController extends Controller
         $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
         return view('admin.Dashboard.update_enquiry_status', ['Name' => $name, 'Id' => $Id, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered, 'DeleteId' => $DeleteId, 'EditId' => $EditId]);
     }
+
+
     public function waGreat($mobile)
     {
         $message = urlencode("Hello and welcome to *Digital Cyber* We're excited to have you as a new customer. With our wide range of government-related services, from passport assistance to train reservations, we aim to make your life easier. Don't forget to join our community group for the latest updates !
@@ -505,6 +555,7 @@ class ApplicationController extends Controller
         $whatsappLink = 'whatsapp://send?phone=+91' . $mobile . '&text=' . $message;
         return redirect($whatsappLink);
     }
+
     public function waCallBack($mobile, $name, $service, $servicetype)
     {
         $message = urlencode("Hello *" . $name . "* 👋🏻😍 ,
@@ -518,6 +569,8 @@ class ApplicationController extends Controller
         $whatsappLink = 'whatsapp://send?phone=+91' . $mobile . '&text=' . $message;
         return redirect($whatsappLink);
     }
+
+    
     public function waApplyNow($mobile, $name, $service, $servicetype)
     {
         $message = urlencode("Hello *" . $name . "* 👋🏻😍 ,
@@ -537,6 +590,8 @@ class ApplicationController extends Controller
         $whatsappLink = 'whatsapp://send?phone=+91' . $mobile . '&text=' . $message;
         return redirect($whatsappLink);
     }
+
+
     public function waEnquiry($mobile, $name, $service, $time)
     {
         $message = urlencode("Dear *" . $name . "* 👋🏻😍
@@ -557,6 +612,8 @@ class ApplicationController extends Controller
         // dd($whatsappLink);
         return redirect($whatsappLink);
     }
+
+
     public function UpdateCallbackStatus($Id, $Client_Id, $name)
     {
         $Tittle1 = 'Total Requests';
@@ -574,6 +631,8 @@ class ApplicationController extends Controller
 
         return view('admin.Dashboard.update_callback_status', ['Id' => $Id, 'Client_Id' => $Client_Id, 'Name' => $name, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'EditId' => $editId, 'DeleteId' => $deleteId, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered]);
     }
+
+
     public function EditCBStatus($editId, $Client_Id, $name)
     {
         $Tittle1 = 'Total Requests';
@@ -590,6 +649,8 @@ class ApplicationController extends Controller
         $deleteId = '';
         return view('admin.Dashboard.update_callback_status', ['Id' => $Id, 'Client_Id' => $Client_Id, 'Name' => $name, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'EditId' => $editId, 'DeleteId' => $deleteId, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered]);
     }
+
+
     public function DeleteCBStatus($deleteId, $Client_Id, $name)
     {
         $Tittle1 = 'Total Requests';
@@ -619,6 +680,7 @@ class ApplicationController extends Controller
 
         return view('Application\app_status_list', ['app_list' => $app_list, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'application_type' => $this->application_type, 'info' => $this->info, 'service' => $service]);
     }
+
     public function Selected_Ser_Balance_List($value)
     {
 
@@ -639,6 +701,8 @@ class ApplicationController extends Controller
         return view('Application\balance_list', ['balance_list' =>
         $selected_ser_balance_list, 'sl_no' => $sl_count, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'application_type' => $this->application_type, 'info' => $info]);
     }
+
+
     public function ViewApplication($Client_Id)
     {
         $yes = 'Yes';
@@ -669,6 +733,8 @@ class ApplicationController extends Controller
 
         return view('admin-module.application.open_application', ['applicant_data' => $applicant_data, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'info' => $this->info, 'indi_total' => $tot, 'indi_amount' => $amnt, 'indi_bal' => $bal, 'indi_count' => $count_app, 'indi_data' => $get_app, 'indi_delivered' => $app_delivered, 'indi_pending' => $app_pending, 'indi_deleted' => $app_deleted, 'Client_Id' => $Client_Id]);
     }
+
+
     public function Update_Application($Id)
     {
 
@@ -767,6 +833,7 @@ class ApplicationController extends Controller
     {
         return view('admin-module.application.search', ['search' => $key]);
     }
+
     public function EditProfile($id)
     {
         return view('admin-module.application.edit_profile', ['Id' => $id]);
@@ -775,10 +842,10 @@ class ApplicationController extends Controller
     public function Delete($id)
     {
         DB::table('digital_cyber_db')->where('Id', $id)->update(['Recycle_Bin' => $this->yes]);
-        DB::table('pan_card')->where('Id', $id)->update(['Recycle_Bin' => $this->yes]);
 
         return redirect('app_form')->with('RecycleMsg', 'Apllication Moved to Recycle Bin');
     }
+
     public function DeletePermanently($id)
     {
         DB::table('digital_cyber_db')->where('Id', $id)->delete();
@@ -786,6 +853,7 @@ class ApplicationController extends Controller
 
         return redirect('view_recycle_bin')->with('RecycleMsg', 'Apllication Deleted Permanently');
     }
+
     public function Restore($id)
     {
         $value = "No";
@@ -794,6 +862,7 @@ class ApplicationController extends Controller
 
         return redirect('view_recycle_bin');
     }
+    
     public function ViewRecycleBin()
     {
 

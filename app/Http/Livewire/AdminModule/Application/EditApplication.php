@@ -4,6 +4,7 @@ namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
 use App\Models\ApplyServiceForm;
+use App\Models\CreditLedger;
 use App\Models\DocumentFiles;
 use App\Models\MainServices;
 use App\Models\PaymentMode;
@@ -31,7 +32,7 @@ class EditApplication extends Component
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
     public $Total_Amount, $today;
-    public $Amount_Paid,$Reason;
+    public $Amount_Paid, $Reason, $previous_paid = 0;
     public $Balance;
     public $PaymentMode, $PaymentModes, $Client_Type, $Confirmation, $Client_Image, $Old_Profile_Image;
     public $Received_Date, $Applied_Date, $Updated_Date, $old_Applicant_Image;
@@ -59,7 +60,7 @@ class EditApplication extends Component
     public $Doc_Names = [];
     public $NewTextBox = [];
     public $label = [];
-    public $old_status,$old_service,$old_service_type;
+    public $old_status, $old_service, $old_service_type;
 
 
 
@@ -115,6 +116,7 @@ class EditApplication extends Component
             $this->Document_No = $key['Document_No'];
             $this->Total_Amount = $key['Total_Amount'];
             $this->Amount_Paid = $key['Amount_Paid'];
+            $this->previous_paid = $key['Amount_Paid'];
             $this->Balance = $key['Balance'];
             $this->PaymentMode = $key['Payment_Mode'];
             $this->Status = $key['Status'];
@@ -349,6 +351,23 @@ class EditApplication extends Component
         $update_data['updated_at'] = Carbon::now();
         $update_App = Application::where([['Id', '=', $Id], ['Client_Id', '=', $this->Client_Id]])->Update($update_data);
 
+        if ($this->Amount_Paid != $this->previous_paid) {
+            $desc  = "Update :  Rs. " . intval($this->Amount_Paid)-intval($this->previous_paid) . "/- From  " . $this->Name . " Bearing Client ID: " . $client_Id . " & Mobile No: " . $this->Mobile_No . " for " . $this->ServiceName . " " . $this->SubSelected . ", on " . $this->Updated_Date . " by  " . $this->PaymentMode . ", Total: " . $this->Total_Amount . "| Previous Paid: " . $this->previous_paid . "| Received : " . intval($this->Amount_Paid)-intval($this->previous_paid) . " | Balance: " . (intval($this->Total_Amount) - ( intval($this->Amount_Paid)));
+
+            $save_credit  = new CreditLedger();
+            $save_credit->Id = 'DC' . time();
+            $save_credit->Client_Id = $this->Client_Id;
+            $save_credit->Category =  $this->ServiceName;
+            $save_credit->Sub_Category = $this->SubSelected;
+            $save_credit->Date =   $this->Received_Date ;
+            $save_credit->Total_Amount =    $this->Total_Amount;
+            $save_credit->Amount_Paid =  intval($this->Amount_Paid)-intval($this->previous_paid);
+            $save_credit->Balance = $this->Balance;
+            $save_credit->Description =    $desc;
+            $save_credit->Payment_Mode = $this->PaymentMode;
+            $save_credit->Attachment = $this->Payment_Path;
+            $save_credit->save(); //Credit Ledger Entry Saved
+        }
         $find = ApplyServiceForm::where('Id', $Id)->get();
         if (!empty($find)) {
             $data = array();
@@ -422,36 +441,13 @@ class EditApplication extends Component
             }
         }
 
-        // Balance Ledger Update.
-        $bal_data = array();
-        $bal_data['Name'] = $this->Name;
-        $bal_data['Mobile_No'] = $this->Mobile_No;
-        $bal_data['Category'] = $this->ServiceName;
-        $bal_data['Sub_Category'] =$this->SubSelected;
-        $bal_data['Total_Amount'] = $this->Total_Amount;
-        $bal_data['Amount_Paid'] = $this->Amount_Paid;
-        $bal_data['Balance'] = $this->Balance;
-        $bal_data['Payment_Mode'] = $this->PaymentMode;
-        $bal_data['Attachment'] = $this->Payment_Path;
-        $bal_data['Description'] = $Description;
-        $bal_data['updated_at'] = Carbon::now();
 
-        $update_Bal = DB::table('balance_ledger')->where([['Id', '=', $Id], ['Client_Id', '=', $this->Client_Id]])->Update($bal_data);
-        if ($update_App && $update_Bal) {
-            session()->flash('SuccessUpdate', 'Application Details for ' . $this->Name . ' Updated Successfully');
-        } elseif ($update_Bal) {
-            session()->flash('SuccessMsg', 'Balance Ledger Updated for ' . $this->Name);
-        } elseif ($update_App) {
+        if ($update_App) {
             session()->flash('SuccessUpdate', 'Application Details for ' . $this->Name . ' Updated Successfully');
         }
 
-
-        $update_Credit = DB::update('update credit_ledger set Category=?, Sub_Category=?,Total_Amount =?, Amount_Paid=?, Balance=?,Payment_Mode=?,Attachment=?, Description=? where Id = ? && Client_Id=?', [$this->Application, $this->Application_Type, $this->Total_Amount, $this->Amount_Paid, $this->Balance, $this->PaymentMode, $this->Payment_Path, $Description, $Id, $this->Client_Id]);
-        if ($update_Credit) {
-            session()->flash('SuccessMsg', 'Credit Ledger Updated for ' . $this->Name);
-        }
-        if(($this->old_status != $this->Status) ||  ($this->Application != $this->ServiceName) || ($this->Application_Type != $this->SubSelected)){
-            $this->ApplicaitonUpdateAlert($this->Mobile_No,$this->Name, $this->ServiceName ,$this->SubSelected,$this->Status,$this->Reason);
+        if (($this->old_status != $this->Status) ||  ($this->Application != $this->ServiceName) || ($this->Application_Type != $this->SubSelected)) {
+            $this->ApplicaitonUpdateAlert($this->Mobile_No, $this->Name, $this->ServiceName, $this->SubSelected, $this->Status, $this->Reason);
         }
         return redirect()->route('view.application', $Id);
     }
@@ -460,6 +456,8 @@ class EditApplication extends Component
         $this->ShowTable = true;
         $this->key = $mobile;
     }
+
+
     public function Delete_Doc($Id)
     {
         $fetch = DocumentFiles::Wherekey($Id)->get();
@@ -479,6 +477,8 @@ class EditApplication extends Component
             session()->flash('Error', 'File Not Available');
         }
     }
+
+
     public function MultipleDelete()
     {
         $files  = DocumentFiles::WhereIn('Id', $this->Checked)->get();
@@ -500,13 +500,19 @@ class EditApplication extends Component
         );
         return redirect()->route('edit_application', $this->Id)->with($notification);
     }
+
+
     public function LastUpdateTime()
     {
 
         $latest_doc = DocumentFiles::latest('created_at')->first();
-        $this->created = Carbon::parse($latest_doc['created_at'], $latest_doc['updated_at'])->diffForHumans();
-        $this->updated = Carbon::parse($latest_doc['updated_at'])->diffForHumans();
+        if (!is_Null($latest_doc)) {
+            $this->created = Carbon::parse($latest_doc['created_at'], $latest_doc['updated_at'])->diffForHumans();
+            $this->updated = Carbon::parse($latest_doc['updated_at'])->diffForHumans();
+        }
     }
+
+    
     public function render()
     {
         $this->Capitalize();

@@ -33,37 +33,28 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('/admin/profile_view', 'ProfileView')->name('admin.profile_view');
         Route::get('/admin/change_password', 'ChangePassword')->name('change_password');
         Route::get('/add/services', 'AddServices')->name('add_services');
-        Route::get('/Edit/Services/{id}/{type}', 'EditServices')->name('edit.services');
-        Route::get('/Delete/Services/{id}/{type}', 'DeleteServices')->name('delete.services');
+        Route::get('/edit/services/{id}/{type}', 'EditServices')->name('edit.services');
+        Route::get('/delete/services/{id}/{type}', 'DeleteServices')->name('delete.services');
         Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
-        Route::get('/New/Carousel', 'Carousel')->name('new.carousel');
-        Route::get('/abous_us', 'AboutUs')->name('new.about_us');
+        Route::get('/new/carousel', 'Carousel')->name('new.carousel');
+        Route::get('/aboutus', 'AboutUs')->name('new.about_us');
         Route::get('/eidt/carousel/{id}', 'EditCarousel')->name('edit.carousel');
-        Route::get('/Eidt/AboutUs/{id}', 'EditAboutUs')->name('edit.aboutus');
-        Route::get('/Delete/AboutUs/{id}', 'DeleteAboutUs')->name('delete.aboutus');
-        Route::get('/Select/AboutUs/{id}', 'SelectAbout')->name('select.aboutus');
-        Route::get('/Edit/Header/{id}', 'EditHeader')->name('edit.header');
+        Route::get('/eidt/about/us/{id}', 'EditAboutUs')->name('edit.aboutus');
+        Route::get('/delete/about/us/{id}', 'DeleteAboutUs')->name('delete.aboutus');
+        Route::get('/select/about/us/{id}', 'SelectAbout')->name('select.aboutus');
+        Route::get('/edit/header/{id}', 'EditHeader')->name('edit.header');
         Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
         Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
-
-
-
-
-        // --------------------Data Migration Routes -----------------
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
+        Route::get('/admin/logout', 'destroy')->name('admin.logout');
     });
 });
-Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin/logout', 'destroy')->name('admin.logout');
-});
+
 Route::controller(WhatsappController::class)->group(function () {
     // Route::get('/send/message/{phone}/{message}', 'sendMessage')->name('send.message');
     Route::get('/send/message/{mobile}/{name}/{service}/{time}/{page}', 'sendMessage')->name('send.message');
 });
 Route::controller(ApplicationController::class)->group(function () {
-    Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
-    Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
-    Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
 });
 
 
@@ -72,19 +63,19 @@ Route::controller(ApplicationController::class)->group(function () {
 Route::middleware('auth', 'auth.role:user')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('/user/dashboard', 'UserDashboard')->name('user.dashboard');
-        Route::get('/User/Home/{id}', 'UserHome')->name('user.home');
-        Route::get('/View/Profile', 'ViewProfile')->name('view.profile');
-        Route::get('/Service/History/{mobile_no}', 'MyServiceHistory')->name('history');
-        Route::get('/Eidt/Profile', 'EditProfile')->name('edit.profile');
-        Route::get('/About/Company', 'About')->name('about.us');
-        Route::get('/Serivce/List', 'ServiceList')->name('service.list');
-        Route::get('/Serivce/Details/{id}', 'ServDetails')->name('serv.details');
-        Route::get('/ApplyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
-        Route::get('/Acknowledgment/{id}', 'Acknowledgment')->name('acknowledgment');
-        Route::get('/Track/{id}', 'Track')->name('track');
-        Route::get('/View/Application{id}', 'viewApplication')->name('view.application');
-        Route::get('/View/Document/{id}', 'viewDocument')->name('view.document');
-        Route::get('/Feedback/{id}', 'Feedback')->name('feedback');
+        Route::get('/user/home/{id}', 'UserHome')->name('user.home');
+        Route::get('/view/profile', 'ViewProfile')->name('view.profile');
+        Route::get('/service/history/{mobile_no}', 'MyServiceHistory')->name('history');
+        Route::get('/eidt/profile', 'EditProfile')->name('edit.profile');
+        Route::get('/about/company', 'About')->name('about.us');
+        Route::get('/serivce/list', 'ServiceList')->name('service.list');
+        Route::get('/serivce/details/{id}', 'ServDetails')->name('serv.details');
+        Route::get('/applyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
+        Route::get('/acknowledgment/{id}', 'Acknowledgment')->name('acknowledgment');
+        Route::get('/track/{id}', 'Track')->name('track');
+        Route::get('/view/application{id}', 'viewApplication')->name('view.user.application');
+        Route::get('/view/document/{id}', 'viewDocument')->name('view.document');
+        Route::get('/feedback/{id}', 'Feedback')->name('feedback');
         Route::get('/callback/{id}/{service}/{service_type}', 'CallBack')->name('callback');
     });
 });
@@ -117,6 +108,7 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('update/application', 'updateApplication')->name('update_application');
         Route::get('edit/application/{id}', 'Edit')->name('edit_application');
         Route::get('view/application/{id}', 'ViewApplication')->name('view.application');
+        Route::get('delete/application/{id}', 'MovetoRecycleBin')->name('delete.application');
         Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');
@@ -129,18 +121,20 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
         Route::get('list/app/status/{status}', 'ViewStatus')->name('view.status');
         Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
-        // ------------------------------------------------------------------
         Route::get('{name}/dashboard', 'DashboardUpdate')->name('update.dashboard');
-        Route::get('Whatsapp/Chat/{mobile}', 'waGreat')->name('wa.great');
-        Route::get('Whatsapp/Callback/{mobile}/{name}/{service}/{servicetype}', 'waCallBack')->name('wa.callback');
-        Route::get('Whatsapp/Applynow/{mobile}/{name}/{service}/{servicetype}', 'waApplyNow')->name('wa.applynow');
-        Route::get('Callback/Status/Update/{id}/{client_id}/{name}', 'UpdateCallBackStatus')->name('update.cb.status');
-        Route::get('Callback/Status/Edit/{id}/{client_id}/{name}', 'EditCBStatus')->name('edit.status.callback');
-        Route::get('Callback/Status/Delete/{id}/{client_id}/{name}', 'DeleteCBStatus')->name('delete.status.callback');
+        Route::get('whatsapp/chat/{mobile}', 'waGreat')->name('wa.great');
+        Route::get('whatsapp/callback/{mobile}/{name}/{service}/{servicetype}', 'waCallBack')->name('wa.callback');
+        Route::get('whatsapp/applynow/{mobile}/{name}/{service}/{servicetype}', 'waApplyNow')->name('wa.applynow');
+        Route::get('callback/status/update/{id}/{client_id}/{name}', 'UpdateCallBackStatus')->name('update.cb.status');
+        Route::get('callback/status/edit/{id}/{client_id}/{name}', 'EditCBStatus')->name('edit.status.callback');
+        Route::get('callback/status/delete/{id}/{client_id}/{name}', 'DeleteCBStatus')->name('delete.status.callback');
         Route::get('Whatsapp/Enquiry/{mobile}/{name}/{service}/{time}', 'waEnquiry')->name('wa.enquiry');
         Route::get('Enquiry/dashboard/{id}', 'UpdateEnquiryDashboard')->name('update.enquiry.dashboard');
-        Route::get('Enquiry/Status/Edit/{id}]', 'EditEnquiryStatus')->name('edit.status.enquiry');
-        Route::get('Enquiry/Status/Delete/{id}/{client_id}/{name}', 'DeleteEnquiryStatus')->name('delete.status.enquiry');
+        Route::get('enquiry/status/edit/{id}]', 'EditEnquiryStatus')->name('edit.status.enquiry');
+        Route::get('enquiry/status/delete/{id}/{client_id}/{name}', 'DeleteEnquiryStatus')->name('delete.status.enquiry');
+        Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
+        Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
+        Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
     });
 });
 Route::middleware('auth', 'auth.role:admin')->group(function () {

@@ -179,6 +179,6 @@ class UserApplyNowForm extends Component
         $services = MainServices::where('Service_Type', 'Public')->get();
         $applied = ApplyServiceForm::where('Client_Id', Auth::user()->Client_Id)->paginate(10);
         $service_count = $applied->total();
-        return view('livewire.user.user-apply-now-form', compact('services', 'applied'), ['service_count' => $service_count]);
+        return view('livewire.user-module.user-apply-now-form', compact('services', 'applied'), ['service_count' => $service_count]);
     }
 }

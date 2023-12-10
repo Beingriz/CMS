@@ -47,6 +47,6 @@ class FeedbackForm extends Component
     }
     public function render()
     {
-        return view('livewire.user.feedback-form');
+        return view('livewire.user-module.feedback-form');
     }
 }

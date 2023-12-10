@@ -47,19 +47,21 @@
     </div>{{-- End of Page Tittle --}}
 
 
-    <div class="row"> {{-- buttons Row  --}}
-        <div class="col-lg-6">
-            <h5 class="font-size-14 mb-3">Options</h5>
-            <div class="d-flex flex-wrap gap-2">
-                <p class="text-muted"> Show Profile</p>
-                <input type="checkbox" id="profile" switch="primary" wire:model.lazy="Profile_Show">
-                <label for="profile" data-on-label="Yes" data-off-label="No"></label>
-                <p class="text-muted"> Show Records</p>
-                <input type="checkbox" id="records" switch="success" wire:model.lazy="Records_Show">
-                <label for="records" data-on-label="Yes" data-off-label="No"></label>
+    @if ($Open == 1)
+        <div class="row"> {{-- buttons Row  --}}
+            <div class="col-lg-6">
+                <h5 class="font-size-14 mb-3">Options</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <p class="text-muted"> Show Profile</p>
+                    <input type="checkbox" id="profile" switch="primary" wire:model.lazy="Profile_Show">
+                    <label for="profile" data-on-label="Yes" data-off-label="No"></label>
+                    <p class="text-muted"> Show Records</p>
+                    <input type="checkbox" id="records" switch="success" wire:model.lazy="Records_Show">
+                    <label for="records" data-on-label="Yes" data-off-label="No"></label>
+                </div>
             </div>
-        </div>
-    </div> {{-- End of Row --}}
+        </div> {{-- End of Row --}}
+    @endif
     <!-- ------------------------------------------------------------------------------------------------- -->
     <div class="row"> {{-- Form,Profile,Records Panel Row --}}
         <div class="col-lg-7">
@@ -191,7 +193,7 @@
                                                     Birth</label>
                                                 <input type="date" class="form-control"
                                                     placeholder="Date of Birth "id="progress-basicpill-dob-input"
-                                                    wire:model.lazy="Dob">
+                                                    wire:model.lazy="Dob" max="{{ now()->toDateString() }}">
                                                 @error('Dob')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -536,174 +538,203 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-4 d-flex">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"> Name</li>
-                                            <li class="list-group-item"> Mobile No</li>
-                                            <li class="list-group-item"> DOB</li>
-                                            <li class="list-group-item"> Client Type</li>
-                                            <li class="list-group-item"> Profile</li>
+                                <div class="row ">
+                                    {{-- First Half Data Display --}}
+                                    <div class="col-md-6 col-lg-6">
 
-                                        </ul>
+                                        <!-- Client Id  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-16 ">Client ID</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($C_Id) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($C_Id) ? $C_Id : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- Name  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Name</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Name) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Name) ? $Name : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
 
+                                         <!-- Applicant Image  -->
+                                         <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Applicant Image</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <img class="rounded avatar-md"
+                                                    src="{{ !empty($Applicant_Image) ? $Applicant_Image->temporaryUrl() : asset('storage/no_image.jpg') }}"alt="Client_Image" />
+                                            </div>
+                                        </div>
 
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                @if (empty($Name))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Name }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Name))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Mobile_No }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Name))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Dob }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Name))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Client_Type }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Client_Image))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <img class="rounded avatar-md" src="{{ $Client_Image->temporaryUrl() }}"
-                                                alt="Client_Image" />
-                                            @endif
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-lg-4 d-flex">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"> Service</li>
-                                            <li class="list-group-item"> Category</li>
-                                            <li class="list-group-item"> Acknowledgment No</li>
-                                            <li class="list-group-item"> Document No</li>
+                                        <!-- Relative Name  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Relative Name</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($RelativeName) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($RelativeName) ? $RelativeName : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
 
-                                        </ul>
+                                        <!-- Gender  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Gender</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Gender) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Gender) ? $Gender : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- Mobile Number  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Mobile Number</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Mobile_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Mobile_No) ? $Mobile_No : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
 
+                                        <!-- Date of Birth -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Date of Birth</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Dob) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Dob) ? $Dob : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
 
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                @if (empty($MainSelected))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $ServiceName }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($SubSelected))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $SubSelected }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Ack_No))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Ack_No }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Document_No))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Document_No }}</strong>
-                                            @endif
-                                            </li>
-                                        </ul>
+                                        <!--Client Type  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Client Type</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Client_Type) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Client_Type) ? $Client_Type : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                                                          
                                     </div>
 
-                                    <div class="col-lg-4 d-flex">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"> Received Date</li>
-                                            <li class="list-group-item"> Status No</li>
-                                            <li class="list-group-item"> Total Amount</li>
-                                            <li class="list-group-item"> Amount Paid</li>
-                                            <li class="list-group-item"> Balance</li>
-                                            <li class="list-group-item"> Payment Mode</li>
+                                    {{-- First Half Data Display --}}
+                                    <div class="col-md-6 col-lg-6">
+                                        <!-- ServiceName  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Service</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($ServiceName) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($ServiceName) ? $ServiceName : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
 
-                                        </ul>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                @if (empty($Received_Date))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Received_Date }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Status))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Status }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Total_Amount))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Total_Amount }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Amount_Paid))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Amount_Paid }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Bal))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Bal }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($PaymentMode))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $PaymentMode }}</strong>
-                                            @endif
-                                            </li>
-                                        </ul>
+                                        <!-- Sub Service  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Service Type</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($SubSelected) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($SubSelected) ? $SubSelected : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Ack_No  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Ack No.</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Ack_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Ack_No) ? $Ack_No : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Client Id  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Doc No</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Document_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Document_No) ? $Document_No : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Total_Amount   -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Total Payment</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Total_Amount) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Total_Amount) ? $Total_Amount : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Amount_Paid -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Amount Paid</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Amount_Paid) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Amount_Paid) ? $Amount_Paid : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Balance  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Balance</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ $Bal == 0 ? 'text-sucess font-weight-bolder' : '' }}">{{ $Bal == 0 ? 'No Due' : '$Bal' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Statusd  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Status</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Status) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Status) ? $Status : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- PaymentMode  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Payment Mode</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($PaymentMode) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($PaymentMode) ? $PaymentMode : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
-
-
-
+                                {{-- Confirmation Button --}}
                                 <div class="row">
                                     <h5 class="font-size-14 mb-3">Preview Confirmation</h5>
                                     <div class="d-flex flex-wrap gap-2">
@@ -718,246 +749,274 @@
                                         @endif
                                     </div>
                                 </div>
-                                @if ($Confirmation == 1)
-                                    <div class="row">
-                                        <div class="col-xl-12">
+                            @if ($Confirmation == 1)
+                                <div class="row">
+                                    <div class="col-xl-12">
 
-                                            <div class="text-center">
-                                                <a href="#" wire:click.prevent="submit()"
-                                                    class="btn btn-success waves-effect waves-light"><i
-                                                        class="ri-check-line align-middle me-2"></i> Submit
-                                                    Applicaiton</a>
-                                            </div>
-
+                                        <div class="text-center">
+                                            <a href="#" wire:click.prevent="submit()"
+                                                class="btn btn-success waves-effect waves-light"><i
+                                                    class="ri-check-line align-middle me-2"></i> Submit
+                                                Applicaiton</a>
                                         </div>
-                                    </div>
-                                @endif
 
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <ul class="pager wizard twitter-bs-wizard-pager-link">
+                        <li class="previous disabled"><a href="javascript: void(0);">Previous</a></li>
+                        <li class="next"><a href="javascript: void(0);">Next</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --------------------------------------------------------------------------------------------- -->
+    @if ($Profile_Show == 1)
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title"><strong class="text-info">{{ $C_Name }}</strong> Profile
+                        </h4>
+                </div>
+                {{-- Profile Section  --}}
+                <div class="row no-gutters align-items-center">
+                    {{-- Profile Creation Time --}}
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-text">{{ $C_Name }} Registered {{ $profileCreated }}</p>
+                            <p class="card-text"><small class="text-muted">Profile Last updated
+                                    {{ $lastProfUpdate }}</small></p>
+                        </div>
+                    </div>
+                    {{-- Profile Section --}}
+                    <div class="col-md-4">
+                        @if (!empty($Client_Image))
+                            <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
+                                alt="Client Profile">
+                        @else
+                            <img class="rounded-circle avatar-lg"
+                                src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
+                                alt="Card image cap">
+                        @endif
+                    </div>
+                </div>
+
+                <div class="row ">
+                    {{-- First Half Data Display --}}
+                    <div class="col-md-6 col-lg-12">
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Client ID</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Id != '' ? $C_Id : 'Not Available' }}</span>
                             </div>
                         </div>
-                        <ul class="pager wizard twitter-bs-wizard-pager-link">
-                            <li class="previous disabled"><a href="javascript: void(0);">Previous</a></li>
-                            <li class="next"><a href="javascript: void(0);">Next</a></li>
-                        </ul>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Name</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Name != '' ? $C_Name : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Relative Name</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_RName != '' ? $C_RName : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Date of Birth</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Dob != '' ? $C_Dob : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Mobile Number</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Mob != '' ? $C_Mob : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Email Id</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Email != '' ? $C_Email : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Client Type</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Ctype != '' ? $C_Ctype : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <!-- Client Id  -->
+                        <div class="row">
+                            <div class="col-45">
+                                <span class="font-size-18 ">Address</span>
+                            </div>
+                            <div class="col-55">
+                                <span
+                                    class="text-primary font-size-18">{{ $C_Address != '' ? $C_Address : 'Not Available' }}</span>
+                            </div>
+                        </div>
+                        <a href={{ route('edit_profile', $C_Id) }} class="btn btn-primary waves-effect waves-light"
+                            id="update">Update
+                            Profile</a>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    @endif {{-- End of Profile View --}}
+
+    @if ($Records_Show == 1)
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Previous {{ $AppliedServices->total() }} Records for
+                        {{ $C_Mob }} of {{ $C_Name }}</h5>
+                </div>
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-8">
+                        <div class="card-body">
+
+                            <p class="card-text text-dark">List of All Applications Applied by
+                                {{ $C_Name }}, Including Recyclebin applicaitons. </p>
+                            <p class="card-text text-dark"><small class="text-muted">Last Application Applied
+                                    {{ $lastMobRecTime }}</small></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        @if (!empty($Client_Image))
+                            <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
+                                alt="Client Profile">
+                        @else
+                            <img class="rounded-circle avatar-lg"
+                                src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
+                                alt="Card image cap">
+                        @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table id="datatable"
+                            class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid"
+                            aria-describedby="datatable_info">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Service</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($AppliedServices as $key)
+                                    <tr class="{{ $key->Recycle_Bin == 'Yes' ? 'bg-light text-dark' : '' }}">
+                                        <td>{{ $AppliedServices->firstItem() + $loop->index }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($key->Received_Date)->diffForHumans() }}
+                                            on
+                                            {{ \Carbon\Carbon::parse($key->Received_Date)->format('d-m-Y') }}
+                                        </td>
+                                        <td>{{ $key->Name }}</td>
+                                        <td>{{ $key->Application, $key->Application_Type }}</td>
+                                        <td>
+                                            <a href={{ route('view.application', $key->Id) }}
+                                                class="btn btn-sm btn-primary font-size-15" id="open"><i
+                                                    class="mdi mdi-book-open-page-variant"></i></a>
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                                <p class="text-muted">Showing {{ count($AppliedServices) }} of
+                                    {{ $AppliedServices->total() }} entries</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class=" pagination pagination-rounded float-end">
+                                    {{ $AppliedServices->links() }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- --------------------------------------------------------------------------------------------- -->
-        @if ($Profile_Show == 1)
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title"><strong class="text-info">{{ $C_Name }}</strong> Profile </h4>
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <p class="card-text">{{ $C_Name }} Registered {{ $profileCreated }}</p>
-                                <p class="card-text"><small class="text-muted">Profile Last updated
-                                        {{ $lastProfUpdate }}</small></p>
+    @endif
+</div> {{-- End of Form,Profile,Records Panel Row --}}
+<!-- ------------------------------------------------------------------------------------------------- -->
+
+<div class="row"> {{-- Daily Transaction Display Panel --}}
+    @if (count($daily_applications) > 0)
+
+        <div class="col-lg-12">
+            <div class="card">
+
+                <h5 class="card-header">Application List</h5>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Total Credit as on
+                        @if (empty($Select_Date))
+                            {{ \Carbon\Carbon::parse($today)->format('d-M-Y') }} is &#x20B9
+                            {{ $Daily_Income }}
+                        @endif
+                        @if (!empty($Select_Date))
+                            {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y') }}
+                            <strong>
+                                {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
+                            </strong>
+                            {{ $Daily_Income }}
+                        @endif
+                    </h5>
+                    <div id="message">
+                        @if (session('SuccessMsg'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('SuccessMsg') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            @if (!empty($Client_Image))
-                                <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
-                                    alt="Client Profile">
-                            @else
-                                <img class="rounded-circle avatar-lg"
-                                    src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
-                                    alt="Card image cap">
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-lg-12 d-flex">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"> Client ID :</li>
-                                <li class="list-group-item"> Name :</li>
-                                <li class="list-group-item"> Relative Name :</li>
-                                <li class="list-group-item"> Gender :</li>
-                                <li class="list-group-item"> Mobile No :</li>
-                                <li class="list-group-item"> Email ID :</li>
-                                <li class="list-group-item"> DOB :</li>
-                                <li class="list-group-item"> Client Type :</li>
-                                <li class="list-group-item"> Address: </li>
-
-                            </ul>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    @if (!$C_Id)
-                                        <strong class="text-danger">Not Avaialble</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Id }}</strong>
-                                    @endif
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Name)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Name }}</strong>
-                                    @endif
-
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_RName)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_RName }}</strong>
-                                    @endif
-
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Gender)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Gender }}</strong>
-                                    @endif
-
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Mob)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Mob }}</strong>
-                                    @endif
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Email)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Email }}</strong>
-                                    @endif
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Dob)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Dob }}</strong>
-                                    @endif
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Ctype)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Ctype }}</strong>
-                                    @endif
-                                </li>
-                                <li class="list-group-item">
-                                    @if (!$C_Address)
-                                        <strong class="text-danger">Not Available</strong>
-                                    @else
-                                        <strong class="text-primary">{{ $C_Address }}</strong>
-                                    @endif
-                                </li>
-                            </ul>
-                        </div>
-                        <a href="#" class="btn btn-primary waves-effect waves-light" id="update">Update
-                            Profile</a>
-                    </div>
-
-                </div>
-            </div>
-        @endif {{-- End of Profile View --}}
-
-        @if ($Records_Show == 1)
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Previous {{ $AppliedServices->total() }} Records for
-                            {{ $C_Mob }} of {{ $C_Name }}</h5>
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-md-8">
-                            <div class="card-body">
-
-                                <p class="card-text">This is a wider card with supporting text below as a natural
-                                    lead-in to additional content.</p>
-                                <p class="card-text"><small class="text-muted">Last Application Applied
-                                        {{ $lastMobRecTime }}</small></p>
+                        @endif
+                        @if (session('SuccessUpdate'))
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{ session('SuccessUpdate') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            @if (!empty($Client_Image))
-                                <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
-                                    alt="Client Profile">
-                            @else
-                                <img class="rounded-circle avatar-lg"
-                                    src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
-                                    alt="Card image cap">
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <table id="datatable"
-                                class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid"
-                                aria-describedby="datatable_info">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Date</th>
-                                        <th>Name</th>
-                                        <th>Service</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($AppliedServices as $key)
-                                        <tr>
-                                            <td>{{ $AppliedServices->firstItem() + $loop->index }}</td>
-                                            <td>{{ $key->Received_Date }}</td>
-                                            <td>{{ $key->Name }}</td>
-                                            <td>{{ $key->Application, $key->Application_Type }}</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary font-size-15"
-                                                    id="open"><i class="mdi mdi-book-open-page-variant"></i></a>
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($AppliedServices) }} of
-                                        {{ $AppliedServices->total() }} entries</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class=" pagination pagination-rounded float-end">
-                                        {{ $AppliedServices->links() }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-    </div> {{-- End of Form,Profile,Records Panel Row --}}
-    <!-- ------------------------------------------------------------------------------------------------- -->
-
-    <div class="row"> {{-- Daily Transaction Display Panel --}}
-        @if (count($daily_applications) > 0)
-
-            <div class="col-lg-12">
-                <div class="card">
-
-                    <h5 class="card-header">Application List</h5>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Total Credit as on
-                            @if (empty($Select_Date))
-                                {{ \Carbon\Carbon::parse($today)->format('d-M-Y') }} is &#x20B9 {{ $Daily_Income }}
-                            @endif
-                            @if (!empty($Select_Date))
-                                {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y') }}
-                                <strong>
-                                    {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
-                                </strong>
-                                {{ $Daily_Income }}
-                            @endif
-                        </h5>
+                        @endif
                         @if (session('Error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('Error') }}
@@ -965,159 +1024,135 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <div class="d-flex flex-wrap gap-2">
                                         <div class="row">
-                                            <div class="d-flex flex-wrap gap-2">
-                                                @if ($Checked)
-                                                    <div class="btn-group-vertical" role="group"
-                                                        aria-label="Vertical button group">
-                                                        <div class="btn-group" role="group">
-                                                            <button id="btnGroupVerticalDrop2" type="button"
-                                                                class="btn btn-light dropdown-toggle"
-                                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="false">
-                                                                Cheched ({{ count($Checked) }}) <i
-                                                                    class="mdi mdi-chevron-down"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu"
-                                                                aria-labelledby="btnGroupVerticalDrop2"
-                                                                style="">
-                                                                <a class="dropdown-item" title="Multiple Delete"
-                                                                    onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()"
-                                                                    wire:click="MultipleDelete()">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
+                                            <div class="col-sm-7">
+                                                <label class="form-label" for="paginate">Show Pages</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select name="datatable_length" wire:model="paginate"
+                                                    aria-controls="datatable"
+                                                    class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
+                                                    <option value="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                </select>
                                             </div>
                                         </div>
-
-                                        <div class="d-flex flex-wrap gap-2">
-                                            <div class="row">
-                                                <div class="col-sm-7">
-                                                    <label class="form-label" for="paginate">Show Pages</label>
-                                                </div>
-                                                <div class="col-sm-5">
-                                                    <select name="datatable_length" wire:model="paginate"
-                                                        aria-controls="datatable"
-                                                        class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
-                                                        <option value="5">5</option>
-                                                        <option value="10">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                    </select>
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="paginate">Filter By</label>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <label class="form-label" for="paginate">Filter By</label>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" wire:model="filterby"
-                                                        class="form-control form-control-sm" placeholder="Filter">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label class="form-label" for="paginate">Search By Date</label>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="date" id="date" name="Select_Date"
-                                                        wire:model="Select_Date"
-                                                        class="form-control form-control-sm" />
-                                                </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" wire:model="filterby"
+                                                    class="form-control form-control-sm" placeholder="Filter">
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="paginate">Search By
+                                                    Date</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="date" id="date" name="Select_Date"
+                                                    wire:model="Select_Date" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    </tr>
+                                </tr>
+                                <tr>
+                                    <th>SL. No</th>
+                                    <th>Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Application</th>
+                                    <th>Status</th>
+                                    <th>Total | Paid | Bal. </th>
+                                    <th>Created</th>
+                                    <th>Updated</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                @foreach ($daily_applications as $data)
                                     <tr>
-                                        <th>SL. No</th>
-                                        <th>Check</th>
-                                        <th>Name</th>
-                                        <th>Mobile No</th>
-                                        <th>Application</th>
-                                        <th>Status</th>
-                                        <th>Total | Paid | Bal. </th>
-                                        <th>Created</th>
-                                        <th>Updated</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
+                                        <td>{{ $daily_applications->firstItem() + $loop->index }}</td>
+                                        <td>{{ $data->Name }}</td>
+                                        <td>{{ $data->Mobile_No }}</td>
+                                        <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
+                                        <td>{{ $data->Status }}</td>
+                                        <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }} |
+                                            {{ $data->Balance }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group-vertical" role="group"
+                                                aria-label="Vertical button group">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupVerticalDrop1" type="button"
+                                                        class="btn btn-light dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        Action <i class="mdi mdi-chevron-down"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1"
+                                                        style="">
+                                                        <a class="dropdown-item" title="View  Application"
+                                                            href={{ route('view.application', $data->Id) }}
+                                                            id="open">View</a>
+                                                        <a class="dropdown-item" title="Edit  Application"
+                                                            href={{ route('edit_application', $data->Id) }}
+                                                            id="update">Edit</a>
 
+                                                        <a class="dropdown-item" title="Delete Application"
+                                                            id="delete"
+                                                            href={{ route('delete.application', $data->Id) }}>Delete</a>
 
-                                <tbody>
-                                    @foreach ($daily_applications as $data)
-                                        <tr>
-                                            <td>{{ $daily_applications->firstItem() + $loop->index }}</td>
-                                            <td><input type="checkbox" id="checkbox" name="checkbox"
-                                                    value="{{ $data->Id }}" wire:model="Checked"></td>
-                                            <td>{{ $data->Name }}</td>
-                                            <td>{{ $data->Mobile_No }}</td>
-                                            <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
-                                            <td>{{ $data->Status }}</td>
-                                            <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }} |
-                                                {{ $data->Balance }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
-                                            <td>
-                                                <div class="btn-group-vertical" role="group"
-                                                    aria-label="Vertical button group">
-                                                    <div class="btn-group" role="group">
-                                                        <button id="btnGroupVerticalDrop1" type="button"
-                                                            class="btn btn-light dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                            Action <i class="mdi mdi-chevron-down"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu"
-                                                            aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item" title="View  Application"
-                                                                href={{ route('view.application', $data->Id) }}
-                                                                id="open">View</a>
-                                                            <a class="dropdown-item" title="Edit  Application"
-                                                                href={{ route('edit_application', $data->Id) }}
-                                                                id="update">Edit</a>
-
-                                                            <a class="dropdown-item" title="Delete Application"
-                                                                onclick="confirm('Are You Sure!? You Want to Delete This Record?')||event.stopImmediatePropagation"
-                                                                wire:click="Delete('{{ $data->Id }}')">Delete</a>
-                                                            <a class="dropdown-item" title="View Application"
-                                                                href='./open_app/{{ $data->Id }}'>View</a>
-                                                        </div>
                                                     </div>
-
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
 
-                            </table>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($daily_applications) }} of
-                                        {{ $daily_applications->total() }} entries</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class=" pagination pagination-rounded float-end">
-                                        {{ $daily_applications->links() }}
-                                    </span>
-                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+
+                        </table>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                                <p class="text-muted">Showing {{ count($daily_applications) }} of
+                                    {{ $daily_applications->total() }} entries</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class=" pagination pagination-rounded float-end">
+                                    {{ $daily_applications->links() }}
+                                </span>
                             </div>
                         </div>
-
-                        <p class="card-text"><small class="text-muted">Last Entry at {{ $lastRecTime }} </small>
-                        </p>
-
-
                     </div>
+
+                    <p class="card-text"><small class="text-muted">Last Entry at {{ $lastRecTime }}
+                        </small>
+                    </p>
+
+
                 </div>
             </div>
-        @endif {{-- End of Daily Transaction Display Panel --}}
-    </div>
+        </div>
+    @endif {{-- End of Daily Transaction Display Panel --}}
+</div>
 
-    <!-- --------------------------------------------------------------------------------------------- -->
+<!-- --------------------------------------------------------------------------------------------- -->
 </div>

@@ -10,14 +10,18 @@ use App\Models\MainServices;
 use App\Models\PaymentMode;
 use App\Models\Status;
 use App\Models\SubServices;
+use App\Models\User;
 use App\Traits\WhatsappTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Auth\Events\Registered;
+
 
 class ApplicationForm extends Component
 {
@@ -28,7 +32,7 @@ class ApplicationForm extends Component
 
 
     public $App_Id, $today, $payment_mode;
-    public $Name;
+    public $Name, $username;
     public $Dob;
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
@@ -50,6 +54,8 @@ class ApplicationForm extends Component
     public $Select_Date, $Daily_Income = 0;
     public $Edit_Window = 0;
     public $PaymentFile, $AckFile, $DocFile = 0, $FilterChecked;
+
+
 
     public $Yes = 'off', $Client_Image, $Old_Profile_Image, $C_Id, $C_Name, $C_RName, $C_Gender, $C_Email, $C_Dob, $C_Mob, $C_Ctype, $C_Address, $Open = 0, $lastMobRecTime, $profileCreated, $lastProfUpdate, $status_list;
 
@@ -90,6 +96,26 @@ class ApplicationForm extends Component
     {
         $this->validate(['Name' => 'required']);
     }
+
+
+    // Function to Generate Random Username
+    public function usernameGenrator($name, $dob)
+    {
+        // randomly creating username for new client registration,
+        // it is the combinamtion of full name without space being first letter capital
+        // ending with 2 letter of seconds of current time stamp and 2 letter of applicant date of birth.
+        $username = strtolower($name); // to small case/
+        $username = ucfirst($username); // first letter capital.
+        $currentTimestamp = time(); // Get the current timestamp
+        $timeString = date("His", $currentTimestamp); // Format timestamp as HHMMSS
+        $sec = substr($timeString, -2); // Get the last two letters
+        $dob = substr($dob, -2); // Get the last two letters
+        $username = str_replace(' ', '', $username);
+        $this->username = $username . $sec . $dob;
+    }
+
+
+    // Function to Save Application(old Users/ Create New Users)
     public function submit()
     {
 
@@ -233,24 +259,8 @@ class ApplicationForm extends Component
                     DB::update('update client_register set Profile_Image=? where Id = ?', [$Client_Image, $client_Id]);
                 }
 
-
-                $save_balance = new BalanceLedger();
-                $save_balance->Id = $this->App_Id;
-                $save_balance->Client_Id = $client_Id;
-                $save_balance->Date = $this->Received_Date;
-                $save_balance->Name = $this->Name;
-                $save_balance->Mobile_No = $this->Mobile_No;
-                $save_balance->Category = $service;
-                $save_balance->Sub_Category = $this->SubSelected;
-                $save_balance->Total_Amount = $this->Total_Amount;
-                $save_balance->Amount_Paid = $this->Amount_Paid;
-                $save_balance->Balance = $this->Balance;
-                $save_balance->Payment_Mode = $this->PaymentMode;
-                $save_balance->Attachment = $this->Payment_Receipt;
-                $save_balance->Description = $Description;
-                $save_balance->save(); // Balance Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Application Saved Successfully!, Balance Ledger Updated');
-                $this->ApplicaitonRegisterAlert($this->Mobile_No,$name, $this->Name, $service, $this->SubSelected );
+                $this->ApplicaitonRegisterAlert($this->Mobile_No, $name, $this->Name, $service, $this->SubSelected);
                 return redirect()->route('new.application');
             } else {
 
@@ -310,27 +320,44 @@ class ApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Application Saved Successfully!!');
-                $this->ApplicaitonRegisterAlert($this->Mobile_No,$name, $this->Name, $service, $this->SubSelected );
+                $this->ApplicaitonRegisterAlert($this->Mobile_No, $name, $this->Name, $service, $this->SubSelected);
                 return redirect()->route('new.application');
             }
         } else // For Unregistered or New Clients
         {
+
             $client_Id = 'DC' . time();
 
+            $this->usernameGenrator($this->Name, $this->Dob);
             if ($this->Balance > 0) {
                 // Client Registration
                 $user_data = new ClientRegister();
                 $user_data->Id = $client_Id;
-                $user_data->Name = $this->Name;
-                $user_data->Relative_Name = $this->RelativeName;
-                $user_data->Gender = $this->Gender;
-                $user_data->Mobile_No = $this->Mobile_No;
-                $user_data->Email_Id = $this->Name . '@gmail.com';
-                $user_data->DOB = $this->Dob;
+                $user_data->Name = trim($this->Name);
+                $user_data->Relative_Name = trim($this->RelativeName);
+                $user_data->Gender = trim($this->Gender);
+                $user_data->Mobile_No = trim($this->Mobile_No);
+                $user_data->Email_Id = trim($this->username . '@gmail.com');
+                $user_data->DOB = trim($this->Dob);
                 $user_data->Address = "Chikkabasthi";
-                $user_data->Profile_Image = $Client_Image;
-                $user_data->Client_Type = $this->Client_Type;
+                $user_data->Profile_Image = trim($Client_Image);
+                $user_data->Client_Type = trim($this->Client_Type);
                 $user_data->save(); // Client Registered
+
+
+                $user = User::create([
+                    'Client_Id' => $client_Id,
+                    'name' => trim($this->Name),
+                    'username' => trim($this->username),
+                    'mobile_no' => trim($this->Mobile_No),
+                    'email' => trim($this->username . '@gmail.com'),
+                    'profile_image' => trim($Client_Image),
+                    'password' => Hash::make(trim($this->username)),
+                ]);
+                event(new Registered($user)); // User Registration to Portal with Login Credentials
+                //Send Whatsapp Alert.
+                $this->UserRegisterAlert($this->Name, $this->Mobile_No, $this->username);
+
 
                 $app_field = new Application();
                 $app_field->Id = $this->App_Id;
@@ -373,23 +400,9 @@ class ApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
 
-                $save_balance = new BalanceLedger();
-                $save_balance->Id = $this->App_Id;
-                $save_balance->Client_Id = $client_Id;
-                $save_balance->Date = $this->Received_Date;
-                $save_balance->Name = $this->Name;
-                $save_balance->Mobile_No = $this->Mobile_No;
-                $save_balance->Category = $service;
-                $save_balance->Sub_Category = $this->SubSelected;
-                $save_balance->Total_Amount = $this->Total_Amount;
-                $save_balance->Amount_Paid = $this->Amount_Paid;
-                $save_balance->Balance = $this->Balance;
-                $save_balance->Payment_Mode = $this->PaymentMode;
-                $save_balance->Attachment = $this->Payment_Receipt;
-                $save_balance->Description = $Description;
-                $save_balance->save(); // Balance Ledger Entry Saved
-                session()->flash('SuccessMsg', 'Client Registered! Application Saved Successfully!, Balance Ledgere Updated!');
-                $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected );
+                
+                session()->flash('SuccessMsg', 'Client Registered! Application Saved Successfully!.');
+                $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
                 return redirect()->route('new.application');
             } else {
                 // Client Registration
@@ -405,6 +418,20 @@ class ApplicationForm extends Component
                 $user_data->Profile_Image = $Client_Image;
                 $user_data->Client_Type = $this->Client_Type;
                 $user_data->save(); // Client Registered
+
+                $this->usernameGenrator($this->Name, $this->Dob);
+                $user = User::create([
+                    'Client_Id' => $client_Id,
+                    'name' => trim($this->Name),
+                    'username' => trim($this->username),
+                    'mobile_no' => trim($this->Mobile_No),
+                    'email' => trim($this->username . '@gmail.com'),
+                    'profile_image' => trim($Client_Image),
+                    'password' => Hash::make(trim($this->username)),
+                ]);
+                event(new Registered($user)); // User Registration to Portal with Login Credentials
+                //Send Whatsapp Alert.
+                $this->UserRegisterAlert($this->Name, $this->Mobile_No, $this->username);
 
                 $app_field = new Application();
                 $app_field->Id = $this->App_Id;
@@ -447,11 +474,12 @@ class ApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Client Registered! Application Saved Successfully!,');
-                $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected );
+                $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
                 return redirect()->route('new.application');
             }
         }
     }
+
     public function Capitalize()
     {
         $this->Name = ucwords($this->Name);
@@ -459,6 +487,7 @@ class ApplicationForm extends Component
         $this->Ack_No = ucwords($this->Ack_No);
         $this->Document_No = ucwords($this->Document_No);
     }
+
     public function UnitPrice()
     {
         $main_id = $this->MainSelected;
@@ -469,6 +498,7 @@ class ApplicationForm extends Component
             $this->Service_Fee = $key['Service_Fee'];
         }
     }
+
     public function Clear()
     {
         $this->Dob = NULL;
@@ -479,16 +509,20 @@ class ApplicationForm extends Component
         $this->Client_Type = NULL;
         $this->clear_button = 'Disable';
     }
+
     public function ResetDefaults()
     {
         $this->Open = 0;
         $this->Clear();
+        $this->resetPage();
     }
+
     public function LatestUpdate()
     {
         $latest_app = Application::latest('created_at')->first();
-        $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
-
+        if (!is_Null($latest_app)) {
+            $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+        }
         $applied = Application::Where('Mobile_No', $this->Mobile_No)->get();
         if (count($applied) > 0) {
             if (!empty($this->Mobile_No)) {
@@ -506,6 +540,8 @@ class ApplicationForm extends Component
             }
         }
     }
+
+
     public function Autofill()
     {
         $this->clear_button = 'Enable';
@@ -525,101 +561,6 @@ class ApplicationForm extends Component
                     $this->Client_Type = $key['Client_Type'];
                 }
             }
-        }
-    }
-
-    public function Delete($Id)
-    {
-        $check_bal_app = DB::table('digital_cyber_db')->where('Id', '=', $Id)
-            ->where(function ($query) {
-                $query->where('Balance', '>', 0);
-            })->get();
-
-        $check_bal = DB::table('balance_ledger')->where('Client_Id', '=', $Id)
-            ->where(function ($query) {
-                $query->where('Balance', '>', 0);
-            })->get();
-
-        $check_bal_credit = DB::table('credit_ledger')->where('Client_Id', '=', $Id)
-            ->where(function ($query) {
-                $query->where('Balance', '>', 0);
-            })->get();
-
-        if ($check_bal && $check_bal_app && $check_bal_credit) {
-            session()->flash('Error', 'Balance Due Found for this Application Id: ' . $Id . ' Please Clear Due and try again!');
-        } elseif ($check_bal_app && $check_bal) {
-            session()->flash('Error', 'Balance Due Found in Balance Ledger for this Application Id: ' . $Id . ' Please Clear Due and try again!');
-        } elseif ($check_bal_app && $check_bal_credit) {
-            session()->flash('Error', 'Balance Due Found in Credit Ledger for this Application Id: ' . $Id . ' Please Clear Due and try again!');
-        } elseif ($check_bal_app) {
-            session()->flash('Error', 'Balance Due Found only In Applicaiton for this Application Id: ' . $Id . ' Please Clear Due and try again!');
-        } else {
-            $recyble_app = DB::table('digital_cyber_db')->where('Id', $Id)->update(['Recycle_Bin' => 'Yes']);
-            if ($recyble_app) {
-                session()->flash('SuccessMsg', 'Record for Application Id: ' . $Id . ' Deleted!');
-            }
-        }
-    }
-
-    public function MultipleDelete()
-    {
-        $check_bal = BalanceLedger::WhereIn('Id', $this->Checked)->get();
-        if (sizeof($check_bal) > 0) {
-            $temp = collect([]);
-            foreach ($check_bal as $get_id) {
-                $bal = 0;
-                $bal_ids = $get_id['Client_Id'];
-                $bal_id = $get_id['Id'];
-                $desc = $get_id['Description'];
-                $tot = $get_id['Total_Amount'];
-                $paid = $get_id['Amount_Paid'];
-                $bal += $get_id['Balance'];
-                if ($bal > 0) {
-                    $temp->push(['Id' => $bal_ids, 'Description' => $desc, 'Total_Amount' => $tot, 'Amount_Paid' => $paid, 'Balance' => $bal]);
-                    $this->FilterChecked = [];
-                    foreach ($temp as $key) {
-                        $id = $key['Id'];
-                        array_push($this->FilterChecked, $id);
-                    }
-                }
-            }
-
-            $this->collection = $temp;
-
-            $Checked = array_diff($this->Checked, $this->FilterChecked);
-            $del_credit = CreditLedger::wherekey($Checked)->delete();
-            $del_bal = BalanceLedger::wherekey($Checked)->delete();
-            $del_app = Application::wherekey($Checked)->delete();
-            if ($del_credit && $del_bal && $del_app) {
-                session()->flash('SuccessMsg', count($Checked) . ' Records Deleted Successfully..');
-            } else {
-                session()->flash('Error', ' Records Unable to Delete..');
-            }
-        } else {
-            $del_credit = CreditLedger::wherekey($this->Checked)->delete();
-            $del_bal = BalanceLedger::wherekey($this->Checked)->delete();
-            $del_app = Application::wherekey($this->Checked)->delete();
-            if ($del_credit && $$del_bal && $del_app) {
-                session()->flash('SuccessMsg', count($this->Checked) . ' Records Deleted Successfully..');
-            } else {
-                session()->flash('Error', count($this->Checked) . ' Records Unable to Delete..');
-            }
-        }
-    }
-
-    public function UpdateBalance($Id)
-    {
-        $fetch = BalanceLedger::where('Id', $Id)->get();
-        $amount = 0;
-        foreach ($fetch as $key) {
-            $amount = $key['Balance'];
-        }
-        $update_bal = DB::table('balance_ledger')->where('Client_Id', $Id)->update(['Balance' => 0]);
-        $update_credit = DB::table('credit_ledger')->where('Id', $Id)->update(['Balance' => 0]);
-        if ($update_bal && $update_credit) {
-            session()->flash('SuccessMsg', 'Balance Due of Rupees ' . $amount . ' is Cleared' . $Id);
-        } else {
-            session()->flash('Error', 'unable to update');
         }
     }
 
@@ -647,10 +588,10 @@ class ApplicationForm extends Component
                     $this->C_Name = $key['Name'];
                     $this->C_RName = $key['Relative_Name'];
                     $this->C_Gender = $key['Gender'];
-                    $this->C_Email = $key['Email'];
+                    $this->C_Email = $key['Email_Id'];
                     $this->C_Mob = $key['Mobile_No'];
-                    // $this->C_Address = $key['Address'];
-                    // $this->C_Ctype = $key['Client_Type'];
+                    $this->C_Address = $key['Address'];
+                    $this->C_Ctype = $key['Client_Type'];
                 }
             }
             $AppliedServices = Application::Where('Mobile_No', $this->Mobile_No)->get();
@@ -674,17 +615,17 @@ class ApplicationForm extends Component
         if (!is_null($this->Select_Date)) //Report on form page for Searh by Date
         {
             $date = Carbon::parse($this->Select_Date)->format('d-M-Y');
-            $daily_applications = Application::Where('Received_Date', $this->Select_Date)->filter($this->filterby)->paginate($this->paginate);
+            $daily_applications = Application::Where([['Received_Date', $this->Select_Date],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
             $this->Daily_Income = 0;
             foreach ($daily_applications as $key) {
                 $this->Daily_Income += $key['Amount_Paid'];
             }
             if (sizeof($daily_applications) == 0) {
                 session()->flash('Error', 'Sorry!! No Record Available for ' . $date);
-                $daily_applications = Application::Where('Received_Date', $this->today)->filter($this->filterby)->paginate($this->paginate);
+                $daily_applications = Application::Where([['Received_Date', $this->today],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
             }
         } else {
-            $daily_applications = Application::Where('Received_Date', $this->today)->filter($this->filterby)->paginate($this->paginate);
+            $daily_applications = Application::Where([['Received_Date', $this->today],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
         }
 
 
@@ -706,7 +647,7 @@ class ApplicationForm extends Component
         $status_list = $this->status_list;
         $this->payment_mode = PaymentMode::all();
 
-        $daily_applications = Application::Where('Received_Date', $today)->filter($this->filterby)->paginate($this->paginate);
+        $daily_applications = Application::Where([['Received_Date', $today],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
 
         $this->main_service = MainServices::orderby('Name')->get();
         if (!empty($this->MainSelected)) {

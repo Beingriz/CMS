@@ -135,6 +135,6 @@ class ViewProfile extends Component
         $id = Auth::user()->id;
         $this->profiledata = User::find($id);
 
-        return view('livewire.user.view-profile', ['profiledata' => $this->profiledata]);
+        return view('livewire.user-module.view-profile', ['profiledata' => $this->profiledata]);
     }
 }
