@@ -10,6 +10,7 @@ use App\Models\MainServices;
 use App\Models\PaymentMode;
 use App\Models\Status;
 use App\Models\SubServices;
+use App\Traits\WhatsappTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -17,15 +18,13 @@ use Intervention\Image\Facades\Image as Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Http\Controllers\WhatsApp\WhatsappController;
 
 class ApplicationForm extends Component
 {
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     use WithPagination;
-    use WhatsappController;
-
+    use WhatsappTrait;
 
 
     public $App_Id, $today, $payment_mode;
@@ -93,7 +92,7 @@ class ApplicationForm extends Component
     }
     public function submit()
     {
-        $this->Regis
+
         $this->validate();
         $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
         $service = MainServices::Where('Id', $this->MainSelected)->get();
@@ -251,6 +250,7 @@ class ApplicationForm extends Component
                 $save_balance->Description = $Description;
                 $save_balance->save(); // Balance Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Application Saved Successfully!, Balance Ledger Updated');
+                $this->ApplicaitonRegisterAlert($this->Mobile_No,$name, $this->Name, $service, $this->SubSelected );
                 return redirect()->route('new.application');
             } else {
 
@@ -261,6 +261,7 @@ class ApplicationForm extends Component
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
                 $app_field->Name = $this->Name;
+                $app_field->Gender = $this->Gender;
                 $app_field->Mobile_No =  $this->Mobile_No;
                 $app_field->DOB = $this->Dob;
                 $app_field->Applied_Date = NULL;
@@ -309,6 +310,7 @@ class ApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Application Saved Successfully!!');
+                $this->ApplicaitonRegisterAlert($this->Mobile_No,$name, $this->Name, $service, $this->SubSelected );
                 return redirect()->route('new.application');
             }
         } else // For Unregistered or New Clients
@@ -387,6 +389,7 @@ class ApplicationForm extends Component
                 $save_balance->Description = $Description;
                 $save_balance->save(); // Balance Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Client Registered! Application Saved Successfully!, Balance Ledgere Updated!');
+                $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected );
                 return redirect()->route('new.application');
             } else {
                 // Client Registration
@@ -444,6 +447,7 @@ class ApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
                 session()->flash('SuccessMsg', 'Client Registered! Application Saved Successfully!,');
+                $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected );
                 return redirect()->route('new.application');
             }
         }

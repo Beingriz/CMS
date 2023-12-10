@@ -240,6 +240,16 @@
                                             {{ $Status }}</span>
                                     </div>
                                 </div>
+                                <!-- Reason -->
+                                <div class="row">
+                                    <div class="col-45">
+                                        <span class="font-size-18">Reason</span>
+                                    </div>
+                                    <div class="col-55">
+                                        <span class="text-primary font-weight-bolder font-size-18">
+                                            {{ $Reason }}</span>
+                                    </div>
+                                </div>
                             </div>
                             {{-- End --}}
 

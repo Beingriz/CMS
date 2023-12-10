@@ -48,7 +48,7 @@ class WhatsappController extends Controller
         session()->flash('Success', 'Message Sent!');
         return redirect()->back();
     }
-    public function RegisteredAlert($mobile, $name, $service,)
+    public function RegisteredAlert($mobile, $name, $service)
     {
 
         $body = "Hi ".$name.",

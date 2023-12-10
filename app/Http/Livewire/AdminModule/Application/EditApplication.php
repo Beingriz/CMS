@@ -10,6 +10,7 @@ use App\Models\PaymentMode;
 use App\Models\Status;
 use App\Models\SubServices;
 use App\Traits\RightInsightTrait;
+use App\Traits\WhatsappTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,8 @@ class EditApplication extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    use WhatsappTrait;
+
     protected $paginationTheme = 'bootstrap';
     public $Client_Id, $Id, $App_Id;
     public $Name, $Checked = [];
@@ -28,7 +31,7 @@ class EditApplication extends Component
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
     public $Total_Amount, $today;
-    public $Amount_Paid;
+    public $Amount_Paid,$Reason;
     public $Balance;
     public $PaymentMode, $PaymentModes, $Client_Type, $Confirmation, $Client_Image, $Old_Profile_Image;
     public $Received_Date, $Applied_Date, $Updated_Date, $old_Applicant_Image;
@@ -56,6 +59,7 @@ class EditApplication extends Component
     public $Doc_Names = [];
     public $NewTextBox = [];
     public $label = [];
+    public $old_status,$old_service,$old_service_type;
 
 
 
@@ -98,7 +102,9 @@ class EditApplication extends Component
             $this->Gender = $key['Gender'];
             $this->Application = $key['Application'];
             $this->mainservice = $key['Application'];
+            $this->old_service = $key['Application'];
             $this->Application_Type = $key['Application_Type'];
+            $this->old_service_type = $key['Application_Type'];
             $this->subservice = $key['Application_Type'];
             $this->SubService = $key['Application_Type'];
             $this->Dob = $key['Dob'];
@@ -107,12 +113,13 @@ class EditApplication extends Component
             $this->Applied_Date = $key['Applied_Date'];
             $this->Ack_No = $key['Ack_No'];
             $this->Document_No = $key['Document_No'];
-            $this->Status = $key['Status'];
             $this->Total_Amount = $key['Total_Amount'];
             $this->Amount_Paid = $key['Amount_Paid'];
             $this->Balance = $key['Balance'];
             $this->PaymentMode = $key['Payment_Mode'];
             $this->Status = $key['Status'];
+            $this->old_status = $key['Status'];
+            $this->Reason = $key['Reason'];
             $this->Updated_Date = $key['Delivered_Date'];
             $this->Registered = $key['Registered'];
             $this->Ack = $key['Ack_File'];
@@ -188,7 +195,6 @@ class EditApplication extends Component
 
     public function Update($Id)
     {
-
         $today = date("d-m-Y");
         $time = strtotime("now");
         $fetch = Application::Wherekey($Id)->get();
@@ -330,6 +336,7 @@ class EditApplication extends Component
         $update_data['Document_No'] = $this->Document_No;
         $update_data['Applied_Date'] = $this->Applied_Date;
         $update_data['Status'] = $this->Status;
+        $update_data['Reason'] = $this->Reason;
         $update_data['Total_Amount'] = $this->Total_Amount;
         $update_data['Amount_Paid'] = $this->Amount_Paid;
         $update_data['Balance'] = $this->Balance;
@@ -352,6 +359,7 @@ class EditApplication extends Component
             $data['Relative_Name'] = $this->RelativeName;
             $data['Mobile_No'] = $this->Mobile_No;
             $data['Status'] = $this->Status;
+            $data['Reason'] = $this->Reason;
             $data['Profile_Image'] = $this->Applicant_Image;
             $data['updated_at'] = Carbon::now();
             ApplyServiceForm::where('Id', $Id)->Update($data);
@@ -418,9 +426,8 @@ class EditApplication extends Component
         $bal_data = array();
         $bal_data['Name'] = $this->Name;
         $bal_data['Mobile_No'] = $this->Mobile_No;
-        $bal_data['Category'] = $this->Application;
-        $bal_data['Sub_Category'] = $this->Application_Type;
-        $bal_data['Sub_Category'] = $this->Application_Type;
+        $bal_data['Category'] = $this->ServiceName;
+        $bal_data['Sub_Category'] =$this->SubSelected;
         $bal_data['Total_Amount'] = $this->Total_Amount;
         $bal_data['Amount_Paid'] = $this->Amount_Paid;
         $bal_data['Balance'] = $this->Balance;
@@ -442,6 +449,9 @@ class EditApplication extends Component
         $update_Credit = DB::update('update credit_ledger set Category=?, Sub_Category=?,Total_Amount =?, Amount_Paid=?, Balance=?,Payment_Mode=?,Attachment=?, Description=? where Id = ? && Client_Id=?', [$this->Application, $this->Application_Type, $this->Total_Amount, $this->Amount_Paid, $this->Balance, $this->PaymentMode, $this->Payment_Path, $Description, $Id, $this->Client_Id]);
         if ($update_Credit) {
             session()->flash('SuccessMsg', 'Credit Ledger Updated for ' . $this->Name);
+        }
+        if(($this->old_status != $this->Status) ||  ($this->Application != $this->ServiceName) || ($this->Application_Type != $this->SubSelected)){
+            $this->ApplicaitonUpdateAlert($this->Mobile_No,$this->Name, $this->ServiceName ,$this->SubSelected,$this->Status,$this->Reason);
         }
         return redirect()->route('view.application', $Id);
     }

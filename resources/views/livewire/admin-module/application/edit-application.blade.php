@@ -27,7 +27,8 @@
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('new.application') }}">Application</a></li>
                         <li class="breadcrumb-item active">Update</li>
-                        <li class="breadcrumb-item active"> <a href="{{ route('view.application',$App_Id) }}" id="open">View</a></li>
+                        <li class="breadcrumb-item active"> <a href="{{ route('view.application', $App_Id) }}"
+                                id="open">View</a></li>
                     </ol>
                 </div>
 
@@ -37,8 +38,7 @@
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="{{ route('Dashboard') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('add_services') }}">Services</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('new.status') }}">Status</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('new.application') }}">New Application</a></li>
             <li class="breadcrumb-item"><a href="{{ route('Credit') }}">Credit</a></li>
             <li class="breadcrumb-item"><a href="{{ route('Debit') }}">Debit</a></li>
         </ol>
@@ -146,7 +146,8 @@
                 <div class="card-header d-sm-flex align-items-center justify-content-between">
                     <h3 class="card-title mb-4">Application ID: {{ $Client_Id }}</h3>
                     <h4 class="card-title mb-6">Update Section</h4>
-                    <h3 class="card-title mb-4"> <a href="{{ route('view.application',$Id) }}">View : Mr / Mrs : {{ $Name }} App</a></h3>
+                    <h3 class="card-title mb-4"> <a href="{{ route('view.application', $Id) }}">View : Mr / Mrs :
+                            {{ $Name }} App</a></h3>
                 </div>
                 <div class="card-body">
 
@@ -233,7 +234,8 @@
                                                 <label class="form-label"
                                                     for="progress-basicpill-firstname-input">Gender </label>
                                                 <select class="form-select" wire:model.lazy="Gender">
-                                                    @if (!empty($Gender))
+
+                                                    @if (!empty($Gender) || is_Null($Gender))
                                                         <option value="{{ $Gender }}">{{ $Gender }}
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
@@ -510,8 +512,9 @@
                                                         for="progress-basicpill-receiveddate-input">Updated
                                                         Date</label>
                                                     <input type="date" class="form-control"
+                                                        value="{{ now()->toDateString() }}"
                                                         id="progress-basicpill-receiveddate-input"
-                                                        wire:model="Updated_Date">
+                                                        wire:model="Updated_Date" max="{{ now()->toDateString() }}">
                                                     @error('Updated_Date')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -522,7 +525,6 @@
                                                 <div class="mb-3">
                                                     <label>Current Status</label>
                                                     <select class="form-select" wire:model.lazy="Status">
-                                                        <option selected="">Select Status</option>
                                                         @foreach ($status as $item)
                                                             <option value="{{ $item->Status }} ">
                                                                 {{ $item->Status }}</option>
@@ -534,6 +536,21 @@
 
                                                 </div>
                                             </div>
+                                            @if (trim($Status) == 'Rejected' || trim($Status) == 'On Hold' ||trim($Status) == 'Returned' )
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label>{{ $Status }} Reason</label>
+                                                        <textarea type="text" class="form-control"
+                                                            placeholder="Reason for {{ $Status }}"
+                                                            id="progress-basicpill-firstname-input"
+                                                            wire:model.lazy="Reason" cols="15" rows="3"></textarea>
+                                                        @error('Status')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
 
                                         <div class="row">

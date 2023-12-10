@@ -17,7 +17,7 @@ class OpenApplication extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $Client_Id, $Id;
-    public $Name;
+    public $Name,$Reason;
     public $Dob;
     public $Ack_No = 'Not Available';
     public $Document_No = 'Not Available';
@@ -59,6 +59,7 @@ class OpenApplication extends Component
             $this->Balance = $key['Balance'];
             $this->PaymentMode = $key['Payment_Mode'];
             $this->Status = $key['Status'];
+            $this->Reason = $key['Reason'];
             $this->Delivered_Date = $key['Delivered_Date'];
             $this->Registered = $key['Registered'];
             $this->Profile_Image = $key['Applicant_Image'];
