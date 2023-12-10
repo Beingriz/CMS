@@ -17,12 +17,14 @@ use Intervention\Image\Facades\Image as Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Http\Controllers\WhatsApp\WhatsappController;
 
 class ApplicationForm extends Component
 {
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     use WithPagination;
+    use WhatsappController;
 
 
 
@@ -91,6 +93,7 @@ class ApplicationForm extends Component
     }
     public function submit()
     {
+        $this->Regis
         $this->validate();
         $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
         $service = MainServices::Where('Id', $this->MainSelected)->get();
