@@ -536,14 +536,12 @@
 
                                                 </div>
                                             </div>
-                                            @if (trim($Status) == 'Rejected' || trim($Status) == 'On Hold' ||trim($Status) == 'Returned' )
+                                            @if (trim($Status) == 'Rejected' || trim($Status) == 'On Hold' || trim($Status) == 'Returned')
                                                 <div class="col-lg-6">
                                                     <div class="mb-3">
                                                         <label>{{ $Status }} Reason</label>
-                                                        <textarea type="text" class="form-control"
-                                                            placeholder="Reason for {{ $Status }}"
-                                                            id="progress-basicpill-firstname-input"
-                                                            wire:model.lazy="Reason" cols="15" rows="3"></textarea>
+                                                        <textarea type="text" class="form-control" placeholder="Reason for {{ $Status }}"
+                                                            id="progress-basicpill-firstname-input" wire:model.lazy="Reason" cols="15" rows="3"></textarea>
                                                         @error('Status')
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -645,240 +643,255 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @error('Name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Mobile_No')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Dob')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('RelativeName')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Gender')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('MainService')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('SubService')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Received_Date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Applied_Date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Updated_Date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Total_Amount')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Amount_Paid')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Balance')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Status')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('Received_Date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    @error('PaymentMode')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 d-flex">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"> Name</li>
-                                            <li class="list-group-item"> Mobile No</li>
-                                            <li class="list-group-item"> DOB</li>
-                                            <li class="list-group-item"> Gender</li>
-                                            <li class="list-group-item"> Photo</li>
-                                        </ul>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                @if (empty($Name))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                                @else
-                                                    <strong class="text-primary">{{ $Name }}</strong>
-                                                @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Mobile_No))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                                @else
-                                                    <strong class="text-primary">{{ $Mobile_No }}</strong>
-                                                @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Dob))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                                @else
-                                                    <strong class="text-primary">{{ $Dob }}</strong>
-                                                @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Gender))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                                @else
-                                                    <strong class="text-primary">{{ $Gender }}</strong>
-                                                @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if ($old_Applicant_Image != 'Not Available')
-                                                    <img class="rounded avatar-md"
-                                                        src="{{ asset('storage/' . $old_Applicant_Image) }}"
-                                                        alt="ApplicantImage" />
-                                                @elseif(!empty($Applicant_Image))
-                                                    <img class="rounded avatar-md"
-                                                        src="{{ $Applicant_Image->temporaryUrl() }}"
-                                                        alt="ApplicantImage" />
-                                                @else
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                                @endif
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    <div class="col-lg-4 d-flex">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"> Service</li>
-                                            <li class="list-group-item"> Category</li>
-                                            <li class="list-group-item"> Acknowledgment No</li>
-                                            <li class="list-group-item"> Document No</li>
-
-                                        </ul>
-
-
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                @if (!empty($MainSelected))
-                                                    <strong class="text-primary">{{ $ServiceName }}</strong>
-                                                @elseif(!empty($Application))
-                                                    <strong class="text-primary">{{ $Application }}</strong>
-                                                @else
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (!empty($SubSelected))
-                                                    <strong class="text-primary">{{ $SubSelected }}</strong>
-                                            </li>
-                                        @elseif(!empty($Application_Type))
-                                            <strong class="text-primary">{{ $Application_Type }}</strong>
-                                        @else
-                                            <strong class="text-danger">Field is Empty</strong></li>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Ack_No))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Ack_No }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Document_No))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Document_No }}</strong>
-                                            @endif
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="col-lg-4 d-flex">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"> Received Date</li>
-                                            <li class="list-group-item"> Applied Date</li>
-                                            <li class="list-group-item"> Updated Date</li>
-                                            <li class="list-group-item"> Status No</li>
-                                            <li class="list-group-item"> Total</li>
-                                            <li class="list-group-item"> Paid</li>
-                                            <li class="list-group-item"> Balance</li>
-                                            <li class="list-group-item"> Payment Mode</li>
-
-                                        </ul>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                @if (empty($Received_Date))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Received_Date }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Applied_Date))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Applied_Date }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Updated_Date))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Updated_Date }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Status))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Status }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Total_Amount))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Total_Amount }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Amount_Paid))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Amount_Paid }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($Balance))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $Balance }}</strong>
-                                            @endif
-                                            </li>
-                                            <li class="list-group-item">
-                                                @if (empty($PaymentMode))
-                                                    <strong class="text-danger">Field is Empty</strong>
-                                            </li>
-                                        @else
-                                            <strong class="text-primary">{{ $PaymentMode }}</strong>
-                                            @endif
-                                            </li>
-                                        </ul>
+                                    {{-- Error / Missing Filed Indicators --}}
+                                    <div id="errorlist">
+                                        @error('Name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Mobile_No')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Dob')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('RelativeName')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Gender')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('MainService')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('SubService')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Received_Date')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Applied_Date')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Updated_Date')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Total_Amount')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Amount_Paid')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Balance')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Status')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('Received_Date')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @error('PaymentMode')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
+                                
+                                <div class="row ">
+                                    {{-- First Half Data Display --}}
+                                    <div class="col-md-6 col-lg-6">
+
+                                        <!-- Client Id  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-16 ">Client ID</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Client_Id) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Client_Id) ? $Client_Id : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- Name  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Name</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Name) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Name) ? $Name : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Applicant Image  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Applicant Image</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <img class="rounded avatar-md"
+                                                    src="{{ !empty($Applicant_Image) ? $Applicant_Image->temporaryUrl() : asset('storage/no_image.jpg') }}"alt="Client_Image" />
+                                            </div>
+                                        </div>
+
+                                        <!-- Relative Name  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Relative Name</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($RelativeName) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($RelativeName) ? $RelativeName : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Gender  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Gender</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Gender) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Gender) ? $Gender : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- Mobile Number  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Mobile Number</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Mobile_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Mobile_No) ? $Mobile_No : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Date of Birth -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Date of Birth</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Dob) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Dob) ? $Dob : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!--Client Type  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Client Type</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Client_Type) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Client_Type) ? $Client_Type : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    {{-- First Half Data Display --}}
+                                    <div class="col-md-6 col-lg-6">
+                                        <!-- ServiceName  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Service</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($ServiceName) ? 'text-info font-weight-bolder' : '' }}">{{ !empty($ServiceName) ? $ServiceName : $Application }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sub Service  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Service Type</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($SubService) ? 'text-info font-weight-bolder' : '' }}">{{ !empty($SubService) ? $SubService : $Application_Type }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Ack_No  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Ack No.</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Ack_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Ack_No) ? $Ack_No : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Client Id  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Doc No</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Document_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Document_No) ? $Document_No : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Total_Amount   -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Total Payment</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Total_Amount) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Total_Amount) ? $Total_Amount : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Amount_Paid -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Amount Paid</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Amount_Paid) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Amount_Paid) ? $Amount_Paid : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Balance  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Balance</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ $Balance == 0 ? 'text-sucess font-weight-bolder' : '' }}">{{ $Balance == 0 ? 'No Due' : '$Balance' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Statusd  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Status</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($Status) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Status) ? $Status : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- PaymentMode  -->
+                                        <div class="row">
+                                            <div class="col-45">
+                                                <span class="font-size-18 ">Payment Mode</span>
+                                            </div>
+                                            <div class="col-55">
+                                                <span
+                                                    class="text-primary font-size-16 {{ empty($PaymentMode) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($PaymentMode) ? $PaymentMode : 'Field is Empty' }}</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <h5 class="font-size-14 mb-3">Preview Confirmation</h5>
                                     <div class="d-flex flex-wrap gap-2">

@@ -538,6 +538,58 @@
                                         </div>
                                     </div>
                                 </div>
+                                {{-- Error / Missing Filed Indicators --}}
+                                <div id="errorlist">
+                                    @error('Name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Mobile_No')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Dob')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('RelativeName')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Gender')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('MainService')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('SubService')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Received_Date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Applied_Date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Updated_Date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Total_Amount')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Amount_Paid')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Balance')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Status')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('Received_Date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    @error('PaymentMode')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
                                 <div class="row ">
                                     {{-- First Half Data Display --}}
                                     <div class="col-md-6 col-lg-6">
@@ -563,14 +615,20 @@
                                             </div>
                                         </div>
 
-                                         <!-- Applicant Image  -->
-                                         <div class="row">
+                                        <!-- Applicant Image  -->
+                                        <div class="row">
                                             <div class="col-45">
                                                 <span class="font-size-18 ">Applicant Image</span>
                                             </div>
                                             <div class="col-55">
-                                                <img class="rounded avatar-md"
-                                                    src="{{ !empty($Applicant_Image) ? $Applicant_Image->temporaryUrl() : asset('storage/no_image.jpg') }}"alt="Client_Image" />
+                                                @if (!empty($Applicant_Image))
+                                                    <img class="rounded avatar-md"
+                                                        src="{{ !empty($Applicant_Image) ? $Applicant_Image->temporaryUrl() : asset('storage/no_image.jpg') }}"alt="Client_Image" />
+                                                @else
+                                                    <img class="rounded avatar-md"
+                                                        src="{{ !empty($old_Applicant_Image) ? asset('storage/' . $old_Applicant_Image) : asset('storage/no_image.jpg') }}"alt="Client_Image" />
+                                                @endif
+
                                             </div>
                                         </div>
 
@@ -627,7 +685,7 @@
                                                     class="text-primary font-size-16 {{ empty($Client_Type) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Client_Type) ? $Client_Type : 'Field is Empty' }}</span>
                                             </div>
                                         </div>
-                                                                          
+
                                     </div>
 
                                     {{-- First Half Data Display --}}
@@ -749,410 +807,410 @@
                                         @endif
                                     </div>
                                 </div>
-                            @if ($Confirmation == 1)
-                                <div class="row">
-                                    <div class="col-xl-12">
+                                @if ($Confirmation == 1)
+                                    <div class="row">
+                                        <div class="col-xl-12">
 
-                                        <div class="text-center">
-                                            <a href="#" wire:click.prevent="submit()"
-                                                class="btn btn-success waves-effect waves-light"><i
-                                                    class="ri-check-line align-middle me-2"></i> Submit
-                                                Applicaiton</a>
+                                            <div class="text-center">
+                                                <a href="#" wire:click.prevent="submit()"
+                                                    class="btn btn-success waves-effect waves-light"><i
+                                                        class="ri-check-line align-middle me-2"></i> Submit
+                                                    Applicaiton</a>
+                                            </div>
+
                                         </div>
-
                                     </div>
-                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <ul class="pager wizard twitter-bs-wizard-pager-link">
+                            <li class="previous disabled"><a href="javascript: void(0);">Previous</a></li>
+                            <li class="next"><a href="javascript: void(0);">Next</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- --------------------------------------------------------------------------------------------- -->
+        @if ($Profile_Show == 1)
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"><strong class="text-info">{{ $C_Name }}</strong> Profile
+                            </h4>
+                    </div>
+                    {{-- Profile Section  --}}
+                    <div class="row no-gutters align-items-center">
+                        {{-- Profile Creation Time --}}
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <p class="card-text">{{ $C_Name }} Registered {{ $profileCreated }}</p>
+                                <p class="card-text"><small class="text-muted">Profile Last updated
+                                        {{ $lastProfUpdate }}</small></p>
+                            </div>
+                        </div>
+                        {{-- Profile Section --}}
+                        <div class="col-md-4">
+                            @if (!empty($Client_Image))
+                                <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
+                                    alt="Client Profile">
+                            @else
+                                <img class="rounded-circle avatar-lg"
+                                    src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
+                                    alt="Card image cap">
                             @endif
                         </div>
                     </div>
-                    <ul class="pager wizard twitter-bs-wizard-pager-link">
-                        <li class="previous disabled"><a href="javascript: void(0);">Previous</a></li>
-                        <li class="next"><a href="javascript: void(0);">Next</a></li>
-                    </ul>
+
+                    <div class="row ">
+                        {{-- First Half Data Display --}}
+                        <div class="col-md-6 col-lg-12">
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Client ID</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Id != '' ? $C_Id : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Name</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Name != '' ? $C_Name : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Relative Name</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_RName != '' ? $C_RName : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Date of Birth</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Dob != '' ? $C_Dob : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Mobile Number</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Mob != '' ? $C_Mob : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Email Id</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Email != '' ? $C_Email : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Client Type</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Ctype != '' ? $C_Ctype : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <!-- Client Id  -->
+                            <div class="row">
+                                <div class="col-45">
+                                    <span class="font-size-18 ">Address</span>
+                                </div>
+                                <div class="col-55">
+                                    <span
+                                        class="text-primary font-size-18">{{ $C_Address != '' ? $C_Address : 'Not Available' }}</span>
+                                </div>
+                            </div>
+                            <a href={{ route('edit_profile', $C_Id) }}
+                                class="btn btn-primary waves-effect waves-light" id="update">Update
+                                Profile</a>
+
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- --------------------------------------------------------------------------------------------- -->
-    @if ($Profile_Show == 1)
-        <div class="col-lg-5">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title"><strong class="text-info">{{ $C_Name }}</strong> Profile
-                        </h4>
-                </div>
-                {{-- Profile Section  --}}
-                <div class="row no-gutters align-items-center">
-                    {{-- Profile Creation Time --}}
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <p class="card-text">{{ $C_Name }} Registered {{ $profileCreated }}</p>
-                            <p class="card-text"><small class="text-muted">Profile Last updated
-                                    {{ $lastProfUpdate }}</small></p>
+        @endif {{-- End of Profile View --}}
+
+        @if ($Records_Show == 1)
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Previous {{ $AppliedServices->total() }} Records for
+                            {{ $C_Mob }} of {{ $C_Name }}</h5>
+                    </div>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-md-8">
+                            <div class="card-body">
+
+                                <p class="card-text text-dark">List of All Applications Applied by
+                                    {{ $C_Name }}, Including Recyclebin applicaitons. </p>
+                                <p class="card-text text-dark"><small class="text-muted">Last Application Applied
+                                        {{ $lastMobRecTime }}</small></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @if (!empty($Client_Image))
+                                <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
+                                    alt="Client Profile">
+                            @else
+                                <img class="rounded-circle avatar-lg"
+                                    src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
+                                    alt="Card image cap">
+                            @endif
                         </div>
                     </div>
-                    {{-- Profile Section --}}
-                    <div class="col-md-4">
-                        @if (!empty($Client_Image))
-                            <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
-                                alt="Client Profile">
-                        @else
-                            <img class="rounded-circle avatar-lg"
-                                src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
-                                alt="Card image cap">
-                        @endif
-                    </div>
-                </div>
-
-                <div class="row ">
-                    {{-- First Half Data Display --}}
-                    <div class="col-md-6 col-lg-12">
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Client ID</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Id != '' ? $C_Id : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Name</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Name != '' ? $C_Name : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Relative Name</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_RName != '' ? $C_RName : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Date of Birth</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Dob != '' ? $C_Dob : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Mobile Number</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Mob != '' ? $C_Mob : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Email Id</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Email != '' ? $C_Email : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Client Type</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Ctype != '' ? $C_Ctype : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <!-- Client Id  -->
-                        <div class="row">
-                            <div class="col-45">
-                                <span class="font-size-18 ">Address</span>
-                            </div>
-                            <div class="col-55">
-                                <span
-                                    class="text-primary font-size-18">{{ $C_Address != '' ? $C_Address : 'Not Available' }}</span>
-                            </div>
-                        </div>
-                        <a href={{ route('edit_profile', $C_Id) }} class="btn btn-primary waves-effect waves-light"
-                            id="update">Update
-                            Profile</a>
-
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    @endif {{-- End of Profile View --}}
-
-    @if ($Records_Show == 1)
-        <div class="col-lg-5">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Previous {{ $AppliedServices->total() }} Records for
-                        {{ $C_Mob }} of {{ $C_Name }}</h5>
-                </div>
-                <div class="row no-gutters align-items-center">
-                    <div class="col-md-8">
-                        <div class="card-body">
-
-                            <p class="card-text text-dark">List of All Applications Applied by
-                                {{ $C_Name }}, Including Recyclebin applicaitons. </p>
-                            <p class="card-text text-dark"><small class="text-muted">Last Application Applied
-                                    {{ $lastMobRecTime }}</small></p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        @if (!empty($Client_Image))
-                            <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
-                                alt="Client Profile">
-                        @else
-                            <img class="rounded-circle avatar-lg"
-                                src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
-                                alt="Card image cap">
-                        @endif
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <table id="datatable"
-                            class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid"
-                            aria-describedby="datatable_info">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>Name</th>
-                                    <th>Service</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($AppliedServices as $key)
-                                    <tr class="{{ $key->Recycle_Bin == 'Yes' ? 'bg-light text-dark' : '' }}">
-                                        <td>{{ $AppliedServices->firstItem() + $loop->index }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($key->Received_Date)->diffForHumans() }}
-                                            on
-                                            {{ \Carbon\Carbon::parse($key->Received_Date)->format('d-m-Y') }}
-                                        </td>
-                                        <td>{{ $key->Name }}</td>
-                                        <td>{{ $key->Application, $key->Application_Type }}</td>
-                                        <td>
-                                            <a href={{ route('view.application', $key->Id) }}
-                                                class="btn btn-sm btn-primary font-size-15" id="open"><i
-                                                    class="mdi mdi-book-open-page-variant"></i></a>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-md-8">
-                                <p class="text-muted">Showing {{ count($AppliedServices) }} of
-                                    {{ $AppliedServices->total() }} entries</p>
-                            </div>
-                            <div class="col-md-4">
-                                <span class=" pagination pagination-rounded float-end">
-                                    {{ $AppliedServices->links() }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-</div> {{-- End of Form,Profile,Records Panel Row --}}
-<!-- ------------------------------------------------------------------------------------------------- -->
-
-<div class="row"> {{-- Daily Transaction Display Panel --}}
-    @if (count($daily_applications) > 0)
-
-        <div class="col-lg-12">
-            <div class="card">
-
-                <h5 class="card-header">Application List</h5>
-                <div class="card-body">
-                    <h5 class="card-title">
-                        Total Credit as on
-                        @if (empty($Select_Date))
-                            {{ \Carbon\Carbon::parse($today)->format('d-M-Y') }} is &#x20B9
-                            {{ $Daily_Income }}
-                        @endif
-                        @if (!empty($Select_Date))
-                            {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y') }}
-                            <strong>
-                                {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
-                            </strong>
-                            {{ $Daily_Income }}
-                        @endif
-                    </h5>
-                    <div id="message">
-                        @if (session('SuccessMsg'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('SuccessMsg') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if (session('SuccessUpdate'))
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                {{ session('SuccessUpdate') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if (session('Error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('Error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                    </div>
-
-
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <div class="row">
-                                            <div class="col-sm-7">
-                                                <label class="form-label" for="paginate">Show Pages</label>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <select name="datatable_length" wire:model="paginate"
-                                                    aria-controls="datatable"
-                                                    class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
-                                                    <option value="5">5</option>
-                                                    <option value="10">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <label class="form-label" for="paginate">Filter By</label>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <input type="text" wire:model="filterby"
-                                                    class="form-control form-control-sm" placeholder="Filter">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="paginate">Search By
-                                                    Date</label>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <input type="date" id="date" name="Select_Date"
-                                                    wire:model="Select_Date" class="form-control form-control-sm" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </tr>
-                                <tr>
-                                    <th>SL. No</th>
-                                    <th>Name</th>
-                                    <th>Mobile No</th>
-                                    <th>Application</th>
-                                    <th>Status</th>
-                                    <th>Total | Paid | Bal. </th>
-                                    <th>Created</th>
-                                    <th>Updated</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-
-
-                            <tbody>
-                                @foreach ($daily_applications as $data)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table id="datatable"
+                                class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid"
+                                aria-describedby="datatable_info">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>{{ $daily_applications->firstItem() + $loop->index }}</td>
-                                        <td>{{ $data->Name }}</td>
-                                        <td>{{ $data->Mobile_No }}</td>
-                                        <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
-                                        <td>{{ $data->Status }}</td>
-                                        <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }} |
-                                            {{ $data->Balance }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}
-                                        </td>
-                                        <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
-                                        </td>
-                                        <td>
-                                            <div class="btn-group-vertical" role="group"
-                                                aria-label="Vertical button group">
-                                                <div class="btn-group" role="group">
-                                                    <button id="btnGroupVerticalDrop1" type="button"
-                                                        class="btn btn-light dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        Action <i class="mdi mdi-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1"
-                                                        style="">
-                                                        <a class="dropdown-item" title="View  Application"
-                                                            href={{ route('view.application', $data->Id) }}
-                                                            id="open">View</a>
-                                                        <a class="dropdown-item" title="Edit  Application"
-                                                            href={{ route('edit_application', $data->Id) }}
-                                                            id="update">Edit</a>
-
-                                                        <a class="dropdown-item" title="Delete Application"
-                                                            id="delete"
-                                                            href={{ route('delete.application', $data->Id) }}>Delete</a>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Service</th>
+                                        <th>Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
+                                </thead>
+                                <tbody>
+                                    @foreach ($AppliedServices as $key)
+                                        <tr class="{{ $key->Recycle_Bin == 'Yes' ? 'bg-light text-dark' : '' }}">
+                                            <td>{{ $AppliedServices->firstItem() + $loop->index }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($key->Received_Date)->diffForHumans() }}
+                                                on
+                                                {{ \Carbon\Carbon::parse($key->Received_Date)->format('d-m-Y') }}
+                                            </td>
+                                            <td>{{ $key->Name }}</td>
+                                            <td>{{ $key->Application, $key->Application_Type }}</td>
+                                            <td>
+                                                <a href={{ route('view.application', $key->Id) }}
+                                                    class="btn btn-sm btn-primary font-size-15" id="open"><i
+                                                        class="mdi mdi-book-open-page-variant"></i></a>
+                                            </td>
 
-                        </table>
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-md-8">
-                                <p class="text-muted">Showing {{ count($daily_applications) }} of
-                                    {{ $daily_applications->total() }} entries</p>
-                            </div>
-                            <div class="col-md-4">
-                                <span class=" pagination pagination-rounded float-end">
-                                    {{ $daily_applications->links() }}
-                                </span>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                    <p class="text-muted">Showing {{ count($AppliedServices) }} of
+                                        {{ $AppliedServices->total() }} entries</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class=" pagination pagination-rounded float-end">
+                                        {{ $AppliedServices->links() }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <p class="card-text"><small class="text-muted">Last Entry at {{ $lastRecTime }}
-                        </small>
-                    </p>
-
-
                 </div>
             </div>
-        </div>
-    @endif {{-- End of Daily Transaction Display Panel --}}
-</div>
+        @endif
+    </div> {{-- End of Form,Profile,Records Panel Row --}}
+    <!-- ------------------------------------------------------------------------------------------------- -->
 
-<!-- --------------------------------------------------------------------------------------------- -->
+    <div class="row"> {{-- Daily Transaction Display Panel --}}
+        @if (count($daily_applications) > 0)
+
+            <div class="col-lg-12">
+                <div class="card">
+
+                    <h5 class="card-header">Application List</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Total Credit as on
+                            @if (empty($Select_Date))
+                                {{ \Carbon\Carbon::parse($today)->format('d-M-Y') }} is &#x20B9
+                                {{ $Daily_Income }}
+                            @endif
+                            @if (!empty($Select_Date))
+                                {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y') }}
+                                <strong>
+                                    {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
+                                </strong>
+                                {{ $Daily_Income }}
+                            @endif
+                        </h5>
+                        <div id="message">
+                            @if (session('SuccessMsg'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ session('SuccessMsg') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                            @if (session('SuccessUpdate'))
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    {{ session('SuccessUpdate') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                            @if (session('Error'))
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ session('Error') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                        </div>
+
+
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <label class="form-label" for="paginate">Show Pages</label>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <select name="datatable_length" wire:model="paginate"
+                                                        aria-controls="datatable"
+                                                        class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <label class="form-label" for="paginate">Filter By</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="text" wire:model="filterby"
+                                                        class="form-control form-control-sm" placeholder="Filter">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="paginate">Search By Date</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="date" id="date" name="Select_Date"
+                                                        wire:model="Select_Date" wire:change="RefreshPage()"
+                                                        class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </tr>
+                                    <tr>
+                                        <th>SL. No</th>
+                                        <th>Name</th>
+                                        <th>Mobile No</th>
+                                        <th>Application</th>
+                                        <th>Status</th>
+                                        <th>Total | Paid | Bal. </th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+                                    @foreach ($daily_applications as $data)
+                                        <tr>
+                                            <td>{{ $daily_applications->firstItem() + $loop->index }}</td>
+                                            <td>{{ $data->Name }}</td>
+                                            <td>{{ $data->Mobile_No }}</td>
+                                            <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
+                                            <td>{{ $data->Status }}</td>
+                                            <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }} |
+                                                {{ $data->Balance }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group-vertical" role="group"
+                                                    aria-label="Vertical button group">
+                                                    <div class="btn-group" role="group">
+                                                        <button id="btnGroupVerticalDrop1" type="button"
+                                                            class="btn btn-light dropdown-toggle"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                            Action <i class="mdi mdi-chevron-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu"
+                                                            aria-labelledby="btnGroupVerticalDrop1" style="">
+                                                            <a class="dropdown-item" title="View  Application"
+                                                                href={{ route('view.application', $data->Id) }}
+                                                                id="open">View</a>
+                                                            <a class="dropdown-item" title="Edit  Application"
+                                                                href={{ route('edit_application', $data->Id) }}
+                                                                id="update">Edit</a>
+
+                                                            <a class="dropdown-item" title="Delete Application"
+                                                                id="delete"
+                                                                href={{ route('delete.application', $data->Id) }}>Delete</a>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-md-8">
+                                    <p class="text-muted">Showing {{ count($daily_applications) }} of
+                                        {{ $daily_applications->total() }} entries</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class=" pagination pagination-rounded float-end">
+                                        {{ $daily_applications->links() }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="card-text"><small class="text-muted">Last Entry at {{ $lastRecTime }}
+                            </small>
+                        </p>
+
+
+                    </div>
+                </div>
+            </div>
+        @endif {{-- End of Daily Transaction Display Panel --}}
+    </div>
+
+    <!-- --------------------------------------------------------------------------------------------- -->
 </div>

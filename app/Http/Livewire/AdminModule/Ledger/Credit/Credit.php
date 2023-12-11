@@ -422,6 +422,9 @@ class Credit extends Component
         $latest_app = CreditLedger::latest('created_at')->first();
         $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
     }
+    public function RefreshPage(){
+        $this->resetpage();
+    }
     public function render()
     {
         $this->LastUpdate();
@@ -438,6 +441,7 @@ class Credit extends Component
             }
         } else {
             $todays_list = CreditLedger::where('Date', $this->today)->filter(trim($this->filterby))->paginate($this->paginate);
+            
             $sl_no = $todays_list->total();
         }
         if (!is_null($this->SourceSelected)) {
@@ -466,7 +470,8 @@ class Credit extends Component
         foreach ($source as $key) {
             $source_total += $key['Amount_Paid'];
         }
-        foreach ($todays_list as $key) {
+        $todays_list_total = CreditLedger::where('Date', $this->today)->get();
+        foreach ($todays_list_total as $key) {
             $today_total += $key['Amount_Paid'];
         }
         foreach ($prev_earning as $key) {

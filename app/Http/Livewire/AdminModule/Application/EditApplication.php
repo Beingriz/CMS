@@ -128,6 +128,7 @@ class EditApplication extends Component
             $this->Doc = $key['Doc_File'];
             $this->Pay = $key['Payment_Receipt'];
             $this->old_Applicant_Image = $key['Applicant_Image'];
+            $this->paginate = 5;
         }
         if (empty($this->Applied_Date)) {
             $this->Applied_Date = date("Y-m-d");

@@ -298,22 +298,22 @@ class ApplicationController extends Controller
         }
     }
 
-    // public function List()
-    // {
-    //     $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);
-    //     $total = 0;
-    //     foreach ($this->daily_app_amount as $key) {
-    //         $key  = get_object_vars($key); {
-    //             $total += $key['Amount_Paid'];
-    //         }
-    //     }
+    public function List()
+    {
+        $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);
+        $total = 0;
+        foreach ($this->daily_app_amount as $key) {
+            $key  = get_object_vars($key); {
+                $total += $key['Amount_Paid'];
+            }
+        }
 
-    //     // Code for insight Data Records are fetched from Right Insight Traits
+        // Code for insight Data Records are fetched from Right Insight Traits
 
 
-    //     // Returns the Values to New Form
-    //     return view('Application\new_app', ['daily_applications' => $this->daily_applications, 'daily_total' => $total, 'application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'Id' => $Id, 'sl_no' => $this->sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'today' => $this->today]);
-    // }
+        // Returns the Values to New Form
+        return view('Application\new_app', ['daily_applications' => $this->daily_applications, 'daily_total' => $total, 'application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'Id' => $Id, 'sl_no' => $this->sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'today' => $this->today]);
+    }
     public function PreviousDay()
     {
         $Id =  "DCA" . date("Y") . date("m") . mt_rand(100, 999);

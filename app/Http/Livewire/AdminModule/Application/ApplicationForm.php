@@ -48,12 +48,13 @@ class ApplicationForm extends Component
     public $Mobile_No = NULL;
     public $user_type = NULL;
     public $Checked = [];
-    public $paginate = 05;
+    public $paginate = 5;
     public $filterby, $Bal = 0;
     public $collection;
-    public $Select_Date, $Daily_Income = 0;
+    public $Select_Date = Null, $Daily_Income = 0;
     public $Edit_Window = 0;
     public $PaymentFile, $AckFile, $DocFile = 0, $FilterChecked;
+    protected $daily_applications = [];
 
 
 
@@ -400,7 +401,7 @@ class ApplicationForm extends Component
                 $save_credit->Attachment = $this->Payment_Receipt;
                 $save_credit->save(); //Credit Ledger Entry Saved
 
-                
+
                 session()->flash('SuccessMsg', 'Client Registered! Application Saved Successfully!.');
                 $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
                 return redirect()->route('new.application');
@@ -564,11 +565,34 @@ class ApplicationForm extends Component
         }
     }
 
+    public function RefreshPage(){
+        $this->resetpage();
+    }
+    public function DatewiseList($Select_Date)
+    {
+       
+        if (!is_null($Select_Date)) //Report on form page for Searh by Date
+        {
+            $date = Carbon::parse($Select_Date)->format('d-M-Y');
+            $this->daily_applications = Application::Where([['Received_Date', '=', $Select_Date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            $this->Daily_Income = 0;
+            foreach ($this->daily_applications as $key) {
+                $this->Daily_Income += $key['Amount_Paid'];
+            }
+            if (sizeof($this->daily_applications) == 0) {
+                session()->flash('Error', 'Sorry!! No Record Available for ' . $date);
+                $this->daily_applications = Application::Where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            }
+        } else {
+            $this->daily_applications = Application::Where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+        }
+    }
+
     public function render()
     {
         $this->LatestUpdate();
         $this->Capitalize();
-
+        $this->today = date("Y-m-d");
 
         $this->main_service = MainServices::orderby('Name')->get();
         if (!empty($this->MainSelected)) {
@@ -612,23 +636,6 @@ class ApplicationForm extends Component
             }
         }
 
-        if (!is_null($this->Select_Date)) //Report on form page for Searh by Date
-        {
-            $date = Carbon::parse($this->Select_Date)->format('d-M-Y');
-            $daily_applications = Application::Where([['Received_Date', $this->Select_Date],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
-            $this->Daily_Income = 0;
-            foreach ($daily_applications as $key) {
-                $this->Daily_Income += $key['Amount_Paid'];
-            }
-            if (sizeof($daily_applications) == 0) {
-                session()->flash('Error', 'Sorry!! No Record Available for ' . $date);
-                $daily_applications = Application::Where([['Received_Date', $this->today],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
-            }
-        } else {
-            $daily_applications = Application::Where([['Received_Date', $this->today],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
-        }
-
-
         $this->ApplicationType = SubServices::where('Service_Id', $this->ApplicationId)->get();
         $service = MainServices::Where('Id', $this->MainSelected)->get();
         foreach ($service as $name) {
@@ -647,16 +654,22 @@ class ApplicationForm extends Component
         $status_list = $this->status_list;
         $this->payment_mode = PaymentMode::all();
 
-        $daily_applications = Application::Where([['Received_Date', $today],['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
+        $this->daily_applications = Application::Where([['Received_Date', $today], ['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
+
+
+        if (!is_null($this->Select_Date)) //Report on form page for Searh by Date
+        {
+            $this->DatewiseList($this->Select_Date);
+        }
 
         $this->main_service = MainServices::orderby('Name')->get();
         if (!empty($this->MainSelected)) {
             $this->sub_service = SubServices::orderby('Name')->Where('Service_Id', $this->MainSelected)->get();
         }
-        $this->today = date("Y-m-d");
+
         return view('livewire.admin-module.application.application-form', [
             'today' => $this->today, 'payment_mode' => $this->payment_mode,
-            'daily_applications' => $daily_applications,
+            'daily_applications' => $this->daily_applications,
             'main_service' => $this->main_service,
             'sub_service' => $this->sub_service, 'Application' => $this->Application,
             'user_type' => $this->user_type, 'status_list' => $this->status_list, 'AppliedServices' => $AppliedServices, 'lastRecTime' => $this->lastRecTime

@@ -131,14 +131,16 @@ class CreditEntry extends Controller
     public function EditCredit($Id)
     {
         $DeleteData = '';
-        return view('DigitalLedger.CreditLedger.credit_entry', ['EditData' => $Id, 'DeleteData' => $DeleteData]);
+        return view('admin-module.ledger.Credit.credit_entry', ['EditData' => $Id, 'DeleteData' => $DeleteData]);
     }
     public function DeleteCredit($DeleteData)
     {
         $eidtData = '';
-        return view('DigitalLedger.CreditLedger.credit_entry', ['EditData' => $eidtData, 'DeleteData' => $DeleteData]);
+        return view('admin-module.ledger.Credit.credit_entry', ['EditData' => $eidtData, 'DeleteData' => $DeleteData]);
     }
-
+    public function RefreshPage(){
+        $this->resetpage();
+    }
     public function Daily_count()
     {
         $total = 0;

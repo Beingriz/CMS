@@ -442,7 +442,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <input type="date" id="date" name="Select_Date" wire:model="Select_Date"
-                                    class="form-control form-control-sm" />
+                                wire:change="RefreshPage()"class="form-control form-control-sm"  />
                             </div>
                         </div>
                     </div>
@@ -509,23 +509,24 @@
                                     @endforeach
                                 </tbody>
 
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col-md-8">
-                                        <p class="text-muted">Showing {{ count($creditdata) }} of
-                                            {{ $creditdata->total() }} entries</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class=" pagination pagination-rounded float-end">
-                                            {{ $creditdata->links() }}
-                                        </span>
-                                    </div>
-                                </div>
+                                
                             </table>
                         </div>
                         <p class="card-text"><small class="text-bold">Last Entry at {{ $lastRecTime }} </small></p>
+                        
                 </div>
-                <span> {{ $creditdata->links() }} </span>
                 @endif
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-8">
+                        <p class="text-muted">Showing {{ count($creditdata) }} of
+                            {{ $creditdata->total() }} entries</p>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="pagination pagination-rounded float-end">
+                            {{ $creditdata->links() }}
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
