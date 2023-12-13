@@ -133,6 +133,7 @@ class UserApplyNowForm extends Component
             'message' => 'Application Submitted Sucessfully',
             'info-type' => 'success'
         );
+        $this->ApplicationbyUserAlert(Auth::user()->name,trim($this->mobile),trim($this->Name),$this->mainServiceName, $this->ServiceName );
         return redirect()->route('acknowledgment', $this->App_Id)->with($notification);
     } //End Function
 

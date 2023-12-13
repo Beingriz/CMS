@@ -103,7 +103,7 @@
                                         <label for="dob" class="col-sm-3 col-form-label">Date of Birth</label>
                                         <div class="col-sm-9">
                                             <input class="form-control" type="date"
-                                                wire:model="dob"placeholder="Name" id="dob">
+                                                wire:model="dob" id="dob" max="{{ now()->toDateString() }}">
                                             <span class="error">
                                                 @error('dob')
                                                     {{ $message }}
@@ -115,7 +115,7 @@
                                     <div class="row mb-3">
                                         <label for="address" class="col-sm-3 col-form-label">Address</label>
                                         <div class="col-sm-9">
-                                            <textarea class="form-control" wire:model.lazy="address" id="address"></textarea>
+                                            <textarea class="form-control" wire:model.lazy="address" id="address" placeholder="Give us your Full Address"></textarea>
                                             <span class="error">
                                                 @error('address')
                                                     {{ $message }}
@@ -146,7 +146,7 @@
                                             <label for="profile_image" class="col-sm-3 col-form-label"></label>
                                             <div class="col-sm-9">
                                                 <img class=" rounded avatar-lg"
-                                                    src="{{ asset('storage/' . $old_profile_image) }}"
+                                                    src="{{ !is_Null($old_profile_image)?asset('storage/' . $old_profile_image) :asset('storage/no_image.png')  }}"
                                                     alt="" />
                                             </div>
                                         </div>

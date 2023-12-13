@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\AdminModule\DataMigration;
 
 use App\Http\Livewire\DebitLedger;
+use Illuminate\Auth\Events\Registered;
+
 use App\Models\Application;
 use App\Models\Bookmark;
 use App\Models\ClientRegister;
@@ -18,18 +20,38 @@ use App\Models\Old_CreditLedger;
 use App\Models\Old_CreditSources;
 use App\Models\Old_Cyber_Data;
 use App\Models\Old_DebitLedger;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\Null_;
+use Illuminate\Support\Facades\Hash;
+
 
 class DataMigration extends Component
 {
     public $Table, $OldServiceList, $Application, $Application_Type, $App_Id, $clinetReg, $appReg, $UnitPrice, $Category;
     public $digitalcyber = false, $creditsource = false, $debitsource = false, $bookmarks = false, $creditledger = false, $debitledger = false;
+    public $username;
+    // Function to Generate Random Username
+    public function usernameGenrator($name, $dob)
+    {
+        // randomly creating username for new client registration,
+        // it is the combinamtion of full name without space being first letter capital
+        // ending with 2 letter of seconds of current time stamp and 2 letter of applicant date of birth.
+        $username = strtolower($name); // to small case/
+        $username = ucfirst($username); // first letter capital.
+        $currentTimestamp = time(); // Get the current timestamp
+        $timeString = date("His", $currentTimestamp); // Format timestamp as HHMMSS
+        $sec = substr($timeString, -2); // Get the last two letters
+        $dob = substr($dob, -2); // Get the last two letters
+        $username = str_replace(' ', '', $username);
+        $this->username = $username . $sec . $dob;
+    }
 
     public function Migrate()
     {
+        
 
         if ($this->Table == 'old_digial_cyber_db') {
 
@@ -65,6 +87,19 @@ class DataMigration extends Component
                     $client['Profile_Image'] = 'account.png';
                     $client['Client_Type'] = 'Old Client';
                     $client->save(); //  Client Registered
+                    
+                    $this->usernameGenrator($item['customer_name'], ($item['dob']=='0000-00-00')?date('Y-m-d'):$item['dob']);
+                    //login User Details Creation
+                    $user = User::create([
+                        'Client_Id' => $Client_Id,
+                        'name' => trim($item['customer_name']),
+                        'username' => trim($this->username),
+                        'mobile_no' => trim($item['mobile_no']),
+                        'email' => trim($this->username.rand(00,999) . '@gmail.com'),
+                        'profile_image' => 'account.png',
+                        'password' => Hash::make(trim($this->username)),
+                    ]);
+                    // event(new Registered($user)); // User Registration to Portal with Login Credentials
                     $this->clinetReg++;
 
                     // Applicaiton Registration

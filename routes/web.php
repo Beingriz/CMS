@@ -46,7 +46,6 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
         Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
-        Route::get('/admin/logout', 'destroy')->name('admin.logout');
     });
 });
 
@@ -77,6 +76,8 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
         Route::get('/view/document/{id}', 'viewDocument')->name('view.document');
         Route::get('/feedback/{id}', 'Feedback')->name('feedback');
         Route::get('/callback/{id}/{service}/{service_type}', 'CallBack')->name('callback');
+        Route::get('/user/logout', 'destroy')->name('user.logout');
+
     });
 });
 Route::middleware('auth', 'auth.role:user', 'prevent.back')->group(function () {

@@ -120,7 +120,7 @@
                         <img class="rounded-circle header-profile-user"
                             src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile">
                     @else
-                        <img class="rounded-circle header-profile-user" src="{{ url('storage/no_image.jpg') }}"
+                        <img class="rounded-circle header-profile-user" src="{{ asset('storage/no_image.jpg') }}"
                             alt="Profile">
                     @endif
 
@@ -141,7 +141,7 @@
                     <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i>Change
                         Password</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}" id="logout"><i
+                    <a class="dropdown-item text-danger" href="{{ route('user.logout') }}" id="logout"><i
                             class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>

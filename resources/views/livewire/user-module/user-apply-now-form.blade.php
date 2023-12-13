@@ -147,7 +147,7 @@
                         <div class="row mb-3">
                             <label for="Dob" class="col-sm-2 col-form-label">Date of Birth</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="date" wire:model="Dob" id="Dob">
+                                <input class="form-control" type="date" wire:model="Dob" id="Dob" max="{{ now()->toDateString()}}">
                                 <span class="error">
                                     @error('Dob')
                                         {{ $message }}
@@ -264,7 +264,7 @@
                         <br>
                         {{ $Name }}
                         <br>
-                    <p>Digitally Signed by {{ $Name }}on </p> {{ $signature }}
+                    <p>Digitally Signed by {{ $Name }} on </p> {{ $signature }}
                     </p>
                     @if ($Signed)
                         <a href="#" wire:click.prevent="Sign"

@@ -207,7 +207,7 @@
                             <div class="row mb-3">
                                 <label for="dob" class="col-sm-3 col-form-label">Date of Birth</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="date"  wire:model="Dob" id="dob">
+                                    <input class="form-control" type="date"  wire:model="Dob" max="{{ now()->toDateString() }}" id="dob">
                                     <span class="error">@error('Dob'){{$message}}@enderror</span>
                                 </div>
                             </div>

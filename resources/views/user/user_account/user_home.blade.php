@@ -3,7 +3,7 @@
     <div class="page-content">
         <div class="container-fluid">
             <div class="row align-content-center"> {{-- Start of Services Row --}}
-                <a href="#" class="col-xl-3 col-md-10">
+                <div class="col-xl-3 col-md-10">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex">
@@ -13,7 +13,7 @@
                                     <i class="fas fa-edit"></i></i>
                                 </span>
                             </div> --}}
-                                <div class="flex-grow-1 align-items-center">
+                                <a href="{{ route('history', Auth::user()->mobile_no) }}" class="flex-grow-1 align-items-center">
                                     <h5 class="text-truncate text-primary font-size-20 mb-2">{{ Auth::user()->name }}</h5>
                                     <div class="col-8">
                                         <div class="text-center mt-8">
@@ -21,7 +21,7 @@
                                             <p class="mb-2 text-truncate">Registerd Since {{ $reg_on }}</p>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
 
                                 {{-- @if ($old_Applicant_Image != 'Not Available') --}}
                                 {{-- <img class="d-flex me-3 rounded-circle img-thumbnail avatar-lg" src="{{asset('storage/'.$old_Applicant_Image)}}" alt="ApplicantImage"> --}}
@@ -33,9 +33,9 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
 
-                <a href="#" class="col-xl-3 col-md-10">
+                <div href="#" class="col-xl-3 col-md-10">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex">
@@ -62,9 +62,9 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
 
-                <a href="#" class="col-xl-3 col-md-10">
+                <div class="col-xl-3 col-md-10">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex">
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
 
 
             </div> {{-- End of Row --}}

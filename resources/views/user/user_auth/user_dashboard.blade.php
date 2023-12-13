@@ -1,7 +1,5 @@
 @extends('user.user_auth.user_auth_master')
 @section('user_auth')
-
-
     @include('user.user_home.user-content.carousel-content')
     @include('user.user_home.user-content.features-content')
     {{-- @include('user.user_home.user-content.about-content') --}}

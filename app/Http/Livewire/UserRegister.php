@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Str;
+
 
 class UserRegister extends Component
 {
@@ -19,14 +21,14 @@ class UserRegister extends Component
 
     protected $rules = [
         'name' => 'required',
-        'mobile_no' => 'required | min:10 | max : 10 | unique:users',
+        'mobile_no' => 'required | min:10 | max : 10|unique:client_register|unique:users',
         'username' => 'required | unique:users',
         'email' => 'required | unique:users',
         'password' => ['required', 'confirmed', 'min:8'],
     ];
     protected $message = [
         'name' => 'please enter your name',
-        'mobile_no' => 'enter your name',
+        'mobile_no' => 'enter valid mobile no',
         'username' => 'Select unique username',
         'email' => 'enter your email id',
     ];
@@ -38,7 +40,7 @@ class UserRegister extends Component
     public function Register()
     {
         $this->validate();
-        $client_Id = 'DC' . time();
+        $client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
         $user = User::create([
             'Client_Id' => $client_Id,
             'name' => $this->name,
@@ -73,6 +75,6 @@ class UserRegister extends Component
     }
     public function render()
     {
-        return view('livewire.user_module.user-register');
+        return view('livewire.user-register');
     }
 }
