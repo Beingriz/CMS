@@ -187,10 +187,10 @@
                         <!-- end row -->
                         <!-- end row -->
                         <div class="row mb-3">
-                            <label for="File" class="col-sm-2 col-form-label">Document</label>
+                            <label for="File" class="col-sm-2 col-form-label">Attachment</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="file" wire:model="File" id="File"
-                                    accept="image/*" required>
+                                    accept="image/*" >
                                 <p class="card-text"><small class="text-muted">Select ,jpg or ,png format only</small>
                                 </p>
                                 <span class="error">

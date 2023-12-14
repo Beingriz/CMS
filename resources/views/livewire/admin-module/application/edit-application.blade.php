@@ -253,7 +253,7 @@
                                                 <label class="form-label" for="progress-basicpill-dob-input">Date of
                                                     Birth</label>
                                                 <input type="date" class="form-control"
-                                                    placeholder="Date of Birth "id="progress-basicpill-dob-input"
+                                                    placeholder="Date of Birth" max="{{now()->toDateString()}}" id="progress-basicpill-dob-input"
                                                     wire:model.lazy="Dob">
                                                 @error('Dob')
                                                     <span class="text-danger">{{ $message }}</span>

@@ -48,7 +48,8 @@
                                                 <label for="">Name</label>
                                             </div>
                                             <div class="col-6">
-                                                <label class="{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'text-primary' }}">{{ $item->Name }}</label>
+                                                <label
+                                                    class="{{ !empty($item->Delivered_Date) ? 'text-success' : 'text-primary' }}">{{ $item->Name }}</label>
                                             </div>
                                         </div>
                                         {{-- Mobile Number --}}
@@ -93,7 +94,8 @@
                                                 <label for="">Service Type</label>
                                             </div>
                                             <div class="col-6">
-                                                <label class="{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'text-info' }}">{{ $item->Application_Type }}</label>
+                                                <label
+                                                    class="{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'text-info' }}">{{ $item->Application_Type }}</label>
                                             </div>
                                         </div>
                                         {{-- Status --}}
@@ -102,7 +104,8 @@
                                                 <label for="">Status</label>
                                             </div>
                                             <div class="col-6">
-                                                <label class="{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'text-success' }}">{{ $item->Status }}</label>
+                                                <label
+                                                    class="{{ !empty($item->Status) ? 'text-success' : 'text-danger' }}">{{ $item->Status }}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +118,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <label
-                                                    class="{{ !empty($item->Total_Amount) ? $item->Total_Amount : 'text-danger' }}">{{ !empty($item->Ack_No) ? $item->Ack_No : 'Not Available' }}</label>
+                                                    class="{{ !empty($item->Ack_No) ? 'text-success' : 'text-danger' }}">{{ !empty($item->Ack_No) ? strtoupper( $item->Ack_No) : 'Not Available' }}</label>
                                             </div>
                                         </div>
                                         {{-- Document --}}
@@ -124,8 +127,13 @@
                                                 <label for="">Document No</label>
                                             </div>
                                             <div class="col-6">
+                                                <?php
+                                                    $Doc_No = $item->Document_No;
+                                                    $visiblePart = substr($Doc_No, -4); // Get the last 4 characters
+                                                    $Doc_No  =  strtoupper(str_pad($visiblePart, strlen($Doc_No), 'x', STR_PAD_LEFT));
+                                                ?>
                                                 <label
-                                                    class="{{ !empty($item->Total_Amount) ? $item->Total_Amount : 'text-danger' }}">{{ !empty($item->Doc_No) ? $item->Doc_No : 'Not Available' }}</label>
+                                                    class="{{ !empty($Doc_No) ? 'text-success' : 'text-danger' }}">{{ !empty($Doc_No) ? $Doc_No : 'Not Available' }}</label>
                                             </div>
                                         </div>
                                         {{-- Total Amount --}}
@@ -165,12 +173,13 @@
                                             </div>
                                             <div class="col-6">
                                                 <label
-                                                    class="{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'text-danger' }}">{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'Not Available' }}</label>
+                                                    class="{{ !empty($item->Delivered_Date) ? 'text-info bg-light' : 'text-danger' }}">{{ !empty($item->Delivered_Date) ? \Carbon\Carbon::parse($item->Delivered_Date)->diffForHumans().' on '. \Carbon\Carbon::parse($item->Delivered_Date)->format('d-m-Y') : 'Not Available' }}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 Applied {{ $time }}
+                                <a class="btn btn-sn btn-info btn-rounded" href='{{route('history', Auth::user()->mobile_no)}}'>Goto My Orders</a>
                             @endforeach
 
                         </div>

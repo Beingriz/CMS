@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\ApplyServiceForm;
 use App\Models\MainServices;
 use App\Models\SubServices;
+use App\Traits\WhatsappTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -14,6 +15,10 @@ use Livewire\WithFileUploads;
 class UserApplyNowForm extends Component
 {
     use WithFileUploads;
+    use WhatsappTrait;
+
+
+
     public $App_Id, $Category_Type, $Service_Type, $Name, $PhoneNo, $FatherName, $Dob, $Description, $File, $ServiceId, $ServiceName, $subServices, $Read_Consent, $signature, $Address, $mobile;
     public $Update = 0, $mainServiceId, $mainServiceName, $Signed = true, $Recived, $disabled, $DigitallySigned, $New_File, $Amount;
     protected $rules = [
@@ -22,7 +27,6 @@ class UserApplyNowForm extends Component
         'FatherName' => 'required',
         'Dob' => 'required',
         'Description' => 'required',
-        'File' => 'required | image',
     ];
 
     public $ConsentMatter;
@@ -124,7 +128,7 @@ class UserApplyNowForm extends Component
         $app_field->Document_No = 'Not Available';
         $app_field->Message = trim($this->Description);
         $app_field->Consent = $consent;;
-        $app_field->Doc_File = $this->New_File;
+        $app_field->Doc_File = $this->New_File != Null?$this->New_File :'Not Available' ;
         $app_field->Delivered_Date = NULL;
         $app_field->Applicant_Image = Auth::user()->profile_image;
         $app_field->save(); // Application Form Saved

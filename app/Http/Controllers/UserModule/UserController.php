@@ -71,7 +71,7 @@ class UserController extends Controller
             ->orderBy('digital_cyber_db.created_at', 'desc')->get();
 
         $delivered = Application::where('Mobile_No', Auth::user()->mobile_no)
-            ->where('Status', 'Deliveted to Client')->count();
+            ->where('Status', 'Delivered to Client')->count();
         // if ($applied <= 0) {
         //     $applied = 1;
         // }
