@@ -34,6 +34,9 @@ class DynamicDashboard extends Component
     {
         $this->MainServiceId = $MainServiceId;
     }
+    public function RefreshPage(){
+        $this->resetpage();
+    }
 
     public function ChangeService($Sub_Serv_Name)
     {
@@ -64,6 +67,7 @@ class DynamicDashboard extends Component
         }
         $this->ShowTable = false;
         $this->temp_count = 1;
+        $this->resetPage();
     }
 
     public function ShowDetails($name)
@@ -76,6 +80,7 @@ class DynamicDashboard extends Component
         // $this->count = count($fetch_details);
         $this->status_name = $name;
         $this->ShowTable = true;
+        $this->resetPage();
     }
     public function UpdateStatus($Id, $pstatus, $ustatus, $subserv)
     {
@@ -109,6 +114,7 @@ class DynamicDashboard extends Component
         }
         $this->ChangeService($subserv);
         $this->ShowDetails($pstatus);
+        $this->resetPage();
     }
     public function UpdateServiceType($Id, $ptype, $utype, $pstatus)
     {
@@ -124,6 +130,7 @@ class DynamicDashboard extends Component
         $this->ChangeService($ptype);
         $this->ShowDetails($pstatus);
         $this->ShowTable = true;
+        $this->resetPage();
     }
 
     public function updateMainSerivcesNotification()

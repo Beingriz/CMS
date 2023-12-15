@@ -8,7 +8,8 @@ use Twilio\Rest\Client;
 trait WhatsappTrait
 {
 
-    public $fromNo,$twilio;
+    public $fromNo;
+    protected $twilio;
     public function validateTwilio(){
         $sid = getenv("TWILIO_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
@@ -81,13 +82,14 @@ trait WhatsappTrait
     }
     public function ApplicationbyUserAlert($profile_name,$mobile, $applicant_name, $service, $service_type)
     {
-       
+
         $body = "Hi *" .trim($profile_name)."*,\n\nCongratulation! 🎉 \nA new application has been successfully Submitted with the following details:\n\n👤 Name : *" .trim($applicant_name)."* \n📱Ph : *+91" . trim($mobile)."* \n📝 Service :  *".trim($service)."* \n🔖 Type : *".trim($service_type)."* \n\nThank you for choosing us!\nFor your convenience, you can log in to our website to track your application details:\n🌐 www.cyberpe.epizy.com \n*Digital Cyber* ";
 
         $this->validateTwilio();
-        dd($this->fromNo);
         $to_no = "whatsapp:+91" . $mobile;
         $from_no = "whatsapp:$this->fromNo";
+
+
         $this->twilio->messages
             ->create(
                 $to_no, // to

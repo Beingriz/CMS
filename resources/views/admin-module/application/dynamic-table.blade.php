@@ -15,7 +15,7 @@
                                 <div>
                                     <div class="d-flex align-items-center ml-4">
                                         <label for="paginate" class="text-nowrap mr-2 mb-0">Per Page</label>
-                                        <select wire:model="paginate" name="paginate" id="paginate"
+                                        <select wire:model="paginate" name="paginate" id="paginate" wire:change="RefreshPage()"
                                             class="form-control form-control-sm">
                                             <option value="5" selected>5</option>
                                             <option value="10">10</option>
@@ -26,7 +26,7 @@
 
                                         <div class="row"></div>
                                         <label for="filterby" class="text-nowrap mr-2 mb-0">Sort By</label>
-                                        <input type="text" wire:model="filterby" class="form-control form-control-sm"
+                                        <input type="text" wire:model="filterby" wire:change="RefreshPage()"class="form-control form-control-sm"
                                             placeholder="Filter">
                                         <div class="row"></div>
                                     </div>

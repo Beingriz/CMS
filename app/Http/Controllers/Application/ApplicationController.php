@@ -150,7 +150,7 @@ class ApplicationController extends Controller
             session()->flash('Error', 'Sorry! Balance due for : ' . $Id . ' Please Clear Due and try again!');
             return redirect()->back();
         } else {
-            
+
             $data = array();
             $data['Recycle_Bin'] = 'Yes';
             $data['updated_at'] = Carbon::now();
@@ -423,8 +423,8 @@ class ApplicationController extends Controller
             $delivered = User::where('Status', 'Completed')->count();
             $pending = User::where('Status', '!=', 'Completed')->count();
             $new =   User::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / $totalRequests, 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
+            $percentpending = number_format(($pending * 100) / (($totalRequests==0)?$totalRequests:1), 1, '.', '');
+            $percentdelivered = number_format(($delivered * 100) / (($totalRequests==0)?$totalRequests:1), 1, '.', '');
         } elseif ($name == 'Orders') {
             $Tittle1 = 'Total Orders';
             $Tittle2 = 'New Orders';
@@ -434,8 +434,8 @@ class ApplicationController extends Controller
             $delivered = ApplyServiceForm::where('Status', 'Delivered to Client')->count();
             $pending = ApplyServiceForm::where('Status', '!=', 'Delivered to Client')->count();
             $new =   ApplyServiceForm::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / $totalRequests, 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
+            $percentpending = number_format(($pending * 100) / (($totalRequests==0)?$totalRequests:1), 1, '.', '');
+            $percentdelivered = number_format(($delivered * 100) / (($totalRequests==0)?$totalRequests:1), 1, '.', '');
         } elseif ($name == 'Callback') {
             $Tittle1 = 'Total Requests';
             $Tittle2 = 'New Requests';
@@ -445,8 +445,8 @@ class ApplicationController extends Controller
             $delivered = Callback_Db::where('Status', 'Completed')->count();
             $pending = Callback_Db::where('Status', '!=', 'Completed')->count();
             $new =   Callback_Db::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / $totalRequests, 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
+            $percentpending = number_format(($pending * 100) / (($totalRequests==0)?$totalRequests:1), 1, '.', '');
+            $percentdelivered = number_format(($delivered * 100) / (($totalRequests==0)?$totalRequests:1), 1, '.', '');
         } elseif ($name == 'Enquiry') {
             $Tittle1 = 'Total Enquiries';
             $Tittle2 = 'New Enquiries';
@@ -456,8 +456,8 @@ class ApplicationController extends Controller
             $delivered = EnquiryDB::where('Status', 'Completed')->count();
             $pending = EnquiryDB::where('Lead_Status', 'Hot')->count();
             $new =   EnquiryDB::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / $totalRequests, 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
+            $percentpending = number_format(($pending * 100) / ($totalRequests==0)?$totalRequests:1, 1, '.', '');
+            $percentdelivered = number_format(($delivered * 100) / ($totalRequests==0)?$totalRequests:1, 1, '.', '');
         } else {
             $Tittle1 = '';
             $Tittle2 = '';
@@ -570,7 +570,7 @@ class ApplicationController extends Controller
         return redirect($whatsappLink);
     }
 
-    
+
     public function waApplyNow($mobile, $name, $service, $servicetype)
     {
         $message = urlencode("Hello *" . $name . "* 👋🏻😍 ,
@@ -862,7 +862,7 @@ class ApplicationController extends Controller
 
         return redirect('view_recycle_bin');
     }
-    
+
     public function ViewRecycleBin()
     {
 
