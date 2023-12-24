@@ -1,4 +1,4 @@
-@extends('admin.admin_master')
+@extends('admin-module.admin_master')
 @section('admin')
     <div class="page-content">
         <div class="container-fluid">
@@ -111,7 +111,7 @@
             </div><!-- end row -->
 
             <!-- end row -->
-            @livewire('admin.admin.update-enquiry-status', ['Key' => $Name, 'Id' => $Id, 'EditId' => $EditId])
+            @livewire('admin-module.dashboard.update-enquiry-status', ['Key' => $Name, 'Id' => $Id, 'EditId' => $EditId])
             {{-- ,'Id'=>$Id,'Client_Id'=>$Client_Id,'EditId'=>$EditId,'DeleteId'=>$DeleteId --}}
             <!-- end row -->
         </div>

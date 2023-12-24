@@ -76,6 +76,6 @@ class UpdateEnquiryStatus extends Component
         $SubServices = SubServices::Where('Service_Id', $this->Service)->get();
         $status = Status::where('Relation', 'Callback')->get();
         $requests = EnquiryDB::where('Phone_No', $this->Mobile_No)->paginate(5);
-        return view('livewire.admin.admin.update-enquiry-status', compact('MainServices', 'SubServices', 'status', 'requests'));
+        return view('livewire.admin-module.dashboard.update-enquiry-status', compact('MainServices', 'SubServices', 'status', 'requests'));
     }
 }
