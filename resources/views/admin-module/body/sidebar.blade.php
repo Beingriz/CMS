@@ -83,7 +83,7 @@
                         {{-- <li><a href="{{url('client_registration')}}">Clinet Registration</a></li> --}}
                         <li> <a href="{{ route('add_services') }}">Services</a></li>
                         <li><a href="{{ route('new.status') }}">Status</a></li>
-                        <li><a href="{{ url('branches') }}">Branches</a></li>
+                        <li><a href="{{ route('branch_register') }}">Branches</a></li>
                         <li><a href="{{ url('bookmarks') }}">Bookmark</a></li>
                         {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
                     </ul>

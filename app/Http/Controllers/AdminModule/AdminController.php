@@ -132,7 +132,6 @@ class AdminController extends Controller
     // Status Functions
     public function AddStatus()
     {
-
         $EditId='';
         $ViewStatus='';
         $DeleteId='';
@@ -140,7 +139,6 @@ class AdminController extends Controller
     }
     public function EditStatus ($id)
     {
-
         $EditId=$id;
         $ViewStatus='';
         $DeleteId='';
@@ -153,6 +151,11 @@ class AdminController extends Controller
         $ViewStatus='';
         $DeleteId=$id;
         return view('admin-module.status.status',['EditId' => $EditId, 'ViewStatus' => $ViewStatus, 'DeleteId' => $DeleteId]);
+    }
+
+    // Branches
+    public function BranchRegister(){
+        return view('branch-admin-module.registration.branch_register');
     }
 
     public function UserTopBar()

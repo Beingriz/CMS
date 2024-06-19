@@ -49,6 +49,8 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
         //Branches Module Routes
 
+        Route::get('/branch/registration', 'BranchRegister')->name('branch_register');
+
     });
 });
 
