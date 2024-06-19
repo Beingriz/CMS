@@ -128,6 +128,33 @@ class AdminController extends Controller
         $DeleteData = $Id;
         return view('admin-module.Services.add_service', ['EditData' => $EditData, 'DeleteData' => $DeleteData, 'Type' => $type]);
     }
+
+    // Status Functions
+    public function AddStatus()
+    {
+
+        $EditId='';
+        $ViewStatus='';
+        $DeleteId='';
+        return view('admin-module.status.status',['EditId' => $EditId, 'ViewStatus' => $ViewStatus, 'DeleteId' => $DeleteId]);
+    }
+    public function EditStatus ($id)
+    {
+
+        $EditId=$id;
+        $ViewStatus='';
+        $DeleteId='';
+        return view('admin-module.status.status',['EditId' => $EditId, 'ViewStatus' => $ViewStatus, 'DeleteId' => $DeleteId]);
+    }
+    public function DeleteStatus ($id)
+    {
+
+        $EditId='';
+        $ViewStatus='';
+        $DeleteId=$id;
+        return view('admin-module.status.status',['EditId' => $EditId, 'ViewStatus' => $ViewStatus, 'DeleteId' => $DeleteId]);
+    }
+
     public function UserTopBar()
     {
         $editId = "";

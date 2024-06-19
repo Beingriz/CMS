@@ -36,6 +36,8 @@ class AuthenticatedSessionController extends Controller
             $url = 'user/dashboard';
         }elseif($request->user()->role === 'admin'){
             $url = '/dashboard';
+        }elseif($request->user()->role === 'branch_admin'){
+            $url = '/branch/dashboard';
         }
         $name = $request->user()->name;
         $notification = array(

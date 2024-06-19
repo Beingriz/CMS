@@ -385,8 +385,8 @@ class ApplicationController extends Controller
     {
         $Id = '';
         $id = '';
-        $status = '';
-        return view('admin-module.Status.status', ['EditId' => $Id, 'DeleteId' => $id, 'VeiwStatus' => $status]);
+        $ViewStatus = '';
+        return view('admin-module.Status.status', ['EditId' => $Id, 'DeleteId' => $id, 'ViewStatus' => $ViewStatus]);
     }
     public function EditStatus($Id)
     {

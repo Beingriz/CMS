@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminModule\AdminController;
+use App\Http\Controllers\AdminModule\BranchController;
 use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Ledger\Creditentry;
 use App\Http\Controllers\Ledger\DebitEntryController;
@@ -46,9 +47,21 @@ Route::middleware('auth', 'auth.role:admin')->group(function () {
         Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
         Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
+        //Branches Module Routes
+
     });
 });
 
+
+// Branch
+Route::middleware('auth', 'auth.role:branch_admin')->group(function(){
+    Route::controller(BranchController::class)->group(function (){
+        Route::get('/branch/dashboard', 'BranchAdminDashboard')->name('branch_dashboard');
+        Route::get('/branch/admin/logout', 'destroy')->name('branch_admin.logout');
+
+
+    });
+});
 Route::controller(WhatsappController::class)->group(function () {
     // Route::get('/send/message/{phone}/{message}', 'sendMessage')->name('send.message');
     Route::get('/send/message/{mobile}/{name}/{service}/{time}/{page}', 'sendMessage')->name('send.message');
@@ -100,7 +113,7 @@ Route::controller(UserController::class)->group(function () {
 
 
 // Application Authentic Routes start
-Route::middleware('auth', 'auth.role:admin')->group(function () {
+Route::middleware('auth', 'auth.role:admin' )->group(function () {
     Route::controller(ApplicationController::class)->group(function () {
         Route::get('application/home', 'Home')->name('app.home');
         Route::get('app/dashboard', 'Dashboard')->name('Dashboard');
