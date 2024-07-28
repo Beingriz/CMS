@@ -26,7 +26,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item active">UserTopBar</li>
                     </ol>
                 </div>
@@ -37,7 +37,7 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{ url('dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin.home') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ url('app_home') }}">Application</a></li>
             <li class="breadcrumb-item"><a href="{{ url('app_form') }}">New Application</a></li>
         </ol>

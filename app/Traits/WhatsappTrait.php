@@ -22,7 +22,7 @@ trait WhatsappTrait
         $this->validateTwilio();
 
         $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:$this->fromNo";
+        $from_no = "whatsapp:".$this->fromNo;
         $this->twilio->messages
             ->create(
                 $to_no, // to
@@ -43,7 +43,7 @@ trait WhatsappTrait
         $this->validateTwilio();
 
         $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:$this->fromNo";
+        $from_no = "whatsapp:".$this->fromNo;
         $this->twilio->messages
             ->create(
                 $to_no, // to
@@ -68,7 +68,7 @@ trait WhatsappTrait
         $this->validateTwilio();
 
         $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:$this->fromNo";
+        $from_no = "whatsapp:".$this->fromNo;
         $this->twilio->messages
             ->create(
                 $to_no, // to
@@ -87,7 +87,7 @@ trait WhatsappTrait
 
         $this->validateTwilio();
         $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:$this->fromNo";
+        $from_no = "whatsapp:".$this->fromNo;
 
 
         $this->twilio->messages

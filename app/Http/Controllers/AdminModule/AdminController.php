@@ -157,17 +157,17 @@ class AdminController extends Controller
     public function BranchRegister(){
         $Id='';
         $deleteId = '';
-        return view('branch-admin-module.registration.branch_register', ['EditId' => $Id, 'DeleteId' => $deleteId]);
+        return view('admin-module.branch.branch_register', ['EditId' => $Id, 'DeleteId' => $deleteId]);
     }
     public function EditBranch($Id)
     {
         $deleteId = '';
-        return view('branch-admin-module.registration.branch_register', ['EditId' => $Id, 'DeleteId' => $deleteId]);
+        return view('admin-module.branch.branch_register', ['EditId' => $Id, 'DeleteId' => $deleteId]);
     }
     public function DeleteBranch($Id)
     {
         $editId = '';
-        return view('branch-admin-module.registration.branch_register', ['EditId' => $editId, 'DeleteId' => $Id]);
+        return view('admin-module.branch.branch_register', ['EditId' => $editId, 'DeleteId' => $Id]);
     }
 
     public function UserTopBar()

@@ -26,7 +26,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item active"><a href="{{ route('new.application') }}">New Form</a></li>
                     </ol>
                 </div>
@@ -243,7 +243,7 @@
                                                 class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @endif
 
-                                    <a href="{{ route('dashboard') }}"
+                                    <a href="{{ route('admin.home') }}"
                                         class="btn btn-warning btn-rounded btn-sm">Cancel</a>
                                 </div>
                             </div>
@@ -509,11 +509,11 @@
                                     @endforeach
                                 </tbody>
 
-                                
+
                             </table>
                         </div>
                         <p class="card-text"><small class="text-bold">Last Entry at {{ $lastRecTime }} </small></p>
-                        
+
                 </div>
                 @endif
                 <div class="row no-gutters align-items-center">

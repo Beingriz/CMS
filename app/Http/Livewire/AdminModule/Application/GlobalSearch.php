@@ -10,6 +10,7 @@ use App\Models\Status;
 use App\Models\User;
 use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -43,10 +44,13 @@ class GlobalSearch extends Component
     public $filtered;
     public $Balance_Collection = [];
     public $Status = NULL, $byStatus, $StatusCount, $FilterChecked;
+    public $Branch_Id,$Emp_Id;
 
     public function mount($key)
     {
         $this->search = $key;
+        $this->Branch_Id = Auth::user()->branch_id;
+        $this->Emp_Id = Auth::user()->Emp_id;
     }
     public function SingleDelete($Id, $Client_Id)
     {

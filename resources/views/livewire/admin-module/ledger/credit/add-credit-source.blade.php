@@ -26,7 +26,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item active"><a href="{{ route('new.application') }}">New Form</a></li>
                     </ol>
                 </div>
@@ -192,21 +192,21 @@
                                             <a href='#' wire:click.prevent="ResetSubFields()"
                                                 class="btn btn-info btn-rounded btn-sm">Reset</a>
                                         @endif
-                                        <a href="{{ route('dashboard') }}"
+                                        <a href="{{ route('admin.home') }}"
                                             class="btn btn-rounded btn-warning btn-sm">Cancel</a>
                                     @elseif($Update == 1)
                                         <a href='#' wire:click.prevent="UpdateMain('{{ $CS_Id }}')"
                                             class="btn btn-success btn-rounded btn-sm">Update</a>
                                         <a href="{{ route('CreditSource') }}"
                                             class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                        <a href="{{ route('dashboard') }}"
+                                        <a href="{{ route('admin.home') }}"
                                             class="btn btn-rounded btn-warning btn-sm">Cancel</a>
                                     @elseif($Update == 2)
                                         <a href='#' wire:click.prevent="UpdateSub('{{ $CS_Id }}')"
                                             class="btn btn-success btn-rounded btn-sm">Update</a>
                                         <a href="{{ route('CreditSource') }}"
                                             class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                        <a href="{{ route('dashboard') }}"
+                                        <a href="{{ route('admin.home') }}"
                                             class="btn btn-rounded btn-warning btn-sm">Cancel</a>
                                     @endif
                                 </div>

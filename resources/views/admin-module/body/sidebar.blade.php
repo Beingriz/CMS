@@ -23,7 +23,7 @@
 
                 {{-- Admin Dashboard --}}
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="{{ route('admin.home') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Home</span>
                     </a>
@@ -73,6 +73,7 @@
                         </li>
                     </ul>
                 </li>
+                @if(Auth::user()->role == 'admin')
                 {{-- Admin Controls Menu --}}
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -88,6 +89,7 @@
                         {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
                     </ul>
                 </li>
+                @endif
                 {{-- User Control Menu --}}
                 <li>
                     <a href="#" class="has-arrow waves-effect">
@@ -101,25 +103,7 @@
                     </ul>
                 </li>
 
-
-                {{-- <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-mail-send-line"></i>
-                        <span>Services</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('new_application')}}">New Application</a></li>
-                        <li><a href="{{route('new_application')}}">Update</a></li>
-                        <li><a href="{{route('new_application')}}">Balance</a></li>
-                        <li><a href="{{route('new_application')}}">Reports</a></li>
-                        <li><a href="{{route('new_application')}}">Filter</a></li>
-                        <li><a href="{{route('new_application')}}">Delete</a></li>
-
-                    </ul>
-                </li> --}}
-
-
-
+                @if(Auth::user()->role == 'admin')
                 <li>
                     <a href="{{ route('data.migration') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
@@ -132,7 +116,7 @@
                         <span>Marketing</span>
                     </a>
                 </li>
-
+                @endif
                 {{-- <li class="menu-title">Report</li>
 
                 <li>

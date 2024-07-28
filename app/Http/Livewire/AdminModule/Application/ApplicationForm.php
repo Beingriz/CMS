@@ -10,6 +10,7 @@ use App\Models\MainServices;
 use App\Models\PaymentMode;
 use App\Models\Status;
 use App\Models\SubServices;
+
 use App\Models\User;
 use App\Traits\WhatsappTrait;
 use Carbon\Carbon;
@@ -21,7 +22,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Auth\Events\Registered;
-
+use Illuminate\Support\Facades\Auth;
 
 class ApplicationForm extends Component
 {
@@ -46,7 +47,7 @@ class ApplicationForm extends Component
     public $Applicant_Image, $lastRecTime;
     public $sub_service = [], $old_Applicant_Image, $clear_button = 'Disable';
     public $Mobile_No = NULL;
-    public $user_type = NULL;
+    public $user_type = NULL,$Branch_Id,$Emp_Id;
     public $Checked = [];
     public $paginate = 5;
     public $filterby, $Bal = 0;
@@ -92,6 +93,8 @@ class ApplicationForm extends Component
     {
         $this->App_Id  = 'DCA' . date('Y') . time();
         $this->Received_Date  = date('Y-m-d');
+        $this->Branch_Id = Auth::user()->branch_id;
+        $this->Emp_Id = Auth::user()->Client_Id;
     }
     public function Validation()
     {
@@ -121,6 +124,7 @@ class ApplicationForm extends Component
     {
 
         $this->validate();
+
         $this->Balance = ($this->Total_Amount - $this->Amount_Paid);
         $service = MainServices::Where('Id', $this->MainSelected)->get();
         foreach ($service as $name) {
@@ -206,6 +210,8 @@ class ApplicationForm extends Component
                 $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
+                $app_field->Branch_Id = $this->Branch_Id;
+                $app_field->Emp_Id = $this->Emp_Id;
                 $app_field->Received_Date = $this->Received_Date;
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
@@ -233,6 +239,8 @@ class ApplicationForm extends Component
                 $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
+                $save_credit->Branch_Id = $this->Branch_Id;
+                $save_credit->Emp_Id = $this->Emp_Id;
                 $save_credit->Category =  $service;
                 $save_credit->Sub_Category = $this->SubSelected;
                 $save_credit->Date =   $this->Received_Date;
@@ -268,6 +276,8 @@ class ApplicationForm extends Component
                 $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
+                $app_field->Branch_Id = $this->Branch_Id;
+                $app_field->Emp_Id = $this->Emp_Id;
                 $app_field->Received_Date = $this->Received_Date;
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
@@ -310,6 +320,8 @@ class ApplicationForm extends Component
                 $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
+                $save_credit->Branch_Id = $this->Branch_Id;
+                $save_credit->Emp_Id = $this->Emp_Id;
                 $save_credit->Category =  $service;
                 $save_credit->Sub_Category = $this->SubSelected;
                 $save_credit->Date =   $this->Received_Date;
@@ -334,6 +346,8 @@ class ApplicationForm extends Component
                 // Client Registration
                 $user_data = new ClientRegister();
                 $user_data->Id = $client_Id;
+                $user_data->Branch_Id = trim($this->Branch_Id);
+                $user_data->Emp_Id = trim($this->Emp_Id);
                 $user_data->Name = trim($this->Name);
                 $user_data->Relative_Name = trim($this->RelativeName);
                 $user_data->Gender = trim($this->Gender);
@@ -348,6 +362,8 @@ class ApplicationForm extends Component
 
                 $user = User::create([
                     'Client_Id' => $client_Id,
+                    'branch_id' => trim($this->Branch_Id),
+                    'Emp_Id' => trim($this->Emp_Id),
                     'name' => trim($this->Name),
                     'username' => trim($this->username),
                     'mobile_no' => trim($this->Mobile_No),
@@ -363,6 +379,8 @@ class ApplicationForm extends Component
                 $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
+                $app_field->Branch_Id = $this->Branch_Id;
+                $app_field->Emp_Id = $this->Emp_Id;
                 $app_field->Received_Date = $this->Received_Date;
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
@@ -390,6 +408,8 @@ class ApplicationForm extends Component
                 $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
+                $save_credit->Branch_Id = $this->Branch_Id;
+                $save_credit->Emp_Id = $this->Emp_Id;
                 $save_credit->Category =  $service;
                 $save_credit->Sub_Category = $this->SubSelected;
                 $save_credit->Date =   $this->Received_Date;
@@ -409,6 +429,8 @@ class ApplicationForm extends Component
                 // Client Registration
                 $user_data = new ClientRegister();
                 $user_data->Id = $client_Id;
+                $user_data->Branch_Id = trim($this->Branch_Id);
+                $user_data->Emp_Id = trim($this->Emp_Id);
                 $user_data->Name = $this->Name;
                 $user_data->Relative_Name = $this->RelativeName;
                 $user_data->Gender = $this->Gender;
@@ -423,6 +445,8 @@ class ApplicationForm extends Component
                 $this->usernameGenrator($this->Name, $this->Dob);
                 $user = User::create([
                     'Client_Id' => $client_Id,
+                    'branch_id' => trim($this->Branch_Id),
+                    'Emp_Id' => trim($this->Emp_Id),
                     'name' => trim($this->Name),
                     'username' => trim($this->username),
                     'mobile_no' => trim($this->Mobile_No),
@@ -437,6 +461,8 @@ class ApplicationForm extends Component
                 $app_field = new Application();
                 $app_field->Id = $this->App_Id;
                 $app_field->Client_Id = $client_Id;
+                $app_field->Branch_Id = $this->Branch_Id;
+                $app_field->Emp_Id = $this->Emp_Id;
                 $app_field->Received_Date = $this->Received_Date;
                 $app_field->Application = $service;
                 $app_field->Application_Type = $this->SubSelected;
@@ -464,6 +490,8 @@ class ApplicationForm extends Component
                 $save_credit  = new CreditLedger();
                 $save_credit->Id = $this->App_Id;
                 $save_credit->Client_Id = $client_Id;
+                $save_credit->Branch_Id = $this->Branch_Id;
+                $save_credit->Emp_Id = $this->Emp_Id;
                 $save_credit->Category =  $service;
                 $save_credit->Sub_Category = $this->SubSelected;
                 $save_credit->Date =   $this->Received_Date;
@@ -574,22 +602,36 @@ class ApplicationForm extends Component
         if (!is_null($Select_Date)) //Report on form page for Searh by Date
         {
             $date = Carbon::parse($Select_Date)->format('d-M-Y');
-            $this->daily_applications = Application::Where([['Received_Date', '=', $Select_Date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            if(Auth::user()->role == 'branch admin'){
+                $this->daily_applications = Application::Where([['Branch_Id','=',$this->Branch_Id],['Received_Date', '=', $date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            }else{
+                $this->daily_applications = Application::Where([['Received_Date', '=', $date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            }
             $this->Daily_Income = 0;
             foreach ($this->daily_applications as $key) {
                 $this->Daily_Income += $key['Amount_Paid'];
             }
             if (sizeof($this->daily_applications) == 0) {
+
+                if(Auth::user()->role == 'branch admin'){
+                    $this->daily_applications = Application::Where([['Branch_Id','=',$this->Branch_Id],['Received_Date', '=', $date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+                }else{
+                    $this->daily_applications = Application::Where([['Received_Date', '=', $date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+                }
                 session()->flash('Error', 'Sorry!! No Record Available for ' . $date);
-                $this->daily_applications = Application::Where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            }else{
+                if(Auth::user()->role == 'branch admin'){
+                    $this->daily_applications = Application::Where([['Branch_Id','=',$this->Branch_Id],['Received_Date', '=', $date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+                }else{
+                    $this->daily_applications = Application::Where([['Received_Date', '=', $date], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
+                }
             }
-        } else {
-            $this->daily_applications = Application::Where([['Received_Date', '=', $this->today], ['Recycle_Bin', '=', 'No']])->filter($this->filterby)->paginate($this->paginate);
         }
     }
 
     public function render()
     {
+
         $this->LatestUpdate();
         $this->Capitalize();
         $this->today = date("Y-m-d");
@@ -654,8 +696,19 @@ class ApplicationForm extends Component
         $status_list = $this->status_list;
         $this->payment_mode = PaymentMode::all();
 
-        $this->daily_applications = Application::Where([['Received_Date', $today], ['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
+        if(Auth::user()->role == 'branch admin'){
+            $this->Daily_Income = 0;
 
+            $this->daily_applications = Application::Where([['Branch_Id','=',$this->Branch_Id],['Received_Date', $today], ['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            foreach ($this->daily_applications as $key) {
+                $this->Daily_Income += $key['Amount_Paid'];
+            }
+        }else{
+            $this->daily_applications = Application::Where([['Received_Date', $today], ['Recycle_Bin', 'No']])->filter($this->filterby)->paginate($this->paginate);
+            foreach ($this->daily_applications as $key) {
+                $this->Daily_Income += $key['Amount_Paid'];
+            }
+        }
 
         if (!is_null($this->Select_Date)) //Report on form page for Searh by Date
         {

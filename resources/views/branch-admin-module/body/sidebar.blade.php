@@ -23,7 +23,7 @@
 
                 {{-- Admin Dashboard --}}
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="{{ route('branch_dashboard') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Home</span>
                     </a>
