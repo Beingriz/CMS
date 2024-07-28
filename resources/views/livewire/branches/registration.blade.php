@@ -45,14 +45,18 @@
 
     {{-- ---------------------------------------------------------------------------------------------------- --}}
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                    <h5>New Branch</h5>
+                    <h5><a href="{{ route('branch_register') }}" title="Click here for New Transaction">Create New</a></h5>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title"> New Branch Registration</h4>
+
                     <p class="card-title-desc">Welcome to Branch Registration</p>
                     <div class="row mb-3">
-                        <label for="example-text-input" class="col-sm-3 col-form-label">Branch Id</label>
-                        <label for="example-text-input" class="col-sm-3 col-form-label">{{ $Br_Id }}</label>
+                        <label for="example-text-input" class="col-sm-4 col-form-label">Branch Id</label>
+                        <label for="example-text-input" class="col-sm-7 col-form-label">{{ $Br_Id }}</label>
 
                     </div>
                     <!-- end row -->
@@ -60,8 +64,8 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="Name" class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
+                            <label for="Name" class="col-sm-4 col-form-label">Name</label>
+                            <div class="col-sm-8">
                                 <input class="form-control" type="text" placeholder="Branch Name" wire:model="Name"
                                     id="Name">
                                 <span class="error"> @error('Name') {{ $message }} @enderror </span>
@@ -69,8 +73,8 @@
                         </div>
                         <!-- end row -->
                         <div class="row mb-3">
-                            <label for="example-url-input" class="col-sm-2 col-form-label">Address</label>
-                            <div class="col-sm-10">
+                            <label for="example-url-input" class="col-sm-4 col-form-label">Address</label>
+                            <div class="col-sm-8">
                                 <textarea class="form-control" type="text" wire:model="Address"
                                     placeholder="Address" rows="3" cols="5" id="example-url-input"></textarea>
                                 <span class="error"> @error('Address') {{ $message }} @enderror </span>
@@ -78,8 +82,8 @@
                         </div>
                         <!-- end row -->
                         <div class="row mb-3">
-                            <label for="googlemap" class="col-sm-2 col-form-label">Google Map Link</label>
-                            <div class="col-sm-10">
+                            <label for="googlemap" class="col-sm-4 col-form-label">Google Map Link</label>
+                            <div class="col-sm-8">
                                 <input class="form-control" type="text" placeholder="Google Map Link" wire:model="MapLink"
                                     id="MapLink">
                                 <span class="error"> @error('MapLink') {{ $message }} @enderror </span>
@@ -113,7 +117,7 @@
         </div> <!-- end col -->
 
     @if (count($Existing_branches) > 0)
-    <div class="col-lg-6">
+    <div class="col-lg-8">
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">#{{ $Existing_branches->total() }} Branches Available</h5>
@@ -122,7 +126,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <table id="datatable"
-                        class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"role="grid"
+                        class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline text-wrap"role="grid"
                         aria-describedby="datatable_info">
                         <thead class="table-light">
                             <tr>
@@ -130,6 +134,8 @@
                                 <th>Name</th>
                                 <th>Address</th>
                                 <th>Link</th>
+                                <th>Applicants</th>
+                                <th>Employess</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -138,15 +144,17 @@
                                 <tr>
                                     <td>{{ $Existing_branches->firstItem() + $loop->index }}</td>
                                     <td>{{ $key->name }}</td>
-                                    <td>{{ $key->address }}</td>
-                                    <td>{{ $key->google_map_link }}</td>
+                                    <td class="text-wrap">{{ $key->address }}</td>
+                                    <td class="text-wrap">{{ $key->google_map_link }}</td>
+                                    <td>{{ $key->user_count }}</td>
+                                    <td>{{ $key->employee_count }}</td>
 
                                     <td>
-                                        <a href="{{ route('edit.bookmark', $key->branch_id) }}"
+                                        <a href="{{ route('edit.branch', $key->branch_id) }}"
                                             class="btn btn-sm btn-primary font-size-15" id="editData"><i
                                                 class="mdi mdi-circle-edit-outline"></i></a>
 
-                                        <a href ="{{ route('delete.bookmark', $key->branch_id) }}"class="btn btn-sm btn-danger font-size-15"
+                                        <a href ="{{ route('delete.branch', $key->branch_id) }}"class="btn btn-sm btn-danger font-size-15"
                                             id="delete"><i class="mdi mdi-delete-alert-outline"></i></a>
                                     </td>
                                 </tr>

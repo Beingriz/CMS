@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentMode;
 use App\Models\Status;
 use App\Models\SubServices;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -60,11 +61,13 @@ trait RightInsightTrait
     private $services_list;
     private $No;
     private $N;
+    private $Branch_Id;
 
 
 
     public function __construct()
     {
+        // $this->Branch_Id = {{Auth::user()->branch_id}}
         $this->today = date("Y-m-d");
         $this->no = 'No';
         $this->yes = 'Yes';

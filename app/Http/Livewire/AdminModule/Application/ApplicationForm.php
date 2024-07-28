@@ -570,7 +570,7 @@ class ApplicationForm extends Component
     }
     public function DatewiseList($Select_Date)
     {
-       
+
         if (!is_null($Select_Date)) //Report on form page for Searh by Date
         {
             $date = Carbon::parse($Select_Date)->format('d-M-Y');

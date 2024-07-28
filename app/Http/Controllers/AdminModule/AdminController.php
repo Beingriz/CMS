@@ -153,9 +153,21 @@ class AdminController extends Controller
         return view('admin-module.status.status',['EditId' => $EditId, 'ViewStatus' => $ViewStatus, 'DeleteId' => $DeleteId]);
     }
 
-    // Branches
+// Branches
     public function BranchRegister(){
-        return view('branch-admin-module.registration.branch_register');
+        $Id='';
+        $deleteId = '';
+        return view('branch-admin-module.registration.branch_register', ['EditId' => $Id, 'DeleteId' => $deleteId]);
+    }
+    public function EditBranch($Id)
+    {
+        $deleteId = '';
+        return view('branch-admin-module.registration.branch_register', ['EditId' => $Id, 'DeleteId' => $deleteId]);
+    }
+    public function DeleteBranch($Id)
+    {
+        $editId = '';
+        return view('branch-admin-module.registration.branch_register', ['EditId' => $editId, 'DeleteId' => $Id]);
     }
 
     public function UserTopBar()

@@ -16,6 +16,7 @@ use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -53,10 +54,16 @@ class ApplicationController extends Controller
 
     public function Dashboard()
     {
+        $branch_id = Auth::user()->branch_id;
         if ($this->applications_served > 0) {
             foreach ($this->MainServices as $key) {
-                $application_total_count = Application::where('Application', $key['Name'])->count();
-                $total_amount = DB::table('digital_cyber_db')->where('Application', $key['Name'])->SUM('Amount_Paid');
+
+                $application_total_count = Application::where('Application', $key['Name'])
+                                                        ->where('Branch_Id', $branch_id)
+                                                        ->count();
+                $total_amount = DB::table('digital_cyber_db')->where('Application', $key['Name'])
+                                                            ->where('Branch_Id', $branch_id)
+                                                            ->SUM('Amount_Paid');
                 $notification = 0;
                 $data = array();
                 $data['Total_Count'] = $application_total_count;
@@ -69,7 +76,7 @@ class ApplicationController extends Controller
 
                 $No = 'No';
                 $app = $key['Name'];
-                $chechk_status = Application::where([['Application', $key['Name']], ['Status', 'Received'], ['Recycle_Bin', $No]])->get();
+                $chechk_status = Application::where([['Branch_Id',$branch_id],['Application', $key['Name']], ['Status', 'Received'], ['Recycle_Bin', $No]])->get();
 
 
                 foreach ($chechk_status as $count) {
@@ -113,12 +120,13 @@ class ApplicationController extends Controller
 
     public function DynamicDashboard($MainServiceId)
     {
+        $branch_id = Auth::user()->branch_id;
         $No = 'No';
         $Sub_Services = SubServices::Where('Service_Id', $MainServiceId)->get();
         if (count($Sub_Services) > 0) {
             foreach ($Sub_Services as $item) { {
                     $name = $item['Name'];
-                    $count = Application::Where([['Application_Type', $name], ['Recycle_Bin', $No]])->count();
+                    $count = Application::Where([['Branch_Id', $branch_id],['Application_Type', $name], ['Recycle_Bin', $No]])->count();
                     DB::update('update sub_service_list set Total_Count=?  where Name = ?', [$count, $name]);
                 }
             }
@@ -141,7 +149,9 @@ class ApplicationController extends Controller
     public function MovetoRecycleBin($Id)
     {
 
+        $branch_id = Auth::user()->branch_id;
         $check_bal_app = DB::table('digital_cyber_db')->where('Id', '=', $Id)
+            ->where('Branch_Id',$branch_id)
             ->where(function ($query) {
                 $query->where('Balance', '>', 0);
             })->get();

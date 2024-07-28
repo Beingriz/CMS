@@ -75,7 +75,7 @@ class UserController extends Controller
         // if ($applied <= 0) {
         //     $applied = 1;
         // }
-        $perc = ($delivered * 100) / $applied == 0 ? 1 : $applied;
+        $perc = ($delivered * 100) / ($applied == 0 ? 1 : $applied);
         $perc = number_format($perc, 2);
         $bal = 0;
         $paid = 0;

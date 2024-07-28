@@ -283,15 +283,11 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{ route('admin.profile_view') }}"><i
+                    <a class="dropdown-item" href="{{ route('branch_admin.profile_view') }}"><i
                             class="ri-user-line align-middle me-1"></i> Profile</a>
-                    <a class="dropdown-item" href="{{ route('change_password') }}"><i
+                    <a class="dropdown-item" href="{{ route('branch_admin.change_password') }}"><i
                             class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
-                    <a class="dropdown-item d-block" href="#"><span
-                            class="badge bg-success float-end mt-1">11</span><i
-                            class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i>
-                        Lock screen</a>
+
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="{{ route('branch_admin.logout') }}"><i
                             class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>

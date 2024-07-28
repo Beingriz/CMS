@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
             $url = 'user/dashboard';
         }elseif($request->user()->role === 'admin'){
             $url = '/dashboard';
-        }elseif($request->user()->role === 'branch_admin'){
+        }elseif($request->user()->role === 'branch admin'){
             $url = '/branch/dashboard';
         }
         $name = $request->user()->name;
