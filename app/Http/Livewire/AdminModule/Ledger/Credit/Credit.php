@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
@@ -45,6 +46,7 @@ class Credit extends Component
     public $collection = [];
     public $bal_id = NULL;
     public $update = 0, $Show_Insight = false;
+    public $Branch_Id, $Emp_Id;
 
 
     protected $rules = [
@@ -83,6 +85,8 @@ class Credit extends Component
         if (!empty($DeleteData)) {
             $this->Delete($DeleteData);
         }
+        $this->Branch_Id = Auth::user()->branch_id;
+        $this->Emp_Id = Auth::user()->Emp_Id;
     }
     public function ImageUpload()
     {
@@ -141,6 +145,8 @@ class Credit extends Component
             $creditentry  = new CreditLedger;
             $creditentry->Id = $transId;
             $creditentry->Client_Id = $clientId;
+            $creditentry->Branch_Id =$this->Branch_Id ;
+            $creditentry->Emp_Id = $this->Emp_Id ;
             $creditentry->Date = $this->Date;
             $creditentry->Category = $CategoryName;
             $creditentry->Sub_Category = $this->SelectedSources;
@@ -157,6 +163,8 @@ class Credit extends Component
             $save_balance = new BalanceLedger;
             $save_balance->Id = $transId;
             $save_balance->Client_Id = $clientId;
+            $save_balance->Branch_Id = $this->Branch_Id;
+            $save_balance->Emp_Id = $this->Emp_Id;
             $save_balance->Date = $this->Date;
             $save_balance->Name = $this->Description;
             $save_balance->Mobile_No = $clientId;
@@ -180,6 +188,8 @@ class Credit extends Component
             $creditentry  = new CreditLedger;
             $creditentry->Id = $transId;
             $creditentry->Client_Id = $clientId;
+            $creditentry->Branch_Id =$this->Branch_Id ;
+            $creditentry->Emp_Id = $this->Emp_Id ;
             $creditentry->Date = $this->Date;
             $creditentry->Category = $CategoryName;
             $creditentry->Sub_Category = $this->SelectedSources;
@@ -434,14 +444,28 @@ class Credit extends Component
             $this->Show_Insight = true;
         }
         if (!is_null($this->Select_Date)) {
-            $todays_list = CreditLedger::where('Date', $this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
+            if(Auth::user()->role == 'branch admin'){
+                $todays_list = CreditLedger::where('Date', $this->Select_Date)
+                                        ->where('Branch_Id', $this->Branch_Id)
+                                        ->filter(trim($this->filterby))->paginate($this->paginate);
+            }else{
+                $todays_list = CreditLedger::where('Date', $this->Select_Date)
+                                            ->filter(trim($this->filterby))->paginate($this->paginate);
+            }
+
             $sl_no = $todays_list->total();
             if (sizeof($todays_list) == 0) {
                 session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
             }
         } else {
-            $todays_list = CreditLedger::where('Date', $this->today)->filter(trim($this->filterby))->paginate($this->paginate);
-            
+            if(Auth::user()->role == 'branch admin'){
+                $todays_list = CreditLedger::where('Date', $this->today)
+                                        ->where('Branch_Id', $this->Branch_Id)
+                                        ->filter(trim($this->filterby))->paginate($this->paginate);
+            }else{
+                $todays_list = CreditLedger::where('Date', $this->today)
+                                            ->filter(trim($this->filterby))->paginate($this->paginate);
+            }
             $sl_no = $todays_list->total();
         }
         if (!is_null($this->SourceSelected)) {
@@ -470,13 +494,26 @@ class Credit extends Component
         foreach ($source as $key) {
             $source_total += $key['Amount_Paid'];
         }
-        $todays_list_total = CreditLedger::where('Date', $this->today)->get();
-        foreach ($todays_list_total as $key) {
-            $today_total += $key['Amount_Paid'];
+        if(Auth::user()->role == 'branch admin'){
+            $todays_list_total = CreditLedger::where('Date', $this->today)
+                                        ->where('Branch_Id', $this->Branch_Id)->get();
+            foreach ($todays_list_total as $key) {
+                $today_total += $key['Amount_Paid'];
+            }
+            foreach ($prev_earning as $key) {
+                $total_prev_earnings += $key['Amount_Paid'];
+            }
+        }else{
+            $todays_list_total = CreditLedger::where('Date', $this->today)
+                                        ->get();
+            foreach ($todays_list_total as $key) {
+                $today_total += $key['Amount_Paid'];
+            }
+            foreach ($prev_earning as $key) {
+                $total_prev_earnings += $key['Amount_Paid'];
+            }
         }
-        foreach ($prev_earning as $key) {
-            $total_prev_earnings += $key['Amount_Paid'];
-        }
+
         $total_revenue = $this->sum;
 
         $contribution =  (($source_total * 100) / $total_revenue);

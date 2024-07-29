@@ -61,13 +61,16 @@ trait RightInsightTrait
     private $services_list;
     private $No;
     private $N;
-    private $Branch_Id;
+    private $branch_id, $role;
 
 
+    public function Initialize(){
+        $this->branch_id = Auth::user()->branch_id;
+        $this->role = Auth::user()->role;
+    }
 
     public function __construct()
     {
-        // $this->Branch_Id = {{Auth::user()->branch_id}}
         $this->today = date("Y-m-d");
         $this->no = 'No';
         $this->yes = 'Yes';
@@ -81,19 +84,43 @@ trait RightInsightTrait
         $this->SubServices = SubServices::all();
         $this->application_type = DB::table('service_list')->get();
         $this->status_list =  Status::all();
-        $this->applications_served = DB::table('digital_cyber_db')->count();
+
         $this->previous_day = date('Y-m-d', strtotime($this->today . ' - 1 days'));
-        $this->previous_day_app = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->count();
         $status = 'Delivered';
-        $this->applications_delivered = DB::table('digital_cyber_db')->where([[
-            'Status', '=',
-            $status
-        ], ['Recycle_Bin', '=', $this->no]])->count();
-        $this->previous_day_app_delivered = DB::table('digital_cyber_db')->where([[
-            'Status', '=',
-            $status
-        ], ['Recycle_Bin', '=', $this->no], ['Delivered_Date', '=', $this->previous_day]])->count();
-        $this->total_revenue = CreditLedger::all();
+
+
+        //Branch Mapping
+        if($this->role == 'branch admin'){
+            //Total Revenue
+            $this->total_revenue = CreditLedger::where('Branch_Id',$this->branch_id)->get();
+
+            // Total Application
+            $this->applications_served = DB::table('digital_cyber_db')
+                                        ->where('Branch_Id',$this->branch_id)
+                                        ->count();
+            // Previous Day Applications
+            $this->previous_day_app = DB::table('digital_cyber_db')
+                                    ->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])
+                                    ->where('Branch_Id', $this->branch_id)
+                                    ->count();
+            // Applications Delivered
+            $this->applications_delivered = DB::table('digital_cyber_db')->where([['Status', '=',$status],          ['Recycle_Bin', '=', $this->no]])
+                                ->where('Branch_Id', $this->branch_id)
+                                ->count();
+
+            // Previoud Day Application Delivered
+            $this->previous_day_app_delivered = DB::table('digital_cyber_db')->where([['Status', '=',$status], ['Recycle_Bin', '=', $this->no], ['Delivered_Date', '=', $this->previous_day]])
+            ->where('Branch_Id', $this->branch_id)->count();
+
+        }else{
+            $this->total_revenue = CreditLedger::all();
+            $this->applications_served = DB::table('digital_cyber_db')->count();
+            $this->previous_day_app = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->count();
+            $this->applications_delivered = DB::table('digital_cyber_db')->where([['Status', '=',$status],          ['Recycle_Bin', '=', $this->no]])->count();
+            $this->previous_day_app_delivered = DB::table('digital_cyber_db')->where([['Status', '=',$status], ['Recycle_Bin', '=', $this->no], ['Delivered_Date', '=', $this->previous_day]])->count();
+
+
+        }
         $this->balance_due = DB::table('digital_cyber_db')->where([['Recycle_Bin', '=', $this->no]])->get();
         $this->previous_revenue = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->get();
         $this->previous_bal = DB::table('digital_cyber_db')->where([['Received_Date', '=', $this->previous_day], ['Recycle_Bin', '=', $this->no]])->get();
@@ -116,6 +143,7 @@ trait RightInsightTrait
         }
 
         $this->sum = 0;
+
         foreach ($this->total_revenue as $key) { {
                 $this->sum += $key['Amount_Paid'];
             }

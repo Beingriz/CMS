@@ -29,6 +29,7 @@ class AdminController extends Controller
         $carousel = Carousel_DB::all();
         $aboutus = About_Us::where('Selected', 'Yes')->get();
         $services = MainServices::where('Service_Type', 'Public')->get();
+        
         return view('user.user_home.user_index', compact('records', 'carousel', 'aboutus', 'services'), ['CompanyName' => $this->Company_Name]);
     }
     public function AdminDashboard()
@@ -80,6 +81,7 @@ class AdminController extends Controller
 
         return view('admin-module.index', ['totalSales' => $totalSales, 'totalEnquiries' => $totalEnquiries, 'totalOrders' => $totlaOrders, 'newUsers' => $newUsers, 'callBack' => $callBack, 'totalRevenue' => $totalRevenue, 'lastWeekAmount' => $lastWeekAmount[0]->lastWeekamount, 'lastMonthAmount' => $lastMonthAmount]);
     }
+
 
     public function MarketingDashboard()
     {

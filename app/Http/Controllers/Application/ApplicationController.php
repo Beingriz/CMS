@@ -26,6 +26,7 @@ class ApplicationController extends Controller
 
     public function index()
     {
+        // $this->Initialize();
         return view('admin-module.application.new_application');
     }
 
