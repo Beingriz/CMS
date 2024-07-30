@@ -26,7 +26,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item active">Status</li>
                     </ol>
                 </div>
@@ -37,7 +37,7 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{ url('dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin.home') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('new.application') }}">New Application</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
@@ -170,7 +170,7 @@
                                                 class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @endif
 
-                                    <a href="{{ route('dashboard') }}" class="btn btn-rounded btn-sm">Cancel</a>
+                                    <a href="{{ route('admin.home') }}" class="btn btn-rounded btn-sm">Cancel</a>
                                 </div>
                             </div>
                         </div>

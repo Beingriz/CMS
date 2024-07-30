@@ -24,7 +24,7 @@
                 @endif
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('new.application') }}">Application</a></li>
                         <li class="breadcrumb-item active">Update</li>
                         <li class="breadcrumb-item active"> <a href="{{ route('view.application', $App_Id) }}"
@@ -695,7 +695,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                
+
                                 <div class="row ">
                                     {{-- First Half Data Display --}}
                                     <div class="col-md-6 col-lg-6">

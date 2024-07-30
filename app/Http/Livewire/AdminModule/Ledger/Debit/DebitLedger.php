@@ -9,6 +9,7 @@ use App\Models\DebitSources;
 use App\Models\PaymentMode;
 use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -48,6 +49,8 @@ class DebitLedger extends Component
     public $UpdateButton = 0;
     public $update = false;
     public $clearButton = false, $lastRecTime;
+    public $Branch_Id, $Emp_Id;
+
 
 
 
@@ -88,6 +91,8 @@ class DebitLedger extends Component
         if (!empty($DeleteData)) {
             $this->Delete($DeleteData);
         }
+        $this->Branch_Id = Auth::user()->branch_id;
+        $this->Emp_Id = Auth::user()->Emp_Id;
     }
 
 
@@ -164,6 +169,8 @@ class DebitLedger extends Component
             $save_balance = new BalanceLedger();
             $save_balance->Id = $this->transaction_id;
             $save_balance->Client_Id = $this->transaction_id;
+            $save_balance->Branch_Id = $this->Branch_Id;
+            $save_balance->Emp_Id = $this->Emp_Id;
             $save_balance->Date = $this->Date;
             $save_balance->Name = $this->Description;
             $save_balance->Mobile_No = 'Not Available';
@@ -180,6 +187,8 @@ class DebitLedger extends Component
             $debitentry  = new Debit();
             $debitentry->Id = $this->transaction_id;
             $debitentry->Client_Id = $this->transaction_id;
+            $debitentry->Branch_Id = $this->Branch_Id;
+            $debitentry->Emp_Id = $this->Emp_Id;
             $debitentry->Date = $this->Date;
             $debitentry->Category = $this->Category;
             $debitentry->Source =  $this->Source;
@@ -203,6 +212,8 @@ class DebitLedger extends Component
             $debitentry  = new Debit();
             $debitentry->Id = 'DE' . time();
             $debitentry->Client_Id = 'EX' . time();
+            $debitentry->Branch_Id = $this->Branch_Id;
+            $debitentry->Emp_Id = $this->Emp_Id;
             $debitentry->Date = $this->Date;
             $debitentry->Category = $this->Category;
             $debitentry->Source =  $this->Source;
@@ -408,12 +419,30 @@ class DebitLedger extends Component
     {
         $this->LastUpdate();
         if (!is_null($this->Select_Date)) {
-            $Transactions = Debit::where('Date', $this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
-            if (sizeof($Transactions) == 0) {
-                session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
+            if(Auth::user()->role == 'branch admin'){
+                $Transactions = Debit::where('Date', $this->Select_Date)
+                                        ->where('Branch_Id', $this->Branch_Id)
+                                        ->filter(trim($this->filterby))->paginate($this->paginate);
+                                if (sizeof($Transactions) == 0) {
+                                session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
+                                }
+            }else{
+                $Transactions = Debit::where('Date', $this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
+                                if (sizeof($Transactions) == 0) {
+                                session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
+                                }
             }
         } else {
-            $Transactions = Debit::whereDate('created_at', DB::raw('CURDATE()'))->filter(trim($this->filterby))->paginate($this->paginate);
+            if(Auth::user()->role == 'branch admin'){
+                $Transactions = Debit::whereDate('created_at', DB::raw('CURDATE()'))
+                                        ->where('Branch_Id', $this->Branch_Id)
+                                        ->filter(trim($this->filterby))->paginate($this->paginate);
+
+            }else{
+                $Transactions = Debit::whereDate('created_at', DB::raw('CURDATE()'))->filter(trim($this->filterby))->paginate($this->paginate);
+
+            }
+
         }
 
 
