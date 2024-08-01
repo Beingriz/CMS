@@ -23,10 +23,12 @@ use Illuminate\Support\Facades\Storage;
 class ApplicationController extends Controller
 {
     use RightInsightTrait;
+    public $total_amount;
 
     public function index()
     {
-        // $this->Initialize();
+
+        $this->Dashboard();
         return view('admin-module.application.new_application');
     }
 
@@ -52,72 +54,112 @@ class ApplicationController extends Controller
         return view('Application\new_template');
     }
 
-
+    //Applicaiton Dashboard Calculation..
     public function Dashboard()
-    {
-        $branch_id = Auth::user()->branch_id;
-        if ($this->applications_served > 0) {
-            foreach ($this->MainServices as $key) {
+{
+    $branchId = Auth::user()->branch_id;
+    $isBranchAdmin = Auth::user()->role === 'branch admin';
 
-                $application_total_count = Application::where('Application', $key['Name'])
-                                                        ->where('Branch_Id', $branch_id)
-                                                        ->count();
-                $total_amount = DB::table('digital_cyber_db')->where('Application', $key['Name'])
-                                                            ->where('Branch_Id', $branch_id)
-                                                            ->SUM('Amount_Paid');
-                $notification = 0;
-                $data = array();
-                $data['Total_Count'] = $application_total_count;
-                $data['Temp_Count'] =  $notification;
-                $data['Total_Amount'] =  $total_amount;
-                // dd($data);
-                MainServices::where('Id', '=', $key['Id'])->Update($data);
+    // Live data for Main Services
+    $mainServicesData = $this->getMainServicesData($branchId, $isBranchAdmin);
 
-                // $application_amount = Application::where('Application','=', $key['Name'])->count();
+    // Live data for Status Records
+    $statusData = $this->getStatusData();
 
-                $No = 'No';
-                $app = $key['Name'];
-                $chechk_status = Application::where([['Branch_Id',$branch_id],['Application', $key['Name']], ['Status', 'Received'], ['Recycle_Bin', $No]])->get();
+    return view('admin-module.application.app_dashboard', [
+        'total_application' => $this->applications_served,
+        'total_amount' => $this->total_amount,
+        'Mainservices' => $mainServicesData,
+        'applications_served' => $this->applications_served,
+        'previous_day_app' => $this->previous_day_app,
+        'applications_delivered' => $this->applications_delivered,
+        'previous_day_app_delivered' => $this->previous_day_app_delivered,
+        'total_revenue' => $this->sum,
+        'previous_revenue' => $this->previous_sum,
+        'balance_due' => $this->balance_due_sum,
+        'previous_bal' => $this->previous_bal_sum,
+        'new_clients' => $this->new_clients,
+        'previous_day_new_clients' => $this->previous_day_new_clients,
+        'bookmarks' => $this->bookmarks,
+    ]);
+}
 
+private function getMainServicesData($branchId, $isBranchAdmin)
+{
+    $data = [];
+    foreach ($this->MainServices as $key) {
+        $query = Application::where('Application', $key['Name']);
 
-                foreach ($chechk_status as $count) {
-                    // $count = get_object_vars($count);
-                    $received_date = $count['Received_Date'];
-                    $start_time = new Carbon($received_date);
-                    $finish_time = new Carbon($this->today);
-                    $diff_days = $start_time->diffInDays($finish_time);
-                    if (($diff_days) >= 2) {
-                        $notification += 1;
-                        DB::update('update service_list set Temp_Count = ? where Name = ?', [$notification, $app]);
-                    }
-                }
-            }
-        } else {
-            foreach ($this->MainServices as $key) {
-                $total_amount = 0;
-                $notification = 0;
-                $data = array();
-                $data['Total_Count'] = 0;
-                $data['Temp_Count'] =  $notification;
-                $data['Total_Amount'] =  0;
-                MainServices::where('Id', $key['Id'])->Update($data);
-                $application_amount = Application::where('Application', '=', $key['Name'])->count();
-            }
+        if ($isBranchAdmin) {
+            $query->where('Branch_Id', $branchId);
         }
-        // Code for insight Data Records are fetched from RightInsight Trait
-        $status = Status::all();
-        foreach ($status as $item) {
-            $name = $item['Status'];
-            $amount = DB::table('digital_cyber_db')->Where('Status', $name)->SUM('Total_Amount');
-            $count = DB::table('digital_cyber_db')->where('Status', $name)->count();
-            $data = array();
-            $data['Total_Amount'] = $amount;
-            $data['Total_Count'] = $count;
-            DB::table('status')->where('Status', $name)->update($data);
-        }
-        return view('admin-module.application.app_dashboard', ['total_applicaiton' => $this->applications_served, 'total_amount' => $total_amount, 'Mainservices' => $this->MainServices, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'new_clients' => $this->new_clients, 'previous_day_new_clients' => $this->previous_day_new_clients, 'bookmarks' => $this->bookmarks,]);
+
+        $application_total_count = $query->count();
+        $total_amount = DB::table('digital_cyber_db')
+            ->where('Application', $key['Name'])
+            ->when($isBranchAdmin, function ($q) use ($branchId) {
+                return $q->where('Branch_Id', $branchId);
+            })
+            ->sum('Amount_Paid');
+
+        $notification = $this->calculateNotifications($key['Name'], $branchId, $isBranchAdmin);
+
+        $data[] = [
+            'Id' => $key['Id'],
+            'Name' => $key['Name'],
+            'Thumbnail' => $key['Thumbnail'],
+            'Total_Count' => $application_total_count,
+            'Temp_Count' => $notification,
+            'Total_Amount' => $total_amount,
+        ];
+    }
+    return $data;
+}
+
+private function calculateNotifications($applicationName, $branchId, $isBranchAdmin)
+{
+    $query = Application::where('Application', $applicationName)
+        ->where('Status', 'Received')
+        ->where('Recycle_Bin', 'No');
+
+    if ($isBranchAdmin) {
+        $query->where('Branch_Id', $branchId);
     }
 
+    $today = now();
+    $notifications = $query->get()->filter(function ($item) use ($today) {
+        $received_date = new Carbon($item->Received_Date);
+        return $received_date->diffInDays($today) >= 2;
+    })->count();
+
+    return $notifications;
+}
+
+private function getStatusData()
+{
+    $statusRecords = Status::all();
+    $data = [];
+
+    foreach ($statusRecords as $item) {
+        $name = $item->Status;
+
+        $amount = DB::table('digital_cyber_db')
+            ->where('Status', $name)
+            ->sum('Total_Amount');
+
+        $count = DB::table('digital_cyber_db')
+            ->where('Status', $name)
+            ->count();
+
+        $data[] = [
+            'Status' => $name,
+            'Total_Amount' => $amount,
+            'Total_Count' => $count,
+        ];
+    }
+
+    return $data;
+}
 
     public function DynamicDashboard($MainServiceId)
     {
@@ -127,15 +169,18 @@ class ApplicationController extends Controller
         if (count($Sub_Services) > 0) {
             foreach ($Sub_Services as $item) { {
                     $name = $item['Name'];
-                    $count = Application::Where([['Branch_Id', $branch_id],['Application_Type', $name], ['Recycle_Bin', $No]])->count();
-                    DB::update('update sub_service_list set Total_Count=?  where Name = ?', [$count, $name]);
-                }
+                    if(Auth::user()->role == 'branch admin'){
+                        $count = Application::Where([['Branch_Id', $branch_id],['Application_Type', $name], ['Recycle_Bin', $No]])->count();
+                        DB::update('update sub_service_list set Total_Count=?  where Name = ?', [$count, $name]);
+                    }else {
+                        $count = Application::Where([['Application_Type', $name], ['Recycle_Bin', $No]])->count();
+                        DB::update('update sub_service_list set Total_Count=?  where Name = ?', [$count, $name]);
+                    }
+                   }
             }
         }
         $a = 0;
         $b = 1;
-
-
         DB::update('update status set Temp_Count=?  where?', [$a, $b]);
         return view('admin-module.application.app_dynamic_dashboard', [
             'MainServiceId' => $MainServiceId,

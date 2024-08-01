@@ -1039,178 +1039,149 @@
     <!-- ------------------------------------------------------------------------------------------------- -->
 
     <div class="row"> {{-- Daily Transaction Display Panel --}}
-        @if (count($daily_applications) > 0)
-
-            <div class="col-lg-12">
-                <div class="card">
-
-                    <h5 class="card-header">Application List</h5>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Total Credit as on
-                            @if (empty($Select_Date))
-                                {{ \Carbon\Carbon::parse($today)->format('d-M-Y') }} is &#x20B9
-                                {{ $Daily_Income }}
-                            @endif
-                            @if (!empty($Select_Date))
-                                {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y') }}
-                                <strong>
-                                    {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
-                                </strong>
-                                {{ $Daily_Income }}
-                            @endif
-                        </h5>
-                        <div id="message">
-                            @if (session('SuccessMsg'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('SuccessMsg') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-                            @if (session('SuccessUpdate'))
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    {{ session('SuccessUpdate') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-                            @if (session('Error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ session('Error') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
+        <div class="col-lg-12">
+            <div class="card">
+                <h5 class="card-header">Application List</h5>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Total Credit as on
+                        @if (empty($Select_Date))
+                            {{ \Carbon\Carbon::parse($today)->format('d-M-Y') }} is &#x20B9 {{ $Daily_Income }}
+                        @endif
+                        @if (!empty($Select_Date))
+                            {{ \Carbon\Carbon::parse($Select_Date)->format('d-M-Y') }}
+                            <strong>
+                                {{ \Carbon\Carbon::parse($Select_Date)->diffForHumans() }} is &#x20B9
+                            </strong>
+                            {{ $Daily_Income }}
+                        @endif
+                    </h5>
+                    @if (session('Error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('Error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-
-
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
+                    @endif
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <div class="row">
                                         <div class="d-flex flex-wrap gap-2">
-                                            <div class="row">
-                                                <div class="col-sm-7">
-                                                    <label class="form-label" for="paginate">Show Pages</label>
-                                                </div>
-                                                <div class="col-sm-5">
-                                                    <select name="datatable_length" wire:model="paginate"
-                                                        aria-controls="datatable"
-                                                        class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
-                                                        <option value="5">5</option>
-                                                        <option value="10">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <label class="form-label" for="paginate">Filter By</label>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" wire:model="filterby"
-                                                        class="form-control form-control-sm" placeholder="Filter">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label class="form-label" for="paginate">Search By Date</label>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="date" id="date" name="Select_Date"
-                                                        wire:model="Select_Date" wire:change="RefreshPage()"
-                                                        class="form-control form-control-sm" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </tr>
-                                    <tr>
-                                        <th>SL. No</th>
-                                        <th>Name</th>
-                                        <th>Mobile No</th>
-                                        <th>Application</th>
-                                        <th>Status</th>
-                                        <th>Total | Paid | Bal. </th>
-                                        <th>Created</th>
-                                        <th>Updated</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-
-
-                                <tbody>
-                                    @foreach ($daily_applications as $data)
-                                        <tr>
-                                            <td>{{ $daily_applications->firstItem() + $loop->index }}</td>
-                                            <td>{{ $data->Name }}</td>
-                                            <td>{{ $data->Mobile_No }}</td>
-                                            <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
-                                            <td>{{ $data->Status }}</td>
-                                            <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }} |
-                                                {{ $data->Balance }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}
-                                            </td>
-                                            <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
-                                            </td>
-                                            <td>
-                                                <div class="btn-group-vertical" role="group"
-                                                    aria-label="Vertical button group">
+                                            @if ($Checked)
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                                     <div class="btn-group" role="group">
-                                                        <button id="btnGroupVerticalDrop1" type="button"
-                                                            class="btn btn-light dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                            Action <i class="mdi mdi-chevron-down"></i>
+                                                        <button id="btnGroupVerticalDrop2" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Checked ({{ count($Checked) }}) <i class="mdi mdi-chevron-down"></i>
                                                         </button>
-                                                        <div class="dropdown-menu"
-                                                            aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item" title="View  Application"
-                                                                href={{ route('view.application', $data->Id) }}
-                                                                id="open">View</a>
-                                                            <a class="dropdown-item" title="Edit  Application"
-                                                                href={{ route('edit_application', $data->Id) }}
-                                                                id="update">Edit</a>
-
-                                                            <a class="dropdown-item" title="Delete Application"
-                                                                id="delete"
-                                                                href={{ route('delete.application', $data->Id) }}>Delete</a>
-
+                                                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2">
+                                                            <a class="dropdown-item" title="Multiple Delete" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
                                                         </div>
                                                     </div>
-
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                            @endif
+                                        </div>
+                                    </div>
 
-                            </table>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($daily_applications) }} of
-                                        {{ $daily_applications->total() }} entries</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class=" pagination pagination-rounded float-end">
-                                        {{ $daily_applications->links() }}
-                                    </span>
-                                </div>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <label class="form-label" for="paginate">Show Pages</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select name="datatable_length" wire:model="paginate" aria-controls="datatable" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
+                                                    <option value="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="paginate">Filter By</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" wire:model="filterby" class="form-control form-control-sm" placeholder="Filter">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="paginate">Search By Date</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="date" id="date" name="Select_Date" wire:model="Select_Date" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <th>SL. No</th>
+                                    <th>Check</th>
+                                    <th>Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Application</th>
+                                    <th>Status</th>
+                                    <th>Total | Paid | Bal.</th>
+                                    <th>Created</th>
+                                    <th>Updated</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($daily_applications as $data)
+                                    <tr>
+                                        <td>{{ $daily_applications->firstItem() + $loop->index }}</td>
+                                        <td><input type="checkbox" id="checkbox" name="checkbox" value="{{ $data->Id }}" wire:model="Checked"></td>
+                                        <td>{{ $data->Name }}</td>
+                                        <td>{{ $data->Mobile_No }}</td>
+                                        <td>{{ $data->Application }} , {{ $data->Application_Type }}</td>
+                                        <td>{{ $data->Status }}</td>
+                                        <td>{{ $data->Total_Amount }} | {{ $data->Amount_Paid }} | {{ $data->Balance }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
+                                        <td>
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Action <i class="mdi mdi-chevron-down"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                                                        <a class="dropdown-item" title="Edit Application" href={{ route('edit_application', $data->Id) }} id="update">Edit</a>
+                                                        <a class="dropdown-item" title="Delete Application"   wire:click="Delete('{{ $data->Id }}')" id="delete">Delete</a>
+                                                        <a class="dropdown-item" title="Open Application" href={{ route('view.application', $data->Id) }} id="open">Open</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="11" class="text-center">
+                                            <img class="avatar-xl" alt="No Result" src="{{ asset('storage/no_result.png') }}">
+                                            <p>No Result Found</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-8">
+                                <p class="text-muted">Showing {{ count($daily_applications) }} of {{ $daily_applications->total() }} entries</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="pagination pagination-rounded float-end">
+                                    {{ $daily_applications->links() }}
+                                </span>
                             </div>
                         </div>
-
-                        <p class="card-text"><small class="text-muted">Last Entry at {{ $lastRecTime }}
-                            </small>
-                        </p>
-
-
                     </div>
+                    <p class="card-text"><small class="text-muted">Last Entry at {{ $lastRecTime }} </small></p>
                 </div>
             </div>
-        @endif {{-- End of Daily Transaction Display Panel --}}
+        </div>
     </div>
+
 
     <!-- --------------------------------------------------------------------------------------------- -->
 </div>

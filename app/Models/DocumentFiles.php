@@ -11,4 +11,13 @@ class DocumentFiles extends Model
     protected $connection = 'mysql';
 
     public $table = 'document_files';
+    protected $fillable = [
+        'Id',
+        'App_Id',
+        'Client_Id',
+        'Document_Name',
+        'Document_Path',
+        'Branch_Id',
+        'Emp_Id'
+    ];
 }

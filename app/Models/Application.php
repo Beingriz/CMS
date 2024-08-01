@@ -27,4 +27,9 @@ class Application extends Model
                 ->orWhere('Application_Type', 'Like', $key);
         });
     }
+    // In app/Models/DigitalCyberDb.php
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('Branch_Id', $branchId);
+    }
 }

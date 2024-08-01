@@ -10,6 +10,22 @@ class CreditLedger extends Model
     use HasFactory;
     protected $connection = "mysql";
     public $table = "credit_ledger";
+    // Add 'Id' to the fillable array to allow mass assignment
+    protected $fillable = [
+        'Id',
+        'Client_Id',
+        'Branch_Id',
+        'Emp_Id',
+        'Category',
+        'Sub_Category',
+        'Date',
+        'Total_Amount',
+        'Amount_Paid',
+        'Balance',
+        'Description',
+        'Payment_Mode',
+        'Attachment',
+    ];
 
     public function scopeFilter($query, $key)
     {
@@ -19,4 +35,9 @@ class CreditLedger extends Model
                 ->orWhere('Amount_Paid', 'Like', $key);
         });
     }
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('Branch_Id', $branchId);
+    }
+
 }

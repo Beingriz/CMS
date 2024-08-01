@@ -11,7 +11,24 @@ class ApplyServiceForm extends Model
     protected $connection = 'mysql';
 
     public $table = 'applynow';
-    protected $guard = [];
+    protected $fillable = [
+        'Id',
+        'Name',
+        'Application',
+        'Application_Type',
+        'Dob',
+        'Relative_Name',
+        'Mobile_No',
+        'Status',
+        'Reason',
+        'Profile_Image',
+        'Branch_Id',
+        'Emp_Id'
+    ];
     // protected $connection ='mysql';
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('Branch_Id', $branchId);
+    }
 
 }

@@ -19,6 +19,9 @@ class AdminController extends Controller
 {
 
     public $Company_Name;
+    public $Branch_Id, $Emp_Id;
+
+
     public function HomeIndex()
     {
         $data = HomeSlide::find(1);
@@ -29,57 +32,152 @@ class AdminController extends Controller
         $carousel = Carousel_DB::all();
         $aboutus = About_Us::where('Selected', 'Yes')->get();
         $services = MainServices::where('Service_Type', 'Public')->get();
-        
+
         return view('user.user_home.user_index', compact('records', 'carousel', 'aboutus', 'services'), ['CompanyName' => $this->Company_Name]);
     }
     public function AdminDashboard()
     {
-        $totalToday = DB::table('digital_cyber_db')
-            ->select(DB::raw('COUNT(*) as total_today'))
-            ->whereRaw('DATE(created_at) = CURDATE()')
-            ->value('total_today');
+        $this->Branch_Id = Auth::user()->branch_id;
+        if(Auth::user()->role == 'branch admin'){
+            $totalToday = DB::table('digital_cyber_db')
+            ->where('Branch_Id', $this->Branch_Id)
+            ->whereDate('created_at', '=', now()->toDateString()) // or CURDATE() if using raw SQL
+            ->count();
 
-        $results = DB::select("SELECT YEAR(created_at) AS year, MONTH(created_at) AS month, COUNT(*) AS total_entries
-                        FROM digital_cyber_db
-                        WHERE (YEAR(created_at) = YEAR(CURRENT_DATE) AND MONTH(created_at) = MONTH(CURRENT_DATE))
-                        GROUP BY  YEAR(created_at), MONTH(created_at)
-                        ORDER BY  YEAR(created_at), MONTH(created_at) ");
 
-        $totalSales =  DB::table('digital_cyber_db')
-            ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
-            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-            ->value('total_amount');
-        $totlaOrders = DB::table('digital_cyber_db')
-            ->select(DB::raw('COUNT(*) as total_orders'))
-            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-            ->value('total_orders');
+            $results = DB::select("
+            SELECT YEAR(created_at) AS year,
+                   MONTH(created_at) AS month,
+                   COUNT(*) AS total_entries
+            FROM digital_cyber_db
+            WHERE Branch_Id = ?
+              AND YEAR(created_at) = YEAR(CURRENT_DATE)
+              AND MONTH(created_at) = MONTH(CURRENT_DATE)
+            GROUP BY YEAR(created_at), MONTH(created_at)
+            ORDER BY YEAR(created_at), MONTH(created_at)
+        ", [$this->Branch_Id]);
+
+
+        $totalSales = DB::table('digital_cyber_db')
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensures filtering by the current year as well
+                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
+                    ->value('total_amount');
+
+        $totalOrders = DB::table('digital_cyber_db')
+                    ->where('Branch_Id', '=', $this->Branch_Id)
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensure the filter is also by the current year
+                    ->select(DB::raw('COUNT(*) as total_orders'))
+                    ->value('total_orders');
+
         $newUsers = DB::table('users')
-            ->select(DB::raw('COUNT(*) as new_users'))
-            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-            ->value('new_users');
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                    ->select(DB::raw('COUNT(*) as new_users'))
+                    ->value('new_users');
+
         $totalEnquiries = DB::table('enquiry_form')
-            ->select(DB::raw('COUNT(*) as new_enquiries'))
-            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-            ->value('new_enquiries');
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                    ->select(DB::raw('COUNT(*) as new_enquiries'))
+                    ->value('new_enquiries');
+
         $callBack = DB::table('callback')
-            ->select(DB::raw('COUNT(*) as callback'))
-            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-            ->value('callback');
-        $totalRevenue =  DB::table('credit_ledger')
-            ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
-            ->value('total_revenue');
-        $lastWeekAmount = DB::select("SELECT SUM(Amount_Paid) AS lastWeekamount FROM credit_ledger
-                            WHERE created_at >= CURDATE() - INTERVAL DAYOFWEEK(CURDATE()) + 6 DAY
-                                AND created_at < CURDATE() - INTERVAL DAYOFWEEK(CURDATE()) - 1 DAY");
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                    ->select(DB::raw('COUNT(*) as callback'))
+                    ->value('callback');
+
+        $totalRevenue = DB::table('credit_ledger')
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
+                    ->value('total_revenue');
+
+        $lastWeekAmount = DB::table('credit_ledger')
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->whereBetween('created_at', [
+                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) + 6) DAY)'),
+                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY)')
+                    ])
+                    ->sum('Amount_Paid');
         $lastMonthAmount = DB::table('credit_ledger')
-            ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
-            ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)')
-            ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)')
-            ->value('total_amount');
-
+                    ->where('Branch_Id', $this->Branch_Id)
+                    ->whereRaw('YEAR(created_at) = YEAR(CURDATE() - INTERVAL 1 MONTH)')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURDATE() - INTERVAL 1 MONTH)')
+                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
+                    ->value('total_amount');
         // Status Count and Amount Update
+        }else{
+            $totalToday = DB::table('digital_cyber_db')
+            ->whereDate('created_at', '=', now()->toDateString()) // or CURDATE() if using raw SQL
+            ->count();
 
-        return view('admin-module.index', ['totalSales' => $totalSales, 'totalEnquiries' => $totalEnquiries, 'totalOrders' => $totlaOrders, 'newUsers' => $newUsers, 'callBack' => $callBack, 'totalRevenue' => $totalRevenue, 'lastWeekAmount' => $lastWeekAmount[0]->lastWeekamount, 'lastMonthAmount' => $lastMonthAmount]);
+
+            $results = DB::select("
+            SELECT YEAR(created_at) AS year,
+                   MONTH(created_at) AS month,
+                   COUNT(*) AS total_entries
+            FROM digital_cyber_db
+            WHERE YEAR(created_at) = YEAR(CURRENT_DATE)
+              AND MONTH(created_at) = MONTH(CURRENT_DATE)
+            GROUP BY YEAR(created_at), MONTH(created_at)
+            ORDER BY YEAR(created_at), MONTH(created_at)
+        ");
+
+
+        $totalSales = DB::table('digital_cyber_db')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensures filtering by the current year as well
+                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
+                    ->value('total_amount');
+
+        $totalOrders = DB::table('digital_cyber_db')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensure the filter is also by the current year
+                    ->select(DB::raw('COUNT(*) as total_orders'))
+                    ->value('total_orders');
+
+        $newUsers = DB::table('users')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                    ->select(DB::raw('COUNT(*) as new_users'))
+                    ->value('new_users');
+
+        $totalEnquiries = DB::table('enquiry_form')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                    ->select(DB::raw('COUNT(*) as new_enquiries'))
+                    ->value('new_enquiries');
+
+        $callBack = DB::table('callback')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                    ->select(DB::raw('COUNT(*) as callback'))
+                    ->value('callback');
+
+        $totalRevenue = DB::table('credit_ledger')
+                    ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
+                    ->value('total_revenue');
+
+        $lastWeekAmount = DB::table('credit_ledger')
+                    ->whereBetween('created_at', [
+                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) + 6) DAY)'),
+                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY)')
+                    ])
+                    ->sum('Amount_Paid');
+        $lastMonthAmount = DB::table('credit_ledger')
+                    ->whereRaw('YEAR(created_at) = YEAR(CURDATE() - INTERVAL 1 MONTH)')
+                    ->whereRaw('MONTH(created_at) = MONTH(CURDATE() - INTERVAL 1 MONTH)')
+                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
+                    ->value('total_amount');
+        // Status Count and Amount Update
+        }
+        return view('admin-module.index', ['totalSales' => $totalSales, 'totalEnquiries' => $totalEnquiries, 'totalOrders' => $totalOrders, 'newUsers' => $newUsers, 'callBack' => $callBack, 'totalRevenue' => $totalRevenue, 'lastWeekAmount' => $lastWeekAmount, 'lastMonthAmount' => $lastMonthAmount]);
     }
 
 

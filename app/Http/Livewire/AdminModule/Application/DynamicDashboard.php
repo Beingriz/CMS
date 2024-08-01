@@ -9,6 +9,7 @@ use App\Models\MainServices;
 use App\Models\Status;
 use App\Models\SubServices;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -30,9 +31,12 @@ class DynamicDashboard extends Component
     public  $temp_count = 0;
     public  $ChangedStaus;
     public  $status_name, $paginate = 5, $filterby;
+    public $Branch_Id, $Emp_Id;
     public function mount($MainServiceId)
     {
         $this->MainServiceId = $MainServiceId;
+        $this->Branch_Id = Auth::user()->branch_id;
+        $this->Emp_Id = Auth::user()->Emp_Id;
     }
     public function RefreshPage(){
         $this->resetpage();
@@ -57,11 +61,16 @@ class DynamicDashboard extends Component
             $No = 'No';
             foreach ($this->status as $item) {
                 $item  = get_object_vars($item); {
-
                     $status_name = $item['Status'];
                     DB::update('update status set Temp_Count=? where status=?', [$n, $status_name]);
-                    $count = DB::table('digital_cyber_db')->Where([['Application', $this->Serv_Name], ['Application_Type', $Sub_Serv_Name], ['Status', $status_name], ['Recycle_Bin', $No]])->count();
+                    if(Auth::user()->role == 'branch admin'){
+                        $count = DB::table('digital_cyber_db')->Where([['Branch_Id',$this->Branch_Id],['Application', $this->Serv_Name], ['Application_Type', $Sub_Serv_Name], ['Status', $status_name], ['Recycle_Bin', $No]])->count();
+                        DB::update('update status set Temp_Count=? where status=?', [$count, $status_name]);
+                    }else{
+                        $count = DB::table('digital_cyber_db')->Where([['Application', $this->Serv_Name], ['Application_Type', $Sub_Serv_Name], ['Status', $status_name], ['Recycle_Bin', $No]])->count();
                     DB::update('update status set Temp_Count=? where status=?', [$count, $status_name]);
+                    }
+
                 }
             }
         }
@@ -97,7 +106,12 @@ class DynamicDashboard extends Component
             $notification = 0;
             $No = 'No';
             $app = $service['Name'];
-            $chechk_status = DB::table('digital_cyber_db')->where([['Application', $service['Name']], ['Status', 'Received'], ['Recycle_Bin', $No]])->get();
+            if(Auth::user()->role == 'branch admin'){
+                $chechk_status = DB::table('digital_cyber_db')->where([['Branch_Id', $this->Branch_Id],['Application', $service['Name']], ['Status', 'Received'], ['Recycle_Bin', $No]])->get();
+            }else{
+                $chechk_status = DB::table('digital_cyber_db')->where([['Application', $service['Name']], ['Status', 'Received'], ['Recycle_Bin', $No]])->get();
+            }
+
             DB::update('update service_list set Temp_Count = ? where Name = ?', [$notification, $app]);
             foreach ($chechk_status as $count) {
 
@@ -141,7 +155,12 @@ class DynamicDashboard extends Component
             // Setting Notification to 0
             $notification = 0;
             $app = $service['Name'];
-            $chechk_status = DB::table('digital_cyber_db')->where([['Application', $service['Name']], ['Status', 'Received'], ['Recycle_Bin', 'No']])->get();
+            if(Auth::user()->role == 'branch admin'){
+                $chechk_status = DB::table('digital_cyber_db')->where([['Branch_Id', $this->Branch_Id],['Application', $service['Name']], ['Status', 'Received'], ['Recycle_Bin', 'No']])->get();
+
+            }else{
+                $chechk_status = DB::table('digital_cyber_db')->where([['Application', $service['Name']], ['Status', 'Received'], ['Recycle_Bin', 'No']])->get();
+            }
             foreach ($chechk_status as $count) {
                 $count = get_object_vars($count);
                 $received_date = $count['Received_Date'];
@@ -164,7 +183,7 @@ class DynamicDashboard extends Component
         if (count($Sub_Services) > 0) {
             foreach ($Sub_Services as $item) { {
                     $name = $item['Name'];
-                    $count = Application::Where([['Application_Type', $name], ['Recycle_Bin', 'No']])->count();
+                    $count = Application::Where([['Branch_Id', $this->Branch_Id],['Application_Type', $name], ['Recycle_Bin', 'No']])->count();
                     $data = array();
                     $data['Total_Count'] = $count;
                     SubServices::where('Name', $name)->update($data);
@@ -189,9 +208,16 @@ class DynamicDashboard extends Component
 
         $bookmarks = Bookmark::Where('Relation', $this->Serv_Name)->orderby('Name', 'asc')->get();
 
-        $StatusDetails = Application::where([['Application', $this->Serv_Name], ['Application_Type', $this->Sub_Serv_Name]])
+        if(Auth::user()->role == 'branch admin'){
+            $StatusDetails = Application::where([['Branch_Id', $this->Branch_Id],['Application', $this->Serv_Name], ['Application_Type', $this->Sub_Serv_Name]])
             ->Where([['Status', trim($this->status_name)], ['Recycle_Bin', 'No']])
             ->filter(trim($this->filterby))->Orderby('Received_Date', 'desc')->paginate($this->paginate);
+        }else{
+            $StatusDetails = Application::where([['Application', $this->Serv_Name], ['Application_Type', $this->Sub_Serv_Name]])
+            ->Where([['Status', trim($this->status_name)], ['Recycle_Bin', 'No']])
+            ->filter(trim($this->filterby))->Orderby('Received_Date', 'desc')->paginate($this->paginate);
+        }
+
         return view('livewire.admin-module.application.dynamic-dashboard', compact('StatusDetails'), [
             'status' => $this->status, 'ServName' => $this->Serv_Name, 'bookmarks' => $bookmarks,
             'SubServices' => $this->SubServices, 'n' => $this->n,

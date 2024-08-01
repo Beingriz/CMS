@@ -11,4 +11,9 @@ class Callback_Db extends Model
     protected $connection = 'mysql';
 
     public $table = 'callback';
+    // In app/Models/Callback.php
+public function scopeForBranch($query, $branchId)
+{
+    return $query->where('Branch_Id', $branchId);
+}
 }

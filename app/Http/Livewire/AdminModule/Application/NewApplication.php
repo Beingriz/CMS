@@ -20,7 +20,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Auth;
 
 class NewApplication extends Component
 {
@@ -646,106 +646,119 @@ class NewApplication extends Component
         $this->Clear();
     }
     public function render()
-    {
-        // $this->LatestUpdate();
-        // $this->Capitalize();
+{
+    // Call methods to update or capitalize data
+    $this->LatestUpdate();
+    $this->Capitalize();
 
+    // Get the branch ID and role from the authenticated user
+    $branch_id = Auth::user()->branch_id;
+    $role = Auth::user()->role;
 
-        // $this->main_service = MainServices::orderby('Name')->get();
-        // if(!empty($this->MainSelected))
-        // {
-        //     $this->sub_service = SubServices::orderby('Name')->Where('Service_Id', $this->MainSelected)->get();
-        // }
+    // Fetch main services without branch filter
+    $this->main_service = MainServices::orderBy('Name')->get();
 
-        //     $Mobile_No = NULL;
-        //     $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
-        //     if(sizeof($Mobile_No)==1) //for Registered Clients
-        //     {
-        //         $Mobile_No = ClientRegister::Where('Mobile_No',$this->Mobile_No)->get();
-        //         if(sizeof($Mobile_No)==1)
-        //         {
-        //             foreach($Mobile_No as $key)
-        //                 {
-        //                     $this->C_Dob = $key['DOB'];
-        //                     $this->C_Id = $key['Id'];
-        //                     $this->Old_Profile_Image = $key['Profile_Image'];
-        //                     $this->C_Name = $key['Name'];
-        //                     $this->C_RName = $key['Relative_Name'];
-        //                     $this->C_Gender = $key['Gender'];
-        //                     $this->C_Email = $key['Email'];
-        //                     $this->C_Mob = $key['Mobile_No'];
-        //                     // $this->C_Address = $key['Address'];
-        //                     // $this->C_Ctype = $key['Client_Type'];
-        //                 }
-        //             }
-        //         $AppliedServices = Application::Where('Mobile_No',$this->Mobile_No)->get();
-        //         $count = count($AppliedServices);
-        //         $this->Open = 1;
-        //         $this->user_type = "Registered User!! Availed ".$count." Services";
-        //     }
-        //     else // for Unregistered clients
-        //     {
-        //         $Mobile_No = Application::Where('Mobile_No',$this->Mobile_No)->get();
-        //         if(sizeof($Mobile_No)>0)
-        //         {
-        //             $count = count($Mobile_No);
-        //             $this->user_type = "Unregistered User!! Availed ".$count."Services ";
-        //         }
-        //         else
-        //         {
-        //             $this->Open = 0;
-        //             $this->Profile_Show = 0;
-        //             $this->Records_Show = 0;
-        //             $this->user_type = "New Client";
-        //         }
-        //     }
-
-        //     if(!is_null($this->Select_Date)) //Report on form page for Searh by Date
-        //     {
-        //         $date = Carbon::parse($this->Select_Date)->format('d-M-Y');
-        //         $daily_applications = Application::Where('Received_Date',$this->Select_Date)->filter($this->filterby)->paginate($this->paginate);
-        //         $this->Daily_Income = 0;
-        //         foreach($daily_applications as $key)
-        //         {
-        //             $this->Daily_Income += $key['Amount_Paid'];
-        //         }
-        //         if(sizeof($daily_applications)==0)
-        //         {
-        //             session()->flash('Error','Sorry!! No Record Available for '.$date);
-        //             $daily_applications = Application::Where('Received_Date',$this->today)->filter($this->filterby)->paginate($this->paginate);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         $daily_applications = Application::Where('Received_Date',$this->today)->filter($this->filterby)->paginate($this->paginate);
-        //     }
-
-
-        //     $this->ApplicationType = SubServices::where('Service_Id',$this->ApplicationId)->get();
-        //     $service = Service_List::Where('Id',$this->MainSelected)->get();
-        //     foreach($service as $name)
-        //     {
-        //         $service = $name['Name'];
-        //         $this->ServiceName = $service;
-        //     }
-        //     $this->Bal = (intval($this->Total_Amount) - intval($this->Amount_Paid));
-        //     $AppliedServices = Application::latest()
-        //                                     ->Where('Mobile_No',$this->Mobile_No)->paginate(8);
-        //     $this->status_list = Status::Where('Relation',$this->ServiceName)
-        //                         ->orWhere('Relation','General')
-        //                         ->orderBy('Orderby', 'asc')
-        //                         ->get();
-        //
-        $today = date("Y-m-d");
-        $status_list = $this->status_list;
-        $payment_mode = $this->payment_mode;
-        $daily_applications = Application::Where('Received_Date', $today)->filter($this->filterby)->paginate($this->paginate);
-
-        $this->main_service = MainServices::orderby('Name')->get();
-        if (!empty($this->MainSelected)) {
-            $this->sub_service = SubServices::orderby('Name')->Where('Service_Id', $this->MainSelected)->get();
-        }
-
-        return view('livewire.admin-module.application.new-application', compact('today', 'status_list', 'payment_mode', 'daily_applications'));
+    // Fetch sub-services if a main service is selected
+    if (!empty($this->MainSelected)) {
+        $this->sub_service = SubServices::orderBy('Name')
+                                        ->where('Service_Id', $this->MainSelected)
+                                        ->get();
     }
+
+    // Initialize client data
+    $this->Open = 0;
+    $this->Profile_Show = 0;
+    $this->Records_Show = 0;
+    $this->user_type = "New Client";
+
+    // Handle registered clients
+    if ($this->Mobile_No) {
+        $clientQuery = ClientRegister::where('Mobile_No', $this->Mobile_No);
+        if ($role == 'branch admin') {
+            $clientQuery->where('Branch_Id', $branch_id);
+        }
+        $client = $clientQuery->first();
+
+        if ($client) {
+            $this->C_Dob = $client->DOB;
+            $this->C_Id = $client->Id;
+            $this->Old_Profile_Image = $client->Profile_Image;
+            $this->C_Name = $client->Name;
+            $this->C_RName = $client->Relative_Name;
+            $this->C_Gender = $client->Gender;
+            $this->C_Email = $client->Email;
+            $this->C_Mob = $client->Mobile_No;
+
+            $appliedServicesQuery = Application::where('Mobile_No', $this->Mobile_No);
+            if ($role == 'branch admin') {
+                $appliedServicesQuery->where('Branch_Id', $branch_id);
+            }
+            $appliedServices = $appliedServicesQuery->get();
+
+            $count = $appliedServices->count();
+            $this->Open = 1;
+            $this->user_type = "Registered User!! Availed $count Services";
+        } else {
+            // Handle unregistered clients
+            $appliedServicesQuery = Application::where('Mobile_No', $this->Mobile_No);
+            if ($role == 'branch admin') {
+                $appliedServicesQuery->where('Branch_Id', $branch_id);
+            }
+            $count = $appliedServicesQuery->count();
+
+            if ($count > 0) {
+                $this->user_type = "Unregistered User!! Availed $count Services";
+            }
+        }
+    }
+
+    // Handle date selection for reports
+    $date = $this->Select_Date ? Carbon::parse($this->Select_Date)->format('d-M-Y') : $this->today;
+    $dailyApplicationsQuery = Application::where('Received_Date', $date);
+    if ($role == 'branch admin') {
+        $dailyApplicationsQuery->where('Branch_Id', $branch_id);
+    }
+    $daily_applications = $dailyApplicationsQuery->filter($this->filterby)->paginate($this->paginate);
+
+    // Calculate daily income
+    $this->Daily_Income = $daily_applications->sum('Amount_Paid');
+
+    $dailyApplicationsQuery = Application::where('Received_Date', $this->today);
+    if ($role == 'branch admin') {
+        $dailyApplicationsQuery->where('Branch_Id', $branch_id);
+    }
+    $daily_applications = $dailyApplicationsQuery->filter($this->filterby)->paginate($this->paginate);
+
+
+    // Fetch application types and service name
+    $this->ApplicationType = SubServices::where('Service_Id', $this->ApplicationId)->get();
+    $service = Service_List::where('Id', $this->MainSelected)->first();
+    $this->ServiceName = $service ? $service->Name : '';
+
+    // Calculate balance
+    $this->Bal = (intval($this->Total_Amount) - intval($this->Amount_Paid));
+
+    // Fetch applied services and status list
+    $appliedServicesQuery = Application::where('Mobile_No', $this->Mobile_No)->latest();
+    if ($role == 'branch admin') {
+        $appliedServicesQuery->where('Branch_Id', $branch_id);
+    }
+    $AppliedServices = $appliedServicesQuery->paginate(8);
+
+    $this->status_list = Status::where('Relation', $this->ServiceName)
+                               ->orWhere('Relation', 'General')
+                               ->orderBy('Orderby', 'asc')
+                               ->get();
+
+    return view('livewire.admin-module.application.new-application', [
+        'today' => $this->today,
+        'status_list' => $this->status_list,
+        'payment_mode' => $this->payment_mode,
+        'daily_applications' => $daily_applications,
+        'main_service' => $this->main_service,
+        'sub_service' => $this->sub_service,
+        'AppliedServices' => $AppliedServices
+    ]);
+}
+
 }

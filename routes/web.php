@@ -189,7 +189,6 @@ Route::controller(UserController::class)->group(function () {
 // Route:: get('search/{key}', [ApplicationController::class,'Search']);
 
 // Route::get('new_temp', [ApplicationController::class,'Temp']);
-// // Route::get('dynamic_dashboard/{mainservice}', [ApplicationController::class,'DynamicDashboard']);
 // Route::get('app_form', [ApplicationController::class,'List']);
 // Route::post('save_application', [SaveApplicaton::class,'Save']);
 // Route::get('/edit_app/{id}', [ApplicationController::class,'Edit']);

@@ -26,8 +26,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('new.application') }}">Application</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Application</a></li>
                         <li class="breadcrumb-item"><a href="#">View</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('view.application',$Id) }}">{{ $Name }}</a></li>
                     </ol>

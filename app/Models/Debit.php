@@ -21,4 +21,9 @@ class Debit extends Model
                 ->orWhere('Amount_Paid', 'Like', $key);
         });
     }
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('Branch_Id', $branchId);
+    }
+
 }

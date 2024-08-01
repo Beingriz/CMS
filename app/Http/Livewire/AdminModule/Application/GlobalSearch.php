@@ -212,12 +212,57 @@ class GlobalSearch extends Component
     public function SearchResults($key)
     {
         $mobile = (int)$this->search;
-        $this->Registered = ClientRegister::Where('Mobile_No', $mobile)
-            ->orWhere('Name', $this->search)
-            ->orWhere('Id', $this->search)
+        if(Auth::user()->role == 'branch admin'){
+            $this->Registered = ClientRegister::Where([['Mobile_No', '=', $mobile],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere( [['Name','=', $this->search],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere( [['Id','=', $this->search],['Branch_Id','=',$this->Branch_Id]])
             ->get();
 
-        $this->search_data = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no]])
+            $this->search_data = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Name', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Ack_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Client_Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->filter(trim($this->filterby))
+            ->when($this->Status, function ($query, $status) {
+                return $query->where('Status', $status);
+            })
+            ->paginate($this->paginate);
+        $this->Search_Count = count($this->search_data);
+
+        $this->Service_Count = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Name', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Ack_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Client_Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->count();
+
+        $search_data = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Name', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Ack_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Client_Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->get();
+
+        $this->StatusCount = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Name', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Ack_No', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->orWhere([['Client_Id', '=', $key], ['Recycle_Bin', '=', $this->no],['Branch_Id','=',$this->Branch_Id]])
+            ->filter(trim($this->filterby))
+            ->when($this->Status, function ($query, $status) {
+                return $query->where('Status', $status);
+            })->count();
+
+
+
+        }else{
+            $this->Registered = ClientRegister::Where([['Mobile_No', '=', $mobile]])
+            ->orWhere( [['Name','=', $this->search]])
+            ->orWhere( [['Id','=', $this->search]])
+            ->get();
+
+            $this->search_data = Application::where([['Mobile_No', '=', $key], ['Recycle_Bin', '=', $this->no]])
             ->orWhere([['Name', '=', $key], ['Recycle_Bin', '=', $this->no]])
             ->orWhere([['Id', '=', $key], ['Recycle_Bin', '=', $this->no]])
             ->orWhere([['Ack_No', '=', $key], ['Recycle_Bin', '=', $this->no]])
@@ -252,6 +297,9 @@ class GlobalSearch extends Component
             ->when($this->Status, function ($query, $status) {
                 return $query->where('Status', $status);
             })->count();
+        }
+
+
 
         $this->Delivered = 0;
         $Balance = 0;

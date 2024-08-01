@@ -1,3 +1,4 @@
+@ -1,1120 +0,0 @@
 <div> {{-- Main Route --}}
 
     <div class="row">

@@ -46,4 +46,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('Branch_Id', $branchId);
+    }
+
 }

@@ -11,4 +11,9 @@ class Feedback extends Model
     protected $connection = 'mysql';
 
     public $table = 'feedback';
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('Branch_Id', $branchId);
+    }
+
 }

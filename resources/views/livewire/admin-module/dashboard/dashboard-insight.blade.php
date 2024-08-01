@@ -156,26 +156,33 @@
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
-                                    @foreach ($Applist as $item)
-                                        <tr>
-                                            <td>{{ $Applist->firstItem() + $loop->index }}</td>
-                                            <td>
-                                                <h6 class="mb-0">{{ $item->Name }}</h6>
-                                            </td>
-                                            <td>{{ $item->Mobile_No }}</td>
-                                            <td>{{ $item->Application }} | {{ $item->Application_Type }}</td>
-                                            <td>{{ $item->Amount_Paid }} </td>
-                                            <td>{{ $item->Balance }} </td>
-                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->updated_at)->diffForHumans() }}</td>
-                                            <td>
-                                                <a href="{{ route('edit_application', $item->Id) }}" title="Edit"
-                                                    class="btn btn-sm btn-primary font-size-15" id="editData"><i
-                                                        class="mdi mdi-circle-edit-outline"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-
+                                    @forelse ( $Applist as $item )
+                                    <tr>
+                                        <td>{{ $Applist->firstItem() + $loop->index }}</td>
+                                        <td>
+                                            <h6 class="mb-0">{{ $item->Name }}</h6>
+                                        </td>
+                                        <td>{{ $item->Mobile_No }}</td>
+                                        <td>{{ $item->Application }} | {{ $item->Application_Type }}</td>
+                                        <td>{{ $item->Amount_Paid }} </td>
+                                        <td>{{ $item->Balance }} </td>
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->updated_at)->diffForHumans() }}</td>
+                                        <td>
+                                            <a href="{{ route('edit_application', $item->Id) }}" title="Edit"
+                                                class="btn btn-sm btn-primary font-size-15" id="editData"><i
+                                                    class="mdi mdi-circle-edit-outline"></i></a>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="11">
+                                            <img class=" avatar-xl" alt="No Result"
+                                                src="{{ asset('storage/no_result.png') }}">
+                                            <p>No Result Found</p>
+                                        </td>
+                                    </tr>
+                                    @endforelse ()
                                     <!-- end -->
 
                                 </tbody><!-- end tbody -->
@@ -214,24 +221,33 @@
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
-                                    @foreach ($CreditLedger as $item)
-                                        <tr>
-                                            <td>{{ $CreditLedger->firstItem() + $loop->index }}</td>
-                                            <td>
-                                                <h6 class="mb-0">{{ $item->Category }}</h6>
-                                            </td>
-                                            <td>{{ $item->Sub_Category }}</td>
-                                            <td>{{ $item->Total_Amount }}</td>
-                                            <td>{{ $item->Amount_Paid }} </td>
-                                            <td>{{ $item->Balance }} </td>
-                                            <td class="text-wrap">{{ $item->Description }} </td>
-                                            <td>
-                                                <a href="{{ route('edit.credit', $item->Id) }}" title="Edit"
-                                                    class="btn btn-sm btn-primary font-size-15" id="editData"><i
-                                                        class="mdi mdi-circle-edit-outline"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                    @forelse ( $CreditLedger as $item )
+                                    <tr>
+                                        <td>{{ $CreditLedger->firstItem() + $loop->index }}</td>
+                                        <td>
+                                            <h6 class="mb-0">{{ $item->Category }}</h6>
+                                        </td>
+                                        <td>{{ $item->Sub_Category }}</td>
+                                        <td>{{ $item->Total_Amount }}</td>
+                                        <td>{{ $item->Amount_Paid }} </td>
+                                        <td>{{ $item->Balance }} </td>
+                                        <td class="text-wrap">{{ $item->Description }} </td>
+                                        <td>
+                                            <a href="{{ route('edit.credit', $item->Id) }}" title="Edit"
+                                                class="btn btn-sm btn-primary font-size-15" id="editData"><i
+                                                    class="mdi mdi-circle-edit-outline"></i></a>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="11">
+                                            <img class=" avatar-xl" alt="No Result"
+                                                src="{{ asset('storage/no_result.png') }}">
+                                            <p>No Result Found</p>
+                                        </td>
+                                    </tr>
+                                    @endforelse ()
+
                                     <!-- end -->
 
                                 </tbody><!-- end tbody -->
@@ -270,7 +286,7 @@
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
-                                    @foreach ($DebitLedger as $item)
+                                    @forelse ($DebitLedger as $item)
                                         <tr>
                                             <td>{{ $DebitLedger->firstItem() + $loop->index }}</td>
                                             <td>
@@ -287,8 +303,15 @@
                                                         class="mdi mdi-circle-edit-outline"></i></a>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                    <!-- end -->
+                                        @empty
+                                        <tr>
+                                            <td colspan="11">
+                                                <img class=" avatar-xl" alt="No Result"
+                                                    src="{{ asset('storage/no_result.png') }}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                        @endforelse ()
 
                                 </tbody><!-- end tbody -->
                             </table> <!-- end table -->
@@ -327,7 +350,7 @@
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
-                                    @foreach ($callbacks as $item)
+                                    @forelse ($callbacks as $item)
                                         <tr>
                                             <td>{{ $callbacks->firstItem() + $loop->index }}</td>
                                             <td>
@@ -344,8 +367,15 @@
                                                     id="editData"><i class="mdi mdi-circle-edit-outline"></i></a>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                    <!-- end -->
+                                        @empty
+                                        <tr>
+                                            <td colspan="11">
+                                                <img class=" avatar-xl" alt="No Result"
+                                                    src="{{ asset('storage/no_result.png') }}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                        @endforelse ()
 
                                 </tbody><!-- end tbody -->
                             </table> <!-- end table -->
@@ -382,7 +412,7 @@
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
-                                    @foreach ($feedbacks as $item)
+                                    @forelse ($feedbacks as $item)
                                         <tr>
                                             <td>{{ $feedbacks->firstItem() + $loop->index }}</td>
                                             <td>
@@ -393,8 +423,15 @@
                                             <td>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }} </td>
                                             <td>{{ \Carbon\Carbon::parse($item->updated_at)->diffForHumans() }} </td>
                                         </tr>
-                                    @endforeach
-                                    <!-- end -->
+                                        @empty
+                                        <tr>
+                                            <td colspan="11">
+                                                <img class=" avatar-xl" alt="No Result"
+                                                    src="{{ asset('storage/no_result.png') }}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                        @endforelse ()
 
                                 </tbody><!-- end tbody -->
                             </table> <!-- end table -->
@@ -434,7 +471,7 @@
                                     </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
-                                    @foreach ($leads as $item)
+                                    @forelse ($leads as $item)
                                         <tr>
                                             <td>{{ $leads->firstItem() + $loop->index }}</td>
                                             <td>
@@ -452,8 +489,15 @@
                                                         class="mdi mdi-circle-edit-outline"></i></a>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                    <!-- end -->
+                                        @empty
+                                        <tr>
+                                            <td colspan="11">
+                                                <img class=" avatar-xl" alt="No Result"
+                                                    src="{{ asset('storage/no_result.png') }}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                        @endforelse ()
 
                                 </tbody><!-- end tbody -->
                             </table> <!-- end table -->
