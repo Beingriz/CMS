@@ -1,4 +1,5 @@
 @extends('admin-module.admin_master')
+<title>{{ $Name }} Dashboard</title>
 @section('admin')
     <div class="page-content">
         <div class="container-fluid">

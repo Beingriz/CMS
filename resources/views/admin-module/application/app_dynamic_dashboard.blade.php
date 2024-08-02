@@ -1,4 +1,5 @@
 @extends('admin-module.admin_master')
+<title>Service Dashboard</title>
 @section('admin')
     ;
 

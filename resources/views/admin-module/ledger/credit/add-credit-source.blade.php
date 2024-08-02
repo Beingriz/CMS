@@ -1,4 +1,6 @@
 @extends('admin-module.admin_master')
+<title>Credit Source</title>
+
 @section('admin')
     ;
 

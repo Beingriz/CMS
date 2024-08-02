@@ -1,4 +1,6 @@
 @extends('admin-module.admin_master')
+<title>Status</title>
+
 @section('admin')
 
     <div class="page-content" style="margin-top: 5px">

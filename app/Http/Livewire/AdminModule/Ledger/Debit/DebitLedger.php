@@ -99,373 +99,463 @@ class DebitLedger extends Component
 
     public function ImageUpload()
     {
-
-        if (!empty($this->Attachment)) // Check if new image is selected
-        {
+        if (!empty($this->Attachment)) {
+            // New attachment is provided
             if (!empty($this->Old_Attachment)) {
+                // Old attachment exists, delete it
                 if (Storage::disk('public')->exists($this->Old_Attachment)) {
-                    unlink(storage_path('app/public/' . $this->Old_Attachment));
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Digital Ledger/Debit Book/Attachments' . time();
-                    $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Attachment = $url;
-                } else {
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Digital Ledger/Debit Book/Attachments' . time();
-                    $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Attachment = $url;
-                }
-            } else {
-                if ($this->Payment_Mode != 'Cash') {
-                    $this->validate([
-                        'Attachment' => 'required|image',
-                    ]);
+                    Storage::disk('public')->delete($this->Old_Attachment);
                 }
             }
-        } else // check old is exist
-        {
 
-            if (!empty($this->Old_Attachment)) {
-                if (Storage::disk('public')->exists($this->Old_Attachment)) {
-                    $this->New_Attachment = $this->Old_Attachment;
-                }
+            // Process new attachment
+            $this->validate([
+                'Attachment' => 'required|image|mimes:jpg,jpeg,png|max:2048', // Ensure it's an image and within size limits
+            ]);
+
+            $extension = $this->Attachment->getClientOriginalExtension();
+            $path = 'Digital Ledger/Debit Book/Attachments/' . time(); // Ensure '/' is used to separate folders
+            $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
+            $url = $this->Attachment->storePubliclyAs($path, $filename, 'public');
+            $this->New_Attachment = $url;
+
+        } else {
+            // No new attachment provided, use old one if available
+            if (!empty($this->Old_Attachment) && Storage::disk('public')->exists($this->Old_Attachment)) {
+                $this->New_Attachment = $this->Old_Attachment;
             } else {
-
+                // No old attachment, validate if payment mode is not 'Cash'
                 if ($this->Payment_Mode != 'Cash') {
                     $this->validate([
-                        'Attachment' => 'required|image',
+                        'Attachment' => 'required|image|mimes:jpg,jpeg,png|max:2048', // Ensure it's an image and within size limits
                     ]);
                 }
+                $this->New_Attachment = null; // No attachment provided
             }
         }
     }
+
     public function deleteImage($Id)
     {
-        $fetch = Debit::Where('Id', $Id)->get();
-        foreach ($fetch as $key) {
-            $file = $key['Attachment'];
-        }
-        if (!empty($file)) {
-            if (Storage::disk('public')->exists($file)) {
-                unlink(storage_path('app/public/' . $file));
+        // Fetch the single record by ID
+        $record = Debit::find($Id);
+
+        if ($record) {
+            $file = $record->Attachment; // Get the attachment field
+
+            if (!empty($file) && Storage::disk('public')->exists($file)) {
+                // Delete the file using Laravel's Storage facade
+                Storage::disk('public')->delete($file);
             }
+        } else {
+            // Handle the case where the record with the given ID doesn't exist
+            session()->flash('Error', 'Record not found.');
         }
     }
+
 
     public function Save()
     {
-        $this->validate();
-        $debitsource = DebitSources::where('Id', $this->Particular)->get();
-        foreach ($debitsource as $item) {
-            $this->Source = $item->DS_Name;
-            $this->Name = $item->Name;
+        // Validate input data
+        $rules = [
+            'Particular' => 'required',
+            'Amount_Paid' => 'required|numeric',
+            'Description' => 'required|string',
+            'Date' => 'required|date',
+            'Category' => 'required|string',
+            'Payment_Mode' => 'required|string',
+        ];
+
+        if ($this->Payment_Mode != 'Cash') {
+            $rules['Attachment'] = 'required|image';
         }
-        $Desc = "Spent Rs. " . $this->Amount_Paid . "/- From  " . $this->Description . " for " . $this->Source . ',' . $this->Name . " , on " . $this->Date . " by  " . $this->Payment_Mode . ", Total: " . $this->Total_Amount . ", Paid: " . $this->Amount_Paid . ", Balance: " . $this->Balance;
+
+        $this->validate($rules);
+
+        // Trim input values
+        $this->Particular = trim($this->Particular);
+        $this->Amount_Paid = trim($this->Amount_Paid);
+        $this->Description = trim($this->Description);
+        $this->Date = trim($this->Date);
+        $this->Category = trim($this->Category);
+        $this->Payment_Mode = trim($this->Payment_Mode);
+
+        // Fetch debit source record
+        $debitsource = DebitSources::find($this->Particular);
+        if (!$debitsource) {
+            session()->flash('Error', 'Debit source not found.');
+            return redirect()->route('Debit');
+        }
+
+        $this->Source = $debitsource->DS_Name;
+        $this->Name = $debitsource->Name;
+
+        // Prepare description
+        $Desc = sprintf(
+            "Spent Rs. %s on %s for %s - %s. Date: %s. Payment Mode: %s. Total: %s, Paid: %s, Balance: %s.",
+            trim($this->Amount_Paid),
+            trim($this->Description),
+            trim($this->Source),
+            trim($this->Name),
+            trim($this->Date),
+            trim($this->Payment_Mode),
+            trim($this->Total_Amount),
+            trim($this->Amount_Paid),
+            trim($this->Balance)
+        );
+        // Upload image if necessary
+        $this->ImageUpload();
 
         if ($this->Balance > 0) {
-            $this->ImageUpload();
+            // Save balance ledger entry
             $save_balance = new BalanceLedger();
             $save_balance->Id = $this->transaction_id;
             $save_balance->Client_Id = $this->transaction_id;
             $save_balance->Branch_Id = $this->Branch_Id;
             $save_balance->Emp_Id = $this->Emp_Id;
-            $save_balance->Date = $this->Date;
-            $save_balance->Name = $this->Description;
+            $save_balance->Date = trim($this->Date);
+            $save_balance->Name = trim($this->Description);
             $save_balance->Mobile_No = 'Not Available';
-            $save_balance->Category = $this->Source;
-            $save_balance->Sub_Category = $this->Name;
-            $save_balance->Total_Amount = $this->Total_Amount;
-            $save_balance->Amount_Paid = $this->Amount_Paid;
-            $save_balance->Balance = $this->Balance;
-            $save_balance->Payment_Mode = $this->Payment_Mode;
+            $save_balance->Category = trim($this->Source);
+            $save_balance->Sub_Category = trim($this->Name);
+            $save_balance->Total_Amount = trim($this->Total_Amount);
+            $save_balance->Amount_Paid = trim($this->Amount_Paid);
+            $save_balance->Balance = trim($this->Balance);
+            $save_balance->Payment_Mode = trim($this->Payment_Mode);
             $save_balance->Attachment = $this->New_Attachment;
-            $save_balance->Description = $this->Description;
+            $save_balance->Description = trim($this->Description);
             $save_balance->save(); // Balance Ledger Entry Saved
 
-            $debitentry  = new Debit();
+            // Save debit ledger entry
+            $debitentry = new Debit();
             $debitentry->Id = $this->transaction_id;
             $debitentry->Client_Id = $this->transaction_id;
             $debitentry->Branch_Id = $this->Branch_Id;
             $debitentry->Emp_Id = $this->Emp_Id;
-            $debitentry->Date = $this->Date;
-            $debitentry->Category = $this->Category;
-            $debitentry->Source =  $this->Source;
-            $debitentry->Name = $this->Name;
-            $debitentry->Unit_Price = $this->Unit_Price;
-            $debitentry->Quantity = $this->Quantity;
-            $debitentry->Total_Amount = $this->Total_Amount;
-            $debitentry->Amount_Paid = $this->Amount_Paid;
-            $debitentry->Balance = $this->Balance;
+            $debitentry->Date = trim($this->Date);
+            $debitentry->Category = trim($this->Category);
+            $debitentry->Source = trim($this->Source);
+            $debitentry->Name = trim($this->Name);
+            $debitentry->Unit_Price = trim($this->Unit_Price);
+            $debitentry->Quantity = trim($this->Quantity);
+            $debitentry->Total_Amount = trim($this->Total_Amount);
+            $debitentry->Amount_Paid = trim($this->Amount_Paid);
+            $debitentry->Balance = trim($this->Balance);
             $debitentry->Description = $Desc;
-            $debitentry->Payment_Mode = $this->Payment_Mode;
-            $debitentry->Attachment = $this->New_Attachment;;
-            $debitentry->save(); //Debit Ledger Entry
-            $notification = array(
+            $debitentry->Payment_Mode = trim($this->Payment_Mode);
+            $debitentry->Attachment = $this->New_Attachment;
+            $debitentry->save(); // Debit Ledger Entry
+
+            $notification = [
                 'message' => 'Transaction Saved, Balance Updated!',
                 'alert-type' => 'success'
-            );
-            return redirect()->route('Debit')->with($notification);
+            ];
         } else {
-            $this->ImageUpload();
-            $debitentry  = new Debit();
+            // Save debit ledger entry
+            $debitentry = new Debit();
             $debitentry->Id = 'DE' . time();
             $debitentry->Client_Id = 'EX' . time();
             $debitentry->Branch_Id = $this->Branch_Id;
             $debitentry->Emp_Id = $this->Emp_Id;
-            $debitentry->Date = $this->Date;
-            $debitentry->Category = $this->Category;
-            $debitentry->Source =  $this->Source;
-            $debitentry->Name = $this->Name;
-            $debitentry->Unit_Price = $this->Unit_Price;
-            $debitentry->Quantity = $this->Quantity;
-            $debitentry->Total_Amount = $this->Total_Amount;
-            $debitentry->Amount_Paid = $this->Amount_Paid;
-            $debitentry->Balance = $this->Balance;
+            $debitentry->Date = trim($this->Date);
+            $debitentry->Category = trim($this->Category);
+            $debitentry->Source = trim($this->Source);
+            $debitentry->Name = trim($this->Name);
+            $debitentry->Unit_Price = trim($this->Unit_Price);
+            $debitentry->Quantity = trim($this->Quantity);
+            $debitentry->Total_Amount = trim($this->Total_Amount);
+            $debitentry->Amount_Paid = trim($this->Amount_Paid);
+            $debitentry->Balance = trim($this->Balance);
             $debitentry->Description = $Desc;
-            $debitentry->Payment_Mode = $this->Payment_Mode;
-            $this->ImageUpload();
-            $debitentry->Attachment = $this->New_Attachment;;
-            $debitentry->save(); //Debit Ledger Entry
-            $notification = array(
+            $debitentry->Payment_Mode = trim($this->Payment_Mode);
+            $debitentry->Attachment = $this->New_Attachment;
+            $debitentry->save(); // Debit Ledger Entry
+
+            $notification = [
                 'message' => 'Transaction Saved!',
                 'alert-type' => 'success'
-            );
-            return redirect()->route('Debit')->with($notification);
+            ];
         }
+
+        return redirect()->route('Debit')->with($notification);
     }
+
 
     public function Edit($Id)
     {
-        $fetch = Debit::where('Id', $Id)->get();
-
-        foreach ($fetch as $item) {
-            $this->transaction_id = $item['Id'];
-            $this->Date = $item['Date'];
-            $this->Category = $item['Category'];
-            $this->SubCategory = $item['Source'];
-            $this->Unit_Price = $item['Unit_Price'];
-            $this->Quantity = $item['Quantity'];
-            $this->Total_Amount = $item['Total_Amount'];
-            $this->Amount_Paid = $item['Amount_Paid'];
-            $this->Balance = $item['Balance'];
-            $this->Payment_Mode = $item['Payment_Mode'];
-            $debsource = DebitSources::where('DS_Name', '=', trim($this->SubCategory))->get();
-            foreach ($debsource as $item) {
-                $this->SubCategory = $item['DS_Id'];
-            }
+        // Fetch the debit record by Id
+        $item = Debit::where('Id', $Id)->first();
+        if (!$item) {
+            session()->flash('Error', 'Record not found.');
+            return;
         }
+
+        // Assign values to class properties
+        $this->transaction_id = $item->Id;
+        $this->Date = $item->Date;
+        $this->Category = $item->Category;
+        $this->SubCategory = $item->Source;
+        $this->Unit_Price = $item->Unit_Price;
+        $this->Quantity = $item->Quantity;
+        $this->Total_Amount = $item->Total_Amount;
+        $this->Amount_Paid = $item->Amount_Paid;
+        $this->Balance = $item->Balance;
+        $this->Payment_Mode = $item->Payment_Mode;
+
+        // Fetch the DebitSources record for the SubCategory
+        $debsource = DebitSources::where('DS_Name', trim($this->SubCategory))->first();
+        if ($debsource) {
+            $this->SubCategory = $debsource->DS_Id;
+        } else {
+            $this->SubCategory = null; // Set to null or handle the case where no matching record is found
+        }
+
         $this->update = true;
     }
+
     public function UpdateLedger($Id)
     {
-
-
+        // Upload the image and validate input
         $this->ImageUpload();
-        $debitsource = DebitSources::where('Id', $this->Particular)->get();
-        foreach ($debitsource as $item) {
-            $this->Source = $item->DS_Name;
-            $this->Name = $item->Name;
-        }
-        $Desc = "Spent Rs. " . $this->Amount_Paid . "/- From  " . $this->Description . " for " . $this->Source . ',' . $this->Name . " , on " . $this->Date . " by  " . $this->Payment_Mode . ", Total: " . $this->Total_Amount . ", Paid: " . $this->Amount_Paid . ", Balance: " . $this->Balance;
         $this->validate();
-        if ($this->Balance > 0) {
 
-            $data = array();
-            $data['Date'] = $this->Date;
-            $data['Category'] = $this->Category;
-            $data['Source'] = $this->Source;
-            $data['Name'] = $this->Name;
-            $data['Unit_Price'] = $this->Unit_Price;
-            $data['Quantity'] = $this->Quantity;
-            $data['Total_Amount'] = $this->Total_Amount;
-            $data['Amount_Paid'] = $this->Amount_Paid;
-            $data['Balance'] = $this->Balance;
-            $data['Description'] = $Desc;
-            $data['Attachment'] = $this->New_Attachment;
-            $data['Payment_Mode'] = $this->Payment_Mode;
-            $data['updated_at'] = Carbon::now();
-            DB::table('debit_ledger')->Where('Id', $Id)->Update($data);
-
-            $bal = array();
-            $bal['Date'] = $this->Date;
-            $bal['Category'] = $this->Category;
-            $bal['Sub_Category'] = $this->Source;
-            $bal['Total_Amount'] = $this->Total_Amount;
-            $bal['Amount_Paid'] = $this->Amount_Paid;
-            $bal['Balance'] = $this->Balance;
-            $bal['Description'] = $Desc;
-            $bal['Payment_Mode'] = $this->Payment_Mode;
-            $bal['Attachment'] = $this->New_Attachment;
-            $bal['updated_at'] = Carbon::now();
-            DB::table('balance_ledger')->Where('Id', $Id)->Update($bal);
-
-            $notification = array(
-                'message' => 'Transaction Details & Balance Updated!.',
-                'alert-type' => 'info'
-            );
-            return redirect()->route('Debit')->with($notification);
-        } else {
-            $data = array();
-            $data['Date'] = $this->Date;
-            $data['Category'] = $this->Category;
-            $data['Source'] = $this->Source;
-            $data['Name'] = $this->Name;
-            $data['Unit_Price'] = $this->Unit_Price;
-            $data['Quantity'] = $this->Quantity;
-            $data['Total_Amount'] = $this->Total_Amount;
-            $data['Amount_Paid'] = $this->Amount_Paid;
-            $data['Balance'] = $this->Balance;
-            $data['Description'] = $this->Description;
-            $data['Attachment'] = $this->New_Attachment;
-            $data['Payment_Mode'] = $this->Payment_Mode;
-            $data['updated_at'] = Carbon::now();
-            DB::table('debit_ledger')->Where('Id', $Id)->Update($data);
-            $notification = array(
-                'message' => 'Transaction Details Updated!.',
-                'alert-type' => 'info'
-            );
-            return redirect()->route('Debit')->with($notification);
+        // Fetch the debit source record
+        $debitsource = DebitSources::where('Id', $this->Particular)->first();
+        if (!$debitsource) {
+            session()->flash('Error', 'Debit source not found.');
+            return redirect()->route('Debit');
         }
+
+        $this->Source = $debitsource->DS_Name;
+        $this->Name = $debitsource->Name;
+
+        // Create description
+        $Desc = "Spent Rs. " . trim($this->Amount_Paid) . "/- from " . trim($this->Description) . " for " . trim($this->Source) . ", " . trim($this->Name) . " on " . trim($this->Date) . " by " . trim($this->Payment_Mode) . ". Total: " . trim($this->Total_Amount) . ", Paid: " . trim($this->Amount_Paid) . ", Balance: " . trim($this->Balance);
+
+        // Prepare data for update
+        $data = [
+            'Date' => $this->Date,
+            'Category' => $this->Category,
+            'Source' => $this->Source,
+            'Name' => $this->Name,
+            'Unit_Price' => $this->Unit_Price,
+            'Quantity' => $this->Quantity,
+            'Total_Amount' => $this->Total_Amount,
+            'Amount_Paid' => $this->Amount_Paid,
+            'Balance' => $this->Balance,
+            'Description' => $Desc,
+            'Attachment' => $this->New_Attachment,
+            'Payment_Mode' => $this->Payment_Mode,
+            'updated_at' => Carbon::now()
+        ];
+
+        // Update debit ledger and balance ledger based on balance
+        if ($this->Balance > 0) {
+            DB::table('debit_ledger')->where('Id', $Id)->update($data);
+
+            $data = [
+                'Date' => $this->Date,
+                'Category' => $this->Category,
+                'Sub_Category' => $this->Source,
+                'Name' => $this->Name,
+                'Total_Amount' => $this->Total_Amount,
+                'Amount_Paid' => $this->Amount_Paid,
+                'Balance' => $this->Balance,
+                'Description' => $Desc,
+                'Attachment' => $this->New_Attachment,
+                'Payment_Mode' => $this->Payment_Mode,
+                'updated_at' => Carbon::now()
+            ];
+            $bal = $data; // Reuse the same data array for balance ledger
+            $bal['Sub_Category'] = $this->Source; // Adjust key for balance ledger
+            DB::table('balance_ledger')->where('Id', $Id)->update($bal);
+
+            $message = 'Transaction Details & Balance Updated!';
+        } else {
+            DB::table('debit_ledger')->where('Id', $Id)->update($data);
+
+            $message = 'Transaction Details Updated!';
+        }
+
+        // Redirect with notification
+        $notification = [
+            'message' => $message,
+            'alert-type' => 'info'
+        ];
+        return redirect()->route('Debit')->with($notification);
     }
+
 
     public function Delete($Id)
     {
-        $getbal =  DB::table('Balance_ledger')->Where('Id', $Id)->SUM('Balance');
+        // Fetch balance sum for the given ID
+        $getbal = DB::table('balance_ledger')->where('Id', $Id)->sum('Balance');
+
         if ($getbal > 0) {
+            // If balance is greater than 0, notify the user to clear the due
             $this->clearButton = true;
             $this->balId = $Id;
             $this->balamount = $getbal;
 
-            $notification = array(
-                'message' => 'The Selected Entery has balance Due Please Clear Due of ' . $getbal . ' For Id ' . $Id,
+            $notification = [
+                'message' => 'The selected entry has a balance due. Please clear the due of ' . $getbal . ' for ID ' . $Id,
                 'alert-type' => 'error'
-            );
+            ];
             return redirect()->back()->with($notification);
         } else {
+            // Proceed to delete the debit and balance records
             $this->deleteImage($Id);
-            $Debit = Debit::wherekey($Id)->delete();
-            $balance = BalanceLedger::wherekey($Id)->delete();
-            if ($Debit > 0) {
-                $notification = array(
-                    'message' => 'Debit Transaction Deleted!',
+
+            // Attempt to delete records
+            $debitDeleted = Debit::where('Id', $Id)->delete();
+            $balanceDeleted = BalanceLedger::where('Id', $Id)->delete();
+
+            // Determine the notification message based on what was deleted
+            if ($debitDeleted && $balanceDeleted) {
+                $notification = [
+                    'message' => 'Debit and balance ledger entries deleted successfully!',
                     'alert-type' => 'info'
-                );
-                return redirect()->back()->with($notification);
-            } elseif ($balance > 0 && $Debit > 0) {
-                $notification = array(
-                    'message' => 'Debit & Balance Ledger Entry Deleted!',
+                ];
+            } elseif ($debitDeleted) {
+                $notification = [
+                    'message' => 'Debit transaction deleted successfully!',
                     'alert-type' => 'info'
-                );
-                return redirect()->back()->with($notification);
+                ];
             } else {
-                $notification = array(
-                    'message' => 'Unable to Delete!. retry',
+                $notification = [
+                    'message' => 'Unable to delete. Please try again.',
                     'alert-type' => 'error'
-                );
-                return redirect()->back()->with($notification);
+                ];
             }
+
+            return redirect()->back()->with($notification);
         }
     }
+
     public function UpdateBalance($Id)
     {
-        $fetch = BalanceLedger::where('Id', $Id)->get();
-        foreach ($fetch as $key) {
-            $total = $key['Total_Amount'];
-            $paid = $key['Amount_Paid'];
-            $bal = $key['Balance'];
+        // Fetch the balance ledger record
+        $balanceRecord = BalanceLedger::where('Id', $Id)->first();
+        if (!$balanceRecord) {
+            $notification = [
+                'message' => 'Balance record not found!',
+                'alert-type' => 'danger'
+            ];
+            return redirect()->route('Debit')->with($notification);
         }
-        $fetch = Debit::where('Id', $Id)->get();
-        foreach ($fetch as $key) {
-            $desc = $key['Description'];
+
+        // Fetch the debit record
+        $debitRecord = Debit::where('Id', $Id)->first();
+        if (!$debitRecord) {
+            $notification = [
+                'message' => 'Debit record not found!',
+                'alert-type' => 'danger'
+            ];
+            return redirect()->route('Debit')->with($notification);
         }
-        $baldata = array();
-        $baldata['Amount_Paid'] = $total;
-        $baldata['Balance'] = 0;
 
-        $debitdata = array();
-        $debitdata['Amount_Paid'] = $total;
-        $debitdata['Balance'] = 0;
-        $desc = $desc . ' Balance Updated @' . Carbon::now();
-        $debitdata['Balance'] = 0;
-        $debitdata['Description'] = $desc;
+        // Prepare data for update
+        $desc = $debitRecord->Description . ' Balance Updated @ ' . Carbon::now();
+        $updateData = [
+            'Amount_Paid' => $balanceRecord->Total_Amount,
+            'Balance' => 0,
+            'Description' => $desc,
+        ];
 
-        $update_bal = DB::table('balance_ledger')->where('Id', $Id)->update($baldata);
-        $update_debit = DB::table('debit_ledger')->where('Id', $Id)->update($debitdata);
-        if ($update_bal && $update_debit) {
-            $notification = array(
-                'message' => 'Balance Clered, No Due.!',
+        // Update both balance and debit records
+        $updateBalance = DB::table('balance_ledger')->where('Id', $Id)->update($updateData);
+        $updateDebit = DB::table('debit_ledger')->where('Id', $Id)->update($updateData);
+
+        // Check if both updates were successful
+        if ($updateBalance && $updateDebit) {
+            $notification = [
+                'message' => 'Balance cleared, no due!',
                 'alert-type' => 'success'
-            );
+            ];
             return redirect()->route('Debit')->with($notification);
         } else {
-            $notification = array(
-                'message' => 'Unable to Clear the Balance! Please retry',
+            $notification = [
+                'message' => 'Unable to clear the balance! Please retry.',
                 'alert-type' => 'danger'
-            );
-            return redirect()->route('Credit')->with($notification);
+            ];
+            return redirect()->route('Debit')->with($notification);
         }
     }
+
     public function LastUpdate()
     {
-        # code...
+        // Fetch the most recent debit record
         $latest_app = Debit::latest('created_at')->first();
-        $this->lastRecTime =  Carbon::parse($latest_app['created_at'])->diffForHumans();
+
+        // Check if a record exists and update the lastRecTime accordingly
+        if ($latest_app) {
+            $this->lastRecTime = Carbon::parse($latest_app->created_at)->diffForHumans();
+        } else {
+            $this->lastRecTime = 'No records found';
+        }
     }
 
 
     public function render()
     {
+        // Update the last update time
         $this->LastUpdate();
+
+        // Determine the query for transactions based on user role and date selection
         if (!is_null($this->Select_Date)) {
-            if(Auth::user()->role == 'branch admin'){
-                $Transactions = Debit::where('Date', $this->Select_Date)
-                                        ->where('Branch_Id', $this->Branch_Id)
-                                        ->filter(trim($this->filterby))->paginate($this->paginate);
-                                if (sizeof($Transactions) == 0) {
-                                session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
-                                }
-            }else{
-                $Transactions = Debit::where('Date', $this->Select_Date)->filter(trim($this->filterby))->paginate($this->paginate);
-                                if (sizeof($Transactions) == 0) {
-                                session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
-                                }
+            $query = Debit::where('Date', $this->Select_Date);
+
+            if (Auth::user()->role == 'branch admin') {
+                $query->where('Branch_Id', $this->Branch_Id);
             }
+
+            $Transactions = $query->filter(trim($this->filterby))->paginate($this->paginate);
         } else {
-            if(Auth::user()->role == 'branch admin'){
-                $Transactions = Debit::whereDate('created_at', DB::raw('CURDATE()'))
-                                        ->where('Branch_Id', $this->Branch_Id)
-                                        ->filter(trim($this->filterby))->paginate($this->paginate);
+            $query = Debit::whereDate('created_at', DB::raw('CURDATE()'));
 
-            }else{
-                $Transactions = Debit::whereDate('created_at', DB::raw('CURDATE()'))->filter(trim($this->filterby))->paginate($this->paginate);
-
+            if (Auth::user()->role == 'branch admin') {
+                $query->where('Branch_Id', $this->Branch_Id);
             }
 
+            $Transactions = $query->filter(trim($this->filterby))->paginate($this->paginate);
         }
 
+        // Check for empty results
+        if ($Transactions->isEmpty()) {
+            session()->flash('Error', 'Sorry!! No Record Available for ' . ($this->Select_Date ?? 'today'));
+        }
 
-
+        // Fetch necessary data for views
         $DebitSource = DebitSource::where('Category', $this->Category)->get();
         $DebitSources = DebitSources::where('DS_Id', $this->SubCategory)->get();
         $PaymentMode = PaymentMode::all();
 
+        // Update calculations if a particular record is selected
         if (!empty($this->Particular)) {
-            $debitsources = DebitSources::where('Id', $this->Particular)->get();
-            foreach ($debitsources as $item) {
-                $this->Unit_Price = $item->Unit_Price;
-            }
-            $this->Total_Amount = intval($this->Unit_Price) * intval($this->Quantity);
-            $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
-        }
-        $today_total = 0;
-        foreach ($Transactions as $key) {
-            $today_total += $key['Amount_Paid'];
-        }
-        $this->total = $today_total;
-        $this->balCollection = BalanceLedger::where('Id', $this->balId)->get();
+            $debitsources = DebitSources::find($this->Particular);
 
-        return view('livewire.admin-module.ledger.debit.debit-ledger', compact('DebitSource', 'DebitSources', 'PaymentMode', 'Transactions'), ['today' => $this->today,]);
+            if ($debitsources) {
+                $this->Unit_Price = $debitsources->Unit_Price;
+                $this->Total_Amount = intval($this->Unit_Price) * intval($this->Quantity);
+                $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
+            }
+        }
+
+        // Calculate total amount paid today
+        $today_total = $Transactions->sum('Amount_Paid');
+        $this->total = $today_total;
+
+        // Fetch balance collection
+        $this->balCollection = BalanceLedger::find($this->balId);
+
+        // Render the view with data
+        return view('livewire.admin-module.ledger.debit.debit-ledger', [
+            'DebitSource' => $DebitSource,
+            'DebitSources' => $DebitSources,
+            'PaymentMode' => $PaymentMode,
+            'Transactions' => $Transactions,
+            'today' => $this->today,
+        ]);
     }
+
 }

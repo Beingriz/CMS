@@ -1,4 +1,5 @@
 @extends('admin-module.admin_master')
+<title>Application Update</title>
 @section('admin')
     ;
 

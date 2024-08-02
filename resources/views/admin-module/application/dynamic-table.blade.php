@@ -4,9 +4,9 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <h4 class="card-title">{{ $StatusDetails->total() }} Search Result found. </h4>
+                        <h4 class="card-title">{{ $statusDetails->total() }} Search Result found. </h4>
                         <h4 class="card-title">Service : {{ !is_null($Sub_Serv_Name) ? $Sub_Serv_Name : 'All' }}
-                            {{ $StatusDetails->total() }} </h4>
+                            {{ $statusDetails->total() }} </h4>
                     </div>
 
                     <div class="filter-bar">
@@ -58,7 +58,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse( $StatusDetails as $data )
+                                @forelse( $statusDetails as $data )
                                     <tr>
                                         <td>{{ $n++ }}</td>
                                         <td>{{ \Carbon\Carbon::parse($data->Received_Date)->diffForHumans() }}</td>
@@ -134,12 +134,12 @@
                         </table>
                         <div class="row no-gutters align-items-center">
                             <div class="col-md-8">
-                                <p class="text-muted">Showing {{ count($StatusDetails) }} of
-                                    {{ $StatusDetails->total() }} entries</p>
+                                <p class="text-muted">Showing {{ count($statusDetails) }} of
+                                    {{ $statusDetails->total() }} entries</p>
                             </div>
                             <div class="col-md-4">
                                 <span class=" pagination pagination-rounded float-end">
-                                    {{ $StatusDetails->links() }}
+                                    {{ $statusDetails->links() }}
                                 </span>
                             </div>
                         </div>

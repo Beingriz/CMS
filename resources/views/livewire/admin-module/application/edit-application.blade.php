@@ -591,7 +591,7 @@
                                                         @else
                                                             <option selected="">Select Payment Mode</option>
                                                         @endif
-                                                        @foreach ($payment_mode as $payment)
+                                                        @foreach ($paymentModes as $payment)
                                                             <option value="{{ $payment->Payment_Mode }}">
                                                                 {{ $payment->Payment_Mode }}</option>
                                                         @endforeach
@@ -934,7 +934,7 @@
         </div>
 
         {{-- ---------------------------------------------------------------------------------------------------- --}}
-        @if (count($Doc_Files) > 0) {{-- Document List Table  --}}
+        @if (count($docFiles) > 0) {{-- Document List Table  --}}
             <div class="col-lg-5">
                 <div class="card">
                     <h5 class="card-header">Available Documents </h5>

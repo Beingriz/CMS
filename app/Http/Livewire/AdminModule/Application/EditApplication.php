@@ -492,7 +492,9 @@ class EditApplication extends Component
             $this->updated = Carbon::parse($latest_doc['updated_at'])->diffForHumans();
         }
     }
-
+    public function RefreshPage(){
+        $this->resetpage();
+    }
 
     public function render()
     {

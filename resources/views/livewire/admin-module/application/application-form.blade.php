@@ -220,7 +220,7 @@
                                                 <label class="form-label" for="Applicant_Image">Applicant
                                                     Image</label>
                                                 <input type="file" class="form-control" id="Applicant_Image"
-                                                    wire:model="Applicant_Image">
+                                                    wire:model="Applicant_Image" accept=".jpg,.jpeg,.png">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
@@ -271,7 +271,7 @@
                                                         Image</label>
                                                     <input type="file" class="form-control"
                                                         id="progress-basicpill-profileimage-input"
-                                                        wire:model="Client_Image">
+                                                        wire:model="Client_Image" accept=".jpg,.jpeg,.png">
 
                                                 </div>
                                             </div>
@@ -509,7 +509,7 @@
                                                         <input type="file" class="form-control"
                                                             id="progress-basicpill-ackfile-input"
                                                             wire:model="Payment_Receipt"
-                                                            accept="image/jpeg, image/png">
+                                                            accept=".jpg,.jpeg,.png">
                                                         <span class="text-danger">
                                                             @error('Payment_Receipt')
                                                                 {{ $message }}

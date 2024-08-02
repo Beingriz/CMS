@@ -109,7 +109,7 @@ class DebitEntryController extends Controller
         $DeleteData='';
         $editid='';
         $deleteid=$Id;
-        return view('DigitalLedger.DebitLedger.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
+        return view('admin-module.ledger.debit.add-debit-source',['EditData'=>$EditData,'DeleteData'=>$DeleteData,'editid'=>$editid,'deleteid'=>$deleteid]);
     }
     public function Previous()
     {   $total = 0;

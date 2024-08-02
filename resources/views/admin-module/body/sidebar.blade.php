@@ -89,7 +89,7 @@
                         {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
                     </ul>
                 </li>
-                @endif
+
                 {{-- User Control Menu --}}
                 <li>
                     <a href="#" class="has-arrow waves-effect">
@@ -103,7 +103,7 @@
                     </ul>
                 </li>
 
-                @if(Auth::user()->role == 'admin')
+
                 <li>
                     <a href="{{ route('data.migration') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>

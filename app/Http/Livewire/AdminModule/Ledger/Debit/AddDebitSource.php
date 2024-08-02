@@ -7,6 +7,7 @@ use App\Models\DebitSource;
 use App\Models\DebitSources;
 use App\Traits\RightInsightTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -90,26 +91,38 @@ class AddDebitSource extends Component
         $this->Unit_Price = Null;
         $this->Update = 0;
     }
-    public function Save() #Funciton to Save Categories
+    public function Save() #Function to Save Categories
     {
+       // Trim the input fields
+        $this->Name = trim($this->Name);
+        $this->CategoryType = trim($this->CategoryType);
+        $this->CategoryList = trim($this->CategoryList);
+        $this->SubCategoryName = trim($this->SubCategoryName);
+        $this->Unit_Price = trim($this->Unit_Price);
+        $this->Loan_Amount = trim($this->Loan_Amount);
+        $this->Tenure = trim($this->Tenure);
+
         if ($this->Type == 'Main Category') {
             $this->validate([
                 'Name' => 'required|unique:credit_source',
                 'Image' => 'required|image',
             ]);
+
             $save_DS = new DebitSource();
             $save_DS->Id = $this->DS_Id;
             $save_DS->Name = $this->Name;
             $save_DS->Category = $this->CategoryType;
+
             $this->ImageUpload();
             $save_DS->Thumbnail = $this->NewImage;
-            $save_DS->save(); //Category Created
+            $save_DS->save(); // Category Created
+
             $notification = array(
-                'message' => 'Debit Source' . $this->Name . ' Added!.',
+                'message' => 'Debit Source ' . $this->Name . ' Added!.',
                 'alert-type' => 'success'
             );
+
             return redirect()->route('DebitSource')->with($notification);
-            $this->Type == 'Main Category';
         } elseif ($this->Type == 'Sub Category') {
             $this->validate([
                 'CategoryList' => 'required',
@@ -117,34 +130,38 @@ class AddDebitSource extends Component
                 'Unit_Price' => 'required',
             ]);
 
-            if (!is_null($this->CategoryList)) {
-                $exists  = DebitSource::Where('Name', '=', $this->CategoryList)->get();
-                foreach ($exists as $key) {
-                    $Id = $key['Id'];
-                    $Name = $key['Name'];
-                }
-                $this->DS_Id = $Id;
+            $exists = DebitSource::where('Name', $this->CategoryList)->first();
+            if ($exists) {
+                $this->DS_Id = $exists->Id;
+                $Name = $exists->Name;
             }
-            $time = substr(time(), 6, 8);
+
+            $time = substr(time(), -8); // Changed to -8 to get the last 8 digits
             $dsId = $this->DS_Id . $time;
+
             $save_DS = new DebitSources();
             $save_DS->Id = $dsId;
             $save_DS->DS_Id = $this->DS_Id;
             $save_DS->DS_Name = $Name;
             $save_DS->Name = $this->SubCategoryName;
             $save_DS->Unit_Price = $this->Unit_Price;
+
             if ($this->CategoryType == "Loan") {
                 $save_DS->Loan_Amount = $this->Loan_Amount;
                 $save_DS->Tenure = $this->Tenure;
-                $amount =  $this->Loan_Amount / $this->Tenure;
+                $amount = $this->Loan_Amount / $this->Tenure;
                 $save_DS->Unit_Price = $amount;
             }
-            $save_DS->save(); //Sub Category  Created
-            session()->flash('SuccessMsg', 'Sub Category Name: ' . $this->SubCategoryName . ' & ID: ' . $Id . ', for ' . $Name . ' Created Successfully!!');
+
+            $save_DS->save(); // Sub Category Created
+
+            session()->flash('SuccessMsg', 'Sub Category Name: ' . $this->SubCategoryName . ' & ID: ' . $dsId . ', for ' . $Name . ' Created Successfully!!');
+
             $this->ResetSubFields();
-            $this->CategoryList = $this->SubCategoryName;;
+            $this->CategoryList = $this->SubCategoryName;
         }
     }
+
     public function Change($val) # Function to Reset Field when Category Changes
     {
         $this->Update = 0;
@@ -176,64 +193,63 @@ class AddDebitSource extends Component
     }
     public function ImageUpload()
     {
-
-        if (!empty($this->Image)) // Check if new image is selected
-        {
-            if (!empty($this->OldImage)) {
-                if (Storage::disk('public')->exists($this->OldImage)) {
-                    unlink(storage_path('app/public/' . $this->OldImage));
-                    $extension = $this->Image->getClientOriginalExtension();
-                    $path = 'Digital Ledger/Debit Source/Thumbnail' . time();
-                    $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Image->storePubliclyAs($path, $filename, 'public');
-                    $this->NewImage = $url;
-                } else {
-                    $extension = $this->Image->getClientOriginalExtension();
-                    $path = 'Digital Ledger/Debit Source/Thumbnail' . time();
-                    $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Image->storePubliclyAs($path, $filename, 'public');
-                    $this->NewImage = $url;
-                }
-            } else {
-
-                $this->validate([
-                    'Image' => 'required|image',
-                ]);
-                $extension = $this->Image->getClientOriginalExtension();
-                $path = 'Digital Ledger/Debit Source/Thumbnail' . time();
-                $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Image->storePubliclyAs($path, $filename, 'public');
-                $this->NewImage = $url;
+        if (!empty($this->Image)) { // Check if a new image is selected
+            if (!empty($this->OldImage) && Storage::disk('public')->exists($this->OldImage)) {
+                unlink(storage_path('app/public/' . $this->OldImage));
             }
-        } else // check old is exist
-        {
-            if (!empty($this->OldImage)) {
-                if (Storage::disk('public')->exists($this->OldImage)) {
-                    $this->NewImage = $this->OldImage;
-                }
+
+            $this->validate([
+                'Image' => 'required|image',
+            ]);
+
+            $extension = $this->Image->getClientOriginalExtension();
+            $path = 'Digital Ledger/Debit Source/Thumbnail' . time();
+            $filename = 'DS_' . $this->Name . '_' . time() . '.' . $extension;
+            $url = $this->Image->storePubliclyAs($path, $filename, 'public');
+            $this->NewImage = $url;
+        } else { // Check if old image exists
+            if (!empty($this->OldImage) && Storage::disk('public')->exists($this->OldImage)) {
+                $this->NewImage = $this->OldImage;
             } else {
                 $this->validate([
                     'Image' => 'required|image',
                 ]);
+
                 $extension = $this->Image->getClientOriginalExtension();
                 $path = 'Digital Ledger/Debit Source/Thumbnail' . time();
-                $filename = 'BM_' . $this->Name . '_' . time() . '.' . $extension;
+                $filename = 'DS_' . $this->Name . '_' . time() . '.' . $extension;
                 $url = $this->Image->storePubliclyAs($path, $filename, 'public');
                 $this->NewImage = $url;
             }
         }
     }
+
     public function UpdateMain($Id) # Function to Update Main Category Fields in Record
     {
-        $fetch = DebitSource::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $oldname = $key['Name'];
+        // Fetch the old name
+        $fetch = DebitSource::find($Id);
+        if (!$fetch) {
+            session()->flash('Error', 'Record not found.');
+            return;
         }
+        $oldname = $fetch->Name;
+
+        // Handle the image upload
         $this->ImageUpload();
+
+        // Update the main category
         $update_source = DB::update('update debit_source set Name = ?, Thumbnail=? where Id = ?', [$this->Name, $this->NewImage, $Id]);
-        $update_sources = DB::update('update debit_sources set DS_Name = ?  where DS_Id = ?', [$this->Name, $Id]);
+
+        // Update sub-categories associated with the main category
+        $update_sources = DB::update('update debit_sources set DS_Name = ? where DS_Id = ?', [$this->Name, $Id]);
+
+        // Update ledger entries
         $update_CL = DB::update('update debit_ledger set Category = ? where Category = ?', [$this->Name, $oldname]);
+
+        // Reset fields
         $this->ResetMainFields();
+
+        // Set session flash messages based on updates
         if ($update_source && $update_CL && $update_sources) {
             session()->flash('SuccessMsg', $this->Name . ' Details Updated Successfully!');
         } elseif ($update_source) {
@@ -241,180 +257,236 @@ class AddDebitSource extends Component
         } elseif ($update_CL) {
             session()->flash('SuccessMsg', $this->Name . ' Ledger Updated Successfully!');
         } else {
-            session()->flash('Error', 'Sorry!. Unable to Update ' . $this->Name . ' Source in Record');
+            session()->flash('Error', 'Sorry! Unable to Update ' . $this->Name . ' Source in Record.');
         }
     }
+
 
 
     public function DeleteMain($Id) # Function to Delete Main Category Record
     {
-        $fetch = DebitSource::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $Id = $key['Id'];
-            $Name = $key['Name'];
-            $Image = $key['Thumbnail'];
+        // Fetch the main category record
+        $fetch = DebitSource::find($Id);
+        if (!$fetch) {
+            session()->flash('Error', 'Record not found.');
+            return;
         }
-        $find = Debit::where('Category', $Name)->get();
 
-        $findsub = DebitSources::where([['DS_Name', '=', $Name], ['DS_Id', '=', $Id]])->get();
+        $Name = $fetch->Name;
+        $Image = $fetch->Thumbnail;
 
-        if (count($findsub) > 0) {
-            $val = count($findsub);
-            session()->flash('Error', $Name . ' This Category Contains ' . $val . ' Sub Categories. Please Delete Sub Categories first.');
-        } elseif (count($find) > 0) {
-            session()->flash('Error', $Name . ' This Source Field is Served, Cannot Delete ');
-        } else {
-            $Image = str_replace('storage/app/', '', $Image);
-            if (Storage::exists($Image)) {
-                unlink(storage_path('app/' . $Image));
-                $delete = DebitSource::Wherekey($Id)->delete();
-                if ($delete) {
-                    session()->flash('SuccessMsg', $Name . ' Deleted Permanently.. ');
-                    $this->Name = NUll;
-                    $this->Image = NUll;
-                    $this->OldImage = NUll;
-                    $this->Update = 0;
-                } else {
-                    session()->flash('Error', 'Unable to Delete' . $Name . 'sorry..');
-                }
-            } else {
-                $delete = DebitSource::Wherekey($Id)->delete();
-                if ($delete) {
-                    session()->flash('SuccessMsg', $Name . ' Deleted Permanently.. No Thumbnail File Found!');
-                    $this->Name = NUll;
-                    $this->Image = NUll;
-                    $this->OldImage = NUll;
-                    $this->Update = 0;
-                } else {
-                    session()->flash('Error', 'Unable to Delete' . $Name . 'sorry..');
-                }
+        // Check if the category has sub-categories
+        $subCategories = DebitSources::where([['DS_Name', '=', $Name], ['DS_Id', '=', $Id]])->count();
+        if ($subCategories > 0) {
+            session()->flash('Error', $Name . ' This Category Contains ' . $subCategories . ' Sub Categories. Please Delete Sub Categories first.');
+            return;
+        }
+
+        // Check if the category is used in any debit records
+        $debits = Debit::where('Category', $Name)->count();
+        if ($debits > 0) {
+            session()->flash('Error', $Name . ' This Source Field is Served, Cannot Delete.');
+            return;
+        }
+
+        // Remove the image if it exists
+        if (!empty($Image)) {
+            $imagePath = str_replace('storage/app/', '', $Image);
+            if (Storage::exists($imagePath)) {
+                unlink(storage_path('app/' . $imagePath));
             }
         }
+
+        // Delete the main category record
+        $delete = DebitSource::destroy($Id);
+        if ($delete) {
+            session()->flash('SuccessMsg', $Name . ' Deleted Permanently.');
+        } else {
+            session()->flash('Error', 'Unable to Delete ' . $Name . ' sorry.');
+        }
+
+        // Reset fields
+        $this->Name = null;
+        $this->Image = null;
+        $this->OldImage = null;
+        $this->Update = 0;
     }
+
     public function EditSub($id) # Function to Fetch Sub Category Fields
     {
         $this->Type = "Sub Category";
         $this->Update = 2;
-        $fetch = DebitSources::Where('Id', '=', $id)->get();
-        foreach ($fetch as $key) {
-            $this->DS_Id = $key['Id'];
-            $this->CategoryList = $key['DS_Name'];
-            $this->SubCategoryName = $key['Name'];
-            $this->Unit_Price = $key['Unit_Price'];
-            $this->Tenure = $key['Tenure'];
-            $this->Loan_Amount = $key['Loan_Amount'];
+
+        // Fetch the sub-category record
+        $fetch = DebitSources::find($id);
+        if (!$fetch) {
+            session()->flash('Error', 'Sub-category not found.');
+            return;
         }
+
+        // Assign the fetched values to the class properties
+        $this->DS_Id = $fetch->Id;
+        $this->CategoryList = $fetch->DS_Name;
+        $this->SubCategoryName = $fetch->Name;
+        $this->Unit_Price = $fetch->Unit_Price;
+        $this->Tenure = $fetch->Tenure;
+        $this->Loan_Amount = $fetch->Loan_Amount;
     }
+
     public function Capitalize()
     {
-        $this->Name = ucwords($this->Name);
-        $this->SubCategoryName = ucwords($this->SubCategoryName);
+        if (!is_null($this->Name)) {
+            $this->Name = ucwords($this->Name);
+        }
+
+        if (!is_null($this->SubCategoryName)) {
+            $this->SubCategoryName = ucwords($this->SubCategoryName);
+        }
     }
+
     public function UpdateSub($Id) # Function to Update Sub Category Record
     {
-        $fetch = DebitSources::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $DS_Name = $key['DS_Name'];
-            $Source = $key['Name'];
-            // $Unit_Price = $key['Unit_Price'];
-            // $Loan_Amount = $key['Loan_Amount'];
-            // $Total_Paid = $key['Total_Paid'];
-            // $Tenure = $key['Tenure'];
-            // $Renaining = $key['Remaining'];
+        // Fetch the sub-category record
+        $fetch = DebitSources::find($Id);
+        if (!$fetch) {
+            session()->flash('Error', 'Sub-category not found.');
+            return;
         }
-        $check_record = DB::table('debit_ledger')->where([['Source', '=', $Source],])->get();
-        if (count($check_record)) {
+
+        $DS_Name = $fetch->DS_Name;
+        $Source = $fetch->Name;
+
+        // Check if the sub-category is used in any debit records
+        $check_record = DB::table('debit_ledger')->where('Source', $Source)->get();
+        if ($check_record->isNotEmpty()) {
             foreach ($check_record as $key) {
-                $key = get_object_vars($key);
-                $category = $key['Category'];
-                $subcategory = $key['Source'];
+                $category = $key->Category;
+                $subcategory = $key->Source;
             }
         }
-        $data = array();
-        $data['Category'] = $this->CategoryList;
-        $data['Source'] = $this->SubCategoryName;
+
+        // Update the ledger records
+        $data = [
+            'Category' => $this->CategoryList,
+            'Source' => $this->SubCategoryName,
+        ];
         $update_CL = DB::table('debit_ledger')->where('Source', $Source)->update($data);
-        $revenue = DB::table('debit_ledger')->where('Source', $this->SubCategoryName)->SUM('Amount_Paid');
-        $data = array();
-        $data['Name'] = $this->SubCategoryName;
-        $data['Unit_Price'] = $this->Unit_Price;
-        $data['Total_Paid'] = $revenue;
+
+        // Calculate the total revenue
+        $revenue = DB::table('debit_ledger')->where('Source', $this->SubCategoryName)->sum('Amount_Paid');
+
+        // Update the sub-category record
+        $data = [
+            'Name' => $this->SubCategoryName,
+            'Unit_Price' => $this->Unit_Price,
+            'Total_Paid' => $revenue,
+        ];
         $update = DB::table('debit_sources')->where('Id', $Id)->update($data);
 
-        $data = array();
-        $data['Category'] = $this->CategoryList;
-        $data['Source'] = $this->SubCategoryName;
-        $update_CL = DB::table('debit_ledger')->where('Source', $Source)->update($data);
-
+        // Handle the result of the updates
         if ($update && $update_CL) {
-            session()->flash('SuccessMsg', $this->SubCategoryName . ' Details Updated Successfully..');
-            $this->ResetSubFields();
-            $this->CategoryList = $DS_Name;
+            session()->flash('SuccessMsg', $this->SubCategoryName . ' Details Updated Successfully.');
         } elseif ($update) {
-            session()->flash('SuccessMsg', $this->SubCategoryName . ' Record Updated Successfully ..');
-            $this->ResetSubFields();
-            $this->CategoryList = $DS_Name;
+            session()->flash('SuccessMsg', $this->SubCategoryName . ' Record Updated Successfully.');
         } elseif ($update_CL) {
-            session()->flash('SuccessMsg', $this->SubCategoryName . ' Ledger Updated Successfully..');
-            $this->ResetSubFields();
-            $this->CategoryList = $DS_Name;
+            session()->flash('SuccessMsg', $this->SubCategoryName . ' Ledger Updated Successfully.');
         } else {
-            session()->flash('Error', ' No Changes Foud for in ' . $this->SubCategoryName . ' Field for Update ..');
+            session()->flash('Error', 'No changes found for ' . $this->SubCategoryName . ' field for update.');
         }
+
+        // Reset fields
+        $this->ResetSubFields();
+        $this->CategoryList = $DS_Name;
     }
 
     public function DeleteSub($Id)
     {
-        $fetch = DebitSources::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $main = $key['DS_Name'];
-            $sub = $key['Name'];
+        // Fetch the sub-category record
+        $fetch = DebitSources::find($Id);
+        if (!$fetch) {
+            session()->flash('Error', 'Sub-category not found.');
+            return;
         }
-        $find_CL = DB::table('debit_ledger')->where([['Category', '=', $main], ['Source', '=', $sub],])->get();
-        if (count($find_CL) > 0) {
-            session()->flash('Error', $sub . ' for ' . $main . ' is already served  ' . count($find_CL) . ' times,  Unable to Delete');
-        } else {
-            $delete = DebitSources::wherekey($Id)->delete();
+
+        $main = trim($fetch->DS_Name);
+        $sub = trim($fetch->Name);
+
+
+
+        // Check if the sub-category is used in any debit ledger records
+        $find_CL = Debit::where([['Source','=',$main],['Name', '=', $sub]])->get();
+
+        if ($find_CL->count() > 0) {
+            session()->flash('Error', "$sub for $main is already served " . $find_CL->count() . " times, Unable to Delete.");
+            return;
+        }
+
+        // Attempt to delete the sub-category record
+        try {
+            $delete = DebitSources::destroy($Id);
             if ($delete) {
-                session()->flash('SuccessMsg', $sub . ' for ' . $main . ' Deleted Permanently.. ');
+                session()->flash('SuccessMsg', "$sub for $main Deleted Permanently.");
             } else {
-                session()->flash('Error', $sub . ' for ' . $main . 'was unable to Delete!');
+                session()->flash('Error', "Unable to delete $sub for $main.");
             }
+        } catch (\Exception $e) {
+            // Log the exception message for debugging
+            Log::error('DeleteSub Exception: ' . $e->getMessage());
+            session()->flash('Error', "An error occurred while deleting $sub for $main. Please try again.");
         }
     }
+
+
 
     public function ResetList($val) # Function to Reset Sub Category Fields When Sub Category Value changes.
     {
-        $this->SubCategoryName = NULL;
-        $this->Unit_Price = NULL;
+        $this->SubCategoryName = null;
+        $this->Unit_Price = null;
     }
+
 
     public function render() # Default Function to View Blade File In Livewire
-    {
-        $this->Capitalize();
+{
+    $this->Capitalize();
 
-        $Exist_Main_Category = DebitSource::orderby('Name')->get();
-        if ($this->Type == 'Main Category') {
-            $this->exist_main_categories = DebitSource::orderby('Name')->paginate(10);
-        } elseif ($this->Type == "Sub Category") {
-            $this->exist_categories = DebitSources::Where('DS_Name', '=', $this->CategoryList)->paginate(10);
-        }
-        if (!is_null($this->CategoryList)) {
-            $getid = DebitSource::Where('Name', $this->CategoryList)->get();
-            foreach ($getid as $key) {
-                $id = $key['Id'];
-                $this->CategoryType =  $key['Category'];
-            }
-            $this->exist_categories = DebitSources::Where([['DS_Name', '=', $this->CategoryList], ['DS_Id', '=', $id]])->paginate(10);
-        }
-        if ($this->CategoryType == "Loan") {
-            $this->Unit_Price = $this->Loan_Amount / ($this->Tenure == 0 ? 1 : $this->Tenure);
-        }
-        return view('livewire.admin-module.ledger.debit.add-debit-source', [
-            'n' => $this->n,
-            'exist_main_categories' => $this->exist_main_categories,
-            'Categorys' => $Exist_Main_Category,
-            'exist_categories' => $this->exist_categories
-        ]);
+    // Fetch main categories
+    $Exist_Main_Category = DebitSource::orderBy('Name')->get();
+
+    // Determine which categories to show based on the type
+    if ($this->Type === 'Main Category') {
+        $this->exist_main_categories = DebitSource::orderBy('Name')->paginate(10);
+        $this->exist_categories = null; // Clear sub-categories
+    } elseif ($this->Type === 'Sub Category') {
+        $this->exist_categories = DebitSources::where('DS_Name', $this->CategoryList)->paginate(10);
+        $this->exist_main_categories = null; // Clear main categories
     }
+
+    // Fetch category ID and type if CategoryList is not null
+    if (!is_null($this->CategoryList)) {
+        $category = DebitSource::where('Name', $this->CategoryList)->first();
+        if ($category) {
+            $this->CategoryType = $category->Category;
+            $id = $category->Id;
+
+            $this->exist_categories = DebitSources::where([
+                ['DS_Name', '=', $this->CategoryList],
+                ['DS_Id', '=', $id]
+            ])->paginate(10);
+        }
+    }
+
+    // Calculate Unit Price if CategoryType is "Loan"
+    if ($this->CategoryType === 'Loan') {
+        $this->Unit_Price = $this->Loan_Amount / ($this->Tenure > 0 ? $this->Tenure : 1);
+    }
+
+    // Return view with necessary data
+    return view('livewire.admin-module.ledger.debit.add-debit-source', [
+        'n' => $this->n,
+        'exist_main_categories' => $this->exist_main_categories,
+        'Categorys' => $Exist_Main_Category,
+        'exist_categories' => $this->exist_categories
+    ]);
+}
+
 }
