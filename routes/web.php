@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Auth;
 */
 // --------------------------------------------- Admin Module Routes----------------------------------------------------------------------
 
-Route::middleware('auth', 'auth.role:admin,branch admin',)->group(function () {
+Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::get('/admin/dashboard', 'AdminDashboard')->name('admin.home');
         Route::get('/admin/logout', 'destroy')->name('admin.logout');
@@ -49,6 +49,8 @@ Route::middleware('auth', 'auth.role:admin,branch admin',)->group(function () {
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
         //Employee
         Route::get('/employee/register', 'EmployeeRegistration')->name('emp.register');
+        Route::get('edit/employee', 'Edit')->name('edit.employee');
+        Route::get('delete/employee', 'Delete')->name('delete.employee');
 
 
 
@@ -61,7 +63,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin',)->group(function () {
 });
 
 // Application Controller Admin & Branch Admin Role
-Route::middleware('auth', 'auth.role:admin,branch admin' )->group(function () {
+Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(function () {
     Route::controller(ApplicationController::class)->group(function () {
         Route::get('application/home', 'Home')->name('app.home');
         Route::get('app/dashboard', 'Dashboard')->name('Dashboard');
@@ -101,7 +103,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin' )->group(function () {
 });
 
 // Credit Ledger Controller Admin & Branch Admin
-Route::middleware('auth', 'auth.role:admin,branch admin')->group(function () {
+Route::middleware('auth', 'auth.role:admin,branch admin,operator')->group(function () {
     Route::controller(CreditEntry::class)->group(function () {
         Route::get('Credit', 'Home')->name('Credit');
         Route::get('edit/credit/entry/{Id}', 'EditCredit')->name('edit.credit');
@@ -115,7 +117,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin')->group(function () {
 });
 
 //Debit Ledger Controler Admin & Branch Admin
-Route::middleware('auth', 'auth.role:admin,branch admin')->group(function () {
+Route::middleware('auth', 'auth.role:admin,branch admin,operator')->group(function () {
     Route::controller(DebitEntryController::class)->group(function () {
         Route::get('Debit', 'Home')->name('Debit');
         Route::get('edit/debit/entry/{Id}', 'EditDebit')->name('edit.debit');
@@ -152,6 +154,8 @@ Route::controller(ApplicationController::class)->group(function () {
 
 Route::middleware('auth', 'auth.role:user')->group(function () {
     Route::controller(UserController::class)->group(function () {
+        Route::get('/', 'Home')->name('user.index');
+        Route::get('/', 'HomeIndex')->name('home');
         Route::get('/user/dashboard', 'UserDashboard')->name('user.dashboard');
         Route::get('/user/home/{id}', 'UserHome')->name('user.home');
         Route::get('/view/profile', 'ViewProfile')->name('view.profile');

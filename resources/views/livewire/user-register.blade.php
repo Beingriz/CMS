@@ -67,6 +67,20 @@
                                                 </span>
                                             </div>
                                         </div>
+                                          {{-- Branch --}}
+                                        <div class="row mb-3">
+                                            <label for="Branch" class="col-sm-5 col-form-label">Select Nearest Branch</label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="Branch" wire:model="Branch" name="Particular">
+                                                    <option value="">---Select Branch---</option>
+                                                    @foreach ($Branches as $branch)
+                                                        <option value="{{ $branch->branch_id }}">
+                                                            {{ $branch->name }}, {{ $branch->address }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="error">@error('Branch'){{ $message }}@enderror</span>
+                                            </div>
+                                        </div>
 
                                         <div class="row mb-3">
                                             <label for="password" class="col-sm-5 col-form-label">Password</label>

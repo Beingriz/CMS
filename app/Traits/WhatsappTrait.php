@@ -35,6 +35,24 @@ trait WhatsappTrait
         return redirect()->back();
 
     }
+    public function EmployeeRegisterAlert($name, $mobile, $username){
+        $body = "🎉 **Welcome to Digital Cyber Family!** 🎉\n\nHello *".$name."*\n\n,👤 You are now officially registered with Digital Cyber!\n\n📧 Username: ".$username."\n📱 Phone: ".$mobile."\n\nTo access your account and explore our services, please log in to our website:\n🔐 www.cyberpe.epizy.com\n\n\nIf you have any questions, feel free to reach out. Welcome to Digital Cyber!\n\nBest regards,\n*Digital Cyber.*\n*+918892988334*";
+        $this->validateTwilio();
+
+        $to_no = "whatsapp:+91" . $mobile;
+        $from_no = "whatsapp:".$this->fromNo;
+        $this->twilio->messages
+            ->create(
+                $to_no, // to
+                array(
+                    "from" => $from_no,
+                    "body" => $body
+                )
+            );
+        session()->flash('Success', 'Message Sent!');
+        return redirect()->back();
+
+    }
 
     public function ApplicaitonRegisterAlert($mobile, $profile_name, $applicant_name, $service, $service_type)
     {

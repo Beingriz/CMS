@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Branches;
 use App\Models\ClientRegister;
 use App\Models\User;
 use App\Traits\WhatsappTrait;
@@ -17,7 +18,7 @@ use Illuminate\Support\Str;
 class UserRegister extends Component
 {
     use WhatsappTrait;
-    public $name, $email, $username, $mobile_no, $password, $password_confirmation;
+    public $name, $email, $username, $mobile_no, $password, $password_confirmation,$Branch_Id,$Emp_Id,$Branch;
 
     protected $rules = [
         'name' => 'required',
@@ -37,6 +38,7 @@ class UserRegister extends Component
     {
         $this->validateOnly($propertyName);
     }
+
     public function Register()
     {
         $this->validate();
@@ -44,9 +46,14 @@ class UserRegister extends Component
         $user = User::create([
             'Client_Id' => $client_Id,
             'name' => $this->name,
+            'branch_id' => $this->Branch,
+            'Emp_Id' => 'Direct',
             'username' => $this->username,
             'mobile_no' => $this->mobile_no,
             'email' => $this->email,
+            'role' => 'user',
+            'status' => 'user',
+            'address' => 'Not Available',
             'profile_image' => 'account.png',
             'password' => Hash::make($this->password),
         ]);
@@ -71,10 +78,11 @@ class UserRegister extends Component
             'alert-type' => 'info'
         );
         $this->UserRegisterAlert($this->name, $this->mobile_no, $this->username);
-        return redirect()->route('user.dashboard')->with($notification);
+        return redirect()->route('home')->with($notification);
     }
     public function render()
     {
-        return view('livewire.user-register');
+        $Branches = Branches::all();
+        return view('livewire.user-register',['Branches'=>$Branches]);
     }
 }

@@ -3,7 +3,7 @@
 @section('admin')
     <div class="page-content" style="margin-top: 5px">
         <div class="container=fluid">
-            @livewire('admin-module.employee.employee-register')
+            @livewire('admin-module.employees.emp-register')
         </div>
     </div>
 @endsection
