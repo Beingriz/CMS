@@ -47,6 +47,10 @@ Route::middleware('auth', 'auth.role:admin,branch admin',)->group(function () {
         Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
         Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
+        //Employee
+        Route::get('/employee/register', 'EmployeeRegistration')->name('emp.register');
+
+
 
     //Branches Module Routes
         Route::get('/branch/registration', 'BranchRegister')->name('branch_register');

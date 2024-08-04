@@ -179,7 +179,11 @@ class AdminController extends Controller
         }
         return view('admin-module.index', ['totalSales' => $totalSales, 'totalEnquiries' => $totalEnquiries, 'totalOrders' => $totalOrders, 'newUsers' => $newUsers, 'callBack' => $callBack, 'totalRevenue' => $totalRevenue, 'lastWeekAmount' => $lastWeekAmount, 'lastMonthAmount' => $lastMonthAmount]);
     }
+// -----------------------------------------------Employee Module Functions ------------------------------------
 
+    public function EmployeeRegistration(){
+        return view('admin-module.employee.employee_register');
+    }
 
     public function MarketingDashboard()
     {
