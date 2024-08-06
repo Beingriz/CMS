@@ -674,7 +674,7 @@ class NewApplication extends Component
     // Handle registered clients
     if ($this->Mobile_No) {
         $clientQuery = ClientRegister::where('Mobile_No', $this->Mobile_No);
-        if ($role == 'branch admin') {
+        if ($role == 'branch admin' ||$role == 'operator' ) {
             $clientQuery->where('Branch_Id', $branch_id);
         }
         $client = $clientQuery->first();
@@ -690,7 +690,7 @@ class NewApplication extends Component
             $this->C_Mob = $client->Mobile_No;
 
             $appliedServicesQuery = Application::where('Mobile_No', $this->Mobile_No);
-            if ($role == 'branch admin') {
+            if ($role == 'branch admin' ||$role == 'operator') {
                 $appliedServicesQuery->where('Branch_Id', $branch_id);
             }
             $appliedServices = $appliedServicesQuery->get();
@@ -701,7 +701,7 @@ class NewApplication extends Component
         } else {
             // Handle unregistered clients
             $appliedServicesQuery = Application::where('Mobile_No', $this->Mobile_No);
-            if ($role == 'branch admin') {
+            if ($role == 'branch admin' ||$role == 'operator') {
                 $appliedServicesQuery->where('Branch_Id', $branch_id);
             }
             $count = $appliedServicesQuery->count();
@@ -715,7 +715,7 @@ class NewApplication extends Component
     // Handle date selection for reports
     $date = $this->Select_Date ? Carbon::parse($this->Select_Date)->format('d-M-Y') : $this->today;
     $dailyApplicationsQuery = Application::where('Received_Date', $date);
-    if ($role == 'branch admin') {
+    if ($role == 'branch admin' || $role == 'operator') {
         $dailyApplicationsQuery->where('Branch_Id', $branch_id);
     }
     $daily_applications = $dailyApplicationsQuery->filter($this->filterby)->paginate($this->paginate);
@@ -724,7 +724,7 @@ class NewApplication extends Component
     $this->Daily_Income = $daily_applications->sum('Amount_Paid');
 
     $dailyApplicationsQuery = Application::where('Received_Date', $this->today);
-    if ($role == 'branch admin') {
+    if ($role == 'branch admin' || $role == 'operator') {
         $dailyApplicationsQuery->where('Branch_Id', $branch_id);
     }
     $daily_applications = $dailyApplicationsQuery->filter($this->filterby)->paginate($this->paginate);
@@ -740,7 +740,7 @@ class NewApplication extends Component
 
     // Fetch applied services and status list
     $appliedServicesQuery = Application::where('Mobile_No', $this->Mobile_No)->latest();
-    if ($role == 'branch admin') {
+    if ($role == 'branch admin' || $role == 'operator') {
         $appliedServicesQuery->where('Branch_Id', $branch_id);
     }
     $AppliedServices = $appliedServicesQuery->paginate(8);

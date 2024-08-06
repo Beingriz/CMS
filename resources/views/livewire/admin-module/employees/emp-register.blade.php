@@ -315,6 +315,7 @@
                                     <tr>
                                         <th>SL.No</th>
                                         <th>Name</th>
+                                        <th>Username</th>
                                         <th>Mobile No</th>
                                         <th>Role</th>
                                         <th>Branch</th>
@@ -326,10 +327,11 @@
                                     @forelse($employeeData as $data)
                                         <tr>
                                             <td>{{ $employeeData->firstItem() + $loop->index }}</td>
-                                            <td>{{ $data->Name}},{{  $data->Username }}</td>
+                                            <td>{{ $data->Name}}</td>
+                                            <td>{{  $data->Username }}</td>
                                             <td>{{ $data->Mobile_No }}</td>
-                                            <td>{{ $data->Role }}</td>
-                                            <td>{{ $data->Branch }}</td>
+                                            <td>{{ ucwords($data->Role) }}</td>
+                                            <td>{{ $data->branch->name }},{{ $data->branch->address }}</td>
                                             <td><img class="avatar-sm"
                                                 src="{{ !empty($data->Profile_Img) ? asset('storage/' . $data->Profile_Img) : url('storage/no_image.jpg') }}">
                                             </td>

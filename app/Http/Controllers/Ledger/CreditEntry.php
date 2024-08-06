@@ -83,19 +83,34 @@ class CreditEntry extends Controller
         ]);
     }
     public function EditCreditSource($id)
-    {
-        $fetch = CreditSources::where('CS_Id', '=', $id)->get();
-        foreach ($fetch as $key) {
-            $CS_Id = $key['CS_Id'];
-            $CS_Name = $key['CS_Name'];
-            $Source = $key['Source'];
-            $Unit_Price = $key['Unit_Price'];
-        }
-        return view('DigitalLedger.CreditLedger.add-credit-source', [
-            'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'today' => $this->today, 'CS_Id' => $CS_Id,
-            'CS_Name' => $CS_Name, 'Source' => $Source, 'Unit_Price' => $Unit_Price,
-        ]);
+{
+    // Fetch the credit source by id
+    $creditSource = CreditSources::where('CS_Id', '=', $id)->first();
+
+    // Check if the credit source was found
+    if (!$creditSource) {
+        // Handle the case where the credit source is not found, e.g., return a 404 response
+        return abort(404, 'Credit Source not found');
     }
+
+    // Pass the credit source data to the view
+    return view('DigitalLedger.CreditLedger.add-credit-source', [
+        'applications_served' => $this->applications_served,
+        'previous_day_app' => $this->previous_day_app,
+        'applications_delivered' => $this->applications_delivered,
+        'previous_day_app_delivered' => $this->previous_day_app_delivered,
+        'total_revenue' => $this->sum,
+        'previous_revenue' => $this->previous_sum,
+        'balance_due' => $this->balance_due_sum,
+        'previous_bal' => $this->previous_bal_sum,
+        'today' => $this->today,
+        'CS_Id' => $creditSource->CS_Id,
+        'CS_Name' => $creditSource->CS_Name,
+        'Source' => $creditSource->Source,
+        'Unit_Price' => $creditSource->Unit_Price,
+    ]);
+}
+
 
     /**
      * Store a newly created resource in storage.

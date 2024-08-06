@@ -45,6 +45,17 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Define the relationship with the Branches model.
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branches::class, 'branch_id', 'branch_id');
+        //branch_id - first one. is foreign key in current model
+        // branch id is- second one is primary key in branches table.
+
+    }
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

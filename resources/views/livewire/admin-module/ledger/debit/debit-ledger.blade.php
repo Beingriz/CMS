@@ -185,7 +185,7 @@
                         <div class="row mb-3">
                             <label for="Date" class="col-sm-4 col-form-label">Description</label>
                             <div class="col-sm-8">
-                                <textarea id="Description" wire:model.lazy="Description" name="Description" class="form-control"
+                                <textarea id="Description" wire:model="Description" name="Description" class="form-control"
                                     placeholder="Debit Description" rows="3" resize="none"></textarea>
                                 <span class="error">
                                     @error('Description')

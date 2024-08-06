@@ -51,13 +51,13 @@ class EmployeeRegister extends Model
         });
     }
 
-    // /**
-    //  * Define the relationship with the Branches model.
-    //  */
-    // public function branch()
-    // {
-    //     return $this->belongsTo(Branches::class, 'Branch_Id', 'branch_id');
-    // }
+    /**
+     * Define the relationship with the Branches model.
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branches::class, 'Branch', 'branch_id');
+    }
 
     // /**
     //  * Define the relationship with the User model.

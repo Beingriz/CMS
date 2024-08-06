@@ -435,39 +435,31 @@ class Credit extends Component
     public function RefreshPage(){
         $this->resetpage();
     }
+    public function isBranchAdminOrOperator()
+    {
+        $role = Auth::user()->role;
+        return $role === 'branch admin' || $role === 'operator';
+    }
+
     public function render()
     {
         $this->LastUpdate();
-        if (empty($this->Show_Insight)) {
-            $this->Show_Insight = false;
-        } else {
-            $this->Show_Insight = true;
-        }
-        if (!is_null($this->Select_Date)) {
-            if(Auth::user()->role == 'branch admin'){
-                $todays_list = CreditLedger::where('Date', $this->Select_Date)
-                                        ->where('Branch_Id', $this->Branch_Id)
-                                        ->filter(trim($this->filterby))->paginate($this->paginate);
-            }else{
-                $todays_list = CreditLedger::where('Date', $this->Select_Date)
-                                            ->filter(trim($this->filterby))->paginate($this->paginate);
-            }
 
-            $sl_no = $todays_list->total();
-            if (sizeof($todays_list) == 0) {
-                session()->flash('Error', 'Sorry!! No Record Available for ' . $this->Select_Date);
-            }
-        } else {
-            if(Auth::user()->role == 'branch admin'){
-                $todays_list = CreditLedger::where('Date', $this->today)
-                                        ->where('Branch_Id', $this->Branch_Id)
-                                        ->filter(trim($this->filterby))->paginate($this->paginate);
-            }else{
-                $todays_list = CreditLedger::where('Date', $this->today)
-                                            ->filter(trim($this->filterby))->paginate($this->paginate);
-            }
-            $sl_no = $todays_list->total();
+        $isBranchAdminOrOperator = $this->isBranchAdminOrOperator();
+        $query = CreditLedger::query();
+
+        if ($isBranchAdminOrOperator) {
+            $query->where('Branch_Id', $this->Branch_Id);
         }
+
+        if (!is_null($this->Select_Date)) {
+            $query->where('Date', $this->Select_Date);
+        } else {
+            $query->where('Date', $this->today);
+        }
+
+        $query->filter(trim($this->filterby));
+        $todays_list = $query->paginate($this->paginate);
         if (!is_null($this->SourceSelected)) {
             $this->Sources = CreditSources::orderby('Source')->where('CS_Id', $this->SourceSelected)->get();
         }
@@ -485,50 +477,67 @@ class Credit extends Component
         $this->Total_Amount = intval($Unit_Price) * intval($this->Quantity);
         $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
 
-        // Credit Insight Code
+
+        // Additional logic for calculations and rendering
         $source = CreditLedger::Where('Sub_Category', $this->SelectedSources)->get();
         $prev_earning = CreditLedger::Where([['Date', '=', $this->previous_day], ['Sub_Category', '=', $this->SelectedSources]])->paginate($this->paginate);
         $total_prev_earnings = 0;
         $source_total = 0;
         $today_total = 0;
+        foreach ($todays_list as $key) {
+            $today_total += $key['Amount_Paid'];
+        }
+
         foreach ($source as $key) {
             $source_total += $key['Amount_Paid'];
         }
-        if(Auth::user()->role == 'branch admin'){
+
+        if ($isBranchAdminOrOperator) {
             $todays_list_total = CreditLedger::where('Date', $this->today)
-                                        ->where('Branch_Id', $this->Branch_Id)->get();
-            foreach ($todays_list_total as $key) {
-                $today_total += $key['Amount_Paid'];
-            }
-            foreach ($prev_earning as $key) {
-                $total_prev_earnings += $key['Amount_Paid'];
-            }
-        }else{
-            $todays_list_total = CreditLedger::where('Date', $this->today)
-                                        ->get();
-            foreach ($todays_list_total as $key) {
-                $today_total += $key['Amount_Paid'];
-            }
-            foreach ($prev_earning as $key) {
-                $total_prev_earnings += $key['Amount_Paid'];
-            }
+                                            ->where('Branch_Id', $this->Branch_Id)->get();
+        } else {
+            $todays_list_total = CreditLedger::where('Date', $this->today)->get();
+        }
+
+        foreach ($todays_list_total as $key) {
+            $today_total += $key['Amount_Paid'];
+        }
+
+        foreach ($prev_earning as $key) {
+            $total_prev_earnings += $key['Amount_Paid'];
         }
 
         $total_revenue = $this->sum;
-
-        $contribution =  (($source_total * 100) / $total_revenue);
-        $contribution = number_format($contribution, 2,);
+        $contribution = number_format(($source_total * 100) / $total_revenue, 2);
+        $percentage = number_format(($today_total / 1500) * 100);
         $creditsource = CreditSource::orderby('Name')->get();
 
-
-        $percentage = number_format(($today_total / 1500) * 100);
         return view('livewire.admin-module.ledger.credit.credit', [
-            'credit_source' => $creditsource, 'credit_sources' => $this->Sources,
+            'credit_source' => $creditsource,
+            'credit_sources' => $this->Sources,
             'payment_mode' => $this->payment_mode,
             'total_revenue' => $this->sum,
-            'previous_revenue' => $this->previous_revenue, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'today' => $this->today, 'total' => $today_total, 'percentage' => $percentage, 'creditdata' => $todays_list,
-            'sl_no' => $sl_no, 'n' => $this->n, 'source_total' => $source_total, 'contribution' => $contribution,
-            'prev_earning' => $total_prev_earnings, 'Total' => $this->Total_Amount, 'Total_Amount' => $this->Total_Amount, 'Unit_Price' => $Unit_Price,
+            'previous_revenue' => $this->previous_revenue,
+            'applications_served' => $this->applications_served,
+            'previous_day_app' => $this->previous_day_app,
+            'applications_delivered' => $this->applications_delivered,
+            'previous_day_app_delivered' => $this->previous_day_app_delivered,
+            'total_revenue' => $this->sum,
+            'previous_revenue' => $this->previous_sum,
+            'balance_due' => $this->balance_due_sum,
+            'previous_bal' => $this->previous_bal_sum,
+            'today' => $this->today,
+            'total' => $today_total,
+            'percentage' => $percentage,
+            'creditdata' => $todays_list,
+            'n' => $this->n,
+            'source_total' => $source_total,
+            'contribution' => $contribution,
+            'prev_earning' => $total_prev_earnings,
+            'Total' => $this->Total_Amount,
+            'Total_Amount' => $this->Total_Amount,
+            'Unit_Price' => $this->Unit_Price,
         ]);
     }
+
 }

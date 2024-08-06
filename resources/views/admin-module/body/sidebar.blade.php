@@ -12,6 +12,9 @@
                 <h4 class="font-size-16 mb-1">{{ Auth::user()->name }}</h4>
                 <span class="text-muted"><i class="ri-record-circle-line align-middle font-size-14 text-success"></i>
                     Online | <b class="text-danger" >{{ ucwords(Auth::user()->role) }}</b></span>
+                    <br>
+                    <span class="text-muted">Branch: <b>{{ Auth::user()->branch->address ?? 'N/A' }}</b></span>
+
             </div>
         </div>
 

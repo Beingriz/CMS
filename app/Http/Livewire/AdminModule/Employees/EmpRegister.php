@@ -147,7 +147,7 @@ class EmpRegister extends Component
         $empReg->save();
         $user = User::create([
             'Client_Id' => $this->Id,
-            'branch_id' => trim($this->Branch_Id),
+            'branch_id' => trim($this->Branch),
             'Emp_Id' => trim($this->Emp_Id),
             'name' => trim($this->Name),
             'gender' => trim($this->Gender),
@@ -171,13 +171,16 @@ class EmpRegister extends Component
         // Reset form fields after saving
         $this->reset(['Name', 'DOB', 'Father_Name', 'Mobile_No', 'Address', 'Gender', 'Email_Id', 'Experience', 'Qualification', 'Branch', 'Role', 'Profile_Img', 'Qualification_Doc', 'Resume_Doc', 'Old_Profile_Img']);
         $this->iteration++;
-        return redirect()->back('emp.register');
+        return redirect()->route('emp.register');
     }
 
     public function render()
     {
         $Branches = Branches::all();
-        $employeeData = EmployeeRegister::filter($this->filterby)->paginate($this->paginate);
+          // Fetch employee data with branch name
+        $employeeData = EmployeeRegister::with('branch') // Assuming you have a branch relationship
+        ->filter($this->filterby)
+        ->paginate($this->paginate);
 
         $lastRecTime = Carbon::parse(EmployeeRegister::latest('created_at')->first()->created_at ?? now())->diffForHumans();
 

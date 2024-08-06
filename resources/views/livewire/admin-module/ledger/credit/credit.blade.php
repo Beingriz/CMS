@@ -152,7 +152,7 @@
                         <div class="row mb-3">
                             <label for="Date" class="col-sm-4 col-form-label">Paid / Bal </label>
                             <div class="col-sm-4">
-                                <input type="number" id="paid" wire:model="Amount_Paid" name="Amount_Paid"
+                                <input type="number" id="paid" wire:model.lazy="Amount_Paid" name="Amount_Paid"
                                     class="form-control" placeholder="Paid" <span class="error">
                                 @error('Amount_Paid')
                                     {{ $message }}

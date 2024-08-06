@@ -494,7 +494,11 @@ class DebitLedger extends Component
             $this->lastRecTime = 'No records found';
         }
     }
-
+    public function isBranchAdminOrOperator()
+    {
+        $role = Auth::user()->role;
+        return $role === 'branch admin' || $role === 'operator';
+    }
 
     public function render()
     {
@@ -502,28 +506,21 @@ class DebitLedger extends Component
         $this->LastUpdate();
 
         // Determine the query for transactions based on user role and date selection
+        $query = Debit::query();
+        $isBranchAdminOrOperator = $this->isBranchAdminOrOperator();
+
+        if ($isBranchAdminOrOperator) {
+            $query->where('Branch_Id', $this->Branch_Id);
+        }
+
         if (!is_null($this->Select_Date)) {
-            $query = Debit::where('Date', $this->Select_Date);
-
-            if (Auth::user()->role == 'branch admin') {
-                $query->where('Branch_Id', $this->Branch_Id);
-            }
-
-            $Transactions = $query->filter(trim($this->filterby))->paginate($this->paginate);
+            $query->where('Date', $this->Select_Date);
         } else {
-            $query = Debit::whereDate('created_at', DB::raw('CURDATE()'));
-
-            if (Auth::user()->role == 'branch admin') {
-                $query->where('Branch_Id', $this->Branch_Id);
-            }
-
-            $Transactions = $query->filter(trim($this->filterby))->paginate($this->paginate);
+            $query->where('Date', $this->today);
         }
 
-        // Check for empty results
-        if ($Transactions->isEmpty()) {
-            session()->flash('Error', 'Sorry!! No Record Available for ' . ($this->Select_Date ?? 'today'));
-        }
+        $query->filter(trim($this->filterby));
+        $Transactions = $query->paginate($this->paginate);
 
         // Fetch necessary data for views
         $DebitSource = DebitSource::where('Category', $this->Category)->get();
