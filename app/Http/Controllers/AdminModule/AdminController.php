@@ -5,7 +5,10 @@ namespace App\Http\Controllers\AdminModule;
 use App\Http\Controllers\Controller;
 use App\Http\Livewire\UserTopBar;
 use App\Models\About_Us;
+use App\Models\ApplyServiceForm;
+use App\Models\Callback_Db;
 use App\Models\Carousel_DB;
+use App\Models\EnquiryDB;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
 use App\Models\User;
@@ -35,150 +38,303 @@ class AdminController extends Controller
 
         return view('user.user_home.user_index', compact('records', 'carousel', 'aboutus', 'services'), ['CompanyName' => $this->Company_Name]);
     }
+    // Admin Dashboard Insight Functions.
     public function AdminDashboard()
     {
         $this->Branch_Id = Auth::user()->branch_id;
-        if(Auth::user()->role == 'branch admin'){
-            $totalToday = DB::table('digital_cyber_db')
-            ->where('Branch_Id', $this->Branch_Id)
-            ->whereDate('created_at', '=', now()->toDateString()) // or CURDATE() if using raw SQL
-            ->count();
+        $userRole = Auth::user()->role;
 
+        $totalToday = $this->getTotalToday($this->Branch_Id, $userRole);
 
-            $results = DB::select("
-            SELECT YEAR(created_at) AS year,
-                   MONTH(created_at) AS month,
-                   COUNT(*) AS total_entries
-            FROM digital_cyber_db
-            WHERE Branch_Id = ?
-              AND YEAR(created_at) = YEAR(CURRENT_DATE)
-              AND MONTH(created_at) = MONTH(CURRENT_DATE)
-            GROUP BY YEAR(created_at), MONTH(created_at)
-            ORDER BY YEAR(created_at), MONTH(created_at)
-        ", [$this->Branch_Id]);
+        $results = $this->getMonthlyEntries($this->Branch_Id, $userRole);
 
+        $totalSales = $this->getTotalSales($this->Branch_Id, $userRole);
 
-        $totalSales = DB::table('digital_cyber_db')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensures filtering by the current year as well
-                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
-                    ->value('total_amount');
+        $totalOrders = $this->getTotalOrders($this->Branch_Id, $userRole);
 
-        $totalOrders = DB::table('digital_cyber_db')
-                    ->where('Branch_Id', '=', $this->Branch_Id)
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensure the filter is also by the current year
-                    ->select(DB::raw('COUNT(*) as total_orders'))
-                    ->value('total_orders');
+        $newUsers = $this->getNewUsers($this->Branch_Id, $userRole);
 
-        $newUsers = DB::table('users')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
-                    ->select(DB::raw('COUNT(*) as new_users'))
-                    ->value('new_users');
+        $totalEnquiries = $this->getTotalEnquiries($this->Branch_Id, $userRole);
 
-        $totalEnquiries = DB::table('enquiry_form')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
-                    ->select(DB::raw('COUNT(*) as new_enquiries'))
-                    ->value('new_enquiries');
+        $callBack = $this->getCallBack($this->Branch_Id, $userRole);
 
-        $callBack = DB::table('callback')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
-                    ->select(DB::raw('COUNT(*) as callback'))
-                    ->value('callback');
+        $totalRevenue = $this->getTotalRevenue($this->Branch_Id, $userRole);
 
-        $totalRevenue = DB::table('credit_ledger')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
-                    ->value('total_revenue');
+        $lastWeekAmount = $this->getLastWeekAmount($this->Branch_Id, $userRole);
 
-        $lastWeekAmount = DB::table('credit_ledger')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->whereBetween('created_at', [
-                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) + 6) DAY)'),
-                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY)')
-                    ])
-                    ->sum('Amount_Paid');
-        $lastMonthAmount = DB::table('credit_ledger')
-                    ->where('Branch_Id', $this->Branch_Id)
-                    ->whereRaw('YEAR(created_at) = YEAR(CURDATE() - INTERVAL 1 MONTH)')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURDATE() - INTERVAL 1 MONTH)')
-                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
-                    ->value('total_amount');
-        // Status Count and Amount Update
-        }else{
-            $totalToday = DB::table('digital_cyber_db')
-            ->whereDate('created_at', '=', now()->toDateString()) // or CURDATE() if using raw SQL
-            ->count();
+        $lastMonthAmount = $this->getLastMonthAmount($this->Branch_Id, $userRole);
 
-
-            $results = DB::select("
-            SELECT YEAR(created_at) AS year,
-                   MONTH(created_at) AS month,
-                   COUNT(*) AS total_entries
-            FROM digital_cyber_db
-            WHERE YEAR(created_at) = YEAR(CURRENT_DATE)
-              AND MONTH(created_at) = MONTH(CURRENT_DATE)
-            GROUP BY YEAR(created_at), MONTH(created_at)
-            ORDER BY YEAR(created_at), MONTH(created_at)
-        ");
-
-
-        $totalSales = DB::table('digital_cyber_db')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensures filtering by the current year as well
-                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
-                    ->value('total_amount');
-
-        $totalOrders = DB::table('digital_cyber_db')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)') // Ensure the filter is also by the current year
-                    ->select(DB::raw('COUNT(*) as total_orders'))
-                    ->value('total_orders');
-
-        $newUsers = DB::table('users')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
-                    ->select(DB::raw('COUNT(*) as new_users'))
-                    ->value('new_users');
-
-        $totalEnquiries = DB::table('enquiry_form')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
-                    ->select(DB::raw('COUNT(*) as new_enquiries'))
-                    ->value('new_enquiries');
-
-        $callBack = DB::table('callback')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
-                    ->select(DB::raw('COUNT(*) as callback'))
-                    ->value('callback');
-
-        $totalRevenue = DB::table('credit_ledger')
-                    ->select(DB::raw('SUM(Amount_Paid) as total_revenue'))
-                    ->value('total_revenue');
-
-        $lastWeekAmount = DB::table('credit_ledger')
-                    ->whereBetween('created_at', [
-                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) + 6) DAY)'),
-                        DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY)')
-                    ])
-                    ->sum('Amount_Paid');
-        $lastMonthAmount = DB::table('credit_ledger')
-                    ->whereRaw('YEAR(created_at) = YEAR(CURDATE() - INTERVAL 1 MONTH)')
-                    ->whereRaw('MONTH(created_at) = MONTH(CURDATE() - INTERVAL 1 MONTH)')
-                    ->select(DB::raw('SUM(Amount_Paid) as total_amount'))
-                    ->value('total_amount');
-        // Status Count and Amount Update
-        }
-        return view('admin-module.index', ['totalSales' => $totalSales, 'totalEnquiries' => $totalEnquiries, 'totalOrders' => $totalOrders, 'newUsers' => $newUsers, 'callBack' => $callBack, 'totalRevenue' => $totalRevenue, 'lastWeekAmount' => $lastWeekAmount, 'lastMonthAmount' => $lastMonthAmount]);
+        return view('admin-module.index', [
+            'totalSales' => $totalSales,
+            'totalEnquiries' => $totalEnquiries,
+            'totalOrders' => $totalOrders,
+            'newUsers' => $newUsers,
+            'callBack' => $callBack,
+            'totalRevenue' => $totalRevenue,
+            'lastWeekAmount' => $lastWeekAmount,
+            'lastMonthAmount' => $lastMonthAmount
+        ]);
     }
+
+        private function getTotalToday($branchId, $role)
+        {
+            $query = DB::table('digital_cyber_db')
+                ->whereDate('created_at', now()->toDateString());
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->count();
+        }
+
+        private function getMonthlyEntries($branchId, $role)
+        {
+            $query = "
+                SELECT YEAR(created_at) AS year,
+                    MONTH(created_at) AS month,
+                    COUNT(*) AS total_entries
+                FROM digital_cyber_db
+                WHERE YEAR(created_at) = YEAR(CURRENT_DATE)
+                AND MONTH(created_at) = MONTH(CURRENT_DATE)
+            ";
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query .= " AND Branch_Id = ?";
+                $query .= " GROUP BY YEAR(created_at), MONTH(created_at)";
+                return DB::select($query, [$branchId]);
+            }
+
+            $query .= " GROUP BY YEAR(created_at), MONTH(created_at)";
+            return DB::select($query);
+        }
+
+
+        private function getTotalSales($branchId, $role)
+        {
+            $query = DB::table('digital_cyber_db')
+                ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                ->select(DB::raw('SUM(Amount_Paid) as total_amount'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('total_amount');
+        }
+
+        private function getTotalOrders($branchId, $role)
+        {
+            $query = DB::table('digital_cyber_db')
+                ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                ->select(DB::raw('COUNT(*) as total_orders'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('total_orders');
+        }
+
+        private function getNewUsers($branchId, $role)
+        {
+            $query = DB::table('users')
+                ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                ->select(DB::raw('COUNT(*) as new_users'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('new_users');
+        }
+
+        private function getTotalEnquiries($branchId, $role)
+        {
+            $query = DB::table('enquiry_form')
+                ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                ->select(DB::raw('COUNT(*) as new_enquiries'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('new_enquiries');
+        }
+
+        private function getCallBack($branchId, $role)
+        {
+            $query = DB::table('callback')
+                ->whereRaw('MONTH(created_at) = MONTH(CURRENT_DATE)')
+                ->whereRaw('YEAR(created_at) = YEAR(CURRENT_DATE)')
+                ->select(DB::raw('COUNT(*) as callback'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('callback');
+        }
+
+        private function getTotalRevenue($branchId, $role)
+        {
+            $query = DB::table('credit_ledger')
+                ->select(DB::raw('SUM(Amount_Paid) as total_revenue'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('total_revenue');
+        }
+
+        private function getLastWeekAmount($branchId, $role)
+        {
+            $query = DB::table('credit_ledger')
+                ->whereBetween('created_at', [
+                    DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) + 6) DAY)'),
+                    DB::raw('DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY)')
+                ]);
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->sum('Amount_Paid');
+        }
+
+        private function getLastMonthAmount($branchId, $role)
+        {
+            $query = DB::table('credit_ledger')
+                ->whereRaw('YEAR(created_at) = YEAR(CURDATE() - INTERVAL 1 MONTH)')
+                ->whereRaw('MONTH(created_at) = MONTH(CURDATE() - INTERVAL 1 MONTH)')
+                ->select(DB::raw('SUM(Amount_Paid) as total_amount'));
+
+            if ($role == 'branch admin' || $role == 'operator') {
+                $query->where('Branch_Id', $branchId);
+            }
+
+            return $query->value('total_amount');
+        }
+
+        public function DashboardUpdate($name)
+        {
+            $branchId = Auth::user()->branch_id;
+            $userRole = Auth::user()->role;
+
+            $Tittle1 = '';
+            $Tittle2 = '';
+            $Tittle3 = '';
+            $Tittle4 = '';
+            $totalRequests = 0;
+            $delivered = 0;
+            $pending = 0;
+            $new = 0;
+            $percentpending = 0;
+            $percentdelivered = 0;
+
+            if ($name == 'User') {
+                $Tittle1 = 'Total Users';
+                $Tittle2 = 'New User';
+                $Tittle3 = 'Pending';
+                $Tittle4 = 'Converted';
+
+                $totalRequests = $this->getTotalRequests(User::class, $branchId, $userRole);
+                $delivered = $this->getDelivered(User::class, $branchId, $userRole, 'Completed');
+                $pending = $this->getPending(User::class, $branchId, $userRole, 'Completed');
+                $new = $this->getNewRequests(User::class, $branchId, $userRole);
+
+            } elseif ($name == 'Orders') {
+                $Tittle1 = 'Total Orders';
+                $Tittle2 = 'New Orders';
+                $Tittle3 = 'Pending';
+                $Tittle4 = 'Delivered';
+
+                $totalRequests = $this->getTotalRequests(ApplyServiceForm::class, $branchId, $userRole);
+                $delivered = $this->getDelivered(ApplyServiceForm::class, $branchId, $userRole, 'Delivered to Client');
+                $pending = $this->getPending(ApplyServiceForm::class, $branchId, $userRole, 'Delivered to Client');
+                $new = $this->getNewRequests(ApplyServiceForm::class, $branchId, $userRole);
+
+            } elseif ($name == 'Callback') {
+                $Tittle1 = 'Total Requests';
+                $Tittle2 = 'New Requests';
+                $Tittle3 = 'Converted';
+                $Tittle4 = 'Pending';
+
+                $totalRequests = $this->getTotalRequests(Callback_Db::class, $branchId, $userRole);
+                $delivered = $this->getDelivered(Callback_Db::class, $branchId, $userRole, 'Completed');
+                $pending = $this->getPending(Callback_Db::class, $branchId, $userRole, 'Completed');
+                $new = $this->getNewRequests(Callback_Db::class, $branchId, $userRole);
+
+            } elseif ($name == 'Enquiry') {
+                $Tittle1 = 'Total Enquiries';
+                $Tittle2 = 'New Enquiries';
+                $Tittle3 = 'Hot';
+                $Tittle4 = 'Completed';
+
+                $totalRequests = $this->getTotalRequests(EnquiryDB::class, $branchId, $userRole);
+                $delivered = $this->getDelivered(EnquiryDB::class, $branchId, $userRole, 'Completed');
+                $pending = $this->getPending(EnquiryDB::class, $branchId, $userRole, 'Hot', 'Lead_Status');
+                $new = $this->getNewRequests(EnquiryDB::class, $branchId, $userRole);
+            }
+
+            if ($totalRequests > 0) {
+                $percentpending = number_format(($pending * 100) / $totalRequests, 1, '.', '');
+                $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
+            }
+
+            return view('admin-module.dashboard.dashboard_update', [
+                'Name' => $name,
+                'Tittle1' => $Tittle1,
+                'Tittle2' => $Tittle2,
+                'Tittle3' => $Tittle3,
+                'Tittle4' => $Tittle4,
+                'totalRequests' => $totalRequests,
+                'delivered' => $delivered,
+                'pending' => $pending,
+                'new' => $new,
+                'percentpending' => $percentpending,
+                'percentdelivered' => $percentdelivered
+            ]);
+        }
+
+        private function getTotalRequests($model, $branchId, $role)
+        {
+            if ($role == 'branch admin' || $role == 'operator') {
+                return $model::where('Branch_Id', $branchId)->count();
+            }
+            return $model::count();
+        }
+
+        private function getDelivered($model, $branchId, $role, $status)
+        {
+            if ($role == 'branch admin' || $role == 'operator') {
+                return $model::where('Branch_Id', $branchId)->where('Status', $status)->count();
+            }
+            return $model::where('Status', $status)->count();
+        }
+
+        private function getPending($model, $branchId, $role, $status, $column = 'Status')
+        {
+            if ($role == 'branch admin' || $role == 'operator') {
+                return $model::where('Branch_Id', $branchId)->where($column, '!=', $status)->count();
+            }
+            return $model::where($column, '!=', $status)->count();
+        }
+
+        private function getNewRequests($model, $branchId, $role)
+        {
+            if ($role == 'branch admin' || $role == 'operator') {
+                return $model::where('Branch_Id', $branchId)->whereDate('created_at', DB::raw('CURDATE()'))->count();
+            }
+            return $model::whereDate('created_at', DB::raw('CURDATE()'))->count();
+        }
+
+
 // -----------------------------------------------Employee Module Functions ------------------------------------
 
     public function EmployeeRegistration(){

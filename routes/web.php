@@ -36,6 +36,9 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('/add/services', 'AddServices')->name('add_services');
         Route::get('/edit/services/{id}/{type}', 'EditServices')->name('edit.services');
         Route::get('/delete/services/{id}/{type}', 'DeleteServices')->name('delete.services');
+
+        Route::get('{name}/dashboard', 'DashboardUpdate')->name('update.dashboard');
+
         Route::get('/usertopbar', 'UserTopBar')->name('user_top_bar');
         Route::get('/new/carousel', 'Carousel')->name('new.carousel');
         Route::get('/aboutus', 'AboutUs')->name('new.about_us');
@@ -85,7 +88,6 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(funct
         Route::get('edit/status/{id}', 'EditStatus')->name('edit.status');
         Route::get('list/app/status/{status}', 'ViewStatus')->name('view.status');
         Route::get('delete/status/{id}', 'DeleteStatus')->name('delete.status');
-        Route::get('{name}/dashboard', 'DashboardUpdate')->name('update.dashboard');
         Route::get('whatsapp/chat/{mobile}', 'waGreat')->name('wa.great');
         Route::get('whatsapp/callback/{mobile}/{name}/{service}/{servicetype}', 'waCallBack')->name('wa.callback');
         Route::get('whatsapp/applynow/{mobile}/{name}/{service}/{servicetype}', 'waApplyNow')->name('wa.applynow');

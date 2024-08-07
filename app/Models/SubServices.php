@@ -12,4 +12,10 @@ class SubServices extends Model
     protected $connection = 'mysql';
 
     public $table = 'sub_service_list';
+
+    // defining relation :  Many to 1 relation :  many sub services belong to only one main service
+    public function mainServices()
+    {
+        return $this->belongsTo(MainServices::class);
+    }
 }

@@ -468,60 +468,7 @@ private function getStatusData()
     }
 
 
-    public function DashboardUpdate($name)
-    {
-        if ($name == 'User') {
-            $Tittle1 = 'Total Users';
-            $Tittle2 = 'New User';
-            $Tittle3 = 'Pedning';
-            $Tittle4 = 'Converted';
-            $totalRequests = User::all()->count();
-            $delivered = User::where('Status', 'Completed')->count();
-            $pending = User::where('Status', '!=', 'Completed')->count();
-            $new =   User::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / (($totalRequests!=0)?$totalRequests:1), 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / (($totalRequests!=0)?$totalRequests:1), 1, '.', '');
-        } elseif ($name == 'Orders') {
-            $Tittle1 = 'Total Orders';
-            $Tittle2 = 'New Orders';
-            $Tittle3 = 'Pending';
-            $Tittle4 = 'Delivered';
-            $totalRequests = ApplyServiceForm::all()->count();
-            $delivered = ApplyServiceForm::where('Status', 'Delivered to Client')->count();
-            $pending = ApplyServiceForm::where('Status', '!=', 'Delivered to Client')->count();
-            $new =   ApplyServiceForm::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / (($totalRequests!=0)?$totalRequests:1), 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / (($totalRequests!=0)?$totalRequests:1), 1, '.', '');
-        } elseif ($name == 'Callback') {
-            $Tittle1 = 'Total Requests';
-            $Tittle2 = 'New Requests';
-            $Tittle3 = 'Converted';
-            $Tittle4 = 'Pending';
-            $totalRequests = Callback_Db::all()->count();
-            $delivered = Callback_Db::where('Status', 'Completed')->count();
-            $pending = Callback_Db::where('Status', '!=', 'Completed')->count();
-            $new =   Callback_Db::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / (($totalRequests!=0)?$totalRequests:1), 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / (($totalRequests!=0)?$totalRequests:1), 1, '.', '');
-        } elseif ($name == 'Enquiry') {
-            $Tittle1 = 'Total Enquiries';
-            $Tittle2 = 'New Enquiries';
-            $Tittle3 = 'Hot';
-            $Tittle4 = 'Completed';
-            $totalRequests = EnquiryDB::all()->count();
-            $delivered = EnquiryDB::where('Status', 'Completed')->count();
-            $pending = EnquiryDB::where('Lead_Status', 'Hot')->count();
-            $new =   EnquiryDB::whereDate('created_at', DB::raw('CURDATE()'))->count();
-            $percentpending = number_format(($pending * 100) / ($totalRequests!=0)?$totalRequests:1, 1, '.', '');
-            $percentdelivered = number_format(($delivered * 100) / ($totalRequests!=0)?$totalRequests:1, 1, '.', '');
-        } else {
-            $Tittle1 = '';
-            $Tittle2 = '';
-            $Tittle3 = '';
-            $Tittle4 = '';
-        }
-        return view('admin-module.dashboard.dashboard_update', ['Name' => $name, 'Tittle1' => $Tittle1, 'Tittle2' => $Tittle2, 'Tittle3' => $Tittle3, 'Tittle4' => $Tittle4, 'totalRequests' => $totalRequests, 'delivered' => $delivered, 'pending' => $pending, 'new' => $new, 'percentpending' => $percentpending, 'percentdelivered' => $percentdelivered]);
-    }
+
 
 
     public function UpdateEnquiryDashboard($Id)

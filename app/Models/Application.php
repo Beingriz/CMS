@@ -32,4 +32,15 @@ class Application extends Model
     {
         return $query->where('Branch_Id', $branchId);
     }
+
+    //defining relation
+    public function clientRegister()
+    {
+        return $this->belongsTo(ClientRegister::class);
+    }
+
+    public function mainServices()
+    {
+        return $this->belongsTo(MainServices::class);
+    }
 }

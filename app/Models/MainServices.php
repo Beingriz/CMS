@@ -10,4 +10,19 @@ class MainServices extends Model
     use HasFactory;
     protected $connection = "mysql";
     public $table = 'service_list';
+
+
+    // defining relation :  1 to Many relation :  1 Main Services has many Applicaitons.
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    // defining relation :  1 to Many relation : 1 Main Services has many Subservices
+    public function subServices()
+    {
+        return $this->hasMany(SubServices::class);
+    }
+
+
 }
