@@ -84,7 +84,7 @@ class DashboardUpdate extends Component
                 $this->key = 'Completed';
                 break;
             default:
-                $table = 'digtial_cyber_db';
+                $table = 'digital_cyber_db';
                 break;
         }
 

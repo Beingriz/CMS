@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\AdminModule\Application;
+namespace App\Http\Livewire\AdminModule\Operations;
 
 use App\Models\DocumentList;
 use App\Models\MainServices;
@@ -23,13 +23,13 @@ class Documents extends Component
     public $SubService;
     public $exist_categories;
     public $value;
-    public $n = 1;
+    public $n = 1,$update=false,$readonly="";
     public $i = 1;
     public $Document_Name;
     public $Document_Names = [];
-    public $Existing_Documents = [];
+    protected $Existing_Documents = [];
     public $Documents = [];
-    public $Subservices = [];
+    public $Subservices = NULL;
     public $NewTextBox = [];
 
     // Validation rules
@@ -53,9 +53,14 @@ class Documents extends Component
     }
 
     // Component mount lifecycle hook
-    public function mount()
+    public function mount($Edit_Id,$Delete_Id)
     {
         $this->Doc_Id = 'DOC' . time();
+        if($Edit_Id != ''){
+            $this->Edit($Edit_Id);
+        }elseif($Delete_Id!=''){
+            $this->Delete($Delete_Id);
+        }
     }
 
     // Add a new text box for additional documents
@@ -71,8 +76,13 @@ class Documents extends Component
     {
         $this->Doc_Id = 'DOC' . time();
         $this->Document_Name = '';
+        $this->MainserviceId = '';
+        $this->SubService = '';
         $this->Document_Names = [];
         $this->NewTextBox = [];
+        $this->update=false;
+        $this->readonly="";
+        $this->reset();
     }
 
     // Remove a text box
@@ -133,10 +143,43 @@ class Documents extends Component
     // Edit an existing document
     public function Edit($Id)
     {
+        $this->update=true;
+        $this->readonly='disabled';
         $fetch = DocumentList::whereKey($Id)->get();
         if ($fetch->isNotEmpty()) {
             $this->Document_Name = $fetch->first()->Name;
+            $this->MainserviceId = $fetch->first()->Service_Id;
+            $this->SubService = $fetch->first()->Sub_Service_Id;
             $this->Doc_Id = $Id;
+        }
+    }
+
+    public function Update()
+    {
+
+        // Find the document by its ID
+        $document = DocumentList::find($this->Doc_Id);
+
+        if ($document) {
+            $data = array();
+            $data['Name'] = $this->Document_Name;
+            DB::table('document_list')->where('Id', '=', $this->Doc_Id)->Update($data);
+            session()->flash('SuccessMsg', 'Document updated successfully.');
+            $this->reset();
+        } else {
+            // Handle the case where the document does not exist
+            session()->flash('error', 'Document not found.');
+        }
+    }
+    // Delete an existing document
+    public function Delete($id)
+    {
+        $document = DocumentList::find($id);
+        if ($document) {
+            $document->delete();
+        } else {
+            // Handle the case where the document does not exist
+            // For example, you could throw an exception or return an error message
         }
     }
 
@@ -145,14 +188,15 @@ class Documents extends Component
     {
         $this->MainServices = MainServices::all();
         $this->Subservices = SubServices::where('Service_Id', $this->MainserviceId)->get();
-        $this->Existing_Documents = DocumentList::where([
+        $this->Existing_Documents = DocumentList::with('subservices')->where([
             ['Service_Id', $this->MainserviceId],
             ['Sub_Service_Id', $this->SubService]
-        ])->orderBy('Name', 'asc')->get();
+        ])->orderBy('Name', 'asc')->paginate(10);
 
-        return view('livewire.admin-module.application.documents', [
+        return view('livewire.admin-module.operations.documents', [
             'MainServices' => $this->MainServices,
-            'Subservices' => $this->Subservices
+            'Subservices' => $this->Subservices,
+            'Existing_Documents' => $this->Existing_Documents
         ]);
     }
 }

@@ -21,6 +21,7 @@ use App\Models\Old_CreditSources;
 use App\Models\Old_Cyber_Data;
 use App\Models\Old_DebitLedger;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class DataMigration extends Component
 {
     public $Table, $OldServiceList, $Application, $Application_Type, $App_Id, $clinetReg = 0, $appReg = 0, $UnitPrice, $Category;
     public $digitalcyber = false, $creditsource = false, $debitsource = false, $bookmarks = false, $creditledger = false, $debitledger = false;
-    public $username;
+    public $username,$Branch_Id,$Emp_Id;
 
     // Function to Generate Random Username
     public function usernameGenrator($name, $dob)
@@ -46,6 +47,11 @@ class DataMigration extends Component
         $dob = substr($dob, -2); // Get the last two digits of the date of birth
         $username = str_replace(' ', '', $username); // Remove spaces from the name
         $this->username = $username . $sec . $dob; // Combine to create the username
+    }
+
+    public function mount(){
+        $this->Branch_Id = Auth::user()->branch_id;
+        $this->Emp_Id = Auth::user()->Emp_Id;
     }
 
     // Main function to handle the data migration
@@ -107,6 +113,8 @@ class DataMigration extends Component
         $client = new ClientRegister();
         $client->fill([
             'Id' => $Client_Id,
+            'Branch_Id' => $this->Branch_Id,
+            'Emp_Id' => $this->Emp_Id,
             'Name' => $item['customer_name'],
             'Relative_Name' => 'Not Available',
             'Gender' => 'Not Declared',
@@ -122,9 +130,13 @@ class DataMigration extends Component
         $this->usernameGenrator($item['customer_name'], $item['dob'] == '0000-00-00' ? date('Y-m-d') : $item['dob']);
         User::create([
             'Client_Id' => $Client_Id,
+            'branch_id' => $this->Branch_Id,
+            'Emp_Id' => $this->Emp_Id,
             'name' => trim($item['customer_name']),
             'username' => trim($this->username),
             'mobile_no' => trim($item['mobile_no']),
+            'Status' => trim('user'),
+            'role' => trim('user'),
             'email' => trim($this->username . rand(00, 999) . '@gmail.com'),
             'profile_image' => 'account.png',
             'password' => Hash::make(trim($this->username)),
@@ -141,6 +153,8 @@ class DataMigration extends Component
         $data->fill([
             'Id' => $App_Id,
             'Client_Id' => $Client_Id,
+            'Branch_Id' => $this->Branch_Id,
+            'Emp_Id' => $this->Emp_Id,
             'Received_Date' => $item['received_on'] == '0000-00-00' || $item['received_on'] == null ? null : $item['received_on'],
             'Name' => $item['customer_name'],
             'Gender' => 'Not Declared',
@@ -205,6 +219,8 @@ class DataMigration extends Component
         $data->fill([
             'Id' => $item['transaction_id'],
             'Client_Id' => $Client_Id,
+            'Branch_Id' => $this->Branch_Id,
+            'Emp_Id' => $this->Emp_Id,
             'Date' => $item['date'],
             'Category' => $this->Application,
             'Sub_Category' => $this->Application_Type,
@@ -285,6 +301,8 @@ class DataMigration extends Component
         $data->fill([
             'Id' => $item['transaction_id'],
             'Client_Id' => $Client_Id,
+            'Branch_Id' => $this->Branch_Id,
+            'Emp_Id' => $this->Emp_Id,
             'Date' => $item['date'],
             'Category' => $this->Category,
             'Source' => $this->Application,

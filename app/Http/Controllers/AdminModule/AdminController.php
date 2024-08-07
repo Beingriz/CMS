@@ -341,6 +341,28 @@ class AdminController extends Controller
         return view('admin-module.employee.employee_register');
     }
 
+// Document advisor
+
+    public function AddDocument(){
+        $edit='';
+        $delete='';
+        return view('admin-module.documents.add_document',['Edit_Id'=>$edit,'Delete_Id'=>$delete]);
+    }
+    public function editDocumet($id){
+        $edit=$id;
+        $delete='';
+        return view('admin-module.documents.add_document',['Edit_Id'=>$edit,'Delete_Id'=>$delete]);
+    }
+    public function deleteDocument($id){
+        $edit='';
+        $delete=$id;
+        return view('admin-module.documents.add_document',['Edit_Id'=>$edit,'Delete_Id'=>$delete]);
+    }
+    public function documentAdvisor(){
+
+        return view('admin-module.documents.document_advisor');
+    }
+
     public function MarketingDashboard()
     {
         return view('admin-module.marketing.marketing');

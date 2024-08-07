@@ -90,7 +90,7 @@
                         <li><a href="{{ route('branch_register') }}">Branches</a></li>
                         <li><a href="{{ route('emp.register') }}">Employee Reg.</a></li>
                         <li><a href="{{ url('bookmarks') }}">Bookmark</a></li>
-                        {{-- <li> <a href="{{url('add_document')}}">Add Documents</a></li> --}}
+                        <li> <a href="{{route('add.document')}}">Add Documents</a></li>
                     </ul>
                 </li>
 
@@ -121,6 +121,12 @@
                     </a>
                 </li>
                 @endif
+                <li>
+                    <a href="{{ route('doc.advisor') }}">
+                        <i class=" ri-profile-line"></i>
+                        <span>Doc Advisor</span>
+                    </a>
+                </li>
                 {{-- <li class="menu-title">Report</li>
 
                 <li>

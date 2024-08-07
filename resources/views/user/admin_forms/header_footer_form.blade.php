@@ -1,4 +1,5 @@
 @extends('admin-module.admin_master')
+<title>Header</title>
 @section('admin')
     <div class="page-content" style="margin-top: -25px">
         <div class="container-fluid">

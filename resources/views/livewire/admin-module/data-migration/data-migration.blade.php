@@ -27,7 +27,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Digital Cyber</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
                         <li class="breadcrumb-item active"><a href="{{ route('new.application') }}">New Form</a></li>
                     </ol>
                 </div>
@@ -225,7 +225,7 @@
                                     <button type="submit" value="submit" name="submit"
                                         class="btn btn-primary btn-rounded btn-sm">Save</button>
                                     <a href="{{ route('Debit') }}" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    <a href="{{ route('dashboard') }}"
+                                    <a href="{{ route('admin.home') }}"
                                         class="btn btn-warning btn-rounded btn-sm">Cancel</a>
                                 </div>
                             </div>

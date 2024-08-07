@@ -23,6 +23,11 @@ class MainServices extends Model
     {
         return $this->hasMany(SubServices::class);
     }
+    // defining relation :  1 to Many relation : 1 Main Services has many Subservices
+    public function documents()
+    {
+        return $this->hasMany(DocumentList::class);
+    }
 
 
 }

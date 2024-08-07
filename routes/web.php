@@ -50,10 +50,15 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
         Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
-        //Employee
+    //Employee
         Route::get('/employee/register', 'EmployeeRegistration')->name('emp.register');
         Route::get('edit/employee', 'Edit')->name('edit.employee');
         Route::get('delete/employee', 'Delete')->name('delete.employee');
+    //Dcoument Advisore
+        Route::get('add/document', 'AddDocument')->name('add.document');
+        Route::get('document/advisor', 'documentAdvisor')->name('doc.advisor');
+        Route::get('edit/doc/{id}', 'editDocumet')->name('edit.doc');
+        Route::get('delete/doc/{id}', 'deleteDocument')->name('delete.doc');
 
 
 
