@@ -33,7 +33,7 @@
                 </li>
                 {{-- Application Dashboard --}}
                 <li>
-                    <a href="{{ route('Dashboard') }}">
+                    <a href="{{ route('app.home') }}">
                         <i class=" ri-profile-line"></i>
                         <span>Dashboard</span>
                     </a>

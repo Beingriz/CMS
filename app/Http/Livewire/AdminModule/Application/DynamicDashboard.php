@@ -264,10 +264,10 @@ class DynamicDashboard extends Component
             $query->where('Branch_Id', $this->Branch_Id);
         }
 
-        $StatusDetails = $query->paginate($this->paginate);
+        $statusDetails = $query->paginate($this->paginate);
 
         // Return view with data
-        return view('livewire.admin-module.application.dynamic-dashboard', compact('StatusDetails'), [
+        return view('livewire.admin-module.application.dynamic-dashboard', compact('statusDetails'), [
             'status' => $this->status,
             'ServName' => $this->Serv_Name,
             'bookmarks' => $bookmarks,

@@ -10,7 +10,7 @@ trait WhatsappTrait
 
     public $fromNo;
     protected $twilio;
-    public function validateTwilio(){
+    public function __construct(){
         $sid = getenv("TWILIO_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
         $this->fromNo = getenv("TWILIO_PHONE_NUMBER");

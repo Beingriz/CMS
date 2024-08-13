@@ -73,7 +73,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
 // Application Controller Admin & Branch Admin Role
 Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(function () {
     Route::controller(ApplicationController::class)->group(function () {
-        Route::get('application/home', 'Home')->name('app.home');
+        Route::get('application/home', 'Dashboard')->name('app.home');
         Route::get('app/dashboard', 'Dashboard')->name('Dashboard');
         Route::get('dynamic_dashboard/{mainservice}', 'DynamicDashboard')->name('DynamicDashboard');
         Route::get('new/application', 'index')->name('new.application');
