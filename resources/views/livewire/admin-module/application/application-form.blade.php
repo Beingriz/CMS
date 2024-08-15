@@ -1148,8 +1148,9 @@
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
                                                         <a class="dropdown-item" title="Edit Application" href={{ route('edit_application', $data->Id) }} id="update">Edit</a>
-                                                        <a class="dropdown-item" title="Delete Application"  href="{{ route('delete.application',$data->Id) }}"  id="delete">Delete</a>
+                                                        <a class="dropdown-item" title="Delete Application"  href={{ route('delete.application',$data->Id) }} id="delete">Delete</a>
                                                         <a class="dropdown-item" title="Open Application" href={{ route('view.application', $data->Id) }} id="open">Open</a>
+                                                        <a class="dropdown-item" title="Open Application" href={{ route('gen.invoice', $data->Id) }} id="open">Invoice</a>
                                                     </div>
                                                 </div>
                                             </div>

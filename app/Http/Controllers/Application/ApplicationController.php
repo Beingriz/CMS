@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Application;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
-use App\Models\ApplyServiceForm;
 use App\Models\Callback_Db;
 use App\Models\DocumentFiles;
 use App\Models\EnquiryDB;
-use App\Models\MainServices;
 use App\Models\Status;
 use App\Models\SubServices;
-use App\Models\User;
 use App\Traits\RightInsightTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -19,10 +16,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PDF; // Import the PDF facade
 
 class ApplicationController extends Controller
 {
     use RightInsightTrait;
+
+
     public $total_amount;
     public $no='No';
     public function index()
@@ -43,16 +43,18 @@ class ApplicationController extends Controller
         return view('admin-module.application.app_dashboard',);
     }
 
-    public function UpdateService()
+    public function genInvoice($id)
     {
+        $data = [
+            'Client_Id' => $id,
+            // Add other necessary data here
+        ];
+        $pdf = PDF::loadView('admin-module.invoice.print_ack', $data)
+        ->setPaper('a5', 'portrait'); // Set paper size to A5
 
-        return view('DigitalLedger\CreditLedger\update',);
+        return $pdf->stream('invoice.pdf');
     }
 
-    public function Temp()
-    {
-        return view('Application\new_template');
-    }
 
     //Applicaiton Dashboard Calculation..
     public function Dashboard()

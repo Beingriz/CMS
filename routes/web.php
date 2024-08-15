@@ -106,6 +106,8 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(funct
         Route::get('download/docs/{id}', 'Download_Files')->name('download_documents');
         Route::get('download/ack/{id}', 'Download_Ack')->name('download_ack');
         Route::get('download/doc/{id}', 'Download_Doc')->name('download_doc');
+    //PDF
+        Route::get('invoice/{id}','genInvoice')->name('gen.invoice');
     });
 });
 
