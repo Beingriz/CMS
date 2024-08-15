@@ -4,118 +4,116 @@ namespace App\Traits;
 
 use Twilio\Rest\Client;
 
-
 trait WhatsappTrait
 {
-
-    public $fromNo;
     protected $twilio;
-    public function __construct(){
-        $sid = getenv("TWILIO_SID");
-        $token = getenv("TWILIO_AUTH_TOKEN");
+    protected $fromNo;
+
+    public function __construct()
+    {
+        $this->twilio = new Client(getenv("TWILIO_SID"), getenv("TWILIO_AUTH_TOKEN"));
         $this->fromNo = getenv("TWILIO_PHONE_NUMBER");
-        $this->twilio = new Client($sid, $token);
-
-    }
-    public function UserRegisterAlert($name, $mobile, $username){
-        $body = "🎉 **User Registration Success** 🎉\n\nHello *".$name."*\n\n,👤 You are now officially registered with Digital Cyber!\n\n📧 Username: ".$username."\n📱 Phone: ".$mobile."\n\nTo access your account and explore our services, please log in to our website:\n🔐 www.cyberpe.epizy.com\n\n\nIf you have any questions, feel free to reach out. Welcome to Digital Cyber!\n\nBest regards,\n*Digital Cyber.*\n*+918892988334*";
-        $this->validateTwilio();
-
-        $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:".$this->fromNo;
-        $this->twilio->messages
-            ->create(
-                $to_no, // to
-                array(
-                    "from" => $from_no,
-                    "body" => $body
-                )
-            );
-        session()->flash('Success', 'Message Sent!');
-        return redirect()->back();
-
-    }
-    public function EmployeeRegisterAlert($name, $mobile, $username){
-        $body = "🎉 **Welcome to Digital Cyber Family!** 🎉\n\nHello *".$name."*\n\n,👤 You are now officially registered with Digital Cyber!\n\n📧 Username: ".$username."\n📱 Phone: ".$mobile."\n\nTo access your account and explore our services, please log in to our website:\n🔐 www.cyberpe.epizy.com\n\n\nIf you have any questions, feel free to reach out. Welcome to Digital Cyber!\n\nBest regards,\n*Digital Cyber.*\n*+918892988334*";
-        $this->validateTwilio();
-
-        $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:".$this->fromNo;
-        $this->twilio->messages
-            ->create(
-                $to_no, // to
-                array(
-                    "from" => $from_no,
-                    "body" => $body
-                )
-            );
-        session()->flash('Success', 'Message Sent!');
-        return redirect()->back();
-
     }
 
-    public function ApplicaitonRegisterAlert($mobile, $profile_name, $applicant_name, $service, $service_type)
+    private function sendMessage($mobile, $body)
     {
-        $body = "Hi *" .trim($profile_name)."*,\n\nCongratulation! 🎉 \nA new application has been successfully registered with the following details:\n\n👤 Name : *" .trim($applicant_name)."* \n📱Ph : *+91" . trim($mobile)."* \n📝 Service :  *".trim($service)."* \n🔖 Type : *".trim($service_type)."* \n\nThank you for choosing us!\nFor your convenience, you can log in to our website to track your application details:\n🌐 www.cyberpe.epizy.com \n*Digital Cyber* ";
+        $toNo = "whatsapp:+91" . $mobile;
+        $fromNo = "whatsapp:" . $this->fromNo;
 
-        $this->validateTwilio();
+        $this->twilio->messages->create($toNo, [
+            "from" => $fromNo,
+            "body" => $body,
+        ]);
 
-        $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:".$this->fromNo;
-        $this->twilio->messages
-            ->create(
-                $to_no, // to
-                array(
-                    "from" => $from_no,
-                    "body" => $body
-                )
-            );
         session()->flash('Success', 'Message Sent!');
         return redirect()->back();
     }
 
-    public function ApplicaitonUpdateAlert($mobile, $applicant_name, $service, $service_type,$status,$reason)
+    public function UserRegisterAlert($name, $mobile, $username)
     {
-        if($reason == 'Not Available'){
-            $reason = "";
-        }else{
-            $reason = "*Reason: ".$reason."*";
-        }
-        $body = "Hi *" .trim($applicant_name)."*,\n\n🚀 Exciting news! 🚀 \nYour *application status* has been updated with following details:\n\n👤 Name : *" .trim($applicant_name)."* \n📱 Ph : *+91" . trim($mobile)."* \n📝 Service :  *".trim($service)."* \n🔖 Type : *".trim($service_type)."*\n📊 *New Status:* *".trim($status)."*  \n".$reason."\n\nThank you for choosing us!\nFor your convenience, you can log in to our website to track your application details:\n\n🌐 www.cyberpe.epizy.com \n\n*Digital Cyber* ";
+        $body = "🎉 **User Registration Success** 🎉\n\n"
+            . "Hello *{$name}*,\n\n"
+            . "👤 You are now officially registered with Digital Cyber!\n\n"
+            . "📧 Username: {$username}\n"
+            . "📱 Phone: {$mobile}\n\n"
+            . "To access your account and explore our services, please log in to our website:\n"
+            . "🔐 www.cyberpe.epizy.com\n\n"
+            . "If you have any questions, feel free to reach out. Welcome to Digital Cyber!\n\n"
+            . "Best regards,\n"
+            . "*Digital Cyber.*\n"
+            . "*+918892988334*";
 
-        $this->validateTwilio();
-
-        $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:".$this->fromNo;
-        $this->twilio->messages
-            ->create(
-                $to_no, // to
-                array(
-                    "from" => $from_no,
-                    "body" => $body
-                )
-            );
-        session()->flash('Success', 'Message Sent!');
-        return redirect()->back();
+        return $this->sendMessage($mobile, $body);
     }
-    public function ApplicationbyUserAlert($profile_name,$mobile, $applicant_name, $service, $service_type)
+
+    public function EmployeeRegisterAlert($name, $mobile, $username)
     {
+        $body = "🎉 **Welcome to Digital Cyber Family!** 🎉\n\n"
+            . "Hello *{$name}*,\n\n"
+            . "👤 You are now officially registered with Digital Cyber!\n\n"
+            . "📧 Username: {$username}\n"
+            . "📱 Phone: {$mobile}\n\n"
+            . "To access your account and explore our services, please log in to our website:\n"
+            . "🔐 www.cyberpe.epizy.com\n\n"
+            . "If you have any questions, feel free to reach out. Welcome to Digital Cyber!\n\n"
+            . "Best regards,\n"
+            . "*Digital Cyber.*\n"
+            . "*+918892988334*";
 
-        $body = "Hi *" .trim($profile_name)."*,\n\nCongratulation! 🎉 \nA new application has been successfully Submitted with the following details:\n\n👤 Name : *" .trim($applicant_name)."* \n📱Ph : *+91" . trim($mobile)."* \n📝 Service :  *".trim($service)."* \n🔖 Type : *".trim($service_type)."* \n\nThank you for choosing us!\nFor your convenience, you can log in to our website to track your application details:\n🌐 www.cyberpe.epizy.com \n*Digital Cyber* ";
+        return $this->sendMessage($mobile, $body);
+    }
 
-        $this->validateTwilio();
-        $to_no = "whatsapp:+91" . $mobile;
-        $from_no = "whatsapp:".$this->fromNo;
+    public function ApplicationRegisterAlert($mobile, $profileName, $applicantName, $service, $serviceType)
+    {
+        $body = "Hi *{$profileName}*,\n\n"
+            . "Congratulations! 🎉\n"
+            . "A new application has been successfully registered with the following details:\n\n"
+            . "👤 Name: *{$applicantName}*\n"
+            . "📱 Phone: *+91{$mobile}*\n"
+            . "📝 Service: *{$service}*\n"
+            . "🔖 Type: *{$serviceType}*\n\n"
+            . "Thank you for choosing us!\n"
+            . "You can log in to our website to track your application details:\n"
+            . "🌐 www.cyberpe.epizy.com\n\n"
+            . "*Digital Cyber*";
 
+        return $this->sendMessage($mobile, $body);
+    }
 
-        $this->twilio->messages
-            ->create(
-                $to_no, // to
-                array(
-                    "from" => $from_no,
-                    "body" => $body
-                )
-            );
-        return redirect()->back();
+    public function ApplicationUpdateAlert($mobile, $applicantName, $service, $serviceType, $status, $reason)
+    {
+        $reasonText = $reason !== 'Not Available' ? "*Reason: {$reason}*" : "";
+        $body = "Hi *{$applicantName}*,\n\n"
+            . "🚀 Exciting news! 🚀\n"
+            . "Your application status has been updated with the following details:\n\n"
+            . "👤 Name: *{$applicantName}*\n"
+            . "📱 Phone: *+91{$mobile}*\n"
+            . "📝 Service: *{$service}*\n"
+            . "🔖 Type: *{$serviceType}*\n"
+            . "📊 New Status: *{$status}*\n"
+            . "{$reasonText}\n\n"
+            . "Thank you for choosing us!\n"
+            . "You can log in to our website to track your application details:\n"
+            . "🌐 www.cyberpe.epizy.com\n\n"
+            . "*Digital Cyber*";
+
+        return $this->sendMessage($mobile, $body);
+    }
+
+    public function ApplicationByUserAlert($profileName, $mobile, $applicantName, $service, $serviceType)
+    {
+        $body = "Hi *{$profileName}*,\n\n"
+            . "Congratulations! 🎉\n"
+            . "A new application has been successfully submitted with the following details:\n\n"
+            . "👤 Name: *{$applicantName}*\n"
+            . "📱 Phone: *+91{$mobile}*\n"
+            . "📝 Service: *{$service}*\n"
+            . "🔖 Type: *{$serviceType}*\n\n"
+            . "Thank you for choosing us!\n"
+            . "You can log in to our website to track your application details:\n"
+            . "🌐 www.cyberpe.epizy.com\n\n"
+            . "*Digital Cyber*";
+
+        return $this->sendMessage($mobile, $body);
     }
 }

@@ -303,7 +303,7 @@ class EditApplication extends Component
         // Flash success message and redirect
         session()->flash('SuccessUpdate', 'Application Details for ' . $this->Name . ' Updated Successfully');
         if ($this->old_status != $this->Status || $this->Application != $this->ServiceName || $this->Application_Type != $this->SubSelected) {
-            $this->ApplicaitonUpdateAlert($this->Mobile_No, $this->Name, $this->ServiceName, $this->SubSelected, $this->Status, $this->Reason);
+            $this->ApplicationUpdateAlert($this->Mobile_No, $this->Name, $this->ServiceName, $this->SubSelected, $this->Status, $this->Reason);
         }
 
         return redirect()->route('view.application', $Id);

@@ -84,7 +84,7 @@
                                         <td>
                                             <select name="ChangeStatus" id="ChangeStatus"
                                                 class="form-control-sm form-control"
-                                                wire:change="UpdateStatus('{{ $data->Id }}','{{ $data->Status }}',$event.target.value,'{{ $data->Application_Type }}')">
+                                                wire:change="updateStatus('{{ $data->Id }}','{{ $data->Status }}',$event.target.value,'{{ $data->Application_Type }}')">
                                                 <option selected>{{ $data->Status }}</option>
                                                 @foreach ($status as $item)
                                                     <option value="{{ $item->Status }}">{{ $item->Status }}</option>

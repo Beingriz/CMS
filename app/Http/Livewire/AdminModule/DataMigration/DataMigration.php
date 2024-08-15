@@ -155,7 +155,8 @@ class DataMigration extends Component
             'Client_Id' => $Client_Id,
             'Branch_Id' => $this->Branch_Id,
             'Emp_Id' => $this->Emp_Id,
-            'Received_Date' => $item['received_on'] == '0000-00-00' || $item['received_on'] == null ? null : $item['received_on'],
+            $received_date= $item['received_on'] == '0000-00-00' || $item['received_on'] == null ? null : $item['received_on'],
+            'Received_Date' => $received_date,
             'Name' => $item['customer_name'],
             'Gender' => 'Not Declared',
             'Relative_Name' => 'Not Available',
@@ -180,6 +181,8 @@ class DataMigration extends Component
             'Consent' => 'No',
             'Recycle_Bin' => 'No',
             'Registered' => 'Yes',
+            'created_at' => $received_date ? \Carbon\Carbon::parse($received_date) : null,
+
         ]);
         $data->save();
         $this->appReg++;
@@ -217,11 +220,12 @@ class DataMigration extends Component
         $Client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
         $data = new CreditLedger();
         $data->fill([
-            'Id' => $item['transaction_id'],
+            'Id' => 'DCCREDIT'. strtoupper(substr(md5(time() . rand()), 0, 16)),
             'Client_Id' => $Client_Id,
             'Branch_Id' => $this->Branch_Id,
             'Emp_Id' => $this->Emp_Id,
-            'Date' => $item['date'],
+            $received_date = $item['date'],
+            'Date' => $received_date,
             'Category' => $this->Application,
             'Sub_Category' => $this->Application_Type,
             'Unit_Price' => $this->UnitPrice,
@@ -232,6 +236,7 @@ class DataMigration extends Component
             'Description' => $item['description'],
             'Payment_Mode' => $item['payment_mode'],
             'Attachment' => 'no_image.jpg',
+            'created_at' => $received_date ? \Carbon\Carbon::parse($received_date) : null,
         ]);
         $data->save();
         $this->appReg++;
@@ -299,11 +304,12 @@ class DataMigration extends Component
         $Client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
         $data = new Debit();
         $data->fill([
-            'Id' => $item['transaction_id'],
+            'Id' => 'DCDEBIT' . strtoupper(substr(md5(time() . rand()), 0, 16)),
             'Client_Id' => $Client_Id,
             'Branch_Id' => $this->Branch_Id,
             'Emp_Id' => $this->Emp_Id,
-            'Date' => $item['date'],
+            $received_date = $item['date'],
+            'Date' => $received_date,
             'Category' => $this->Category,
             'Source' => $this->Application,
             'Name' => $this->Application_Type,
@@ -315,6 +321,7 @@ class DataMigration extends Component
             'Description' => $item['description'],
             'Payment_Mode' => $item['payment_mode'],
             'Attachment' => 'no_image.jpg',
+            'created_at' => $received_date ? \Carbon\Carbon::parse($received_date) : now(),
         ]);
         $data->save();
         $this->appReg++;

@@ -271,37 +271,38 @@ class DashboardInsight extends Component
         $applist = Application::when($this->isBranchAdminOrOperator, function ($query) {
             $query->where('Branch_Id', $this->Branch_Id);
         })
-        ->whereDate('created_at', DB::raw('CURDATE()'))
+        ->whereDate('created_at', today())
+        ->where('Recycle_Bin','No')
         ->paginate(10);
 
         $creditledger = CreditLedger::when($this->isBranchAdminOrOperator, function ($query) {
             $query->where('Branch_Id', $this->Branch_Id);
         })
-        ->whereDate('created_at', DB::raw('CURDATE()'))
+        ->whereDate('created_at',  today())
         ->paginate(10);
 
         $DebitLedger = Debit::when($this->isBranchAdminOrOperator, function ($query) {
             $query->where('Branch_Id', $this->Branch_Id);
         })
-        ->whereDate('created_at', DB::raw('CURDATE()'))
+        ->whereDate('created_at',  today())
         ->paginate(10);
 
         $callback = Callback_Db::when($this->isBranchAdminOrOperator, function ($query) {
             $query->where('Branch_Id', $this->Branch_Id);
         })
-        ->whereDate('created_at', DB::raw('CURDATE()'))
+        ->whereDate('created_at',  today())
         ->paginate(10);
 
         $feedback = Feedback::when($this->isBranchAdminOrOperator, function ($query) {
             $query->where('Branch_Id', $this->Branch_Id);
         })
-        ->whereDate('created_at', DB::raw('CURDATE()'))
+        ->whereDate('created_at',  today())
         ->paginate(10);
 
         $lead = ApplyServiceForm::when($this->isBranchAdminOrOperator, function ($query) {
             $query->where('Branch_Id', $this->Branch_Id);
         })
-        ->whereDate('created_at', DB::raw('CURDATE()'))
+        ->whereDate('created_at',  today())
         ->paginate(10);
 
         return view('livewire.admin-module.dashboard.dashboard-insight', [

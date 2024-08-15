@@ -24,7 +24,7 @@ class ApplicationController extends Controller
 {
     use RightInsightTrait;
     public $total_amount;
-
+    public $no='No';
     public function index()
     {
 
@@ -189,32 +189,52 @@ private function getStatusData()
 
     public function Edit($Id)
     {
-
         return view('admin-module.application.edit_app', ['application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'sl_no' => $this->sl_no, 'n' => $this->n, 'daily_applications' => $this->daily_applications, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'Id' => $Id, 'ForceDelete' => $this->ForceDelete]);
     }
-    public function MovetoRecycleBin($Id)
+    public function deleteApp($Id)
     {
+        // Check balance due in digital_cyber_db
+        $check_bal_app = DB::table('digital_cyber_db')
+            ->where('Id', $Id)
+            ->where('Balance', '>', 0)
+            ->exists();
 
-        $branch_id = Auth::user()->branch_id;
-        $check_bal_app = DB::table('digital_cyber_db')->where('Id', '=', $Id)
-            ->where('Branch_Id',$branch_id)
-            ->where(function ($query) {
-                $query->where('Balance', '>', 0);
-            })->get();
+        // Check balance due in balance_ledger
+        $check_bal = DB::table('balance_ledger')
+            ->where('Client_Id', $Id)
+            ->where('Balance', '>', 0)
+            ->exists();
 
-        if (count($check_bal_app) > 0) {
-            session()->flash('Error', 'Sorry! Balance due for : ' . $Id . ' Please Clear Due and try again!');
-            return redirect()->back();
+        // Check balance due in credit_ledger
+        $check_bal_credit = DB::table('credit_ledger')
+            ->where('Client_Id', $Id)
+            ->where('Balance', '>', 0)
+            ->exists();
+
+
+        if ($check_bal_app && $check_bal && $check_bal_credit) {
+            session()->flash('Error', 'Balance Due Found for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } elseif ($check_bal_app && $check_bal) {
+            session()->flash('Error', 'Balance Due Found in Balance Ledger for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } elseif ($check_bal_app && $check_bal_credit) {
+            session()->flash('Error', 'Balance Due Found in Credit Ledger for this Application Id: ' . $Id . ' Please Clear Due and try again!');
+        } elseif ($check_bal_app) {
+            session()->flash('Error', 'Balance Due Found only In Application for this Application Id: ' . $Id . ' Please Clear Due and try again!');
         } else {
+            // Update record to recycle bin if no balance due found
+            $recyble_app = DB::table('digital_cyber_db')->where('Id', $Id)->update(['Recycle_Bin' => 'Yes']);
+            if ($recyble_app) {
+                $checkCreditLedger = DB::table('credit_ledger')->where('Id',$Id)->exists();
+                if($checkCreditLedger){
+                    DB::table('credit_ledger')->where('Id',$Id)->delete();
+                }
+                return redirect()->route('new.application')->with('SuccessMsg', 'Record for Application Id: ' . $Id . ' Deleted!');
+            }
+             //check credit ledger to delete same entry
 
-            $data = array();
-            $data['Recycle_Bin'] = 'Yes';
-            $data['updated_at'] = Carbon::now();
-            Application::where('Id', $Id)->Update($data);
-            session()->flash('SuccessMsg', 'Record for Application Id: ' . $Id . ' Moved to recyble bin!');
-            return redirect()->back();
         }
     }
+
     public function Download_Ack($Id)
     {
         $fetch = Application::wherekey($Id)->get();
@@ -674,164 +694,111 @@ private function getStatusData()
 
     public function AppStatusList($service)
     {
+        $app_list = DB::table('digital_cyber_db')
+            ->where([['Status', '=', $service], ['Recycle_Bin', '=', $this->no]])
+            ->paginate(15);
 
-        $app_list = DB::table('digital_cyber_db')->where([['Status', '=', $service], ['Recycle_Bin', '=', $this->no]])->Paginate(15);
-        $sl_no = DB::table('digital_cyber_db')->where([['Status', '=', $service], ['Recycle_Bin', '=', $this->no]])->count();
+        $sl_no = DB::table('digital_cyber_db')
+            ->where([['Status', '=', $service], ['Recycle_Bin', '=', $this->no]])
+            ->count();
 
-        // Code for insight Data Records
-
-
-        return view('Application\app_status_list', ['app_list' => $app_list, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'application_type' => $this->application_type, 'info' => $this->info, 'service' => $service]);
+        return view('Application\app_status_list', [
+            'app_list' => $app_list,
+            'sl_no' => $sl_no,
+            'n' => $this->n,
+            'applications_served' => $this->applications_served,
+            'previous_day_app' => $this->previous_day_app,
+            'applications_delivered' => $this->applications_delivered,
+            'previous_day_app_delivered' => $this->previous_day_app_delivered,
+            'total_revenue' => $this->sum,
+            'previous_revenue' => $this->previous_sum,
+            'balance_due' => $this->balance_due_sum,
+            'previous_bal' => $this->previous_bal_sum,
+            'application_type' => $this->application_type,
+            'info' => $this->info,
+            'service' => $service
+        ]);
     }
 
     public function Selected_Ser_Balance_List($value)
     {
+        $selected_ser_balance_list = DB::table('digital_cyber_db')
+            ->where([['Balance', '>', 1], ['Recycle_Bin', '=', $this->no], ['Application_Type', '=', $value]])
+            ->paginate(10);
 
-        $selected_ser_balance_list = DB::table('digital_cyber_db')->where([['Balance', '>', 1], ['Recycle_Bin', '=', $this->no], ['Application_Type', '=', $value]])->paginate(10);
-        $sl_count = DB::table('digital_cyber_db')->where([['Balance', '>', 1], ['Recycle_Bin', '=', $this->no], ['Application_Type', '=', $value]])->count();
-        $count_bal = 0;
-        foreach ($selected_ser_balance_list as $key) {
-            $key = get_object_vars($key); {
-                $count_bal += $key['Balance'];
-            }
-        }
+        $sl_count = DB::table('digital_cyber_db')
+            ->where([['Balance', '>', 1], ['Recycle_Bin', '=', $this->no], ['Application_Type', '=', $value]])
+            ->count();
 
+        $count_bal = $selected_ser_balance_list->sum('Balance');
 
         $info = $sl_count . ' ' . $value . ' Applications Found Due for ₹ ' . $count_bal . '/-  as on ' . date("Y-m-d");
 
-        // Code for insight Data Records
-
-        return view('Application\balance_list', ['balance_list' =>
-        $selected_ser_balance_list, 'sl_no' => $sl_count, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'application_type' => $this->application_type, 'info' => $info]);
+        return view('Application\balance_list', [
+            'balance_list' => $selected_ser_balance_list,
+            'sl_no' => $sl_count,
+            'n' => $this->n,
+            'applications_served' => $this->applications_served,
+            'previous_day_app' => $this->previous_day_app,
+            'applications_delivered' => $this->applications_delivered,
+            'previous_day_app_delivered' => $this->previous_day_app_delivered,
+            'total_revenue' => $this->sum,
+            'previous_revenue' => $this->previous_sum,
+            'balance_due' => $this->balance_due_sum,
+            'previous_bal' => $this->previous_bal_sum,
+            'application_type' => $this->application_type,
+            'info' => $info
+        ]);
     }
-
 
     public function ViewApplication($Client_Id)
     {
-        $yes = 'Yes';
-        $sl_no = DB::table('digital_cyber_db')->where([['Client_Id', '=', $Client_Id], ['Recycle_Bin', '=', $this->no]])->count();
-        $applicant_data = DB::table('digital_cyber_db')->where([['Client_Id', '=', $Client_Id], ['Recycle_Bin', '=', $this->no]])->get();
-        $mobile = '';
-        foreach ($applicant_data as $field) {
-            $field = get_object_vars($field); {
-                $mobile = $field['Mobile_No'];
-            }
-        }
-        $get_app = DB::table('digital_cyber_db')->where('Mobile_No', '=', $mobile)->get();
-        $count_app = DB::table('digital_cyber_db')->where('Mobile_No', '=', $mobile)->count();
-        $app_delivered =  DB::table('digital_cyber_db')->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', $this->no], ['Status', '=', 'Delivered']])->count();
-        $app_pending =  DB::table('digital_cyber_db')->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', $this->no], ['Status', '=', 'Pending']])->count();
-        $app_deleted =  DB::table('digital_cyber_db')->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', $yes]])->count();
-        $tot = 0;
-        $amnt = 0;
-        $bal = 0;
-        foreach ($get_app as $amt) {
-            $amt = get_object_vars($amt); {
-                $tot +=  $amt['Total_Amount'];
-                $amnt += $amt['Amount_Paid'];
-                $bal +=  $amt['Balance'];
-            }
-        }
+        $applicant_data = DB::table('digital_cyber_db')
+            ->where([['Client_Id', '=', $Client_Id], ['Recycle_Bin', '=', $this->no]])
+            ->get();
 
+        $mobile = $applicant_data->first()->Mobile_No ?? '';
 
-        return view('admin-module.application.open_application', ['applicant_data' => $applicant_data, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $this->applications_served, 'previous_day_app' => $this->previous_day_app, 'applications_delivered' => $this->applications_delivered, 'previous_day_app_delivered' => $this->previous_day_app_delivered, 'total_revenue' => $this->sum, 'previous_revenue' => $this->previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'info' => $this->info, 'indi_total' => $tot, 'indi_amount' => $amnt, 'indi_bal' => $bal, 'indi_count' => $count_app, 'indi_data' => $get_app, 'indi_delivered' => $app_delivered, 'indi_pending' => $app_pending, 'indi_deleted' => $app_deleted, 'Client_Id' => $Client_Id]);
+        $get_app = DB::table('digital_cyber_db')
+            ->where('Mobile_No', '=', $mobile)
+            ->get();
+
+        $count_app = $get_app->count();
+        $app_delivered = $get_app->where('Status', 'Delivered')->count();
+        $app_pending = $get_app->where('Status', 'Pending')->count();
+        $app_deleted = DB::table('digital_cyber_db')
+            ->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', 'Yes']])
+            ->count();
+
+        $tot = $get_app->sum('Total_Amount');
+        $amnt = $get_app->sum('Amount_Paid');
+        $bal = $get_app->sum('Balance');
+
+        return view('admin-module.application.open_application', [
+            'applicant_data' => $applicant_data,
+            'sl_no' => $applicant_data->count(),
+            'n' => $this->n,
+            'applications_served' => $this->applications_served,
+            'previous_day_app' => $this->previous_day_app,
+            'applications_delivered' => $this->applications_delivered,
+            'previous_day_app_delivered' => $this->previous_day_app_delivered,
+            'total_revenue' => $this->sum,
+            'previous_revenue' => $this->previous_sum,
+            'balance_due' => $this->balance_due_sum,
+            'previous_bal' => $this->previous_bal_sum,
+            'info' => $this->info,
+            'indi_total' => $tot,
+            'indi_amount' => $amnt,
+            'indi_bal' => $bal,
+            'indi_count' => $count_app,
+            'indi_data' => $get_app,
+            'indi_delivered' => $app_delivered,
+            'indi_pending' => $app_pending,
+            'indi_deleted' => $app_deleted,
+            'Client_Id' => $Client_Id
+        ]);
     }
 
-
-    public function Update_Application($Id)
-    {
-
-        $sl_no = DB::table('digital_cyber_db')->where([['Id', '=', $Id], ['Recycle_Bin', '=', $this->no]])->count();
-        $applicant_data = DB::table('digital_cyber_db')->where([['Id', '=', $Id], ['Recycle_Bin', '=', $this->no]])->get();
-
-        // Code for Individual Customer Data Insight
-        foreach ($applicant_data as $field) {
-            $field = get_object_vars($field); {
-                $mobile = $field['Mobile_No'];
-            }
-        }
-        $get_app = DB::table('digital_cyber_db')->where('Mobile_No', '=', $mobile)->get();
-        $count_app = DB::table('digital_cyber_db')->where('Mobile_No', '=', $mobile)->count();
-        $app_delivered =  DB::table('digital_cyber_db')->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', $this->no], ['Status', '=', 'Delivered']])->count();
-        $app_pending =  DB::table('digital_cyber_db')->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', $this->no], ['Status', '=', 'Pending']])->count();
-        $app_deleted =  DB::table('digital_cyber_db')->where([['Mobile_No', '=', $mobile], ['Recycle_Bin', '=', $this->yes]])->count();
-        $tot = 0;
-        $amnt = 0;
-        $bal = 0;
-        foreach ($get_app as $amt) {
-            $amt = get_object_vars($amt); {
-                $tot +=  $amt['Total_Amount'];
-                $amnt += $amt['Amount_Paid'];
-                $bal +=  $amt['Balance'];
-            }
-        }
-        // End of Data Insight Code
-
-        // Code for insight Data Records
-        $applications_served = DB::table('digital_cyber_db')->count();
-        $previous_day = date('Y-m-d', strtotime($this->today . ' - 1 days'));
-        $previous_day_app = DB::table('digital_cyber_db')->where([['Received_Date', '=', $previous_day], ['Recycle_Bin', '=', $this->no]])->count();
-        $status = 'Delivered';
-        $applications_delivered = DB::table('digital_cyber_db')->where([[
-            'Status', '=',
-            $status
-        ], ['Recycle_Bin', '=', $this->no]])->count();
-        $previous_day_app_delivered = DB::table('digital_cyber_db')->where([[
-            'Status', '=',
-            $status
-        ], ['Recycle_Bin', '=', $this->no], ['Delivered_Date', '=', $previous_day]])->count();
-
-        $total_revenue = DB::table('digital_cyber_db')->where([['Recycle_Bin', '=', $this->no]])->get();
-        $sum = 0.00;
-        foreach ($total_revenue as $key) {
-            $key  = get_object_vars($key); {
-                $sum += $key['Amount_Paid'];
-            }
-        }
-
-        $previous_revenue = DB::table('digital_cyber_db')->where([['Received_Date', '=', $previous_day], ['Recycle_Bin', '=', $this->no]])->get();
-
-        $previous_sum = 0.00;
-        foreach ($previous_revenue as $key) {
-            $key  = get_object_vars($key); {
-                $previous_sum += $key['Amount_Paid'];
-            }
-        }
-
-
-        //  End of Data Insight Code
-
-        return view('Application\update_open_app', ['applicant_data' => $applicant_data, 'sl_no' => $sl_no, 'n' => $this->n, 'applications_served' => $applications_served, 'previous_day_app' => $previous_day_app, 'applications_delivered' => $applications_delivered, 'previous_day_app_delivered' => $previous_day_app_delivered, 'total_revenue' => $sum, 'previous_revenue' => $previous_sum, 'balance_due' => $this->balance_due_sum, 'previous_bal' => $this->previous_bal_sum, 'info' => $this->info, 'indi_total' => $tot, 'indi_amount' => $amnt, 'indi_bal' => $bal, 'indi_count' => $count_app, 'indi_data' => $get_app, 'indi_delivered' => $app_delivered, 'indi_pending' => $app_pending, 'application_type' => $this->application_type, 'payment_mode' => $this->payment_mode, 'id' => $Id, 'status_list' => $this->status_list, 'indi_deleted' => $app_deleted]);
-    }
-
-    // public function GlobalSearch($key)
-    // {
-    //     $search = $key;
-    //     $search_data = DB::table('digital_cyber_db')
-    //                 ->where([['Mobile_No', '=', $search],['Recycle_Bin','=',$this->no]])
-    //                 ->orWhere('Name', '=', $search)
-    //                 ->orWhere('Ack_No', '=', $search)
-    //                 ->get();
-
-    //     $fetched_data_count = DB::table('digital_cyber_db')
-    //                         ->where([['Mobile_No', '=', $search],['Recycle_Bin','=',$this->no]])
-    //                         ->orWhere('Name', '=', $search)
-    //                         ->orWhere('Ack_No', '=', $search)
-    //                 ->count();
-    //     $total=0;
-    //     foreach ($search_data as $key)
-    //     {
-    //          $key  = get_object_vars($key);
-    //         {
-    //             $total += $key['Amount_Paid'];
-    //         }
-    //     }
-    //     // code for Isnight Data
-
-
-    //     return view('Application.searc',['search_data'=>$search_data, 'count'=>$fetched_data_count, 'sl_no'=>$fetched_data_count, 'n'=>$this->n, 'search'=>$search,'total'=>$total,'applications_served'=>$this->applications_served,'previous_day_app'=>$this->previous_day_app,'applications_delivered'=>$this->applications_delivered,'applications_delivered'=>$this->applications_delivered,'previous_day_app_delivered'=>$this->previous_day_app_delivered,'total_revenue'=>$this->sum,'previous_revenue'=>$this->previous_sum,'balance_due'=>$this->balance_due_sum,'previous_bal'=>$this->previous_bal_sum]);
-
-    // }
     public function  GlobalSearch($key)
     {
         return view('admin-module.application.search', ['search' => $key]);

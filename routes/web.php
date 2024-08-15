@@ -80,7 +80,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(funct
         Route::get('update/application', 'updateApplication')->name('update_application');
         Route::get('edit/application/{id}', 'Edit')->name('edit_application');
         Route::get('view/application/{id}', 'ViewApplication')->name('view.application');
-        Route::get('delete/application/{id}', 'MovetoRecycleBin')->name('delete.application');
+        Route::get('delete/application/{id}', 'deleteApp')->name('delete.application');
         Route::get('delete/docs/{id}', 'Delete_File')->name('delete_document');
         Route::get('download/paymentreceipt/{id}', 'Download_Pay')->name('download_pay');
         Route::get('multiple/documents/delete/{array}', 'MultipleDocDelete')->name('multiple_doc_delete');

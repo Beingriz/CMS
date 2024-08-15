@@ -55,7 +55,7 @@ class ApplicationForm extends Component
     public $Select_Date = Null, $Daily_Income = 0;
     public $Edit_Window = 0;
     public $PaymentFile, $AckFile, $DocFile = 0, $FilterChecked;
-    protected $daily_applications = [],$AppliedServices;
+    protected $daily_applications,$AppliedServices;
 
 
 
@@ -201,7 +201,7 @@ class ApplicationForm extends Component
 
         // Flash success message and redirect
         session()->flash('SuccessMsg', 'Application Saved Successfully! ' . ($this->Balance > 0 ? 'Balance Ledger Updated' : ''));
-        $this->ApplicaitonRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
+        $this->ApplicationRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
         return redirect()->route('new.application');
     }
 
@@ -434,6 +434,7 @@ class ApplicationForm extends Component
             ->where('Balance', '>', 0)
             ->exists();
 
+
         if ($check_bal_app && $check_bal && $check_bal_credit) {
             session()->flash('Error', 'Balance Due Found for this Application Id: ' . $Id . ' Please Clear Due and try again!');
         } elseif ($check_bal_app && $check_bal) {
@@ -448,9 +449,69 @@ class ApplicationForm extends Component
             if ($recyble_app) {
                 session()->flash('SuccessMsg', 'Record for Application Id: ' . $Id . ' Deleted!');
             }
+             //check credit ledger to delete same entry
+             $checkCreditLedger = CreditLedger::where('Client_Id',$Id)->exists();
+             if($checkCreditLedger){
+                 CreditLedger::where('Client_Id',$Id)->delete();
+             }
         }
     }
 
+
+// Multiple Delete
+    public function MultipleDelete()
+    {
+        // Perform the delete operation on the selected IDs
+        $this->DeleteMultiple($this->Checked);
+    }
+    public function DeleteMultiple(array $Ids)
+    {
+        foreach ($Ids as $Id) {
+            // Check balance due in digital_cyber_db
+            $check_bal_app = DB::table('digital_cyber_db')
+                ->where('Id', $Id)
+                ->where('Balance', '>', 0)
+                ->exists();
+
+            // Check balance due in balance_ledger
+            $check_bal = DB::table('balance_ledger')
+                ->where('Client_Id', $Id)
+                ->where('Balance', '>', 0)
+                ->exists();
+
+            // Check balance due in credit_ledger
+            $check_bal_credit = DB::table('credit_ledger')
+                ->where('Client_Id', $Id)
+                ->where('Balance', '>', 0)
+                ->exists();
+
+            if ($check_bal_app && $check_bal && $check_bal_credit) {
+                session()->flash('Error', 'Balance Due Found for this Application Id: ' . $Id . '. Please Clear Due and try again!');
+                continue; // Skip to the next ID in the loop
+            } elseif ($check_bal_app && $check_bal) {
+                session()->flash('Error', 'Balance Due Found in Balance Ledger for this Application Id: ' . $Id . '. Please Clear Due and try again!');
+                continue; // Skip to the next ID in the loop
+            } elseif ($check_bal_app && $check_bal_credit) {
+                session()->flash('Error', 'Balance Due Found in Credit Ledger for this Application Id: ' . $Id . '. Please Clear Due and try again!');
+                continue; // Skip to the next ID in the loop
+            } elseif ($check_bal_app) {
+                session()->flash('Error', 'Balance Due Found only in Application for this Application Id: ' . $Id . '. Please Clear Due and try again!');
+                continue; // Skip to the next ID in the loop
+            } else {
+                // Update record to recycle bin if no balance due found
+                $recycle_app = DB::table('digital_cyber_db')->where('Id', $Id)->update(['Recycle_Bin' => 'Yes']);
+                $checkCreditLedger = CreditLedger::where('Id',$Id)->exists();
+                if($checkCreditLedger){
+                    CreditLedger::where('Id',$Id)->delete();
+                }
+                if ($recycle_app) {
+                    session()->flash('SuccessMsg', 'Record for Application Id: ' . $Id . ' Deleted!');
+                } else {
+                    session()->flash('Error', 'Failed to delete Application Id: ' . $Id);
+                }
+            }
+        }
+    }
 
 
     public function render()

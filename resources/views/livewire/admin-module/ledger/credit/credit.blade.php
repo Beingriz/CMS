@@ -254,7 +254,7 @@
         </div> {{-- End of Form Column --}}
 
         @if ($Show_Insight)
-            <div class="col-lg-7">{{-- Record Column --}}
+            <div class="col-lg-4">{{-- Record Column --}}
                 <div class="card">
                     <div class="card-body">
                         <h4 class="mb-sm-0">Insight</h4>

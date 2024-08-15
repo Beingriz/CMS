@@ -101,7 +101,7 @@ class DynamicDashboard extends Component
     }
 
     // Update application status
-    public function updateStatus(int $id, string $pstatus, string $ustatus, string $subserv): void
+    public function updateStatus(string $id, string $pstatus, string $ustatus, string $subserv): void
     {
         $this->updateApplicationStatus($id, $ustatus);
         $this->flashSuccessMessage($pstatus, $ustatus);
@@ -114,7 +114,7 @@ class DynamicDashboard extends Component
     }
 
     // Helper function to update application status
-    private function updateApplicationStatus(int $id, string $ustatus): void
+    private function updateApplicationStatus(string $id, string $ustatus): void
     {
         $data = [
             'Status' => $ustatus,

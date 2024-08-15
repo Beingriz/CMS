@@ -1075,7 +1075,7 @@
                                                             Checked ({{ count($Checked) }}) <i class="mdi mdi-chevron-down"></i>
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2">
-                                                            <a class="dropdown-item" title="Multiple Delete" onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()" wire:click="MultipleDelete()">Delete</a>
+                                                            <a class="dropdown-item" id="delete" title="Multiple Delete" wire:click="MultipleDelete()">Delete</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1148,7 +1148,7 @@
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
                                                         <a class="dropdown-item" title="Edit Application" href={{ route('edit_application', $data->Id) }} id="update">Edit</a>
-                                                        <a class="dropdown-item" title="Delete Application"   wire:click="Delete('{{ $data->Id }}')" id="delete">Delete</a>
+                                                        <a class="dropdown-item" title="Delete Application"  href="{{ route('delete.application',$data->Id) }}"  id="delete">Delete</a>
                                                         <a class="dropdown-item" title="Open Application" href={{ route('view.application', $data->Id) }} id="open">Open</a>
                                                     </div>
                                                 </div>
