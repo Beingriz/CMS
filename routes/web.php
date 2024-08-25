@@ -8,6 +8,7 @@ use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Ledger\Creditentry;
 use App\Http\Controllers\Ledger\DebitEntryController;
 use App\Http\Controllers\Home\HomeSlideController;
+use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\UserModule\UserController;
 use App\Http\Controllers\WhatsApp\WhatsappController;
 use FontLib\Table\Type\name;
@@ -60,16 +61,23 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('edit/doc/{id}', 'editDocumet')->name('edit.doc');
         Route::get('delete/doc/{id}', 'deleteDocument')->name('delete.doc');
 
-
-
     //Branches Module Routes
         Route::get('/branch/registration', 'BranchRegister')->name('branch_register');
         Route::get('edit/branch/{id}', 'EditBranch')->name('edit.branch');
         Route::get('delete/branch/{id}', 'DeleteBranch')->name('delete.branch');
 
+    //Whatsapp Webhooks
+        Route::get('whatsapp/chatbot','WhatsappChat')->name('whatsapp.chat');
+        // Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
+
+
     });
 });
-
+//whatsapp
+Route::controller(TwilioWebhookController::class)->group(function () {
+    // Route::post('/incoming/twilio', 'handle')->name('chatbot');
+    Route::post('/incoming/twilio', 'handleWebhook');
+});
 // Application Controller Admin & Branch Admin Role
 Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(function () {
     Route::controller(ApplicationController::class)->group(function () {
@@ -133,10 +141,10 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator')->group(functi
         Route::get('delete/debit/entry/{Id}', 'DeleteDebit')->name('delete.debit');
         //Debit Ledger Routes
         Route::get('DebitSource', 'DebitSource')->name('DebitSource');
-        Route::get('edit/debit/main/source{id}', 'EidtMainSource')->name('edit.mainsource');
-        Route::get('delete/debit/main/source{id}', 'DeleteMainSource')->name('delete.mainsource');
-        Route::get('edit/debit/sub/source{id}', 'EditsSubSource')->name('edit.subsource');
-        Route::get('delete/debit/sub/source{id}', 'DeleteSubSource')->name('delete.subsource');
+        Route::get('edit/debit/main/source{id}', 'EidtMainSource')->name('edit.debit.mainsource');
+        Route::get('delete/debit/main/source{id}', 'DeleteMainSource')->name('delete.debit.mainsource');
+        Route::get('edit/debit/sub/source{id}', 'EditsSubSource')->name('edit.debit.subsource');
+        Route::get('delete/debit/sub/source{id}', 'DeleteSubSource')->name('delete.debit.subsource');
     });
 });
 
@@ -186,7 +194,7 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
 });
 Route::middleware('auth', 'auth.role:user', 'prevent.back')->group(function () {
     Route::controller(UserController::class)->group(function () {
-        Route::get('/ApplyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
+        Route::get('/applyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
     });
 });
 Route::controller(UserController::class)->group(function () {
@@ -231,5 +239,14 @@ Route::controller(UserController::class)->group(function () {
 // Route::get('/dashboard', function () {
 //     return view('admin.index');
 // })->middleware(['auth','auth.role:admin'])->name('dashboard');
+
+Route::get('/test', function () {
+    return csrf_token(); // This should return a token without error
+});
+
+Route::post('/test-post', function () {
+    return response()->json(['status' => 'success']);
+});
+
 
 require __DIR__ . '/auth.php';

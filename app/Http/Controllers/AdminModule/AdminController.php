@@ -362,10 +362,14 @@ class AdminController extends Controller
 
         return view('admin-module.documents.document_advisor');
     }
-
+//-------------------------------WhatsAPpp-----------------------------
     public function MarketingDashboard()
     {
         return view('admin-module.marketing.marketing');
+    }
+    public function WhatsappChat()
+    {
+        return view('whats-app.whass_app');
     }
     public function destroy(Request $request)
     {
