@@ -36,23 +36,18 @@ trait WhatsappTrait
 }
 
 
-    public function UserRegisterAlert($name, $mobile, $username)
+    public function userRegisterationAlert($mobile,$profileName, $username, $password)
     {
-        $body = "🎉 **User Registration Success** 🎉\n\n"
-            . "Hello *{$name}*,\n\n"
-            . "👤 You are now officially registered with Digital Cyber!\n\n"
-            . "📧 Username: {$username}\n"
-            . "📱 Phone: {$mobile}\n\n"
-            . "To access your account and explore our services, please log in to our website:\n"
-            . "🔐 www.cyberpe.epizy.com\n\n"
-            . "If you have any questions, feel free to reach out. Welcome to Digital Cyber!\n\n"
-            . "Best regards,\n"
-            . "*Digital Cyber.*\n"
-            . "*+918892988334*";
+        $contentSid = 'HX362d409fe6a035e6b3480b3678f98478'; // Replace with your actual ContentSid
+        $contentVariables = [
+           "1" => trim($profileName),
+            "2" => trim($username),
+            "3" => trim($password),
+        ];
 
-            $contentSid=""; $contentVariables=[];
+        $body = "Hi *{{1}}*,\n\nWelcome to *Digital Cyber*! 🎉\n\nYour account has been successfully created. Here are your login details:\n\n🔑 *Login ID*: {{2}}\n🔒 *Password*: {{3}}\n\nYou can access your account Now.\n\nPlease keep your credentials secure and reach out if you have any questions.\n\n*Digital Cyber.*";
 
-        return  $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
+        $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
     }
 
     public function EmployeeRegisterAlert($name, $mobile, $username)

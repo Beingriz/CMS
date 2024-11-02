@@ -59,7 +59,7 @@ class ApplicationForm extends Component
 
 
 
-    public $Yes = 'off', $Client_Image, $Old_Profile_Image, $C_Id, $C_Name, $C_RName, $C_Gender, $C_Email, $C_Dob, $C_Mob, $C_Ctype, $C_Address, $Open = 0, $lastMobRecTime, $profileCreated, $lastProfUpdate, $status_list;
+    public $Yes = 'off', $Client_Image, $Old_Profile_Image, $C_Id, $C_Name, $C_RName, $C_Gender, $C_Email, $C_Dob, $C_Mob, $C_Ctype, $C_Address, $Open = 0, $lastMobRecTime, $profileCreated, $lastProfUpdate, $status_list,$registerClient=false;
 
 
     protected $rules = [
@@ -133,8 +133,10 @@ class ApplicationForm extends Component
 
         // Check if client already exists
         $existingClient = ClientRegister::where('Mobile_No', $this->Mobile_No)->first();
+        $existinguser = User::where('mobile_no', $this->Mobile_No)->first();
 
-        if ($existingClient) {
+        if ($existingClient && $existinguser) {
+            $this->registerClient = false;
             $client_Id = $existingClient->Id;
             // Existing client details
             $dob = $existingClient->DOB;
@@ -144,16 +146,17 @@ class ApplicationForm extends Component
             $profileimage = $existingClient->Profile_Image;
             $client_type = $existingClient->Client_Type;
         } else {
-            $client_Id = 'DC' . time();
+            $this->registerClient = true;
+            $client_Id = 'DC'.time();
             $name = $this->Name;
             $profileimage = 'account.jpg';
         }
 
         // Handle file uploads
-        $Applicant_Image = $this->handleFileUpload('Applicant_Image', $name, $client_Id, 'Applicant_Image');
-        $this->Ack_File = $this->handleFileUpload('Ack_File', $name, $client_Id, 'Ack_File');
-        $this->Doc_File = $this->handleFileUpload('Doc_File', $name, $client_Id, 'Doc_File');
-        $this->Payment_Receipt = $this->handleFileUpload('Payment_Receipt', $name, $client_Id, 'Payment_Receipt');
+        $Applicant_Image = $this->handleFileUpload($this->Applicant_Image, $name, $client_Id, 'Applicant_Image');
+        $this->Ack_File = $this->handleFileUpload($this->Ack_File, $name, $client_Id, 'Ack_File');
+        $this->Doc_File = $this->handleFileUpload($this->Doc_File, $name, $client_Id, 'Doc_File');
+        $this->Payment_Receipt = $this->handleFileUpload($this->Payment_Receipt, $name, $client_Id, 'Payment_Receipt');
 
         // Handle client image update
         $Client_Image = ($this->Profile_Update == 1 && !empty($this->Client_Image))
@@ -192,6 +195,41 @@ class ApplicationForm extends Component
 
         // Save application form
         $app_field->save();
+        if($this->registerClient){
+            $client = new ClientRegister();
+            $client->fill([
+                'Id' => $client_Id,
+                'Branch_Id' => trim($this->Branch_Id),
+                'Emp_Id' => trim($this->Emp_Id),
+                'Name' => trim($this->Name),
+                'Relative_Name' => trim($this->RelativeName),
+                'Gender' => trim($this->Gender),
+                'DOB' => trim($this->Dob),
+                'Mobile_No' => trim($this->Mobile_No),
+                'Email_Id' => trim($this->username . rand(00, 999) . '@gmail.com'),
+                'Address' => 'Not Available',
+                'Profile_Image' => $Client_Image,
+                'Client_Type' => 'New Client',
+            ]);
+            $client->save();
+
+            $this->usernameGenrator($this->Name, $this->Dob);
+            $password = Hash::make(trim($this->username));
+            User::create([
+                'Client_Id' => $client_Id,
+                'branch_id' => $this->Branch_Id,
+                'Emp_Id' => $this->Emp_Id,
+                'name' => trim($this->Name),
+                'username' => trim($this->username),
+                'mobile_no' => trim($this->Mobile_No),
+                'Status' => trim('user'),
+                'role' => trim('user'),
+                'email' => trim($this->username . rand(00, 999) . '@gmail.com'),
+                'profile_image' =>  $Client_Image,
+                'password' => $password,
+            ]);
+            $this->userRegisterationAlert(trim($this->Mobile_No),trim($this->Name),trim($this->username),trim($this->username));
+        }
 
         // Create or update balance ledger entry
         $this->saveBalanceLedger($client_Id, $service);
@@ -204,6 +242,7 @@ class ApplicationForm extends Component
         $this->ApplicationRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
         return redirect()->route('new.application');
     }
+
 
     private function handleFileUpload($fileType, $name, $client_Id, $prefix)
     {
