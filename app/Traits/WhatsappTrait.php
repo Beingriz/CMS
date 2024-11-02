@@ -89,29 +89,26 @@ trait WhatsappTrait
         $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
     }
 
-
-
-    public function ApplicationUpdateAlert($mobile, $applicantName, $service, $serviceType, $status, $reason)
+    public function ApplicationUpdateAlert($mobile,$profileName, $applicantName, $service, $serviceType, $status, )
     {
-        $reasonText = $reason !== 'Not Available' ? "*Reason: {$reason}*" : "";
-        $body = "Hi *{$applicantName}*,\n\n"
-            . "🚀 Exciting news! 🚀\n"
-            . "Your application status has been updated with the following details:\n\n"
-            . "👤 Name: *{$applicantName}*\n"
-            . "📱 Phone: *+91{$mobile}*\n"
-            . "📝 Service: *{$service}*\n"
-            . "🔖 Type: *{$serviceType}*\n"
-            . "📊 New Status: *{$status}*\n"
-            . "{$reasonText}\n\n"
-            . "Thank you for choosing us!\n"
-            . "You can log in to our website to track your application details:\n"
-            . "🌐 www.cyberpe.epizy.com\n\n"
-            . "*Digital Cyber*";
+        $contentSid = 'HX2220de0d0bffac9fa7d725dadd47e6f1'; // Replace with your actual ContentSid
+        $contentVariables = [
+            "1" => trim($profileName),
+            "2" => trim($applicantName),
+            "3" => trim($mobile),
+            "4" => trim($service),
+            "5" => trim($serviceType),
+            "6" => trim($status)
+        ];
 
-            $contentSid=""; $contentVariables=[];
+        $body = "*Application Update Notification*\n\nDear *{{1}}*,\n\nWe are pleased to inform you of an update to your application. Please find the current details below:\n\n👤 **Name:** *{{2}}*\n📱 **Phone:** *+91{{3}}*\n📝 **Service:** *{{4}}*\n🔖 **Type:** *{{5}}*\n📋 **Status:** *{{6}}*\n\nTo review the status and track further progress, please log in to your account on our website.\n\n**Digital Cyber**\nThank you for trusting us to provide you with services.";
 
-            return  $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
+        $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
     }
+
+
+
+
 
     public function ApplicationByUserAlert($profileName, $mobile, $applicantName, $service, $serviceType)
     {
