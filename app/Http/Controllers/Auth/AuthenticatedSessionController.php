@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
+use App\Traits\WhatsappTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    use WhatsappTrait;
     /**
      * Display the login view.
      *
@@ -42,6 +44,7 @@ class AuthenticatedSessionController extends Controller
             $url = '/admin/dashboard';
         }
         $name = $request->user()->name;
+
         $notification = array(
             'message'=>$name.' Welcome back',
             'alert-type' =>'success'

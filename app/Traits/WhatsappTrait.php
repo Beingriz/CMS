@@ -77,11 +77,11 @@ trait WhatsappTrait
     {
         $contentSid = 'HXcdf92be43cbac16ae0b73cbb7600cc79'; // Replace with your actual ContentSid
         $contentVariables = [
-            "1" => $profileName,
-            "2" => $applicantName,
-            "3" => $mobile,
-            "4" => $service,
-            "5" => $serviceType
+           "1" => trim($profileName),
+            "2" => trim($applicantName),
+            "3" => trim($mobile),
+            "4" => trim($service),
+            "5" => trim($serviceType),
         ];
 
         $body = "Hi *{{1}}*,\n\nCongratulations! 🎉\nA new application has been successfully registered with the following details:\n\n👤 Name: *{{2}}*\n📱 Phone: *+91{{3}}*\n📝 Service: *{{4}}*\n🔖 Type: *{{5}}*\n\nYou can log in to our website to track your application details:\n*Digital Cyber*.";

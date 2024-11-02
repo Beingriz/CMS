@@ -146,7 +146,7 @@ class ApplicationForm extends Component
         } else {
             $client_Id = 'DC' . time();
             $name = $this->Name;
-            $profileimage = 'noimage';
+            $profileimage = 'account.jpg';
         }
 
         // Handle file uploads
@@ -563,13 +563,9 @@ class ApplicationForm extends Component
 
     private function loadClientData()
     {
-        $query = ClientRegister::where('Mobile_No', $this->Mobile_No);
+        $global_query = ClientRegister::where('Mobile_No', $this->Mobile_No);
 
-        if (Auth::user()->role == 'branch admin') {
-            $query->where('Branch_Id', $this->Branch_Id);
-        }
-
-        $client = $query->first();
+        $client = $global_query->first();
 
         if ($client) {
             $this->loadRegisteredClientData($client);
@@ -599,7 +595,7 @@ class ApplicationForm extends Component
         $this->AppliedServices = $query->get();
         $count = $this->AppliedServices->count();
         $this->Open = 1;
-        $this->user_type = "Registered User!! Availed {$count} Services";
+        $this->user_type = "Registered User!! Availed {$count} Service from this Branch";
     }
 
     private function loadUnregisteredClientData()
