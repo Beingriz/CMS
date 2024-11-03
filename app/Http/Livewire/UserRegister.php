@@ -44,29 +44,29 @@ class UserRegister extends Component
         $this->validate();
         $client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
         $user = User::create([
-            'Client_Id' => $client_Id,
-            'name' => $this->name,
+            'Client_Id' => trim($client_Id),
+            'name' => trim($this->name),
             'branch_id' => $this->Branch,
             'Emp_Id' => 'Direct',
-            'username' => $this->username,
-            'mobile_no' => $this->mobile_no,
-            'email' => $this->email,
+            'username' => trim($this->username),
+            'mobile_no' => trim($this->mobile_no),
+            'email' => trim($this->email),
             'role' => 'user',
             'status' => 'user',
             'address' => 'Not Available',
             'profile_image' => 'account.png',
-            'password' => Hash::make($this->password),
+            'password' => Hash::make(trim($this->password)),
         ]);
 
 
         $user_data = new ClientRegister();
-        $user_data->Id = $client_Id;
-        $user_data->Name = $this->name;
+        $user_data->Id = trim($client_Id);
+        $user_data->Name = trim($this->name);
         $user_data->Relative_Name = 'Not Available';
         $user_data->Gender = 'Not Available';
         $user_data->DOB = NULL;
-        $user_data->Mobile_No = $this->mobile_no;
-        $user_data->Email_Id = $this->email;
+        $user_data->Mobile_No = trim($this->mobile_no);
+        $user_data->Email_Id = trim($this->email);
         $user_data->Address = "Not Available";
         $user_data->Profile_Image = 'account.png';
         $user_data->Client_Type = "New Client";
@@ -77,7 +77,7 @@ class UserRegister extends Component
             'message' => $this->name . ' Login Successfull',
             'alert-type' => 'info'
         );
-        $this->UserRegisterAlert($this->name, $this->mobile_no, $this->username);
+        $this->userRegisterationAlert(trim($this->mobile_no),trim($this->name),trim($this->username),trim($this->password));
         return redirect()->route('home')->with($notification);
     }
     public function render()

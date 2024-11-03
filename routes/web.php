@@ -248,5 +248,17 @@ Route::post('/test-post', function () {
     return response()->json(['status' => 'success']);
 });
 
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-mailgun', function () {
+    Mail::raw('This is a test email sent using Mailgun!', function ($message) {
+        $message->to('mdrizwan.blr@yahoo.com')
+                ->subject('Mailgun Test Email');
+    });
+
+    return 'Email sent!';
+});
+
+
 
 require __DIR__ . '/auth.php';

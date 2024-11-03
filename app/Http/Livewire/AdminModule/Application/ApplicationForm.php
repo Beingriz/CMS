@@ -23,6 +23,8 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 class ApplicationForm extends Component
 {
@@ -147,7 +149,7 @@ class ApplicationForm extends Component
             $client_type = $existingClient->Client_Type;
         } else {
             $this->registerClient = true;
-            $client_Id = 'DC'.time();
+            $client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
             $name = $this->Name;
             $profileimage = 'account.jpg';
         }

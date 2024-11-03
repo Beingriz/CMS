@@ -49,28 +49,10 @@ class RegisteredUserController extends Controller
             'mobile_no' => $request->mobile_no,
             'dob' => $request->dob,
             'email' => $request->email,
-            'Status' => trim('user'),
             'password' => Hash::make($request->password),
         ]);
-        $client = new ClientRegister();
-            $client->fill([
-                'Id' => 'DC'.time(),
-                'Name' => trim($request->name),
-                'Relative_Name' => trim('Not Available'),
-                'Gender' => trim('Not Available'),
-                'DOB' => trim($request->dob),
-                'Mobile_No' => trim($request->mobile_no),
-                'Email_Id' => trim($request->email),
-                'Address' => 'Not Available',
-                'Profile_Image' => 'account.png',
-                'Client_Type' => 'New Client',
-            ]);
-            $client->save();
-
         event(new Registered($user));
-
         Auth::login($user);
-        $this->userRegisterationAlert(trim($request->mobile_no),trim($request->name),trim($request->username),trim($request->password));
         return redirect(RouteServiceProvider::HOME);
     }
 }

@@ -7,14 +7,16 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-dompdf": "^3.0",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.9",
         "intervention/image": "^2.7",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",
         "spatie/laravel-ignition": "1.6",
-        "twilio/sdk": "^7.12"
+        "symfony/http-client": "^7.1",
+        "symfony/mailgun-mailer": "^7.1",
+        "twilio/sdk": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
