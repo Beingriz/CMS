@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'https://0cfc-2406-7400-104-f642-dd04-c127-d7c9-be7e.ngrok-free.app/incoming/twilio', // Add your webhook endpoint here
+        'https://75e1-2406-7400-98-ca36-b184-6f7c-63a7-c36d.ngrok-free.app/incoming_msg','https://75e1-2406-7400-98-ca36-b184-6f7c-63a7-c36d.ngrok-free.app/test-webhook'
     ];
+
 }

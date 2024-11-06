@@ -369,7 +369,11 @@ class AdminController extends Controller
     }
     public function WhatsappChat()
     {
-        return view('whats-app.whass_app');
+        return view('whats-app.whatsapp_chatbot');
+    }
+    public function Templates()
+    {
+        return view('whats-app.whatsapp_template_manage');
     }
     public function destroy(Request $request)
     {

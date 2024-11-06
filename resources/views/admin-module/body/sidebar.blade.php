@@ -136,6 +136,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('marketing.dashboard') }}">Marketing</a></li>
+                        <li><a href="{{ route('whatsapp.templates') }}">Templates</a></li>
                         <li><a href="{{ route('whatsapp.chat') }}">WhatsApp Chat</a></li>
                     </ul>
                 </li>

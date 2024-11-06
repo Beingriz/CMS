@@ -24,4 +24,9 @@ class ClientRegister extends Model
         'Profile_Image',
         'Client_Type',
     ];
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }

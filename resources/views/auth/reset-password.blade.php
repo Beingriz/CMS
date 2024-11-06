@@ -4,7 +4,7 @@
     <head>
 
         <meta charset="utf-8" />
-        <title>Login | Admin</title>
+        <title>Reset Password</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -48,7 +48,7 @@
                                 {{-- Email --}}
                                 <div class="form-group mb-3 row">
                                     <div class="col-12">
-                                        <input  id="email"  name="email" class="form-control" type="email" required autofocus placeholder="Username">
+                                        <input  id="email"  name="email" class="form-control" type="email" required autofocus placeholder="Email">
                                     </div>
                                 </div>
 

@@ -14,7 +14,6 @@ class TwilioWebhookController extends Controller
     }
     public function handle(Request $request)
     {
-        dd('received');
         $messageBody = $request->input('Body');
         $from = $request->input('From');
         $mediaUrl = $request->input('MediaUrl0'); // Twilio sends media URLs this way

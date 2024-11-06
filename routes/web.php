@@ -9,6 +9,7 @@ use App\Http\Controllers\Ledger\Creditentry;
 use App\Http\Controllers\Ledger\DebitEntryController;
 use App\Http\Controllers\Home\HomeSlideController;
 use App\Http\Controllers\TwilioWebhookController;
+
 use App\Http\Controllers\UserModule\UserController;
 use App\Http\Controllers\WhatsApp\WhatsappController;
 use FontLib\Table\Type\name;
@@ -68,16 +69,19 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
 
     //Whatsapp Webhooks
         Route::get('whatsapp/chatbot','WhatsappChat')->name('whatsapp.chat');
+        Route::get('whatsapp/templates','Templates')->name('whatsapp.templates');
         // Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 
 
     });
 });
 //whatsapp
-Route::controller(TwilioWebhookController::class)->group(function () {
-    // Route::post('/incoming/twilio', 'handle')->name('chatbot');
-    Route::post('/incoming/twilio', 'handleWebhook');
-});
+// Route::controller(TwilioWebhookController::class)->group(function () {
+//     Route::post('/incoming_msg', 'handle');
+// });
+
+Route::POST('/incoming_msg', [TwilioWebhookController::class, 'handle']);
+
 // Application Controller Admin & Branch Admin Role
 Route::middleware('auth', 'auth.role:admin,branch admin,operator' )->group(function () {
     Route::controller(ApplicationController::class)->group(function () {
@@ -259,6 +263,9 @@ Route::get('/test-mailgun', function () {
     return 'Email sent!';
 });
 
+// Route::post('/test-webhook', function (Request $request) {
+//     return response()->json(['status' => 'success', 'data' => $request->all()]);
+// });
 
 
 require __DIR__ . '/auth.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\WhatsApp;
 
 use Livewire\Component;
 use Twilio\Rest\Client;
