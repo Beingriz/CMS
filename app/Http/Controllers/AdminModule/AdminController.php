@@ -375,6 +375,10 @@ class AdminController extends Controller
     {
         return view('whats-app.whatsapp_template_manage');
     }
+    public function Marketing()
+    {
+        return view('whats-app.whatsapp_marketing_manager');
+    }
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

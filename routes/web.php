@@ -70,6 +70,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
     //Whatsapp Webhooks
         Route::get('whatsapp/chatbot','WhatsappChat')->name('whatsapp.chat');
         Route::get('whatsapp/templates','Templates')->name('whatsapp.templates');
+        Route::get('whatsapp/marketing','Marketing')->name('whatsapp.marketing');
         // Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 
 
