@@ -636,7 +636,7 @@ class ApplicationForm extends Component
         $this->AppliedServices = $query->get();
         $count = $this->AppliedServices->count();
         $this->Open = 1;
-        $this->user_type = "Registered User!! Availed {$count} Service from this Branch";
+        $this->user_type = "Registered User!! Availed {$count} Services.";
     }
 
     private function loadUnregisteredClientData()
@@ -650,7 +650,7 @@ class ApplicationForm extends Component
         $count = $applications->count();
 
         if ($count > 0) {
-            $this->user_type = "Unregistered User!! Availed {$count} Services";
+            $this->user_type = "Unregistered User!! Availed {$count} Services.";
         } else {
             $this->Open = 0;
             $this->Profile_Show = 0;

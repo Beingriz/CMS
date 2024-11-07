@@ -60,7 +60,7 @@
 
                     </div>
                     <!-- end row -->
-                    <form wire:submit.prevent="sendBulkMessages">
+                    <form wire:submit.prevent="Preview">
                         @csrf
                         <div class="row mb-3">
                             <label for="Name" class="col-sm-4 col-form-label">Service</label>
@@ -87,7 +87,6 @@
                             @error('selectedServiceType')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                         </div>
-                        {{ $totalClients }}
                         <!-- end row -->
                         <div class="row mb-3">
                             <label for="example-url-input" class="col-sm-4 col-form-label">Templates</label>
@@ -116,7 +115,7 @@
                             <div class="row">
                                 <div class="col-100">
                                         <button type="submit" value="submit" name="submit"
-                                            class="btn btn-primary btn-rounded btn-sm">Send Messages</button>
+                                            class="btn btn-primary btn-rounded btn-sm">Preview</button>
                                         <a href="#" wire:click.prevent="ResetFields()"
                                             class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     <a href='{{ route('admin.home') }}'
@@ -129,132 +128,71 @@
             </div>
         </div> <!-- end col -->
 
-    @if (count($templates) > 0)
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header d-sm-flex align-items-center justify-content-between"">
-                <h5 class="card-title">#{{ $templates->total() }} Templates Available</h5>
-                <h5><a href="{{ route('whatsapp.templates') }}" title="Click here for New Template">Create Template</a></h5>
+        {{-- -----------------Session at Glance------------------ --}}
+        @if ($isPreview)
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                    <h5>Preview</h5>
+                </div>
+                <div class="card-body">
 
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <table id="datatable"
-                        class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline text-wrap"role="grid"
-                        aria-describedby="datatable_info">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Body</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($templates as $key)
-                                <tr>
-                                    <td>{{ $templates->firstItem() + $loop->index }}</td>
-                                    <td>{{ $key->template_name }}</td>
-                                    <td class="text-wrap">{{ $key->template_body }}</td>
-                                    <td class="text-wrap">{{ ucwords($key->status) }}</td>
-
-                                    <td>
-                                        <button wire:click.prevent="editTemplate({{ $key->id }})"
-                                            class="btn btn-sm btn-primary font-size-15" ><i
-                                                class="mdi mdi-circle-edit-outline"></i></button>
-
-                                        <a wire:click.prevent="deleteTemplate('{{ $key->id }}')"class="btn btn-sm btn-danger font-size-15"
-                                            id="delete"><i class="mdi mdi-delete-alert-outline"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-md-8">
-                            <p class="text-muted">Showing {{ count($templates) }} of
-                                {{ $templates->total() }} entries</p>
+                    <p class="card-title-desc">Session </p>
+                    <form wire:submit.prevent="sendBulkMessages">
+                        @csrf
+                        <!-- start row -->
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Service</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $serviceName }}</label>
                         </div>
-                        <div class="col-md-4">
-                            <span class=" pagination pagination-rounded float-end">
-                                {{ $templates->links() }}
-                            </span>
-
-
+                        <!-- end row -->
+                        <!-- start row -->
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Service Type</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $selectedServiceType }}</label>
                         </div>
-                        <p class="card-text"><small class="text-muted">Last Template
-                                {{ $created }}</small></p>
-                    </div>
+                        <!-- end row -->
+                        <!-- start row -->
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Template Name</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $templateName }}</label>
+                        </div>
+                        <!-- end row -->
+                        <!-- start row -->
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Template Body</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $templateBody }}</label>
+                        </div>
+                        <!-- end row -->
+                        <!-- start row -->
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Total Recepients</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $totalClients }}</label>
+                        </div>
+                        <!-- end row -->
+                        <!-- start row -->
+                        <div class="row mb-3">
+                            <label for="example-text-input" class="col-sm-4 col-form-label">Messeging Cost</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-danger">&#8377;{{ intval($totalClients * 0.415) }}/- only.</label>
+                        </div>
+                        <!-- end row -->
+
+                        <div class="form-data-buttons"> {{-- Buttons --}}
+                            <div class="row">
+                                <div class="col-100">
+                                        <button type="submit" value="submit" name="submit"
+                                            class="btn btn-success btn-rounded btn-sm">Send</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        </div> <!-- end col -->
+        @endif
     </div>
-    @endif
-    {{-- ------------------------------------------------------client Data --------------------}}
-
-    @if ($totalClients>0)
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-sm-flex align-items-center justify-content-between"">
-                <h5 class="card-title">#{{ $totalClients }} Clients Available</h5>
-                {{-- <h5><a href="{{ route('whatsapp.templates') }}" title="Click here for New Template">Create Template</a></h5> --}}
-
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <table id="datatable"
-                        class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline text-wrap"role="grid"
-                        aria-describedby="datatable_info">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Check</th>
-                                <th>Branch</th>
-                                <th>Name</th>
-                                <th>Phone No</th>
-                                <th>Status</th>
-                                <th>Profile</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($clients as $key)
-                                <tr>
-                                    <td>{{ $clients->firstItem() + $loop->index }}</td>
-                                    <td><input type="checkbox" id="checkbox" name="Checked" value="{{ $key->Mobile_No }}" wire:model="checked"></td>
-                                    <td>{{ $key->Branch_Name }}</td>
-                                    <td class="text-wrap">{{ ucwords($key->Name) }}</td>
-                                    <td class="text-wrap">{{ $key->Mobile_No }}</td>
-                                    <td class="text-wrap">{{ $key->Status }}</td>
-                                    <td class="text-wrap">{{ $key->Status }}</td>
-                                    <td> <img
-                                        src="{{ !empty($key['Profile_Image']) ? url('storage/' . $key['Profile_Image']) : url('storage/no_image.jpg') }} "
-                                        alt="" class="rounded-circle avatar-md"></td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-md-8">
-                            <p class="text-muted">Showing {{ count($clients) }} of
-                                {{ $clients->total() }} entries</p>
-                        </div>
-                        <div class="col-md-4">
-                            <span class=" pagination pagination-rounded float-end">
-                                {{ $clients->links() }}
-                            </span>
 
 
-                        </div>
-                        <p class="card-text"><small class="text-muted">Last Application
-                                {{ $created }}</small></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
 
 </div>

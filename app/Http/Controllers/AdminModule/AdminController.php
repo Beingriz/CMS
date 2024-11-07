@@ -379,6 +379,10 @@ class AdminController extends Controller
     {
         return view('whats-app.whatsapp_marketing_manager');
     }
+    public function BlockList()
+    {
+        return view('whats-app.whatsapp_blocklisted_contacts');
+    }
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

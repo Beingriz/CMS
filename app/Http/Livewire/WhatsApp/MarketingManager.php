@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Whatsapp;
 
 use App\Jobs\SendWhatsAppMessageJob;
+use App\Models\BlacklistedContact;
 use App\Models\BulkMessageReport;
 use App\Models\ClientRegister;
 use App\Models\MainServices;
@@ -16,11 +17,11 @@ class MarketingManager extends Component
 {
     use WithPagination;
 
-    public $selectedTemplateId, $selectedService, $selectedServiceType;
-    public $main_service, $sub_service = [],$totalClients;
-    public $created, $updated,$checked;
+    public $selectedTemplateId,$templateName,$serviceName,$templateBody, $selectedService, $selectedServiceType;
+    public $main_service, $sub_service = [], $totalClients, $allClients,$isPreview=false;
+    public $created, $updated, $checked = [];
 
-    protected $paginationTheme = 'bootstrap',$clients=[];
+    protected $paginationTheme = 'bootstrap', $clients = [];
 
     public function mount()
     {
@@ -29,15 +30,13 @@ class MarketingManager extends Component
         $this->LastUpdate();
     }
 
-
-
     public function loadClients($application, $applicationtype)
     {
         // Fetch the service name based on the selected service ID
         $serviceName = MainServices::where('Id', $application)->value('Name');
         $application = $serviceName;
 
-            // Query to get distinct clients who meet the selected service criteria and join with the branch table
+        // Query to get distinct clients who meet the selected service criteria and join with the branch table
         $query = ClientRegister::select(
             'client_register.Id',
             'client_register.Name',
@@ -51,13 +50,19 @@ class MarketingManager extends Component
         ->join('digital_cyber_db', 'client_register.Id', '=', 'digital_cyber_db.Client_Id')
         ->join('branches', 'digital_cyber_db.Branch_Id', '=', 'branches.branch_id') // Join with branch table
         ->where('digital_cyber_db.Application', $application)
-        ->where('digital_cyber_db.Application_Type', $applicationtype);
+        ->where('digital_cyber_db.Application_Type', $applicationtype)
+        ->whereNotIn('client_register.Id', function ($query) {
+            $query->select('client_id')->from('blacklisted_contacts');
+        });  // Exclude clients in the blacklisted_contacts table
 
-        // Get the total unique count
+        // Get the total unique count excluding blacklisted clients
         $this->totalClients = $query->count();
 
-        // Retrieve the list of clients with unique names and phone numbers
+        // Retrieve the list of clients excluding blacklisted ones
         $this->clients = $query->paginate(10);
+
+        // Retrieve the full list of clients excluding blacklisted ones
+        $this->allClients = $query->get();
     }
 
     public function LastUpdate()
@@ -74,13 +79,7 @@ class MarketingManager extends Component
     {
         $template = Templates::find($this->selectedTemplateId);
 
-        // Filter the clients to exclude checked ones
-        $clientsToSend = collect($this->clients)
-            ->filter(function ($client) {
-                return !in_array($client->Id, $this->checked);
-            });
-
-        $totalRecipients = $clientsToSend->count();
+        $totalRecipients = $this->allClients->count();
 
         // Create a new report for tracking
         $report = BulkMessageReport::create([
@@ -91,24 +90,33 @@ class MarketingManager extends Component
             'successful_sends' => 0,
         ]);
 
-        // Dispatch job for each filtered client with a delay
-        foreach ($clientsToSend as $index => $client) {
+        // Dispatch job for each client with a delay
+        foreach ($this->allClients as $index => $client) {
             SendWhatsAppMessageJob::dispatch($client, $template, $report->id)
-                                ->delay(now()->addSeconds($index * 20));
+                ->delay(now()->addSeconds($index * 20)); // Adds a delay between sends
         }
 
         session()->flash('SuccessMsg', 'Bulk messages are being sent! Check reports for details.');
     }
-
+    public function Preview(){
+        $this->isPreview =  true;
+    }
 
     public function render()
     {
         $this->LastUpdate();
         $this->loadServices();
-        if(!empty($this->selectedService) && !empty($this->selectedServiceType)){
-            $this->loadClients($this->selectedService,$this->selectedServiceType);
+        if($this->selectedTemplateId){
+            $templatename = Templates::find($this->selectedTemplateId);
+            $this->templateName = $templatename->template_name;
+            $this->templateBody = $templatename->template_body;
         }
 
+
+        if (!empty($this->selectedService) && !empty($this->selectedServiceType)) {
+            $this->serviceName = MainServices::where('Id', $this->selectedService)->value('Name');
+            $this->loadClients($this->selectedService, $this->selectedServiceType);
+        }
 
         return view('livewire.whatsapp.marketing-manager', [
             'templates' => Templates::where('status', 'approved')->paginate(5),
@@ -121,7 +129,9 @@ class MarketingManager extends Component
 
     private function loadServices()
     {
+        // Load main services and related sub-services
         $this->main_service = MainServices::orderBy('Name')->get();
+
         if ($this->selectedService) {
             $this->sub_service = SubServices::orderBy('Name')
                 ->where('Service_Id', $this->selectedService)

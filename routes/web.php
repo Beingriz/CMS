@@ -71,6 +71,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('whatsapp/chatbot','WhatsappChat')->name('whatsapp.chat');
         Route::get('whatsapp/templates','Templates')->name('whatsapp.templates');
         Route::get('whatsapp/marketing','Marketing')->name('whatsapp.marketing');
+        Route::get('whatsapp/blocklist','BlockList')->name('whatsapp.blocklist');
         // Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 
 
