@@ -17,8 +17,8 @@ class MarketingManager extends Component
 {
     use WithPagination;
 
-    public $selectedTemplateId,$templateName,$serviceName,$templateBody, $selectedService, $selectedServiceType;
-    public $main_service, $sub_service = [], $totalClients, $allClients,$isPreview=false;
+    public $selectedTemplateId,$templateName,$serviceName,$templateBody, $selectedService, $selectedServiceType,$media_url;
+    public $main_service, $sub_service = [], $totalClients, $allClients,$isPreview=false,$unhide;
     public $created, $updated, $checked = [];
 
     protected $paginationTheme = 'bootstrap', $clients = [];
@@ -98,6 +98,13 @@ class MarketingManager extends Component
 
         session()->flash('SuccessMsg', 'Bulk messages are being sent! Check reports for details.');
     }
+
+    public function resetInputs(){
+        $this->resetInput();
+        $this->isPreview = false;
+    }
+
+
     public function Preview(){
         $this->isPreview =  true;
     }
@@ -106,6 +113,7 @@ class MarketingManager extends Component
     {
         $this->LastUpdate();
         $this->loadServices();
+        $this->unHide();
         if($this->selectedTemplateId){
             $templatename = Templates::find($this->selectedTemplateId);
             $this->templateName = $templatename->template_name;
@@ -117,6 +125,7 @@ class MarketingManager extends Component
             $this->serviceName = MainServices::where('Id', $this->selectedService)->value('Name');
             $this->loadClients($this->selectedService, $this->selectedServiceType);
         }
+
 
         return view('livewire.whatsapp.marketing-manager', [
             'templates' => Templates::where('status', 'approved')->paginate(5),
@@ -137,5 +146,16 @@ class MarketingManager extends Component
                 ->where('Service_Id', $this->selectedService)
                 ->get();
         }
+    }
+
+    private function unHide(){
+        if(!empty($this->selectedService) && !empty($this->selectedServiceType) && !empty($this->selectedTemplateId )){
+            $this->unhide=true;
+        }
+    }
+
+    private function resetInput()
+    {
+        $this->reset(['selectedService', 'selectedServiceType', 'selectedTemplateId', 'media_url']);
     }
 }

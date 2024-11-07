@@ -114,9 +114,12 @@
                         <div class="form-data-buttons"> {{-- Buttons --}}
                             <div class="row">
                                 <div class="col-100">
-                                        <button type="submit" value="submit" name="submit"
-                                            class="btn btn-primary btn-rounded btn-sm">Preview</button>
-                                        <a href="#" wire:click.prevent="ResetFields()"
+                                    @if ($unhide)
+                                    <button type="submit" value="submit" name="submit"
+                                    class="btn btn-primary btn-rounded btn-sm">Preview</button>
+                                    @endif
+
+                                        <a href="#" wire:click.prevent="resetInputs()"
                                             class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     <a href='{{ route('admin.home') }}'
                                         class="btn  btn-warning btn-rounded btn-sm ">Cancel</a>
@@ -141,33 +144,33 @@
                     <form wire:submit.prevent="sendBulkMessages">
                         @csrf
                         <!-- start row -->
-                        <div class="row mb-3">
+                        <div class="row mb-0">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Service</label>
-                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $serviceName }}</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ $serviceName }}</label>
                         </div>
                         <!-- end row -->
                         <!-- start row -->
-                        <div class="row mb-3">
+                        <div class="row mb-0">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Service Type</label>
-                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $selectedServiceType }}</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ $selectedServiceType }}</label>
                         </div>
                         <!-- end row -->
                         <!-- start row -->
                         <div class="row mb-3">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Template Name</label>
-                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $templateName }}</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ $templateName }}</label>
                         </div>
                         <!-- end row -->
                         <!-- start row -->
                         <div class="row mb-3">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Template Body</label>
-                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $templateBody }}</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ $templateBody }}</label>
                         </div>
                         <!-- end row -->
                         <!-- start row -->
                         <div class="row mb-3">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Total Recepients</label>
-                            <label for="example-text-input" class="col-sm-7 col-form-label">{{ $totalClients }}</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ $totalClients }}</label>
                         </div>
                         <!-- end row -->
                         <!-- start row -->
