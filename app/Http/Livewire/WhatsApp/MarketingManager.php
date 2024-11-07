@@ -8,56 +8,81 @@ use App\Models\ClientRegister;
 use App\Models\MainServices;
 use App\Models\SubServices;
 use App\Models\Templates;
+use Carbon\Carbon;
 use Livewire\Component;
-use Twilio\Rest\Client;
+use Livewire\WithPagination;
 
 class MarketingManager extends Component
 {
+    use WithPagination;
+
     public $selectedTemplateId, $selectedService, $selectedServiceType;
-    public $main_service,$sub_service;
-    public $clients = [];
+    public $main_service, $sub_service = [],$totalClients;
+    public $created, $updated,$checked;
+
+    protected $paginationTheme = 'bootstrap',$clients=[];
 
     public function mount()
     {
-        $this->loadClients();
+        // Load main services on mount
+        $this->loadServices();
+        $this->LastUpdate();
     }
 
-    public function updated($property)
+
+
+    public function loadClients($application, $applicationtype)
     {
-        if (in_array($property, ['selectedService', 'selectedServiceType'])) {
-            $this->loadClients();
+        // Fetch the service name based on the selected service ID
+        $serviceName = MainServices::where('Id', $application)->value('Name');
+        $application = $serviceName;
+
+            // Query to get distinct clients who meet the selected service criteria and join with the branch table
+        $query = ClientRegister::select(
+            'client_register.Id',
+            'client_register.Name',
+            'client_register.Mobile_No',
+            'digital_cyber_db.Status',       // Select Status from application table
+            'digital_cyber_db.Applicant_Image', // Select Profile_Image from application table
+            'digital_cyber_db.Branch_Id',     // Select Branch_Id from application table
+            'branches.name as Branch_Name'      // Select Branch Name from branch table (alias for easier access)
+        )
+        ->distinct()
+        ->join('digital_cyber_db', 'client_register.Id', '=', 'digital_cyber_db.Client_Id')
+        ->join('branches', 'digital_cyber_db.Branch_Id', '=', 'branches.branch_id') // Join with branch table
+        ->where('digital_cyber_db.Application', $application)
+        ->where('digital_cyber_db.Application_Type', $applicationtype);
+
+        // Get the total unique count
+        $this->totalClients = $query->count();
+
+        // Retrieve the list of clients with unique names and phone numbers
+        $this->clients = $query->paginate(10);
+    }
+
+    public function LastUpdate()
+    {
+        // Get latest created_at and updated_at from Templates
+        $latest = Templates::latest('created_at')->first();
+        if ($latest) {
+            $this->created = Carbon::parse($latest['created_at'])->diffForHumans();
+            $this->updated = Carbon::parse($latest['updated_at'])->diffForHumans();
         }
-    }
-
-    public function loadClients()
-    {
-         // Fetch service name based on selected service
-        $service = MainServices::where('Id', $this->selectedService)->value('Name');
-        $this->selectedService = $service;
-
-
-        $this->clients = ClientRegister::with('applications') // Eager load applications
-            ->whereHas('applications', function ($query) { // Filter applications based on conditions
-                if ($this->selectedService) {
-                    $query->where('Application', $this->selectedService); // Filter by application
-                }
-                if ($this->selectedServiceType) {
-                    $query->where('Application_Type', $this->selectedServiceType); // Filter by application type
-                }
-            })
-            ->get(); // Retrieve the clients
     }
 
     public function sendBulkMessages()
     {
         $template = Templates::find($this->selectedTemplateId);
-        $clients = ClientRegister::whereHas('applications', function($query) {
-            $query->where('Application', $this->selectedService)
-                  ->where('Application_Type', $this->selectedServiceType);
-        })->get();
 
-        $totalRecipients = count($clients);
+        // Filter the clients to exclude checked ones
+        $clientsToSend = collect($this->clients)
+            ->filter(function ($client) {
+                return !in_array($client->Id, $this->checked);
+            });
 
+        $totalRecipients = $clientsToSend->count();
+
+        // Create a new report for tracking
         $report = BulkMessageReport::create([
             'template_id' => $this->selectedTemplateId,
             'service' => $this->selectedService,
@@ -66,32 +91,40 @@ class MarketingManager extends Component
             'successful_sends' => 0,
         ]);
 
-        foreach ($clients as $index => $client) {
-            SendWhatsAppMessageJob::dispatch($client, $template, $report->id)->delay(now()->addSeconds($index * 20));
+        // Dispatch job for each filtered client with a delay
+        foreach ($clientsToSend as $index => $client) {
+            SendWhatsAppMessageJob::dispatch($client, $template, $report->id)
+                                ->delay(now()->addSeconds($index * 20));
         }
 
         session()->flash('SuccessMsg', 'Bulk messages are being sent! Check reports for details.');
     }
-    public function ResetFields(){
-        $this->resetInput();
-    }
+
 
     public function render()
     {
+        $this->LastUpdate();
         $this->loadServices();
+        if(!empty($this->selectedService) && !empty($this->selectedServiceType)){
+            $this->loadClients($this->selectedService,$this->selectedServiceType);
+        }
+
 
         return view('livewire.whatsapp.marketing-manager', [
-            'templates' => Templates::where('status', 'approved')->paginate(10),
+            'templates' => Templates::where('status', 'approved')->paginate(5),
+            'main_services' => $this->main_service,
             'reports' => BulkMessageReport::latest()->get(),
+            'clients' => $this->clients,
+            'sub_service' => $this->sub_service
         ]);
     }
 
     private function loadServices()
     {
-        $this->main_service = MainServices::orderby('Name')->get();
-        if (!empty($this->MainSelected)) {
-            $this->sub_service = SubServices::orderby('Name')
-                ->where('Service_Id', $this->MainSelected)
+        $this->main_service = MainServices::orderBy('Name')->get();
+        if ($this->selectedService) {
+            $this->sub_service = SubServices::orderBy('Name')
+                ->where('Service_Id', $this->selectedService)
                 ->get();
         }
     }

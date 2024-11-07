@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Application extends Model
 {
     use HasFactory;
+    protected $table = 'digital_cyber_db';
+    protected $primaryKey = 'Id';
+    public $incrementing = false; // since the primary key is a string
+
     protected $connection = 'mysql';
 
-    public $table = "digital_cyber_db";
     protected $guarded;
     public function scopeFilter($query, $key)
     {
@@ -34,9 +37,9 @@ class Application extends Model
     }
 
     //defining relation
-    public function clientRegister()
+    public function client()
     {
-        return $this->belongsTo(ClientRegister::class);
+        return $this->belongsTo(ClientRegister::class, 'Client_Id', 'Id');
     }
 
     public function mainServices()

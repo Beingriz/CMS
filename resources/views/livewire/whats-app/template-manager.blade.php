@@ -27,7 +27,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
-                        <li class="breadcrumb-item active">Bookmarks</li>
+                        <li class="breadcrumb-item active">Templates</li>
                     </ol>
                 </div>
 
@@ -37,9 +37,9 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{ url('admin.home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ url('app_home') }}">Application</a></li>
-            <li class="breadcrumb-item"><a href="{{ url('app_form') }}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('app.home') }}">Application</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('new.application') }}">New Application</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 
@@ -182,7 +182,7 @@
 
 
                         </div>
-                        <p class="card-text"><small class="text-muted">Last Template
+                        <p class="card-text"><small class="text-muted">Last Template created
                                 {{ $created }}</small></p>
                     </div>
                 </div>

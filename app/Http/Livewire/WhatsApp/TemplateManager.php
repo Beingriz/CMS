@@ -21,6 +21,7 @@ class TemplateManager extends Component
 
     public function render()
     {
+        $this->LastUpdate();
 
         return view('livewire.whats-app.template-manager', [
             'templates' => Templates::paginate(10)

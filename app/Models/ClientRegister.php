@@ -9,7 +9,9 @@ class ClientRegister extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    public $table = "client_register";
+    protected $table = 'client_register';
+    protected $primaryKey = 'Id';
+    public $incrementing = false; // since the primary key is a string
     protected $fillable = [
         'Id',
         'Branch_Id',
@@ -26,7 +28,7 @@ class ClientRegister extends Model
     ];
 
     public function applications()
-{
-    return $this->hasMany(Application::class, 'Client_Id', 'Id');
-}
+    {
+        return $this->hasMany(Application::class, 'Client_Id', 'Id');
+    }
 }

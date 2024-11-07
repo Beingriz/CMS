@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('digital_cyber_db', function (Blueprint $table) {
             $table->string('Id', 250)->primary();
-            $table->string('Client_Id', 50);
+            $table->string('Client_Id', 50);// foriegn key of client register
             $table->string('Branch_Id', 200)->default('BR1722167739');
             $table->string('Emp_Id', 200)->default('DC1684825596');
             $table->date('Received_Date')->nullable();
