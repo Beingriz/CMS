@@ -108,8 +108,8 @@
                 </div>
             </div>
         </div>
-{{--
-        @if ($templates->count() > 0)
+
+        @if (!empty($templates))
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
@@ -125,6 +125,7 @@
                                         <th>Name</th>
                                         <th>Body</th>
                                         <th>Status</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -132,9 +133,12 @@
                                     @foreach ($templates as $key)
                                         <tr>
                                             <td>{{ $templates->firstItem() + $loop->index }}</td>
-                                            <td>{{ $key->template_name }}</td>
-                                            <td class="text-wrap">{{ $key->template_body }}</td>
+                                            <td>{{ ucwords(str_replace('_', ' ', $key->template_name)) }}</td>
+                                            <td>{{ ucwords(str_replace('/', ' ', $key->content_type)) }}</td>
+                                            <td class="text-wrap ">{{ ucwords($key->category) }}</td>
+                                             <td class="text-wrap w-25">{{ $key->body }}</td>
                                             <td class="text-wrap">{{ ucwords($key->status) }}</td>
+                                            <td class="text-wrap">{{ \Carbon\Carbon::parse($key->last_created_at)->format('F j, Y') }}</td>
                                             <td>
                                                 <button wire:click.prevent="editTemplate({{ $key->id }})" class="btn btn-sm btn-primary">
                                                     <i class="mdi mdi-circle-edit-outline"></i>
@@ -161,6 +165,6 @@
                     </div>
                 </div>
             </div>
-        @endif --}}
+        @endif
     </div>
 </div>

@@ -9,7 +9,7 @@ use Twilio\Rest\Client;
 class TemplateManager extends Component
 {
     public $templateId, $template_name, $template_body, $media_url, $status, $whatsapp_category;
-    public $isEdit = false, $templates;
+    public $isEdit = false;
     public $content_template_sid;
     public $template_language = 'English';
     public $whatsapp_approval_status = 'pending';
@@ -20,11 +20,11 @@ class TemplateManager extends Component
     protected $rules = [
         'template_name' => 'required|string|max:255',
         'content_template_sid' => 'nullable|string|unique:templates,content_template_sid|max:255',
-        'template_language' => 'required|in:English,Hindi,Spanish',
+        'template_language' => 'required',
         'template_body' => 'required|string',
         'media_url' => 'nullable|url',
         'whatsapp_approval_status' => 'required|in:pending,approved,rejected',
-        'content_type' => 'required|in:text,image,video,whatsapp_card',
+        'content_type' => 'required',
         'whatsapp_category' => 'required|in:utility,marketing,transactional',
         'status' => 'required|in:pending,approved',
     ];
@@ -47,52 +47,47 @@ class TemplateManager extends Component
         $twilio = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
 
         try {
-            // Fetch approved templates from Twilio's content service
+
             $templates = $twilio->content->v1->contentAndApprovals->read();
-
-            // Loop through each template and map Twilio's data to your database fields
+            // Iterate over the templates returned from Twilio API response
             foreach ($templates as $template) {
-                // Access 'types' which is an array
-                if (isset($template->types['whatsapp/card'])) {
-                    $whatsappCard = $template->types['whatsapp/card'];
+                // Prepare the data to store or update
+                $typeName = $template->types;
+                $typeName = key($typeName);
+                $templateData = [
+                    'template_sid' => $template->sid, // Twilio's unique SID for the template
+                    'template_name' => $template->friendlyName, // Template name
+                    'lang' => $template->language === 'en' ? 'English' : $template->language, // Default to 'en' if not specified
+                    'category' => strtolower($template->approvalRequests['category'] ?? 'utility'), // Default category to 'utility' if not specified
+                    'content_type' =>strtolower($template->approvalRequests['content_type'] ?? 'text'), // Type of the content like 'twilio/text', 'whatsapp/card', etc.
+                    'variables' => json_encode($template->variables ?? []), // Store the variables as JSON, if any
+                    'body' => $template->types[$typeName]['body'] ?? '', // Template body (message content)
+                    'media_url' => !empty($template->types['whatsapp/card']['media'])
+                                                ? json_encode($template->types['whatsapp/card']['media'])
+                                                : null, // Media URL, if available
+                    'status' => strtolower($template->approvalRequests['status'] ?? 'pending'), // Default to 'pending' if not specified
+                    'use_count' => $template->use_count ?? 0, // Initialize use_count to 0 if not specified
+                    'last_created_at' => $template->dateCreated ? $template->dateCreated->format('Y-m-d H:i:s') : null,
+                    'last_updated_at' => $template->dateUpdated ? $template->dateUpdated->format('Y-m-d H:i:s') : null,
+                ];
 
-                    // Ensure body is a string, not an array
-                    $templateBody = is_array($whatsappCard['body']) ? implode(' ', $whatsappCard['body']) : $whatsappCard['body'];
+                // Check if the template already exists in the database
+                $existingTemplate = Templates::where('template_sid', $template->sid)->first();
 
-                    // Match Twilio fields with your database schema
-                    $templateData = [
-                        'template_name' => $template->friendlyName ?? 'No Name', // Twilio template name
-                        'content_template_sid' => $template->sid, // Twilio template SID (unique identifier)
-                        'template_language' => $template->language ?? 'English', // Twilio template language
-                        'template_body' => $templateBody, // Content body of the template (converted to string if needed)
-                        'media_url' => $whatsappCard['media'] ?? null, // Media URL if provided (null if not)
-                    ];
-
-                    // Check if the template already exists by its unique content_template_sid
-                    $existingTemplate = Templates::where('content_template_sid', $template->sid)->first();
-                    if (!is_null($existingTemplate)) {
-                        // Update the existing template
-                        $existingTemplate->update($templateData);
-                    } else {
-                        // Insert a new template
-                        $temp = new Templates();
-                        $temp->template_name = $templateData['template_name'];
-                        $temp->content_template_sid = $templateData['content_template_sid'];
-                        $temp->template_language = $templateData['template_language'];
-                        $temp->template_body = $templateData['template_body'];
-                        $temp->media_url = $templateData['media_url'];
-                        $temp->save();
-                    }
+                if ($existingTemplate) {
+                    // Update the existing template
+                    $existingTemplate->update($templateData);
+                } else {
+                    // Insert the new template if it doesn't exist
+                    Templates::create($templateData);
                 }
             }
-
-            session()->flash('SuccessMsg', 'Templates synchronized successfully with Twilio.');
+            // session()->flash('SuccessMsg', 'Templates synchronized successfully with Twilio.');
         } catch (\Exception $e) {
             // Handle exceptions or API errors
             session()->flash('Error', 'Error fetching templates: ' . $e->getMessage());
         }
     }
-
 
     /**
      * Create a new template.
@@ -165,8 +160,9 @@ class TemplateManager extends Component
      */
     public function render()
     {
+        $templates = Templates::where('status', 'approved')->paginate(10);
         return view('livewire.whats-app.template-manager', [
-            'templates' => Templates::paginate(10)
+            'templates' => $templates,
         ]);
     }
 }
