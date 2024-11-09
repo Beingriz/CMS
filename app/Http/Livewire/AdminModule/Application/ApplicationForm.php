@@ -142,7 +142,7 @@ class ApplicationForm extends Component
             $client_Id = $existingClient->Id;
             // Existing client details
             $dob = $existingClient->DOB;
-            $name = $existingClient->Name;
+            $profile_name = $existingClient->Name;
             $relative_name = $existingClient->Relative_Name;
             $gender = $existingClient->Gender;
             $profileimage = $existingClient->Profile_Image;
@@ -150,19 +150,19 @@ class ApplicationForm extends Component
         } else {
             $this->registerClient = true;
             $client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
-            $name = $this->Name;
+            $profile_name = $this->Name;
             $profileimage = 'account.jpg';
         }
 
         // Handle file uploads
-        $Applicant_Image = $this->handleFileUpload($this->Applicant_Image, $name, $client_Id, 'Applicant_Image');
-        $this->Ack_File = $this->handleFileUpload($this->Ack_File, $name, $client_Id, 'Ack_File');
-        $this->Doc_File = $this->handleFileUpload($this->Doc_File, $name, $client_Id, 'Doc_File');
-        $this->Payment_Receipt = $this->handleFileUpload($this->Payment_Receipt, $name, $client_Id, 'Payment_Receipt');
+        $Applicant_Image = $this->handleFileUpload($this->Applicant_Image, $profile_name, $client_Id, 'Applicant_Image');
+        $this->Ack_File = $this->handleFileUpload($this->Ack_File, $profile_name, $client_Id, 'Ack_File');
+        $this->Doc_File = $this->handleFileUpload($this->Doc_File, $profile_name, $client_Id, 'Doc_File');
+        $this->Payment_Receipt = $this->handleFileUpload($this->Payment_Receipt, $profile_name, $client_Id, 'Payment_Receipt');
 
         // Handle client image update
         $Client_Image = ($this->Profile_Update == 1 && !empty($this->Client_Image))
-            ? $this->handleClientImageUpdate($name, $profileimage)
+            ? $this->handleClientImageUpdate($profile_name, $profileimage)
             : $Applicant_Image;
 
         // Prepare application data
@@ -237,11 +237,12 @@ class ApplicationForm extends Component
         $this->saveBalanceLedger($client_Id, $service);
 
         // Update client details if necessary
-        $this->updateClientDetails($existingClient, $client_Id, $name, $Client_Image);
+        $this->updateClientDetails($existingClient, $client_Id, $profile_name, $Client_Image);
 
         // Flash success message and redirect
+        $this->ApplicationRegisterAlert($this->App_Id, $profile_name);
         session()->flash('SuccessMsg', 'Application Saved Successfully! ' . ($this->Balance > 0 ? 'Balance Ledger Updated' : ''));
-        $this->ApplicationRegisterAlert($this->Mobile_No, $this->Name, $this->Name, $service, $this->SubSelected);
+
         return redirect()->route('new.application');
     }
 

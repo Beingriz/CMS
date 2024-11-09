@@ -4,6 +4,8 @@ namespace App\Http\Livewire\WhatsApp;
 
 use App\Models\Templates;
 use Livewire\Component;
+use Livewire\WithPagination;
+use SebastianBergmann\Template\Template;
 use Twilio\Rest\Client;
 
 class TemplateManager extends Component
@@ -16,7 +18,8 @@ class TemplateManager extends Component
     public $content_type = 'text';
     public $last_updated_at;
 
-
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     // Define validation rules
     protected $rules = [
@@ -56,6 +59,7 @@ class TemplateManager extends Component
 
             $templates = $twilio->content->v1->contentAndApprovals->read();
             // Iterate over the templates returned from Twilio API response
+            // dd($templates);
             foreach ($templates as $template) {
                 // Prepare the data to store or update
                 $typeName = $template->types;
@@ -95,30 +99,6 @@ class TemplateManager extends Component
         }
     }
 
-    /**
-     * Create a new template.
-     */
-    public function createTemplate()
-    {
-        $this->validate();
-
-        try {
-            Templates::create([
-                'template_name' => $this->template_name,
-                'content_template_sid' => $this->content_template_sid,
-                'template_body' => $this->template_body,
-                'media_url' => $this->media_url,
-                'whatsapp_category' => $this->whatsapp_category,
-                'whatsapp_approval_status' => $this->status,
-                'last_updated_at' => now(),
-            ]);
-
-            $this->resetFields();
-            session()->flash('SuccessMsg', 'Template has been successfully created!');
-        } catch (\Exception $e) {
-            session()->flash('Error', 'Error creating template. Please try again.');
-        }
-    }
 
     /**
      * Reset the form fields.
@@ -154,12 +134,16 @@ class TemplateManager extends Component
      */
     public function deleteTemplate($templateId)
     {
+        $twilio = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
         try {
             $tempName =  Templates::where('template_sid',$templateId)->first()->value('template_name');
             // Delete the template using the Twilio API
-            $this->twilio->content->v1->contents($templateId)->delete();
+            $twilio->content->v1->contents($templateId)->delete();
+            Templates::where('template_sid',$templateId)->delete();
+            $this->fetchAndSyncApprovedTemplates();
 
             session()->flash('SuccessMsg', $tempName. "Template with SID {$templateId} has been deleted.");
+            redirect()->route('whatsapp.templates');
         } catch (\Exception $e) {
             session()->flash('Error', "Failed to delete template: " . $e->getMessage());
         }
@@ -170,7 +154,7 @@ class TemplateManager extends Component
      */
     public function render()
     {
-        $templates = Templates::where('status', 'approved')->paginate(10);
+        $templates = Templates::where('status', 'approved')->paginate(5);
         return view('livewire.whats-app.template-manager', [
             'templates' => $templates,
         ]);

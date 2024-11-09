@@ -34,87 +34,12 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header d-sm-flex align-items-center justify-content-between">
-                    <h5>New Template</h5>
-                    <h5><a href="{{ route('whatsapp.templates') }}" title="Click here for New Template">Create New</a></h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-title-desc">Customised Whatsapp Templates</p>
-                    <form wire:submit.prevent="createTemplate">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="template_name" class="col-sm-4 col-form-label">Name</label>
-                            <div class="col-sm-8">
-                                <input class="form-control" type="text" placeholder="Temp Name" wire:model="template_name">
-                                <span class="error"> @error('template_name') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="template_content_sid" class="col-sm-4 col-form-label">Content SID</label>
-                            <div class="col-sm-8">
-                                <input class="form-control" type="text" placeholder="Template SID" wire:model="template_content_sid">
-                                <span class="error"> @error('template_content_sid') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="template_body" class="col-sm-4 col-form-label">Body</label>
-                            <div class="col-sm-8">
-                                <textarea class="form-control" placeholder="Template Body" rows="3" wire:model="template_body"></textarea>
-                                <span class="error"> @error('template_body') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="media_url" class="col-sm-4 col-form-label">Media Url</label>
-                            <div class="col-sm-8">
-                                <input class="form-control" type="text" placeholder="Media Url (Optional)" wire:model="media_url">
-                                <span class="error"> @error('media_url') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="status" class="col-sm-4 col-form-label">Status</label>
-                            <div class="col-sm-8">
-                                <select class="form-control" wire:model="status">
-                                    <option value="pending">Pending</option>
-                                    <option value="approved">Approved</option>
-                                </select>
-                                <span class="error"> @error('status') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="whatsapp_category" class="col-sm-4 col-form-label">Category</label>
-                            <div class="col-sm-8">
-                                <select class="form-control" wire:model="whatsapp_category">
-                                    <option value="utility">Utility</option>
-                                    <option value="marketing">Marketing</option>
-                                    <option value="transactional">Transactional</option>
-                                </select>
-                                <span class="error"> @error('whatsapp_category') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-
-                        <div class="form-data-buttons">
-                            <div class="row">
-                                <div class="col-100">
-                                    <button type="submit" class="btn btn-primary btn-rounded btn-sm">Save</button>
-                                    <a href="#" wire:click.prevent="resetFields()" class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    <a href="{{ route('admin.home') }}" class="btn btn-warning btn-rounded btn-sm">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         @if (!empty($templates))
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">#{{ $templates->total() }} Templates Available</h5>
-                        <h6><a href="#" title="Click here to synch available template" wire:click.prevent="fetchAndSyncApprovedTemplates()">Sync Templates</a></h6>
+                        <h6><a href="#" title="Click here to synch available template"  wire:click.prevent="fetchAndSyncApprovedTemplates()">Sync Templates</a></h6>
 
                     </div>
 
@@ -125,9 +50,11 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
+                                        <th>Content Type</th>
+                                        <th>Category</th>
                                         <th>Body</th>
                                         <th>Status</th>
-                                        <th>Status</th>
+                                        <th>Created</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

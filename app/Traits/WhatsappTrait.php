@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\Application;
+use App\Models\Templates;
 use Twilio\Rest\Client;
 
 trait WhatsappTrait
@@ -9,31 +11,32 @@ trait WhatsappTrait
     protected $twilio;
     protected $fromNo;
 
+
     public function __construct()
     {
         $this->twilio = new Client(getenv("TWILIO_SID"), getenv("TWILIO_AUTH_TOKEN"));
         $this->fromNo = "whatsapp:".getenv("TWILIO_PHONE_NUMBER");
     }
 
-    private function sendMessage($mobile, $body, $contentSid, $contentVariables)
-{
-    $toNo = "whatsapp:+91" . $mobile;
-
-    try {
-        $this->twilio->messages->create($toNo, [
-            "from" => $this->fromNo,
-            "body" => $body,
-            "contentSid" => $contentSid,
-            "contentVariables" => json_encode($contentVariables)
-        ]);
-
-        session()->flash('Success', 'Message Sent!');
-    } catch (\Exception $e) {
-        session()->flash('Error', 'Message could not be sent: ' . $e->getMessage());
+    // Send a WhatsApp message using the Twilio API
+    private function sendMessage($contentSid, $applicaiton, $contentVariables, $media_url=null)
+    {
+        $toNo = "whatsapp:+91".$applicaiton->Mobile_No;
+        $template = Templates::where('template_sid', $contentSid)->first();
+        try {
+            $this->twilio->messages->create($toNo, [
+                "from" => $this->fromNo,
+                "body" => $template->body,
+                "contentSid" => $contentSid,
+                "mediaUrl" => $media_url,
+                "contentVariables" => json_encode($contentVariables)
+            ]);
+            session()->flash('SuccessMsg', 'Message Sent!');
+        } catch (\Exception $e) {
+            session()->flash('Error', 'Message could not be sent: ' . $e->getMessage());
+        }
+        return redirect()->back();
     }
-
-    return redirect()->back();
-}
 
 
     public function userRegisterationAlert($mobile,$profileName, $username, $password)
@@ -68,20 +71,28 @@ trait WhatsappTrait
         return  $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
 
     }
-    public function ApplicationRegisterAlert($mobile, $profileName, $applicantName, $service, $serviceType)
+
+
+    public function ApplicationRegisterAlert($app_id,$profileName)
     {
-        $contentSid = 'HXcdf92be43cbac16ae0b73cbb7600cc79'; // Replace with your actual ContentSid
-        $contentVariables = [
-           "1" => trim($profileName),
-            "2" => trim($applicantName),
-            "3" => trim($mobile),
-            "4" => trim($service),
-            "5" => trim($serviceType),
-        ];
 
-        $body = "Hi *{{1}}*,\n\nCongratulations! 🎉\nA new application has been successfully registered with the following details:\n\n👤 Name: *{{2}}*\n📱 Phone: *+91{{3}}*\n📝 Service: *{{4}}*\n🔖 Type: *{{5}}*\n\nYou can log in to our website to track your application details:\n*Digital Cyber*.";
+        $contentSid = 'HXf915685887d78e2aa3e8c9276b8fd8d2'; // Replace with your actual ContentSid
 
-        $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
+        // Get the template from the database
+        $template = Templates::where('template_sid', $contentSid)->first();
+        $contentVariables = json_decode($template->variables, true); // Decode JSON to array
+
+        $application = Application::find($app_id);
+
+        // Replace variables dynamically with client data
+        foreach ($contentVariables as $key => $value) {
+            // Replace each placeholder value with the corresponding client attribute
+            $contentVariables[$key] = !empty(trim($application->{$value})) ? trim($application->{$value}) : trim($profileName);
+            // Fallback to original value if attribute doesn't exist
+        }
+        $imageName = "leather-bag-gray.jpg";
+        $media_url = "https://res.cloudinary.com/djgfhbe6o/image/upload/v1731178434/samples/ecommerce/{$imageName}";
+        $this->sendMessage($contentSid, $application, $contentVariables, $media_url);
     }
 
     public function ApplicationUpdateAlert($mobile,$profileName, $applicantName, $service, $serviceType, $status, )
@@ -121,5 +132,6 @@ trait WhatsappTrait
 
             $contentSid=""; $contentVariables=[];
 
-            return  $this->sendMessage($mobile, $body, $contentSid, $contentVariables);    }
+            return  $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
+    }
 }

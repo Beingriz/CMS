@@ -94,7 +94,7 @@
                                 <select class="form-select" wire:model="selectedTemplateId">
                                 <option selected="">Select Template</option>
                                 @foreach ($templates as $template)
-                                    <option value="{{ $template->id }} ">{{ $template->template_name }}</option>
+                                    <option value="{{ $template->id }} ">{{ ucwords(str_replace('_', ' ', $template->template_name)) }}</option>
                                 @endforeach
                             </select>
                             @error('selectedTemplateId')<span class="text-danger">{{ $message }}</span>@enderror
@@ -158,7 +158,7 @@
                         <!-- start row -->
                         <div class="row mb-3">
                             <label for="example-text-input" class="col-sm-4 col-form-label">Template Name</label>
-                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ $templateName }}</label>
+                            <label for="example-text-input" class="col-sm-7 col-form-label text-black">{{ ucwords(str_replace('_', ' ', $templateName)) }}</label>
                         </div>
                         <!-- end row -->
                         <!-- start row -->

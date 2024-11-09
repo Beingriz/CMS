@@ -77,21 +77,25 @@ class MarketingManager extends Component
 
     public function sendBulkMessages()
     {
+
         $template = Templates::find($this->selectedTemplateId);
+        $this->selectedTemplateId = $template->template_sid;
 
         $totalRecipients = $this->allClients->count();
 
         // Create a new report for tracking
         $report = BulkMessageReport::create([
-            'template_id' => $this->selectedTemplateId,
-            'service' => $this->selectedService,
+            'template_sid' => $this->selectedTemplateId,
+            'service' => $this->serviceName,
             'service_type' => $this->selectedServiceType,
             'total_recipients' => $totalRecipients,
             'successful_sends' => 0,
+            'marketing_cost' => 0,
         ]);
 
         // Dispatch job for each client with a delay
         foreach ($this->allClients as $index => $client) {
+
             SendWhatsAppMessageJob::dispatch($client, $template, $report->id)
                 ->delay(now()->addSeconds($index * 20)); // Adds a delay between sends
         }
@@ -117,7 +121,7 @@ class MarketingManager extends Component
         if($this->selectedTemplateId){
             $templatename = Templates::find($this->selectedTemplateId);
             $this->templateName = $templatename->template_name;
-            $this->templateBody = $templatename->template_body;
+            $this->templateBody = $templatename->body;
         }
 
 
@@ -128,7 +132,7 @@ class MarketingManager extends Component
 
 
         return view('livewire.whatsapp.marketing-manager', [
-            'templates' => Templates::where('status', 'approved')->paginate(5),
+            'templates' => Templates::where('status', 'approved')->get(),
             'main_services' => $this->main_service,
             'reports' => BulkMessageReport::latest()->get(),
             'clients' => $this->clients,
