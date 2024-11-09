@@ -1,251 +1,125 @@
-// Delete
+// Loading Overlay Functions
+function showLoading() {
+    document.getElementById('loading-overlay').classList.remove('d-none');
+}
+
+function hideLoading() {
+    document.getElementById('loading-overlay').classList.add('d-none');
+}
+
+// Generic SweetAlert Confirmation Functions
+function confirmAction(link, title, text, icon, confirmText) {
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: confirmText
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading();
+            window.location.href = link;
+        }
+    });
+}
+
+// Delete Confirmation
 $(function() {
     $(document).on('click', '#delete', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Delete This Data?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'Delete This Data?', 'warning', 'Yes, delete it!');
     });
-
 });
-// DeleteFile
+
+// Delete File Confirmation
 $(function() {
     $(document).on('click', '#deletefile', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Delete This File?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Delete'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'Delete This File?', 'warning', 'Delete');
     });
-
 });
-// Logout
+
+// Logout Confirmation
 $(function() {
     $(document).on('click', '#logout', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "you will be logged out.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Logout'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'You will be logged out.', 'warning', 'Logout');
     });
-
 });
-// DeleteData
+
+// Delete Data Confirmation
 $(function() {
     $(document).on('click', '#deleteData', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Delete This Carousel?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Delete'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'Delete This Carousel?', 'warning', 'Delete');
     });
-
 });
-// Download
+
+// Download Confirmation
 $(function() {
     $(document).on('click', '#download', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "you want to download this?",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Download'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'You want to download this?', 'info', 'Download');
     });
-
 });
 
-// Update
+// Open/View Record Confirmation
 $(function() {
     $(document).on('click', '#open', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to View this Record?",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Open Record!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'You want to View this Record?', 'info', 'Yes, Open Record!');
     });
-
 });
-// Open / View
+
+// Update Record Confirmation
 $(function() {
     $(document).on('click', '#update', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "you want to Edit This Record?",
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-                    // Swal.fire(
-                    //     'Updated!',
-                    //     'Your Record has been Updated.',
-                    //     'success'
-                    // )
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'You want to Edit This Record?', 'success', 'Yes');
     });
-
 });
-// Edit / View
+
+// Edit Data Confirmation
 $(function() {
     $(document).on('click', '#editData', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "you want to Edit This Record?",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-                    // Swal.fire(
-                    //     'Updated!',
-                    //     'Your Record has been Updated.',
-                    //     'success'
-                    // )
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'You want to Edit This Record?', 'info', 'Yes');
     });
-
 });
-// Select File
+
+// Select File Confirmation
 $(function() {
     $(document).on('click', '#SelectData', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "you want to Select This Info?",
-            icon: 'primary',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link
-                    // Swal.fire(
-                    //     'Updated!',
-                    //     'Your Record has been Updated.',
-                    //     'success'
-                    // )
-            }
-        })
-
-
+        confirmAction(link, 'Are you sure?', 'You want to Select This Info?', 'primary', 'Yes');
     });
-
 });
 
-// No file Choosen
-
+// Reset File Selection if No File Chosen
 document.getElementById('image').addEventListener('change', function() {
     if (this.files.length === 0) {
         Livewire.emit('reset');
     }
 });
+
+// Show Loading Overlay for All Form Submissions
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', showLoading);
+    });
+});
+
+// Livewire Loading Integration
+document.addEventListener('livewire:loading', showLoading);
+document.addEventListener('livewire:load', hideLoading);

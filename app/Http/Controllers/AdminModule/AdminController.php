@@ -373,7 +373,12 @@ class AdminController extends Controller
     }
     public function Templates()
     {
-        return view('whats-app.whatsapp_template_manage');
+        $sid="";
+        return view('whats-app.whatsapp_template_manage',['sid'=>$sid]);
+    }
+    public function deleteTemplate($sid)
+    {
+        return view('whats-app.whatsapp_template_manage',['sid'=>$sid]);
     }
     public function Marketing()
     {
@@ -383,6 +388,7 @@ class AdminController extends Controller
     {
         return view('whats-app.whatsapp_blocklisted_contacts');
     }
+
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

@@ -114,6 +114,8 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">#{{ $templates->total() }} Templates Available</h5>
+                        <h6><a href="#" title="Click here to synch available template" wire:click.prevent="fetchAndSyncApprovedTemplates()">Sync Templates</a></h6>
+
                     </div>
 
                     <div class="row">
@@ -140,12 +142,9 @@
                                             <td class="text-wrap">{{ ucwords($key->status) }}</td>
                                             <td class="text-wrap">{{ \Carbon\Carbon::parse($key->last_created_at)->format('F j, Y') }}</td>
                                             <td>
-                                                <button wire:click.prevent="editTemplate({{ $key->id }})" class="btn btn-sm btn-primary">
-                                                    <i class="mdi mdi-circle-edit-outline"></i>
-                                                </button>
-                                                <button wire:click.prevent="deleteTemplate({{ $key->id }})" class="btn btn-sm btn-danger">
+                                                <a href={{ route('whatsapp.template.delete', $key->template_sid) }} id="delete" class="btn btn-sm btn-danger">
                                                     <i class="mdi mdi-delete-alert-outline"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

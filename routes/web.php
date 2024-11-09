@@ -67,11 +67,15 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('edit/branch/{id}', 'EditBranch')->name('edit.branch');
         Route::get('delete/branch/{id}', 'DeleteBranch')->name('delete.branch');
 
-    //Whatsapp Webhooks
+    //Whatsapp
         Route::get('whatsapp/chatbot','WhatsappChat')->name('whatsapp.chat');
         Route::get('whatsapp/templates','Templates')->name('whatsapp.templates');
         Route::get('whatsapp/marketing','Marketing')->name('whatsapp.marketing');
         Route::get('whatsapp/blocklist','BlockList')->name('whatsapp.blocklist');
+
+        //Operation
+
+        Route::get('whatsapp/template/delete/{sid}', 'deleteTemplate')->name('whatsapp.template.delete');
         // Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 
 

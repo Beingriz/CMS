@@ -9,12 +9,14 @@ use Twilio\Rest\Client;
 class TemplateManager extends Component
 {
     public $templateId, $template_name, $template_body, $media_url, $status, $whatsapp_category;
-    public $isEdit = false;
+    public $isEdit = false,$sid;
     public $content_template_sid;
     public $template_language = 'English';
     public $whatsapp_approval_status = 'pending';
     public $content_type = 'text';
     public $last_updated_at;
+
+
 
     // Define validation rules
     protected $rules = [
@@ -34,16 +36,20 @@ class TemplateManager extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount()
+    public function mount($sid)
     {
-        $this->fetchAndSyncApprovedTemplates();
+        $this->sid = $sid;
+        if($this->sid != ""){
+         $this->deleteTemplate($this->sid);
+        }
+
+        // $this->fetchAndSyncApprovedTemplates();
     }
 
     /**
      * Fetch and sync approved templates from Twilio and update the local database.
      */
     public function fetchAndSyncApprovedTemplates() {
-        // Initialize Twilio client with credentials
         $twilio = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
 
         try {
@@ -148,10 +154,14 @@ class TemplateManager extends Component
      */
     public function deleteTemplate($templateId)
     {
-        $template = Templates::find($templateId);
-        if ($template) {
-            $template->delete();
-            session()->flash('SuccessUpdate', 'Template has been deleted successfully!');
+        try {
+            $tempName =  Templates::where('template_sid',$templateId)->first()->value('template_name');
+            // Delete the template using the Twilio API
+            $this->twilio->content->v1->contents($templateId)->delete();
+
+            session()->flash('SuccessMsg', $tempName. "Template with SID {$templateId} has been deleted.");
+        } catch (\Exception $e) {
+            session()->flash('Error', "Failed to delete template: " . $e->getMessage());
         }
     }
 
