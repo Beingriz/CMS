@@ -60,7 +60,12 @@
 
 <body data-topbar="light">
 
-    {{-- <body data-layout="horizontal" data-topbar="dark"> --}}
+        <!-- Loading Spinner Overlay -->
+        <div id="loading-overlay" wire:loading.class="d-block" wire:loading.class.remove="d-none" class="loading-overlay d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
 
     <!-- Begin page -->
     <div id="layout-wrapper">

@@ -120,6 +120,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Livewire Loading Integration
-document.addEventListener('livewire:loading', showLoading);
-document.addEventListener('livewire:load', hideLoading);
+// Show the spinner when a Livewire request starts
+document.addEventListener('livewire:request-start', function() {
+    document.getElementById('loading-overlay').classList.remove('d-none');
+});
+
+// Hide the spinner when a Livewire request ends
+document.addEventListener('livewire:request-end', function() {
+    document.getElementById('loading-overlay').classList.add('d-none');
+});
+
+// Optional: You can also hide the spinner when Livewire has loaded the content
+document.addEventListener('livewire:load', function() {
+    document.getElementById('loading-overlay').classList.add('d-none');
+});
+
+// Show Loading Overlay for All Anchor Tag Clicks
+$(document).ready(function() {
+    // Show spinner when any anchor tag is clicked
+    $('a').on('click', function(event) {
+        // Exclude links with specific classes or attributes if needed
+        if (!$(this).hasClass('no-spinner') && $(this).attr('target') !== '_blank') {
+            $('#loading-overlay').removeClass('d-none');
+        }
+    });
+
+    // Hide spinner on page load (if overlay is shown initially)
+    $(window).on('load', function() {
+        $('#loading-overlay').addClass('d-none');
+    });
+});

@@ -91,10 +91,10 @@
                         <li><a href="{{ route('emp.register') }}">Employee Reg.</a></li>
                         <li><a href="{{ url('bookmarks') }}">Bookmark</a></li>
                         <li><a href="{{route('add.document')}}">Add Documents</a></li>
+                        <li><a href="{{ route('data.migration') }}">Data Migration</a></li>
                     </ul>
                 </li>
-
-                {{-- User Control Menu --}}
+                                {{-- User Control Menu --}}
                 <li>
                     <a href="#" class="has-arrow waves-effect">
                         <i class="ri-home-3-line"></i>
@@ -105,29 +105,6 @@
                         <li> <a href="{{ route('new.carousel') }}">Carousel</a></li>
                         <li> <a href="{{ route('new.about_us') }}">About Us</a></li>
                     </ul>
-                </li>
-
-
-                <li>
-                    <a href="{{ route('data.migration') }}" class="waves-effect">
-                        <i class="ri-dashboard-line"></i>
-                        <span>Migration</span>
-                        <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-bar-chart-line"></i>
-                        <span>Admin Controls</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        {{-- <li><a href="{{url('client_registration')}}">Clinet Registration</a></li> --}}
-                        <li><a href="{{ route('add_services') }}">Services</a></li>
-                        <li><a href="{{ route('new.status') }}">Status</a></li>
-                        <li><a href="{{ route('branch_register') }}">Branches</a></li>
-                        <li><a href="{{ route('emp.register') }}">Employee Reg.</a></li>
-                        <li><a href="{{ url('bookmarks') }}">Bookmark</a></li>
-                        <li><a href="{{route('add.document')}}">Add Documents</a></li>
-                    </ul>
-                </li>
-                    </a>
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

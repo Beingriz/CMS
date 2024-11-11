@@ -35,21 +35,21 @@ class EditApplication extends Component
     public $Total_Amount, $today;
     public $Amount_Paid, $Reason, $previous_paid = 0;
     public $Balance;
-    public $PaymentMode, $PaymentModes, $Client_Type, $Confirmation, $Client_Image, $Old_Profile_Image;
+    public $PaymentMode, $PaymentModes, $Client_Type, $Confirmation, $whatsAppNotificatin=false,$Client_Image, $Old_Profile_Image;
     public $Received_Date, $Applied_Date, $Updated_Date, $old_Applicant_Image;
     public $ServiceName, $SubService;
     public $MainService, $MainServices;
     public $Application;
     public $Application_Type;
     public $Mobile_No = NULL;
-    public $Status, $Ack_File, $Doc_File, $Payment_Receipt;
+    public $Status, $Payment_Receipt;
     public $Registered, $count_app = 0, $app_count, $app_pending, $app_delivered, $app_deleted;
     public $total, $paid, $balance = 0, $n = 1;
     public $filterby, $show = 0, $collection, $no = 'No';
     public $Select_Date, $Daily_Income = 0;
     public $show_app = [];
     public $Ack, $Doc, $Pay, $subservice, $mainservice, $SubServices;
-    public $Ack_Path, $Doc_Path, $Payment_Path, $Profile_Image, $RelativeName, $Gender;
+    public $Ack_File, $Doc_File, $Payment_File, $Profile_Image, $RelativeName, $Gender;
     public $created, $updated, $AckFileDownload = 'Disable', $DocFileDownload = 'Disable', $PayFileDownload = 'Disable', $SubSelected, $key, $ShowTable = false, $paginate, $Sub_Serv_Name;
 
 
@@ -125,15 +125,18 @@ class EditApplication extends Component
             $this->Reason = $key['Reason'];
             $this->Updated_Date = $key['Delivered_Date'];
             $this->Registered = $key['Registered'];
-            $this->Ack = $key['Ack_File'];
-            $this->Doc = $key['Doc_File'];
-            $this->Pay = $key['Payment_Receipt'];
+            $this->Ack_File = $key['Ack_File'];
+            $this->Doc_File = $key['Doc_File'];
+            $this->Payment_File = $key['Payment_Receipt'];
             $this->old_Applicant_Image = $key['Applicant_Image'];
+            $this->Client_Type = $key['Applicant_Image'];
             $this->paginate = 5;
         }
         if (empty($this->Applied_Date)) {
             $this->Applied_Date = date("Y-m-d");
         }
+
+        $this->lastDocumentUpdateTime($this->Id);   // Get the last updated time
     }
     public function Capitalize()
     {
@@ -233,16 +236,16 @@ class EditApplication extends Component
         $this->handleFileUpload('Applicant_Image', $oldFiles['Applicant_Image']);
         $this->handleFileUpload('Ack_File', $oldFiles['Ack_File']);
         $this->handleFileUpload('Doc_File', $oldFiles['Doc_File']);
-        $this->handleFileUpload('Payment_Receipt', $oldFiles['Payment_Receipt']);
+        $this->handleFileUpload('Payment_File', $oldFiles['Payment_Receipt']);
 
         // Calculate balance
         $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
 
         // Ensure file paths are not null
-        $this->Ack_Path = $this->Ack_Path ?? $oldFiles['Ack_File'];
-        $this->Doc_Path = $this->Doc_Path ?? $oldFiles['Doc_File'];
-        $this->Payment_Path = $this->Payment_Path ?? $oldFiles['Payment_Receipt'];
         $this->Applicant_Image = $this->Applicant_Image ?? $oldFiles['Applicant_Image'];
+        $this->Ack_File = $this->Ack_File ?? $oldFiles['Ack_File'];
+        $this->Doc_File = $this->Doc_File ?? $oldFiles['Doc_File'];
+        $this->Payment_File = $this->Payment_File ?? $oldFiles['Payment_Receipt'];
 
         // Update Application record
         $updateData = [
@@ -262,9 +265,9 @@ class EditApplication extends Component
             'Amount_Paid' => $this->Amount_Paid,
             'Balance' => $this->Balance,
             'Payment_Mode' => $this->PaymentMode,
-            'Ack_File' => $this->Ack_Path,
-            'Doc_File' => $this->Doc_Path,
-            'Payment_Receipt' => $this->Payment_Path,
+            'Ack_File' => $this->Ack_File,
+            'Doc_File' => $this->Doc_File,
+            'Payment_Receipt' => $this->Payment_File,
             'Delivered_Date' => $this->Updated_Date,
             'Applicant_Image' => $this->Applicant_Image,
             'Branch_Id' => $branchId,
@@ -275,8 +278,9 @@ class EditApplication extends Component
         Application::where('Id', $Id)->update($updateData);
 
         // Update Credit Ledger if Amount Paid changes
-        if ($this->Amount_Paid != $this->previous_paid) {
-            $this->updateCreditLedger($Id, $branchId, $empId);
+        if ((intval($this->Amount_Paid) > 0) &&
+            (intval($this->previous_paid) + intval($this->Amount_Paid) <= intval($this->Total_Amount))) {
+                $this->updateCreditLedger($Id, $branchId, $empId);
         }
 
         // Update ApplyServiceForm
@@ -300,12 +304,15 @@ class EditApplication extends Component
             $this->handleAdditionalDocuments($Id, $branchId, $empId);
         }
 
+
+
+        if ($this->old_status != $this->Status) {
+            if(!$this->whatsAppNotificatin){
+                $this->applicationUpdateAlert($Id, $this->Name);
+            }
+        }
         // Flash success message and redirect
         session()->flash('SuccessUpdate', 'Application Details for ' . $this->Name . ' Updated Successfully');
-        if ($this->old_status != $this->Status || $this->Application != $this->ServiceName || $this->Application_Type != $this->SubSelected) {
-            $this->ApplicationUpdateAlert($this->Mobile_No, $this->Name, $this->Name, $this->ServiceName, $this->SubSelected, $this->Status);
-        }
-
         return redirect()->route('view.application', $Id);
     }
 
@@ -314,27 +321,28 @@ class EditApplication extends Component
      */
     protected function handleFileUpload($fieldName, $oldFilePath)
     {
-        if ($this->{$fieldName}) {
+
+        if ($this->{$fieldName} instanceof \Illuminate\Http\UploadedFile) {
             $file = $this->{$fieldName};
             $path = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
             $filename = $fieldName . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $this->{$fieldName . '_Path'} = $file->storePubliclyAs($path, $filename, 'public');
+            $this->{$fieldName} = $file->storePubliclyAs($path, $filename, 'public');
 
             // Delete old file if exists
             if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
                 Storage::disk('public')->delete($oldFilePath);
             }
         } else {
-            $this->{$fieldName . '_Path'} = $oldFilePath;
+            $this->{$fieldName} = $oldFilePath;
         }
     }
 
     /**
-     * Update Credit Ledger.
+     * Update : New Credit Entry for balance update in Credit Ledger.
      */
     protected function updateCreditLedger($Id, $branchId, $empId)
     {
-        $desc  = "Update :  Rs. " . (intval($this->Amount_Paid) - intval($this->previous_paid)) . "/- From  " . $this->Name . " Bearing Client ID: " . $this->Client_Id . " & Mobile No: " . $this->Mobile_No . " for " . $this->ServiceName . " " . $this->SubSelected . ", on " . $this->Updated_Date . " by  " . $this->PaymentMode . ", Total: " . $this->Total_Amount . "| Previous Paid: " . $this->previous_paid . "| Received : " . (intval($this->Amount_Paid) - intval($this->previous_paid)) . " | Balance: " . (intval($this->Total_Amount) - intval($this->Amount_Paid));
+        $desc  = "Update :  Rs. " . intval($this->Amount_Paid). "/- Received from  " . $this->Name . " bearing Client ID: " . $this->Client_Id . " & Mobile No: " . $this->Mobile_No . " for " . $this->ServiceName . " " . $this->SubSelected . ", on " . $this->Updated_Date . " by  " . $this->PaymentMode . ", Total: " . $this->Total_Amount . "| Previous Paid: " . $this->previous_paid . "| Received : " . intval($this->Amount_Paid) . " | Balance: " . (intval($this->Total_Amount) - (intval($this->Amount_Paid)+ intval($this->previous_paid)));
 
         $save_credit = new CreditLedger();
         $save_credit->Id = 'DC' . time();
@@ -343,11 +351,11 @@ class EditApplication extends Component
         $save_credit->Sub_Category = $this->SubSelected;
         $save_credit->Date = $this->Received_Date;
         $save_credit->Total_Amount = $this->Total_Amount;
-        $save_credit->Amount_Paid = intval($this->Amount_Paid) - intval($this->previous_paid);
+        $save_credit->Amount_Paid = intval($this->Amount_Paid);
         $save_credit->Balance = $this->Balance;
         $save_credit->Description = $desc;
         $save_credit->Payment_Mode = $this->PaymentMode;
-        $save_credit->Attachment = $this->Payment_Path;
+        $save_credit->Attachment = $this->Payment_File;
         $save_credit->Branch_Id = $branchId;
         $save_credit->Emp_Id = $empId;
         $save_credit->save(); // Credit Ledger Entry Saved
@@ -411,6 +419,7 @@ class EditApplication extends Component
     }
 
 
+    // Delete Document -- Working
     public function Delete_Doc($Id)
     {
         // Fetch the document record
@@ -444,7 +453,7 @@ class EditApplication extends Component
     }
 
 
-
+    // Delete multiple documents -- Working
     public function MultipleDelete()
     {
         if (empty($this->Checked)) {
@@ -476,30 +485,33 @@ class EditApplication extends Component
         if ($fileNotFound) {
             session()->flash('Error', 'Some files were not found, but their records have been removed.');
         } else {
-            session()->flash('Success', 'Selected files have been successfully deleted.');
+            session()->flash('SuccessMsg', 'Selected files have been successfully deleted.');
         }
 
         return redirect()->route('edit_application', $this->Id);
     }
 
-
-    public function LastUpdateTime()
+    // Last Document Updated Time
+    public function lastDocumentUpdateTime($id)
     {
-
-        $latest_doc = DocumentFiles::latest('created_at')->first();
+        $latest_doc = DocumentFiles::where('App_Id',$id)->latest('created_at')->first();
         if (!is_Null($latest_doc)) {
             $this->created = Carbon::parse($latest_doc['created_at'], $latest_doc['updated_at'])->diffForHumans();
             $this->updated = Carbon::parse($latest_doc['updated_at'])->diffForHumans();
         }
     }
+
+    // Refresh Page
     public function RefreshPage(){
         $this->resetpage();
     }
 
+    // Render the view
     public function render()
     {
+
         $this->Capitalize();
-        $this->LastUpdateTime();
+        $this->lastDocumentUpdateTime($this->Id);   // Get the last document updated time
 
         // Fetch main services and set service name if MainService is selected
         $this->MainServices = MainServices::all();

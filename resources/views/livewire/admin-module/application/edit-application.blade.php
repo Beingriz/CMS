@@ -302,7 +302,7 @@
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label>Service</label>
-                                                    <select class="form-select" wire:model.lazy="MainService">
+                                                    <select class="form-select" wire:model.lazy="MainService" disabled>
                                                         <option value="{{ $Application }}" selected>
                                                             {{ $Application }}</option>
                                                         @foreach ($MainServices as $Service)
@@ -319,7 +319,7 @@
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label>Service Category</label>
-                                                    <select class="form-select" wire:model.lazy="SubService">
+                                                    <select class="form-select" wire:model.lazy="SubService" disabled>
                                                         <option value="{{ $Application_Type }}" selected>
                                                             {{ $Application_Type }}</option>
                                                         @foreach ($SubServices as $service)
@@ -485,7 +485,7 @@
                                                         Date</label>
                                                     <input type="date" class="form-control"
                                                         id="progress-basicpill-receiveddate-input"
-                                                        wire:model="Received_Date">
+                                                        wire:model="Received_Date" disabled>
                                                     @error('Received_Date')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -514,7 +514,7 @@
                                                     <input type="date" class="form-control"
                                                         value="{{ now()->toDateString() }}"
                                                         id="progress-basicpill-receiveddate-input"
-                                                        wire:model="Updated_Date" max="{{ now()->toDateString() }}">
+                                                        wire:model="Updated_Date">
                                                     @error('Updated_Date')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -614,10 +614,10 @@
                                                             Receipt</label>
                                                         <input type="file" class="form-control"
                                                             id="progress-basicpill-ackfile-input"
-                                                            wire:model="Payment_Receipt"
+                                                            wire:model="Payment_File"
                                                             accept="image/jpeg, image/png">
                                                         <span class="text-danger">
-                                                            @error('Payment_Receipt')
+                                                            @error('Payment_File')
                                                                 {{ $message }}
                                                             @enderror
                                                         </span>
@@ -726,9 +726,22 @@
                                             <div class="col-45">
                                                 <span class="font-size-18 ">Applicant Image</span>
                                             </div>
+
+
+
                                             <div class="col-55">
+                                                @if (!is_null($Applicant_Image))
                                                 <img class="rounded avatar-md"
-                                                    src="{{ !empty($Applicant_Image) ? $Applicant_Image->temporaryUrl() : asset('storage/no_image.jpg') }}"alt="Client_Image" />
+                                                    src="{{ $Applicant_Image->temporaryUrl() }}"
+                                                    alt="Applicant_Image" />
+                                            @elseif($old_Applicant_Image != 'Not Available')
+                                                <img class="rounded avatar-md"
+                                                    src="{{ asset('storage/' . $old_Applicant_Image) }}"
+                                                    alt="no_image" />
+                                            @else
+                                                <img class="rounded avatar-md"
+                                                    src="{{ asset('storage/no_image.jpg') }}" alt="no_image" />
+                                            @endif
                                             </div>
                                         </div>
 
@@ -775,16 +788,7 @@
                                             </div>
                                         </div>
 
-                                        <!--Client Type  -->
-                                        <div class="row">
-                                            <div class="col-45">
-                                                <span class="font-size-18 ">Client Type</span>
-                                            </div>
-                                            <div class="col-55">
-                                                <span
-                                                    class="text-primary font-size-16 {{ empty($Client_Type) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Client_Type) ? $Client_Type : 'Field is Empty' }}</span>
-                                            </div>
-                                        </div>
+
 
                                     </div>
 
@@ -838,11 +842,11 @@
                                         <!-- Total_Amount   -->
                                         <div class="row">
                                             <div class="col-45">
-                                                <span class="font-size-18 ">Total Payment</span>
+                                                <span class="font-size-18 ">Total Amount</span>
                                             </div>
                                             <div class="col-55">
                                                 <span
-                                                    class="text-primary font-size-16 {{ empty($Total_Amount) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Total_Amount) ? $Total_Amount : 'Field is Empty' }}</span>
+                                                    class="text-success font-size-20 {{ empty($Total_Amount) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Total_Amount) ? $Total_Amount : 'Field is Empty' }}</span>
                                             </div>
                                         </div>
 
@@ -853,7 +857,7 @@
                                             </div>
                                             <div class="col-55">
                                                 <span
-                                                    class="text-primary font-size-16 {{ empty($Amount_Paid) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Amount_Paid) ? $Amount_Paid : 'Field is Empty' }}</span>
+                                                    class="text-danger font-size-16 {{ empty($Amount_Paid) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Amount_Paid) ? $Amount_Paid : 'Field is Empty' }}</span>
                                             </div>
                                         </div>
 
@@ -907,6 +911,22 @@
                                     </div>
                                 </div>
                                 @if ($Confirmation == 1)
+                                <div class="row">
+                                    <h5 class="font-size-14 mb-3 text-danger">WhatsApp Notification</h5>
+                                    <p class="text-danger"><b>Alert :</b>  Check this button only if you don't want to send whatsapp notification to this update</p>
+
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <input type="checkbox" id="switch3" switch="none"
+                                            wire:model.lazy="whatsAppNotificatin">
+                                        <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
+                                        @if ($whatsAppNotificatin)
+                                            <p>
+                                                <i class="mdi mdi-check-circle-outline text-success font-size-20 display-4"></i>
+                                                <small>Whatsapp Notification is Off Now.</small>
+                                            </p>
+                                        @endif
+                                    </div>
+                                </div>
                                     <div class="row">
                                         <div class="col-xl-12">
 
@@ -973,9 +993,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($Doc_Files as $File)
+                                    @foreach ($docFiles as $File)
                                         <tr>
-                                            <td>{{ $Doc_Files->firstItem() + $loop->index }}</td>
+                                            <td>{{ $docFiles->firstItem() + $loop->index }}</td>
                                             <td><input type="checkbox" id="checkbox" name="checkbox"
                                                     value="{{ $File->Id }}" wire:model="Checked"></td>
 
@@ -997,12 +1017,12 @@
                             </table>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($Doc_Files) }} of
-                                        {{ $Doc_Files->total() }} entries</p>
+                                    <p class="text-muted">Showing {{ count($docFiles) }} of
+                                        {{ $docFiles->total() }} entries</p>
                                 </div>
                                 <div class="col-md-4">
                                     <span class=" pagination pagination-rounded float-end">
-                                        {{ $Doc_Files->links() }}
+                                        {{ $docFiles->links() }}
                                     </span>
                                 </div>
                             </div>

@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\DocumentFiles;
 use App\Models\Status;
 use App\Traits\RightInsightTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -65,7 +66,9 @@ class OpenApplication extends Component
             $this->Profile_Image = $key['Applicant_Image'];
             $this->updated_at = $key['updated_at'];
         }
+        $this->lastDocumentUpdateTime($this->Id);
     }
+
     public function ShowApplications($key)
     {
         $this->show = 1;
@@ -76,6 +79,21 @@ class OpenApplication extends Component
         // })
         ->paginate($this->paginate);
     }
+    public function lastDocumentUpdateTime($id)
+    {
+        // Get the latest document for the given App_Id
+        $latest_doc = DocumentFiles::where('App_Id', $id)->latest('created_at')->first();
+
+        // Check if a document is found
+        if ($latest_doc) {
+            // Use created_at if it's available, otherwise use updated_at
+            $this->created = Carbon::parse($latest_doc->created_at)->diffForHumans();
+        } else {
+            // If no document found, use the current time for reference
+            $this->created = Carbon::now()->diffForHumans();
+        }
+    }
+
 
     public function Delete_Doc($Id)
     {

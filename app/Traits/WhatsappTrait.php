@@ -19,8 +19,9 @@ trait WhatsappTrait
     }
 
     // Send a WhatsApp message using the Twilio API
-    private function sendMessage($contentSid, $applicaiton, $contentVariables, $media_url=null)
+    private function sendMessage($contentSid, $applicaiton, $contentVariables)
     {
+
         $toNo = "whatsapp:+91".$applicaiton->Mobile_No;
         $template = Templates::where('template_sid', $contentSid)->first();
         try {
@@ -28,7 +29,6 @@ trait WhatsappTrait
                 "from" => $this->fromNo,
                 "body" => $template->body,
                 "contentSid" => $contentSid,
-                "mediaUrl" => $media_url,
                 "contentVariables" => json_encode($contentVariables)
             ]);
             session()->flash('SuccessMsg', 'Message Sent!');
@@ -90,26 +90,25 @@ trait WhatsappTrait
             $contentVariables[$key] = !empty(trim($application->{$value})) ? trim($application->{$value}) : trim($profileName);
             // Fallback to original value if attribute doesn't exist
         }
-        $imageName = "leather-bag-gray.jpg";
-        $media_url = "https://res.cloudinary.com/djgfhbe6o/image/upload/v1731178434/samples/ecommerce/{$imageName}";
-        $this->sendMessage($contentSid, $application, $contentVariables, $media_url);
+        $this->sendMessage($contentSid, $application, $contentVariables, null);
     }
 
-    public function ApplicationUpdateAlert($mobile,$profileName, $applicantName, $service, $serviceType, $status, )
+    public function applicationUpdateAlert($app_id,$profileName)
     {
-        $contentSid = 'HX2220de0d0bffac9fa7d725dadd47e6f1'; // Replace with your actual ContentSid
-        $contentVariables = [
-            "1" => trim($profileName),
-            "2" => trim($applicantName),
-            "3" => trim($mobile),
-            "4" => trim($service),
-            "5" => trim($serviceType),
-            "6" => trim($status)
-        ];
+        $contentSid = 'HXf37986fb67759b5973e7d557d1c03cd8'; // Replace with your actual ContentSid
+        // Get the template from the database
+        $template = Templates::where('template_sid', $contentSid)->first();
+        $contentVariables = json_decode($template->variables, true); // Decode JSON to array
 
-        $body = "*Application Update Notification*\n\nDear *{{1}}*,\n\nWe are pleased to inform you of an update to your application. Please find the current details below:\n\n👤 **Name:** *{{2}}*\n📱 **Phone:** *+91{{3}}*\n📝 **Service:** *{{4}}*\n🔖 **Type:** *{{5}}*\n📋 **Status:** *{{6}}*\n\nTo review the status and track further progress, please log in to your account on our website.\n\n**Digital Cyber**\nThank you for trusting us to provide you with services.";
+        $application = Application::find($app_id);
 
-        $this->sendMessage($mobile, $body, $contentSid, $contentVariables);
+        // Replace variables dynamically with client data
+        foreach ($contentVariables as $key => $value) {
+            // Replace each placeholder value with the corresponding client attribute
+            $contentVariables[$key] = !empty(trim($application->{$value})) ? trim($application->{$value}) : trim($profileName);
+            // Fallback to original value if attribute doesn't exist
+        }
+        $this->sendMessage($contentSid, $application, $contentVariables, null);
     }
 
 
