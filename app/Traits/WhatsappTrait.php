@@ -19,7 +19,7 @@ trait WhatsappTrait
     }
 
     // Send a WhatsApp message using the Twilio API
-    private function sendMessage($contentSid, $applicaiton, $contentVariables)
+    private function sendMessage($contentSid, $applicaiton, $contentVariables, $media_url=null)
     {
 
         $toNo = "whatsapp:+91".$applicaiton->Mobile_No;

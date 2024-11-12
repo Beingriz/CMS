@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('status', function (Blueprint $table) {
-            $table->string('Id', 50)->primary();
+            $table->string('id', 50)->primary();
             $table->string('Orderby', 50);
             $table->string('Status', 100);
             $table->integer('Total_Count')->nullable();

@@ -9,7 +9,7 @@ class MainServices extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    public $table = 'service_list';
+    public $table = 'services';
 
 
     // defining relation :  1 to Many relation :  1 Main Services has many Applicaitons.

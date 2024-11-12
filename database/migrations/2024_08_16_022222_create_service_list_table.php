@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('service_list', function (Blueprint $table) {
             $table->integer('Sl_No', true)->unique('Sl_No');
-            $table->string('Id', 50)->primary();
+            $table->string('id', 50)->primary();
             $table->string('Name', 100);
             $table->string('Service_Type', 50);
             $table->string('Description', 2000);
