@@ -37,9 +37,9 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{ url('admin.home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ url('app_home') }}">Application</a></li>
-            <li class="breadcrumb-item"><a href="{{ url('app_form') }}">New Application</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('app.home') }}">Application</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('new.application') }}">New Application</a></li>
         </ol>
     </div>{{-- End of Page Tittle --}}
 
@@ -47,9 +47,13 @@
     <div class="row">
         <div class="col-lg-5">
             <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between"">
+                    <h5 class="card-title">Add Documents</h5>
+                    <h5 class="card-title"><a href="{{ route('add.document') }}"
+                            title="Click here for New Transaction">New</a></h5>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title"> Document Advisor</h4>
-                    <p class="card-title-desc">Add Documents</p>
+                    <p class="card-title-desc">Add Documents for each service </p>
                     <div class="row mb-3">
                         <label for="example-text-input" class="col-sm-3 col-form-label">Document ID</label>
                         <label for="example-text-input" class="col-sm-3 col-form-label">{{ $Doc_Id }}</label>
@@ -63,7 +67,6 @@
                             <label for="MainserviceId" class="col-sm-4 col-form-label">Select Service</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="MainserviceId" wire:model="MainserviceId" name="MainserviceId"  {{ $readonly }}         >                         <option value="" selected>Select Service </option>
-                                    <option value="">---Select---</option>
                                     @foreach ($MainServices as $service)
                                         <option value="{{ $service->Id }}" selected>{{ $service->Name }}</option>
                                     @endforeach
@@ -77,7 +80,7 @@
                         <div class="row mb-3">
                             <label for="SubService" class="col-sm-4 col-form-label">Service Type</label>
                             <div class="col-sm-8">
-                                <select class="form-control" id="Main_Services" wire:model="SubService" name="SubService" {{ $readonly }} >
+                                <select class="form-control" id="Main_Services" wire:model.lazy="SubService" name="SubService" {{ $readonly }} >
                                     <option value="" selected>---Select---</option>
                                     @foreach ($Subservices as $service)
                                         <option value="{{ $service->Id }}" selected>{{ $service->Name }}</option>
@@ -92,9 +95,9 @@
                         <div class="row mb-3">
                             <label for="Name" class="col-sm-4 col-form-label">Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" type="text" placeholder="Doc Name" wire:model="Document_Name"
+                                <input class="form-control" type="text" placeholder="Doc Name" wire:model.lazy="Document_Name"
                                     id="Document_Name">
-                                <span class="error">@error('Name'){{ $message }}@enderror</span>
+                                <span class="error">@error('Document_Name'){{ $message }}@enderror</span>
                             </div>
                             <div class="col-0">
                                 @if(!$update)
@@ -189,16 +192,14 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        <p class="card-text"><small class="text-bold">Last document added at {{ $lastRecTime }} </small></p>
+
                         <div class="row no-gutters align-items-center">
                             <div class="col-md-8">
                                 <p class="text-muted">Showing {{ count($Existing_Documents) }} of
                                     {{ $Existing_Documents->total() }} entries</p>
                             </div>
-                            <div class="col-md-4">
-                                <span class="pagination pagination-rounded float-end">
-                                    {{ $Existing_Documents->links() }}
-                                </span>
-                            </div>
+
                         </div>
                     </div>
                 </div>

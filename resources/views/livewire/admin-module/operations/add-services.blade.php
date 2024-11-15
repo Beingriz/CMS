@@ -84,11 +84,8 @@
                                 <label for="Name" class="col-sm-2 col-form-label">Name</label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" placeholder="Main Service Name"
-                                        wire:model="Name" id="Name">
-                                    <span class="error">
-                                        @error('Name')
-                                            {{ $message }}
-                                        @enderror
+                                        wire:model.lazy="servName" id="Name">
+                                    <span class="error">@error('servName'){{ $message }}@enderror
                                     </span>
                                 </div>
                             </div>
@@ -111,54 +108,50 @@
                             </div>
                             <!-- end row -->
                             <div class="row mb-3">
-                                <label for="example-tel-input" class="col-sm-2 col-form-label">Description</label>
+                                <label for="Description" class="col-sm-2 col-form-label">Description</label>
                                 <div class="col-sm-10">
-                                    <textarea id="Description" wire:model="Description" name="Description" class="form-control"
-                                        placeholder="Service Description" rows="3"></textarea>
-                                    <span class="error">
-                                        @error('Description')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Short Description"
+                                            wire:model.lazy="Description" id="Description">
+                                        <span class="error">@error('Description'){{ $message }}@enderror
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
                             <div class="row mb-3">
-                                <label for="example-tel-input" class="col-sm-2 col-form-label">Details</label>
+                                <label for="Details" class="col-sm-2 col-form-label">Details</label>
                                 <div class="col-sm-10">
-                                    <textarea id="Details" wire:model="Details" name="Details" class="form-control" placeholder="Details"
-                                        rows="3" resize="none"></textarea>
-                                    <span class="error">
-                                        @error('Details')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Short Details"
+                                            wire:model.lazy="Details" id="Details">
+                                        <span class="error">@error('Details'){{ $message }}@enderror
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
                             <div class="row mb-3">
-                                <label for="example-tel-input" class="col-sm-2 col-form-label">Features</label>
+                                <label for="Features" class="col-sm-2 col-form-label">Features</label>
                                 <div class="col-sm-10">
-                                    <textarea id="Features" wire:model="Features" name="Features" class="form-control" placeholder="Features"
-                                        rows="3" resize="none"></textarea>
-                                    <span class="error">
-                                        @error('Features')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Short Features"
+                                            wire:model.lazy="Features" id="Features">
+                                        <span class="error">@error('Features'){{ $message }}@enderror
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
                             <div class="row mb-3">
-                                <label for="example-tel-input" class="col-sm-2 col-form-label">Specifications</label>
+                                <label for="Specification" class="col-sm-2 col-form-label">Specifications</label>
                                 <div class="col-sm-10">
-                                    <textarea id="Specification" wire:model="Specification" name="Specification" class="form-control"
-                                        placeholder="Specification" rows="3" resize="none"></textarea>
-                                    <span class="error">
-                                        @error('Specification')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Short Specification"
+                                            wire:model.lazy="Specification" id="Specification">
+                                        <span class="error">@error('Specification'){{ $message }}@enderror
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -192,22 +185,20 @@
                                     </span>
                                 </div>
                             </div>
-                            <div wire:loading wire:target="Thumbnail">Uploading...</div>
-                            @if (!is_Null($Thumbnail))
-                                <div class="row">
-                                    <div class="col-45">
-                                        <img class="col-75" src="{{ $Thumbnail->temporaryUrl() }}""
+                            <div class="row mb-3">
+                                <div class="col-sm-5">
+                                    @if (!empty($Thumbnail))
+                                        <img class="img-thumbnail" src="{{ $Thumbnail->temporaryUrl() }}"
                                             alt="Thumbnail" />
-                                    </div>
+                                    @elseif(!is_Null($Old_Thumbnail))
+                                        <img class="img-thumbnail"
+                                            src="{{ !empty($Old_Thumbnail) ? url('storage/' . $Old_Thumbnail) : url('storage/no_image.jpg') }} "alt="Thumbnail" />
+                                    @else
+                                        <img class="img-thumbnail" src="{{ url('storage/no_image.jpg') }}"
+                                            alt="Thumbnail" />
+                                    @endif
                                 </div>
-                            @elseif(!is_Null($Old_Thumbnail))
-                                <div class="row">
-                                    <div class="col-45">
-                                        <img class="col-75" src="{{ url('storage/' . $Old_Thumbnail) }}""
-                                            alt="Existing Thumbnail" />
-                                    </div>
-                                </div>
-                            @endif
+                            </div>
                             <div class="form-data-buttons"> {{-- Buttons --}}
                                 <div class="row">
                                     <div class="col-100">
@@ -231,7 +222,7 @@
                         <div class="row mb-3">
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Main Services</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="Main_Services" wire:model="Main_ServiceId"
+                                <select class="form-control" id="Main_Services" wire:model.lazy="Main_ServiceId"
                                     name="Main_Services">
                                     <option value="">---Select---</option>
                                     @foreach ($MainServices as $item)
@@ -251,7 +242,7 @@
                             <label for="Name" class="col-sm-2 col-form-label">Name</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" placeholder="Sub Service Name"
-                                    wire:model="Name" id="Name">
+                                    wire:model.lazy="subServName" id="Name">
                                 <span class="error">
                                     @error('Name')
                                         {{ $message }}
@@ -263,7 +254,7 @@
                         <div class="row mb-3">
                             <label for="example-url-input" class="col-sm-2 col-form-label">Service Type</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="Service_Type" wire:model="Service_Type"
+                                <select class="form-control" id="Service_Type" wire:model.lazy="Service_Type"
                                     name="Service_Type">
                                     <option value="">---Select---</option>
                                     <option value="Public">Public</option>
@@ -279,7 +270,7 @@
                         <div class="row mb-3">
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Description</label>
                             <div class="col-sm-10">
-                                <textarea id="Description" wire:model="Description" name="Description" class="form-control"
+                                <textarea id="Description" wire:model.lazy="Description" name="Description" class="form-control"
                                     placeholder="Service Description" rows="3"></textarea>
                                 <span class="error">
                                     @error('Description')
@@ -291,7 +282,7 @@
                         <div class="row mb-3">
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Unit Price</label>
                             <div class="col-sm-3">
-                                <input type="number" id="Unit_Price" wire:model="Unit_Price" name="Unit_Price"
+                                <input type="number" id="Unit_Price" wire:model.lazy="Unit_Price" name="Unit_Price"
                                     class="form-control" placeholder="Unit Price">
                                 <span class="error">
                                     @error('Unit_Price')
@@ -301,7 +292,7 @@
                             </div>
                             <label for="example-tel-input" class="col-sm-2 col-form-label">Service Fee</label>
                             <div class="col-sm-2">
-                                <input type="number" id="Unit_Price" wire:model="Service_Fee" name="Service_Fee"
+                                <input type="number" id="Unit_Price" wire:model.lazy="Service_Fee" name="Service_Fee"
                                     class="form-control" placeholder="Service Fee">
                                 <span class="error">
                                     @error('Service_Fee')
@@ -313,21 +304,21 @@
                         <div class="row mb-3">
                             <label for="Name" class="col-sm-2 col-form-label">Thumbnail</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="file" wire:model="Thumbnail" id="Thumbnail"
+                                <input class="form-control" type="file" wire:model.lazy="SubThumbnail" id="Thumbnail"
                                     accept="image/*">
                                 <span class="error">
-                                    @error('Thumbnail')
+                                    @error('SubThumbnail')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </div>
                         </div>
 
-                        <div wire:loading wire:target="Thumbnail">Uploading...</div>
+                        <div wire:loading wire:target="SubThumbnail">Uploading...</div>
                         <div class="row mb-3">
                             <div class="col-sm-5">
-                                @if (!empty($Thumbnail))
-                                    <img class="img-thumbnail" src="{{ $Thumbnail->temporaryUrl() }}"
+                                @if (!empty($SubThumbnail))
+                                    <img class="img-thumbnail" src="{{ $SubThumbnail->temporaryUrl() }}"
                                         alt="Thumbnail" />
                                 @elseif(!is_Null($Old_Thumbnail))
                                     <img class="img-thumbnail"

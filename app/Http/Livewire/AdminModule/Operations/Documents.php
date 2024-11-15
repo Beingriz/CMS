@@ -5,7 +5,9 @@ namespace App\Http\Livewire\AdminModule\Operations;
 use App\Models\DocumentList;
 use App\Models\MainServices;
 use App\Models\SubServices;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use League\CommonMark\Node\Block\Document;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,7 +25,7 @@ class Documents extends Component
     public $SubService;
     public $exist_categories;
     public $value;
-    public $n = 1,$update=false,$readonly="";
+    public $n = 1,$update=false,$readonly="",$lastRecTime;
     public $i = 1;
     public $Document_Name;
     public $Document_Names = [];
@@ -55,12 +57,16 @@ class Documents extends Component
     // Component mount lifecycle hook
     public function mount($Edit_Id,$Delete_Id)
     {
-        $this->Doc_Id = 'DOC' . time();
+        $this->id();
         if($Edit_Id != ''){
             $this->Edit($Edit_Id);
         }elseif($Delete_Id!=''){
             $this->Delete($Delete_Id);
         }
+    }
+
+    public function id(){
+        $this->Doc_Id = 'DOC' . time();
     }
 
     // Add a new text box for additional documents
@@ -74,15 +80,12 @@ class Documents extends Component
     // Reset form fields
     public function ResetFields()
     {
-        $this->Doc_Id = 'DOC' . time();
+        $this->id();
         $this->Document_Name = '';
-        $this->MainserviceId = '';
-        $this->SubService = '';
         $this->Document_Names = [];
         $this->NewTextBox = [];
         $this->update=false;
         $this->readonly="";
-        $this->reset();
     }
 
     // Remove a text box
@@ -123,11 +126,13 @@ class Documents extends Component
     // Helper function to save a single document
     private function saveSingleDocument($id, $name)
     {
+
         $save_doc = new DocumentList();
         $save_doc->Id = $id;
         $save_doc->Service_Id = $this->MainserviceId;
         $save_doc->Sub_Service_Id = $this->SubService;
-        $save_doc->Name = $name;
+        $name = strtolower(trim($name));
+        $save_doc->Name = ucwords($name);
         $save_doc->save();
     }
 
@@ -165,7 +170,7 @@ class Documents extends Component
             $data['Name'] = $this->Document_Name;
             DB::table('document_list')->where('Id', '=', $this->Doc_Id)->Update($data);
             session()->flash('SuccessMsg', 'Document updated successfully.');
-            $this->reset();
+            $this->ResetFields();
         } else {
             // Handle the case where the document does not exist
             session()->flash('error', 'Document not found.');
@@ -176,16 +181,52 @@ class Documents extends Component
     {
         $document = DocumentList::find($id);
         if ($document) {
-            $document->delete();
+            // Store service IDs before deletion
+            $this->MainserviceId = $document->Service_Id;
+            $this->SubService = $document->Sub_Service_Id;
+
+            // Delete the document
+            DocumentList::where('Id', $id)->delete();
+            // Flash success message and redirect to 'add.document' route
+            session()->flash('SuccessMsg', 'Document Deleted successfully.');
+            return redirect()->back();
         } else {
-            // Handle the case where the document does not exist
-            // For example, you could throw an exception or return an error message
+            // Flash error message if document is not found
+            session()->flash('Error', 'Document not found.');
+            return redirect()->back();
         }
     }
 
+    public function capitalize(){
+        $this->Document_Name = strtolower(trim($this->Document_Name));
+        $this->Document_Name = ucwords($this->Document_Name);
+
+    }
+
+    public function LastUpdate($service_id, $sub_service_id)
+    {
+        // Retrieve the latest record based on service and sub-service IDs
+        $latest_app = DocumentList::where('service_id', $service_id)
+                        ->where('sub_service_id', $sub_service_id)
+                        ->latest('created_at')
+                        ->first();
+
+        // Check if a record was found
+        if ($latest_app) {
+            // Parse and format the date to 'diffForHumans'
+            $this->lastRecTime = Carbon::parse($latest_app->created_at)->diffForHumans();
+        } else {
+            // Handle the case where no record was found
+            $this->lastRecTime = 'No record found';
+        }
+    }
     // Render the component view
     public function render()
     {
+        $this->capitalize();
+        if($this->MainserviceId != null && $this->SubService != null){
+            $this->LastUpdate($this->MainserviceId, $this->SubService);
+        }
         $this->MainServices = MainServices::all();
         $this->Subservices = SubServices::where('Service_Id', $this->MainserviceId)->get();
         $this->Existing_Documents = DocumentList::with('subservices')->where([

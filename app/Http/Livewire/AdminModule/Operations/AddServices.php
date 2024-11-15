@@ -21,20 +21,25 @@ class AddServices extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     use WithFileUploads;
-    public $Service_Id, $Name, $Service_Type, $Services = [],  $Description, $Details, $Specification, $Features, $Service_Fee;
-    public $Thumbnail, $Order_By, $paginate, $pos, $filterby, $Update = 0, $lastRecTime;
+    public $Service_Id, $servName,$subServName, $Service_Type, $Services = [],  $Description, $Details, $Specification, $Features, $Service_Fee;
+    public $Thumbnail, $SubThumbnail, $Order_By, $paginate, $pos, $filterby, $Update = 0, $lastRecTime;
     public $Category_Type, $Main_ServiceId, $Unit_Price, $Old_Thumbnail, $New_Thumbnail;
     protected $Existing_Sevices = [];
 
     protected $rules = [
-        'Name' => 'required ',
+        'servName' => 'required|unique:service_list,Name',
+        'subServName' => 'required|unique:sub_service_list,Name',
         'Service_Type' => 'required',
-        'Description' => 'required|min:50 |max:400',
-        'Thumbnail' => 'image|max:1024',
+        'Description' => 'required|min:20 |max:300',
+        'Thumbnail' => 'required|image|max:1024',
+        'SubThumbnail' => 'required|image|max:1024',
+        'Unit_Price' => 'required|numeric',
+        'Service_Fee' => 'required|numeric',
     ];
 
     protected $messages = [
-        'Name.required' => 'Please Enter the Service Name',
+        'servName.required' => 'Please Enter the Service Name',
+        'subServName.required' => 'Please Enter the Sub Service Name',
         'Service_Type.required' => 'Please Select Service Type',
         'Description.required' => 'Please Write Service Description ',
         'Thumbnail.required' => 'Please Select Thumbnail',
@@ -64,7 +69,8 @@ class AddServices extends Component
     {
 
         $this->Update = 0;
-        $this->Name = '';
+        $this->servName = '';
+        $this->subServName = '';
         $this->Service_Type = '';
         $this->Description = '';
         $this->Details = '';
@@ -78,260 +84,295 @@ class AddServices extends Component
         $Char = strtoupper(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, $length));
         $this->Service_Id = 'DC' . mt_rand(1, 99) . $Char;
     }
-    public function ImageUpload()
-    {
 
-        if (!empty($this->Thumbnail)) // Check if new image is selected
-        {
-            if (!empty($this->Old_Thumbnail)) {
-                if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-                    unlink(storage_path('app/public/' . $this->Old_Thumbnail));
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Services/Thumbnail' . time();
-                    $filename = 'MS_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Thumbnail = $url;
-                } else {
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Services/Thumbnail' . time();
-                    $filename = 'MS_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Thumbnail = $url;
-                }
-            } else {
-                $this->validate([
-                    'Thumbnail' => 'required|image',
-                ]);
-                $extension = $this->Thumbnail->getClientOriginalExtension();
-                $path = 'Services/Thumbnail' . time();
-                $filename = 'MS_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                $this->New_Thumbnail = $url;
-            }
-        } else // check old is exist
-        {
-            if (!empty($this->Old_Thumbnail)) {
-                if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-                    $this->New_Thumbnail = $this->Old_Thumbnail;
-                }
-            } else {
-                $this->validate([
-                    'Thumbnail' => 'required|image',
-                ]);
-                $extension = $this->Thumbnail->getClientOriginalExtension();
-                $path = 'Services/Thumbnail' . time();
-                $filename = 'MS_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                $this->New_Thumbnail = $url;
-            }
-        }
-    }
-    public function deleteImage($Id, $type)
-    {
-        if ($type == 'Main') {
-            $fetch = MainServices::Where('Id', $Id)->first();
-            $file = $fetch->Thumbnail;
-            if (!empty($file)) {
-                if (Storage::disk('public')->exists($file)) {
-                    unlink(storage_path('app/public/' . $file));
-                }
-            }
-        } elseif ($type == 'Sub') {
-            $fetch = SubServices::Where('Id', $Id)->first();
-            $file = $fetch->Thumbnail;
-            if (!empty($file)) {
-                if (Storage::disk('public')->exists($file)) {
-                    unlink(storage_path('app/public/' . $file));
-                }
-            }
-        }                            
-    }
     public function Save()
     {
-        $exist = MainServices::Wherekey($this->Service_Id)->get();
-        foreach ($exist as $item) {
-            $application = $item['Application'];
-        }
-        if (sizeof($exist) > 0) // if Exist then Update
-        {
-            $this->validate(['Name' => 'required', 'Description' => 'required|min:50 |max:400', 'Service_Type' => 'required']);
+        // Find existing service record
+        sleep(2); // Simulate a slow server
+        $exist = MainServices::find($this->Service_Id);
+        $application = $exist ? $exist->Application : null;
 
-            $this->ImageUpload();
-            $data = array();
-            $data['Name'] = trim($this->Name);
-            $data['Service_Type'] = trim($this->Service_Type);
-            $data['Description'] = trim($this->Description);
-            $data['Details'] = trim($this->Details);
-            $data['Features'] = trim($this->Features);
-            $data['Specification'] = trim($this->Specification);
-            $data['Order_By'] = trim($this->Order_By);
-            $data['Thumbnail'] = $this->New_Thumbnail;
-            $data_app = array();
-            $data_app['Application'] = trim($this->Name);
-            $app = Application::where('Application', $application)->Update($data_app);
-            $ser = DB::table('service_list')->where('Id', $this->Service_Id)->Update($data);
+        // Check if service exists
+        if ($exist) {
+            // Process thumbnail and data preparation
+            $this->processNewThumbnail();
 
+            // Prepare service and application data
+            $data = $this->prepareMainServiceData();
+            $data_app = ['Application' => trim($this->servName)];
 
-            if ($ser && $app) {
-                session()->flash('SuccessMsg', trim($this->Name) . ' Service & Applictions Updated!');
-                $this->Category_Type = 'Main';
-                $this->ResetFields();
-            } elseif ($ser) {
-                session()->flash('SuccessMsg', trim($this->Name) . ' Service Database Updated!');
-                $this->Category_Type = 'Main';
-                $this->ResetFields();
-            } elseif ($app) {
-                session()->flash('SuccessMsg', trim($this->Name) . ' Application Database Updated!');
-                $this->Category_Type = 'Main';
-                $this->ResetFields();
-            } else {
-                session()->flash('Error', trim($this->Name) . ' No Changes Found. ');
-                $this->Category_Type = 'Main';
-                $this->ResetFields();
-            }
-        } else // Create New
-        {
-            $this->validate(['Name' => 'required |unique:service_list,Name']);
-            if (!empty($this->Thumbnail)) {
-                $extension = $this->Thumbnail->getClientOriginalExtension();
-                $path = 'Services/Thumbnail' . time();
-                $filename = 'MS_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                $this->New_Thumbnail = $url;
-            } else {
-                $this->validate([
-                    'Thumbnail' => 'required|image',
-                ]);
-            }
-            $save_service = new MainServices();
-            $save_service->Id = $this->Service_Id;
-            $save_service->Name = trim($this->Name);
-            $save_service->Service_Type = trim($this->Service_Type);
-            $save_service->Description = trim($this->Description);
-            $save_service->Details = trim($this->Details);
-            $save_service->Features = trim($this->Features);
-            $save_service->Specification = trim($this->Specification);
-            $save_service->Order_By = $this->Order_By;
-            $save_service->Thumbnail = $this->New_Thumbnail;
+            // Update service and application records in the database
+            $ser = DB::table('service_list')->where('Id', $this->Service_Id)->update($data);
+            $app = Application::where('Application', $application)->update($data_app);
+
+            // Flash success or failure message
+            $this->flashMessage($ser, $app, 'Service & Applications Updated!');
+        } else {
+            // Process thumbnail and save new record
+            $this->processNewThumbnail();
+
+            // Save new service record
+            $save_service = new MainServices($this->prepareMainServiceData());
             $save_service->save();
-            session()->flash('SuccessMsg', 'New  Service "' . $this->Name . '"  Added Successfully!.');
+
+            // Flash success message for new service
+            session()->flash('SuccessMsg', 'New Service "' . $this->servName . '" Added Successfully!');
             $this->ResetFields();
         }
     }
+
+    /**
+     * Helper function to prepare data for main service.
+     */
+    protected function prepareMainServiceData()
+    {
+        $description = strtolower(trim($this->Description));
+        $name = strtolower(trim($this->servName));
+        $details = strtolower(trim($this->Details));
+        $features = strtolower(trim($this->Features));
+        $specification = strtolower(trim($this->Specification));
+        return [
+            'Id' => $this->Service_Id,
+            'Name' => ucwords($name),
+            'Service_Type' => trim($this->Service_Type),
+            'Description' => ucwords($description),
+            'Details' => ucwords($details),
+            'Features' => ucwords($features),
+            'Specification' => ucwords($specification),
+            'Order_By' => trim($this->Order_By),
+            'Thumbnail' => $this->New_Thumbnail,
+        ];
+
+    }
+
+    /**
+     * Helper function to flash success or error message after operation.
+     */
+    protected function flashMessage($ser, $app, $message)
+    {
+        if ($ser && $app) {
+            session()->flash('SuccessMsg', $message);
+        } elseif ($ser) {
+            session()->flash('SuccessMsg', 'Service Database Updated!');
+        } elseif ($app) {
+            session()->flash('SuccessMsg', 'Application Database Updated!');
+        } else {
+            session()->flash('Error', 'No Changes Found.');
+        }
+        $this->Category_Type = 'Main';
+        $this->ResetFields();
+    }
+
+    /**
+     * Process thumbnail upload.
+     */
+    public function processNewThumbnail()
+    {
+        try {
+            // Check if a new thumbnail is uploaded
+            if (!empty($this->Thumbnail)) {
+                // Delete the old thumbnail if it exists
+                if (!empty($this->Old_Thumbnail) && Storage::disk('public')->exists($this->Old_Thumbnail)) {
+                    Storage::disk('public')->delete($this->Old_Thumbnail);
+                }
+
+                // Store the new thumbnail and queue the process
+                $this->New_Thumbnail = $this->storeThumbnail();
+            } elseif (!empty($this->Old_Thumbnail) && Storage::disk('public')->exists($this->Old_Thumbnail)) {
+                // If no new thumbnail, keep the old one
+                $this->New_Thumbnail = $this->Old_Thumbnail;
+            } else {
+                // If there's no thumbnail, store the new one
+                $this->New_Thumbnail = $this->storeThumbnail();
+            }
+        } catch (\Exception $e) {
+            session()->flash('Error', 'Image upload failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Store the service thumbnail image in storage.
+     */
+    protected function storeThumbnail()
+    {
+        $extension = $this->Thumbnail->getClientOriginalExtension();
+        $path = 'Services';
+        $filename = 'MS_' . $this->servName . '_' . time() . '.' . $extension;
+
+        return $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
+    }
+
+
+
     public function Edit($Id, $Type)
     {
+        $this->Update = 1;
+
         if ($Type == 'Main') {
-            $this->Update = 1;
-            $fetch = MainServices::Wherekey($Id)->get();
-            foreach ($fetch as $service) {
-                $this->Service_Id = $service['Id'];
-                $this->Name = $service['Name'];
-                $this->Description = $service['Description'];
-                $this->Details = $service['Details'];
-                $this->Features = $service['Features'];
-                $this->Specification = $service['Specification'];
-                $this->Order_By = $service['Order_By'];
-                $this->Service_Type = $service['Service_Type'];
-                $this->Old_Thumbnail = $service['Thumbnail'];
+            // Fetch a single main service record
+            $service = MainServices::whereKey($Id)->first();
+
+            if ($service) {
+                $this->Service_Id = $service->Id;
+                $this->servName = $service->Name;
+                $this->Description = $service->Description;
+                $this->Details = $service->Details;
+                $this->Features = $service->Features;
+                $this->Specification = $service->Specification;
+                $this->Order_By = $service->Order_By;
+                $this->Service_Type = $service->Service_Type;
+                $this->Old_Thumbnail = $service->Thumbnail;
             }
         } elseif ($Type == 'Sub') {
-            $this->Update = 1;
-            $fetch = SubServices::Wherekey($Id)->get();
-            foreach ($fetch as $service) {
-                // $serName = MainServices::where('Id',$service['Service_Id'])->first();
-                $this->Main_ServiceId = $service['Service_Id'];
-                $this->Service_Id = $service['Id'];
-                $this->Name = $service['Name'];
-                $this->Description = $service['Description'];
-                $this->Service_Type = $service['Service_Type'];
-                $this->Unit_Price = $service['Unit_Price'];
-                $this->Service_Fee = $service['Service_Fee'];
-                $this->Old_Thumbnail = $service['Thumbnail'];
+            // Fetch a single sub service record
+            $service = SubServices::whereKey($Id)->first();
+
+            if ($service) {
+                $this->Main_ServiceId = $service->Service_Id;
+                $this->Service_Id = $service->Id;
+                $this->subServName = $service->Name;
+                $this->Description = $service->Description;
+                $this->Service_Type = $service->Service_Type;
+                $this->Unit_Price = $service->Unit_Price;
+                $this->Service_Fee = $service->Service_Fee;
+                $this->Old_Thumbnail = $service->Thumbnail;
             }
         }
     }
 
+    public function deleteImage($Id, $type)
+    {
+        // Define a list of placeholder values that shouldn't trigger deletion
+        $placeholders = ['not available', 'no-image.png', 'placeholder.jpg'];
+
+        // Determine the model based on type
+        $model = $type === 'Main' ? MainServices::class : ($type === 'Sub' ? SubServices::class : null);
+
+        if ($model) {
+            $fetch = $model::where('Id', $Id)->first();
+
+            if ($fetch && !empty($fetch->Thumbnail)) {
+                $file = $fetch->Thumbnail;
+
+                // Check if $file is not in placeholders and exists in storage
+                if (!in_array($file, $placeholders) && Storage::disk('public')->exists($file)) {
+                    Storage::disk('public')->delete($file); // Delete the file if it’s valid
+                }
+            }
+        }
+    }
+
+
     public function SaveSubService()
     {
+        // Check if the SubService already exists
+        $exist = SubServices::where('Id', $this->Service_Id)->get();
+        if ($exist->isNotEmpty()) {
+            $application_type = $exist->first()->subServName;  // Get the name of the existing sub-service
 
-        $this->validate([
-            'Name' => 'required',
-            'Unit_Price' => 'required |numeric', 'Service_Fee' => 'required |numeric'
-        ]);
-        $exist = SubServices::Wherekey($this->Service_Id)->get();
-        foreach ($exist as $item) {
-            $application_type  = $item['Name'];
-        }
-        if (sizeof($exist) > 0) {
-            if ($this->Thumbnail == NULL or empty($this->Thumbnail)) {
-                if (storage::disk('public')->exists($this->Old_Thumbnail)) {
-                    $this->New_Thumbnail = $this->Old_Thumbnail;
-                } elseif ($this->Old_Thumbnail == 'Not Available') {
-                    $this->validate(['Thumbnail' => 'required']);
-                } else {
-                    $this->validate(['Thumbnail' => 'required']);
-                }
+            // Handle Thumbnail
+            if (is_null($this->SubThumbnail) || empty($this->SubThumbnail)) {
+                $this->handleExistingThumbnail();
             } else {
-
-                $extension = $this->Thumbnail->getClientOriginalExtension();
-                $path = 'Thumbnails/Services/' . $this->Name;
-                $filename = 'SS_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                $this->New_Thumbnail = $url;
+                $this->handleNewThumbnail();
             }
 
-            $data = array();
-            $data['Name'] = trim($this->Name);
-            $data['Service_Type'] = trim($this->Service_Type);
-            $data['Description'] = trim($this->Description);
-            $data['Unit_Price'] = trim($this->Unit_Price);
-            $data['Service_Fee'] = trim($this->Service_Fee);
-            $data['Thumbnail'] = $this->New_Thumbnail;
-            $app_data = array();
-            $app_data['Application_Type'] = trim($this->Name);
-            $ser = DB::table('sub_service_list')->where('Id', '=', $this->Service_Id)->Update($data);
-            $app = DB::table('digital_cyber_db')->where('Application_Type', '=', $application_type)->Update($app_data);
-            if ($ser && $app) {
-                session()->flash('SuccessMsg', trim($this->Name) . ' Service Details Updated!');
-                $this->Category_Type = 'Sub';
-                $this->ResetFields();
-            } elseif ($ser) {
-                session()->flash('SuccessMsg', trim($this->Name) . ' Service Database Updated!');
-                $this->Category_Type = 'Sub';
-                $this->ResetFields();
-            } elseif ($app) {
-                session()->flash('SuccessMsg', trim($this->Name) . ' Application Database Updated!');
-                $this->Category_Type = 'Sub';
-                $this->ResetFields();
-            } else {
-                session()->flash('Error', trim($this->Name) . ' Service Details Unable to Updated!');
-                $this->Category_Type = 'Sub';
-                $this->ResetFields();
-            }
+            // Prepare data for update
+            $data = $this->prepareSubServiceData();
+            $app_data = ['Application_Type' => trim($this->subServName)];
+
+            // Update SubService and Application records
+            $ser = DB::table('sub_service_list')->where('Id', '=', $this->Service_Id)->update($data);
+            $app = DB::table('digital_cyber_db')->where('Application_Type', '=', $application_type)->update($app_data);
+
+            // Handle the outcome of the update
+            $this->handleSaveOutcome($ser, $app);
         } else {
-            $this->validate([
-                'Name' => 'required|unique:sub_service_list',
-                'Unit_Price' => 'required |numeric', 'Service_Fee' => 'required |numeric',
-                'Thumbnail' => 'required'
-            ]);
+            // Validation for new sub-service
 
-            $extension = $this->Thumbnail->getClientOriginalExtension();
-            $path = 'Thumbnails/Services/' . $this->Name;
-            $filename = 'SS_' . $this->Name . '_' . time() . '.' . $extension;
-            $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-            $this->Thumbnail = $url;
+            // Handle new thumbnail upload
+            $this->handleNewThumbnail();
 
-            $save_service = new SubServices();
-            $save_service->Service_Id = $this->Main_ServiceId;
-            $save_service->Id = $this->Service_Id;
-            $save_service->Name = trim($this->Name);
-            $save_service->Service_Type = $this->Service_Type;
-            $save_service->Description = trim($this->Description);
-            $save_service->Unit_Price = trim($this->Unit_Price);
-            $save_service->Service_Fee = trim($this->Service_Fee);
-            $save_service->Thumbnail = $this->Thumbnail;
-            $save_service->save();
-            session()->flash('SuccessMsg', 'New  Sub Service  "' . $this->Name . '"  Added Successfully!.');
+            // Create new SubService record
+            $this->saveNewSubService();
+
+            session()->flash('SuccessMsg', 'New Sub Service "' . $this->subServName . '" Added Successfully!');
+            $this->ResetFields();
+        }
+    }
+
+    // Handle Thumbnail upload for existing sub-service
+    protected function handleExistingThumbnail()
+    {
+        if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
+            $this->New_Thumbnail = $this->Old_Thumbnail;
+        } elseif ($this->Old_Thumbnail == 'Not Available') {
+            $this->validate(['SubThumbnail' => 'required']);
+        } else {
+            $this->validate(['SubThumbnail' => 'required']);
+        }
+    }
+
+    // Handle new Thumbnail upload for a new or updated sub-service
+    protected function handleNewThumbnail()
+    {
+        $extension = $this->SubThumbnail->getClientOriginalExtension();
+        $path = 'Thumbnails/Services/' . trim($this->subServName);
+        $filename = 'SS_' . trim($this->subServName) . '_' . time() . '.' . $extension;
+        $url = $this->SubThumbnail->storePubliclyAs($path, $filename, 'public');
+        $this->New_Thumbnail = $url;
+    }
+
+    // Prepare data array for sub-service
+    protected function prepareSubServiceData()
+    {
+        $description = strtolower(trim($this->Description));
+        $name = strtolower(trim($this->subServName));
+        return [
+            'Name' => ucwords($name),
+            'Service_Type' => trim($this->Service_Type),
+            'Description' => ucwords($description),
+            'Unit_Price' => trim($this->Unit_Price),
+            'Service_Fee' => trim($this->Service_Fee),
+            'Thumbnail' => $this->New_Thumbnail,
+        ];
+    }
+
+    // Save new SubService to the database
+    protected function saveNewSubService()
+    {
+        $save_service = new SubServices();
+        $save_service->Service_Id = $this->Main_ServiceId;
+        $save_service->Id = $this->Service_Id;
+        $name = strtolower(trim($this->subServName));
+        $save_service->Name = ucwords($name);
+        $save_service->Service_Type = $this->Service_Type;
+        $description = strtolower(trim($this->Description));
+        $save_service->Description = ucwords($description);
+        $save_service->Unit_Price = trim($this->Unit_Price);
+        $save_service->Service_Fee = trim($this->Service_Fee);
+        $save_service->Thumbnail = $this->New_Thumbnail;
+        $save_service->save();
+    }
+
+    // Handle outcome of saving/updating SubService and Application
+    protected function handleSaveOutcome($ser, $app)
+    {
+        if ($ser && $app) {
+            session()->flash('SuccessMsg', trim($this->subServName) . ' Service Details Updated!');
+            $this->Category_Type = 'Sub';
+            $this->ResetFields();
+        } elseif ($ser) {
+            session()->flash('SuccessMsg', trim($this->subServName) . ' Service Database Updated!');
+            $this->Category_Type = 'Sub';
+            $this->ResetFields();
+        } elseif ($app) {
+            session()->flash('SuccessMsg', trim($this->subServName) . ' Application Database Updated!');
+            $this->Category_Type = 'Sub';
+            $this->ResetFields();
+        } else {
+            session()->flash('Error', trim($this->subServName) . ' Service Details Unable to Update!');
+            $this->Category_Type = 'Sub';
             $this->ResetFields();
         }
     }
@@ -339,142 +380,82 @@ class AddServices extends Component
     public function Delete($Id, $type)
     {
         $subSerDelCount = 0;
+
+        // Determine service and get name
         if ($type == 'Main') {
-            $fetch = MainServices::Wherekey($Id)->first();
+            $fetch = MainServices::whereKey($Id)->first();
             $name = $fetch->Name;
             $this->Old_Thumbnail = $fetch->Thumbnail;
-            $find = Application::where('Application', $name)->count();
-            if ($find > 0) // Application is Served. Cannot Delete this Service. Use Edit Function to Modify.
-            {
-                $notification = array(
-                    'message' => 'Sorry Unable to Delete ' . $name . 'Service. ' . $find . ' Applications Served',
-                    'alert-type' => 'error'
-                );
-                return redirect()->back()->with($notification);
-            } else // No Application is Servered for this Service so Delete All its Sub Services & Delete Main Service
-            {
-                // Deleting Sub services
-                $fetch_ser = SubServices::Where('Service_Id', $Id)->get();
-                if (count($fetch_ser) > 0) {
-                    foreach ($fetch_ser as $item) {
-                        $Thumbnail = $item['Thumbnail'];
-                        $name = $item['name'];
-                        if (!empty($Thumbnail)) {
-                            if (Storage::disk('public')->exists($Thumbnail)) {
-                                unlink(public_path('storage/' . $Thumbnail));
-                                $delete_sub = SubServices::Where('Service_Id', $Id)->Delete();
-                                if ($delete_sub) {
-                                    $subSerDelCount++;
-                                }
-                            } else {
-                                $delete_sub = SubServices::Where('Service_Id', $Id)->Delete();
-                                if ($delete_sub) {
-                                    $subSerDelCount++;
-                                }
-                            }
-                        } elseif ($Thumbnail == 'Not Available' || $Thumbnail == NULL) {
-                            $delete_sub = SubServices::Where('Service_Id', $Id)->Delete();
-                            if ($delete_sub) {
-                                session()->flash('SuccessMsg',);
-                                $notification = array(
-                                    'message' => $subSerDelCount . ' Sub Services of ' . $name . ' Deleted Successfully!',
-                                    'alert-type' => 'success'
-                                );
-                                return redirect()->back()->with($notification);
-                            } else {
-                                $notification = array(
-                                    'message' => 'Unable to Sub Service',
-                                    'alert-type' => 'error'
-                                );
-                                return redirect()->back()->with($notification);
-                            }
-                        }
-                    }
-                }
 
-                // Deleting Main Service
-                if (!empty($this->Old_Thumbnail)) {
-                    if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-                        unlink(public_path('storage/' . $this->Old_Thumbnail));
-                        $delete_main = MainServices::Wherekey($Id)->Delete();
-                        if ($delete_main) {
-                            $notification = array(
-                                'message' => $name . ' Service &  all Sub Services Deleted Successfully!',
-                                'alert-type' => 'success'
-                            );
-                            return redirect()->route('add_services')->with($notification);
-                        } else {
-                            $notification = array(
-                                'message' => 'Unable to Sub Service',
-                                'alert-type' => 'error'
-                            );
-                            return redirect()->back()->with($notification);
-                        }
-                    } else {
-                        $delete_main = MainServices::Wherekey($Id)->Delete();
-                        if ($delete_main) {
-                            $notification = array(
-                                'message' => $name . ' Service &  all Sub Services Deleted Successfully!',
-                                'alert-type' => 'success'
-                            );
-                            return redirect()->route('add_services')->with($notification);
-                        }
-                    }
-                }
-            }
-        } elseif ($type == 'Sub') {
-            $service_id = $this->Service_Id;
-            $fetch = SubServices::Wherekey($Id)->get();
-            foreach ($fetch as $item) {
-                $name = $item['Name'];
-                $this->Old_Thumbnail = $item['Thumbnail'];
-            }
-            $find = Application::where('Application_Type', $name)->count();
-            if ($find > 0) {
-                $notification = array(
-                    'message' => 'Sorry Unable to Delete ' . $name . 'Service. ' . $find . ' Applications Served',
+            // Check if applications are linked to this service
+            if (Application::where('Application', $name)->count() > 0) {
+                return redirect()->back()->with([
+                    'message' => 'Sorry, unable to delete ' . $name . ' service. Applications are already served.',
                     'alert-type' => 'error'
-                );
-                return redirect()->back()->with($notification);
-            } else {
-                if ($this->Old_Thumbnail != 'Not Available' || $this->Old_Thumbnail != NULL) {
-                    if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-                        unlink(public_path('storage/' . $this->Old_Thumbnail));
-                        $delete_sub = SubServices::Wherekey($Id)->Delete();
-                        if ($delete_sub) {
-                            session()->flash('SuccessMsg', $name . '  Services Deleted Successfully!');
-                            $notification = array(
-                                'message' => $name . '  Services Deleted Successfully!',
-                                'alert-type' => 'success'
-                            );
-                            return redirect()->back()->with($notification);
-                            $this->ResetFields();
-                            $this->Category_Type = 'Sub';
-                            $this->Service_Id = $service_id;
-                        } else {
-                            $notification = array(
-                                'message' => 'Unable to Sub Service',
-                                'alert-type' => 'error'
-                            );
-                            return redirect()->back()->with($notification);
-                        }
-                    } else {
-                        $delete_sub = SubServices::Wherekey($Id)->Delete();
-                        if ($delete_sub) {
-                            $notification = array(
-                                'message' => $name . '  Services Deleted Successfully!',
-                                'alert-type' => 'success'
-                            );
-                            return redirect()->back()->with($notification);
-                            $this->ResetFields();
-                            $this->Category_Type = 'Sub';
-                            $this->Service_Id = $service_id;
-                        }
-                    }
-                }
+                ]);
             }
+
+            // Delete sub-services and then main service
+            $this->deleteSubServices($Id);
+            $this->deleteMainService($Id, $name);
+        } elseif ($type == 'Sub') {
+            $fetch = SubServices::whereKey($Id)->get();
+            $name = $fetch->first()->Name;
+            $this->Old_Thumbnail = $fetch->first()->Thumbnail;
+
+            // Check if applications are linked to this sub-service
+            if (Application::where('Application_Type', $name)->count() > 0) {
+                return redirect()->back()->with([
+                    'message' => 'Sorry, unable to delete ' . $name . ' service. Applications are already served.',
+                    'alert-type' => 'error'
+                ]);
+            }
+
+            // Delete sub-service
+            $this->deleteSubService($Id, $name);
         }
     }
+
+    // Delete Sub Service logic
+    private function deleteSubServices($serviceId)
+    {
+        $fetch_ser = SubServices::where('Service_Id', $serviceId)->get();
+        foreach ($fetch_ser as $item) {
+            $this->deleteThumbnail($item->Thumbnail);
+            SubServices::where('Service_Id', $serviceId)->delete();
+        }
+    }
+
+    // Delete Main Service logic
+    private function deleteMainService($id, $name)
+    {
+        $this->deleteThumbnail($this->Old_Thumbnail);
+        MainServices::whereKey($id)->delete();
+        return redirect()->route('add_services')->with([
+            'message' => $name . ' service and all sub-services deleted successfully!',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    // Delete Sub Service logic
+    private function deleteSubService($id, $name)
+    {
+        $this->deleteThumbnail($this->Old_Thumbnail);
+        SubServices::whereKey($id)->delete();
+        return redirect()->back()->with([
+            'message' => $name . ' service deleted successfully!',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    // Function to delete Thumbnail
+    private function deleteThumbnail($thumbnail)
+    {
+        if ($thumbnail && Storage::disk('public')->exists($thumbnail)) {
+            unlink(public_path('storage/' . $thumbnail));
+        }
+    }
+
     public function LastUpdate()
     {
         # code...
