@@ -68,19 +68,20 @@
             </div>
             <div class="bookmark-container">
                 <div class="data-table-header">
-                    <p class="heading">Bookmarks </p>
+                    <p class="heading">Bookmarks</p>
                 </div>
-
-            </div>
-            <div class="row">
-                @foreach ($bookmarks as $bookmark)
-                    <a href="{{ $bookmark->Hyperlink }}" target="_blank" class="bookmark">
-                        <img class="b-img"
-                            src="{{ !empty($bookmark->Thumbnail) ? url('storage/' . $bookmark->Thumbnail) : url('storage/no_image.jpg') }}"
-                            alt="Bookmark Icon">
-                        <p class="b-name">{{ $bookmark->Name }}</p>
-                    </a>
-                @endforeach
+                <div class="bookmarks-row justify-content-center">
+                    @foreach ($bookmarks as $bookmark)
+                        <a href="{{ $bookmark->Hyperlink }}" target="_blank" class="bookmark">
+                            <div class="bookmark-content">
+                                <img class="b-img"
+                                    src="{{ !empty($bookmark->Thumbnail) ? url('storage/' . $bookmark->Thumbnail) : url('storage/no_image.jpg') }}"
+                                    alt="Bookmark Icon">
+                                <p class="b-name">{{ $bookmark->Name }}</p>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
             </div>
 
         </div>

@@ -40,8 +40,8 @@
 
                             <thead class="table-light">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
+                                    <th>Sl No</th>
+                                    <th>Received</th>
                                     <th>Name</th>
                                     <th>Mobile No</th>
                                     <th>Application</th>
@@ -51,9 +51,9 @@
                                     <th>Total</th>
                                     <th>Paid</th>
                                     <th>Balance</th>
-                                    <th>Change Status</th>
-                                    <th>Action</th>
+                                    <th>Status</th>
                                     <th>Updated</th>
+                                    <th>Action</th>
                                 </tr>
                                 </tr>
                             </thead>
@@ -65,23 +65,14 @@
                                         <td>{{ $data->Name }}</td>
                                         <td>{{ $data->Mobile_No }}</td>
                                         <td>{{ $data->Application }}</td>
-                                        <td>
-                                            <select name="ChangeSType" id="ChangeSType"
-                                                class="form-control-sm form-control"
-                                                wire:change="UpdateServiceType('{{ $data->Id }}','{{ $data->Application_Type }}',$event.target.value,'{{ $data->Status }}')">
-                                                <option selected>{{ $data->Application_Type }}</option>
-                                                @foreach ($SubServices as $item)
-                                                    <option value="{{ $item->Name }}">{{ $item->Name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
+                                        <td>{{ $data->Application_Type}}</td>
                                         <td>{{ $data->Ack_No }}</td>
                                         <td>{{ $data->Document_No }}</td>
                                         <td>{{ $data->Total_Amount }}</td>
                                         <td>{{ $data->Amount_Paid }}</td>
-
                                         <td>{{ $data->Balance }}</td>
-                                        <td>
+                                        <td>{{ $data->Status }}</td>
+                                        {{-- <td>
                                             <select name="ChangeStatus" id="ChangeStatus"
                                                 class="form-control-sm form-control"
                                                 wire:change="updateStatus('{{ $data->Id }}','{{ $data->Status }}',$event.target.value,'{{ $data->Application_Type }}')">
@@ -90,7 +81,9 @@
                                                     <option value="{{ $item->Status }}">{{ $item->Status }}</option>
                                                 @endforeach
                                             </select>
-                                        </td>
+                                        </td> --}}
+                                        <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
+
                                         <td>
 
                                             <div class="btn-group-vertical" role="group"
@@ -117,7 +110,6 @@
 
                                             </div>
                                         </td>
-                                        <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
 
                                     </tr>
                                 @empty

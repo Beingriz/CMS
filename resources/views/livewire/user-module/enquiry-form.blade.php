@@ -56,6 +56,16 @@
                                         @error('SubService') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                      @endif
+                                     <div class="col-12">
+                                        <select class="form-select border-0" style="height: 55px;" wire:model.lazy="Branch" name="Branch">
+                                            <option>Select Branch</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->branch_id }}">{{ $branch->name}} |{{  $branch->address }} </option>
+                                            @endforeach
+                                        </select>
+                                        @error('Branch') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
                                     <div class="col-12">
                                         <textarea class="form-control border-0" placeholder="{{$Msg_template}}" wire:model="Message" cols="10" rows="10"></textarea>
                                         @error('Message') <span class="text-danger">{{ $message }}</span> @enderror

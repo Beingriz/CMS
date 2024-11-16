@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire\UserModule;
 
+use App\Models\Branches;
 use App\Models\EnquiryDB;
 use App\Models\MainServices;
 use App\Models\SubServices;
 use Livewire\Component;
+use Livewire\Livewire;
 use Twilio\Rest\Client;
 
 
@@ -13,13 +15,16 @@ class EnquiryForm extends Component
 {
     public $Id, $Name, $Email, $Message, $Service, $Phone_No, $Callback = 'No', $Feedback = 'Not Available', $Action = 'No', $Amount, $Conversion = 'No';
     public $Msg_template, $SubService;
+    public $Branch; // Add this to the component class
+
     protected $rules = [
         'Name' => 'Required',
         'Email' => 'Required|email',
         'Phone_No' => 'Required | min:10 | max:10',
         'Service' => 'Required',
         'SubService' => 'Required',
-        'Message' => 'Required | min:20'
+        'Message' => 'Required | min:20',
+        'Branch' => 'Required',  // Add validation for Branch
     ];
 
     protected $message = [
@@ -28,7 +33,8 @@ class EnquiryForm extends Component
         'Phone_No' => 'Mobile Number is Mandatory',
         'Service' => 'Please select the Service for callback',
         'SubServices' => 'Please select the Service type for callback',
-        'Message' => 'Please Write your message'
+        'Message' => 'Please Write your message',
+        'Branch' => 'Please select your nearest branch'
     ];
 
     public function updated($propertyName)
@@ -43,10 +49,13 @@ class EnquiryForm extends Component
     public function Save()
     {
         $this->validate();
+
         $mainservice = MainServices::where('Id', $this->Service)->get();
         foreach ($mainservice as $item) {
             $serviceName = $item['Name'];
         }
+
+        // Save the enquiry along with the branch
         $save = new EnquiryDB();
         $save->Id = $this->Id;
         $save->Name = $this->Name;
@@ -55,6 +64,7 @@ class EnquiryForm extends Component
         $save->Message = $this->Message;
         $save->Service = $serviceName;
         $save->Service_Type = $this->SubService;
+        $save->Branch_Id = $this->Branch; // Save the branch ID
         $save->Status = 'Pending';
         $save->Feedback = $this->Feedback;
         $save->Amount = $this->Amount;
@@ -62,12 +72,13 @@ class EnquiryForm extends Component
         $save->save();
 
         $notification = array(
-            'message' => $this->Name . ' your Callback Request is Sent Seccessfully',
+            'message' => $this->Name . ' your Callback Request is Sent Successfully',
             'alert-type' => 'info'
         );
-        $this->sendNotification($this->Phone_No, $this->Name, $serviceName);
+        $this->emit('refreshNotifications');
         return redirect()->route('home')->with($notification);
     }
+
     public function sendNotification($mobile, $name, $service,)
     {
         $body = "Dear *" . $name . "* 👋🏻😍
@@ -110,10 +121,16 @@ class EnquiryForm extends Component
         if ($this->Name != "") {
             $name = "!";
         }
-        $this->Msg_template = "Thank you " . ucwords($this->Name) . $name . " for your interest in contacting us! Please use the this form to send us your message and we will get back to you as soon as possible. Please provide as much detail as possible so that we can assist you effectively. Thank you for taking the time to contact us, and we look forward to hearing from you!";
+        $this->Msg_template = "Thank you " . ucwords($this->Name) . $name . " for your interest in contacting us! Please use this form to send us your message, and we will get back to you as soon as possible. Please provide as much detail as possible so that we can assist you effectively. Thank you for taking the time to contact us, and we look forward to hearing from you!";
+
+        // Fetching services and subservices
         $services = MainServices::where('Service_Type', 'Public')->get();
         $subservices = SubServices::where('Service_Id', $this->Service)->get();
 
-        return view('livewire.user-module.enquiry-form', compact('services', 'subservices'));
+        // Fetching branches (assuming Branch model exists)
+        $branches = Branches::all();  // Modify this according to your Branch model
+
+        return view('livewire.user-module.enquiry-form', compact('services', 'subservices', 'branches'));
     }
+
 }

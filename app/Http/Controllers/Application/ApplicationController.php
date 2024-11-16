@@ -60,7 +60,8 @@ class ApplicationController extends Controller
     public function Dashboard()
 {
     $branchId = Auth::user()->branch_id;
-    $isBranchAdmin = Auth::user()->role === 'branch admin';
+    $role = Auth::user()->role;
+    $isBranchAdmin = $role === 'branch admin' || $role === 'operator';
 
     // Live data for Main Services
     $mainServicesData = $this->getMainServicesData($branchId, $isBranchAdmin);
@@ -168,10 +169,11 @@ private function getStatusData()
         $branch_id = Auth::user()->branch_id;
         $No = 'No';
         $Sub_Services = SubServices::Where('Service_Id', $MainServiceId)->get();
+        $role = Auth::user()->role;
         if (count($Sub_Services) > 0) {
             foreach ($Sub_Services as $item) { {
                     $name = $item['Name'];
-                    if(Auth::user()->role == 'branch admin'){
+                    if($role == 'branch admin' || $role == 'operator'){
                         $count = Application::Where([['Branch_Id', $branch_id],['Application_Type', $name], ['Recycle_Bin', $No]])->count();
                         DB::update('update sub_service_list set Total_Count=?  where Name = ?', [$count, $name]);
                     }else {

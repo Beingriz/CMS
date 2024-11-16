@@ -1128,37 +1128,88 @@ img.profile_image2 {
 
 .bookmark-container {
     width: 100%;
-    display: block;
-    margin: auto;
-    text-align: center;
-    margin-top: 10px;
-    text-decoration-line: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
 }
 
-.bookmark:hover {
-    font-weight: 600;
-    box-shadow: 0 0 2px grey;
-    background-color: #39c0eda6;
+.data-table-header .heading {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    /* border-bottom: 2px solid #4a90e2; */
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+.bookmarks-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .bookmark {
-    width: 121px;
-    float: left;
-    height: 119px;
-    margin: 4px;
+    width: 140px;
+    height: 160px;
     text-align: center;
-    padding: 2px;
-    box-shadow: 0 0 1px darkslategrey;
-    border-radius: 3px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #fff;
 }
 
-.bookmark-container>a {
-    text-decoration-line: none;
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bookmark:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background-color: #f0f8ff;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.bookmark-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .b-img {
-    width: 70px;
-    height: 53px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 80%;
+    margin-bottom: 10px;
+    /* border: 2px solid #4a90e2; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.b-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.b-img {
+    width: 50%;
+    height: 10%
 }
 
 .b-img img {
@@ -1173,6 +1224,79 @@ img.profile_image2 {
     font-family: system-ui;
     text-decoration-line: none;
     font-weight: 700;
+}
+
+.dropdown-megamenu {
+    padding: 15px;
+}
+
+.category-title {
+    color: #033774;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 15px;
+    position: relative;
+    text-transform: uppercase;
+}
+
+.category-title:after {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 2px;
+    background: #000000;
+    margin-top: 4px;
+}
+
+.dropdown-megamenu a {
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-megamenu a:hover {
+    color: #1a1072;
+    background-color: #ebebeb;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-megamenu img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.dropdown-megamenu a:hover img {
+    transform: scale(1.1);
+}
+
+.notification-dropdown {
+    width: 350px;
+    /* Adjust as needed for wider dropdown */
+    max-width: 90vw;
+    /* Responsive to viewport size */
+}
+
+.notification-item {
+    padding: 10px 15px;
+    /* Adjust padding for better readability */
+}
+
+.notification-item .flex-1 h6 {
+    font-size: 14px;
+    /* Slightly smaller font for better fit */
+}
+
+.notification-item .font-size-12 {
+    font-size: 12px;
+    /* Smaller text for timestamps */
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+    /* Light background on hover */
 }
 
 .product {

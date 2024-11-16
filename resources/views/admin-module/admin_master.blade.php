@@ -52,6 +52,22 @@
         justify-content: center;
         z-index: 9999;
     }
+
+    .category-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #61b8ff; /* Attractive coral color */
+    text-transform: uppercase;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.category-title:hover {
+    color: #b7a3ff; /* Slightly darker shade on hover */
+    border-color: #1c155a;
+    transition: color 0.3s, border-color 0.3s;
+}
+
 </style>
 
 <body data-topbar="dark">

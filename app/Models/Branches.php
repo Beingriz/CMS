@@ -9,6 +9,8 @@ class Branches extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
+    protected $primaryKey = 'branch_id';  // Specify the correct primary key
+
 
     public $table="branches";
 }
