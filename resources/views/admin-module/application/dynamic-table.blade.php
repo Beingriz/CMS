@@ -71,7 +71,6 @@
                                         <td>{{ $data->Total_Amount }}</td>
                                         <td>{{ $data->Amount_Paid }}</td>
                                         <td>{{ $data->Balance }}</td>
-                                        <td>{{ $data->Status }}</td>
                                         <td>
                                             <select name="ChangeStatus" id="ChangeStatus"
                                                 class="form-control-sm form-control"
