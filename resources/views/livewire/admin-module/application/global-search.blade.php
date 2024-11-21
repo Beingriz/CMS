@@ -375,7 +375,6 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Sl.No</th>
-                                    <th>Delete</th>
                                     <th>Received</th>
                                     <th>Name</th>
                                     <th>Mobile</th>
@@ -392,8 +391,8 @@
                                 @forelse( $search_data as $data )
                                     <tr>
                                         <td>{{ $search_data->firstItem() + $loop->index }}</td>
-                                        <td><input type="checkbox" name="checked" id="checked"
-                                                value="{{ $data->Id }}" wire:model="Checked"></td>
+                                        {{-- <td><input type="checkbox" name="checked" id="checked"
+                                                value="{{ $data->Id }}" wire:model="Checked"></td> --}}
 
                                         <td>{{ $data->Received_Date }}</td>
                                         <td>{{ $data->Name }}</td>
@@ -401,7 +400,8 @@
                                         <td>{{ $data->Application }}</td>
                                         <td>{{ $data->Application_Type }}</td>
                                         <td>{{ $data->Ack_No }}</td>
-                                        <td>{{ $data->Document_No }}</td>
+                                        <td>{{ $data->Document_No ?? 'Not Available' }}</td>
+
                                         <td>
 
 
@@ -416,8 +416,10 @@
                                             </select>
                                         </td>
                                         <td> <img
-                                                src="{{ !empty($data['Applicant_Image']) ? url('storage/' . $data['Applicant_Image']) : url('storage/no_image.jpg') }} "
-                                                alt="" class="rounded-circle avatar-md"></td>
+                                            src="{{ !empty($data['Applicant_Image']) && $data['Applicant_Image'] !== 'Not Available' ? url('storage/' . $data['Applicant_Image']) : url('storage/no_image.jpg') }}"
+                                            alt="Applicant Image"
+                                            class="rounded-circle avatar-md">
+                                        </td>
 
                                         <td>
                                             <div class="btn-group" role="group">

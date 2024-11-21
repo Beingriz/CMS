@@ -33,28 +33,29 @@ class DataMigration extends Component
 {
     public $Table, $OldServiceList, $Application, $Application_Type, $App_Id, $clinetReg = 0, $appReg = 0, $UnitPrice, $Category;
     public $digitalcyber = false, $creditsource = false, $debitsource = false, $bookmarks = false, $creditledger = false, $debitledger = false;
-    public $username,$Branch_Id,$Emp_Id;
+    public $username, $Branch_Id, $Emp_Id;
 
-    // Function to Generate Random Username
-    public function usernameGenrator($name, $dob)
+    public function mount()
     {
-        // Create username by combining the full name (without spaces) and parts of the current timestamp and date of birth
-        $username = strtolower($name); // Convert name to lowercase
-        $username = ucfirst($username); // Capitalize the first letter
-        $currentTimestamp = time(); // Get the current timestamp
-        $timeString = date("His", $currentTimestamp); // Format timestamp as HHMMSS
-        $sec = substr($timeString, -2); // Get the last two digits of the timestamp
-        $dob = substr($dob, -2); // Get the last two digits of the date of birth
-        $username = str_replace(' ', '', $username); // Remove spaces from the name
-        $this->username = $username . $sec . $dob; // Combine to create the username
-    }
-
-    public function mount(){
         $this->Branch_Id = Auth::user()->branch_id;
         $this->Emp_Id = Auth::user()->Emp_Id;
     }
 
-    // Main function to handle the data migration
+    // Function to generate a random unique username
+    private function generateUsername($name, $dob)
+    {
+        $username = ucfirst(Str::slug($name));
+        $uniqueIdentifier = substr(time(), -4) . substr($dob ?? '0000', -2);
+        $generatedUsername = $username . $uniqueIdentifier;
+
+        // Ensure uniqueness by appending a random number if needed
+        while (User::where('username', $generatedUsername)->exists()) {
+            $generatedUsername = $username . rand(10, 99);
+        }
+
+        return $generatedUsername;
+    }
+
     public function Migrate()
     {
         switch ($this->Table) {
@@ -79,43 +80,57 @@ class DataMigration extends Component
         }
     }
 
-    // Function to migrate data from old digital cyber DB
     private function migrateDigitalCyberDb()
     {
-        $fetchserv = MainServices::where('Id', $this->Application)->get();
-        foreach ($fetchserv as $item) {
-            $this->Application = $item['Name'];
-        }
+        $service = MainServices::find($this->Application);
+        $this->Application = $service ? $service->Name : 'Unknown Service';
 
-        // Fetch records based on the selected application
         $records = Old_Cyber_Data::where('services', $this->OldServiceList)->get();
+
         foreach ($records as $item) {
             $mobile = $item['mobile_no'];
-            if (empty($mobile) || empty($item['customer_name'])) {
-                continue; // Skip records with missing mobile number or customer name
+            if (empty($mobile) || empty($item['customer_name']) || $mobile == 0) {
+                continue;
             }
-            $client_record = ClientRegister::where('Mobile_No', $mobile)->first();
-            if (is_null($client_record)) {
+
+            $clientRecord = ClientRegister::where('Mobile_No', $mobile)->first();
+
+            if (is_null($clientRecord)) {
                 $this->registerNewClient($item);
             } else {
-                $this->saveApplication($client_record->Id, $item);
+                $this->saveApplication($clientRecord->Id, $item);
             }
         }
-        session()->flash('SuccessMsg', 'Clients ' . $this->clinetReg . ' & Applications ' . $this->appReg . ' Registered');
+
+        session()->flash('SuccessMsg', "Clients {$this->clinetReg} & Applications {$this->appReg} Registered");
         $this->updateOldServiceList();
         $this->resetCounters();
     }
 
-    // Function to register a new client
     private function registerNewClient($item)
     {
-        $Client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
-        $client = new ClientRegister();
-        $client->fill([
+        $Client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(1000, 9999);
+        $username = $this->generateUsername($item['customer_name'], $item['dob']);
+
+        User::create([
+            'Client_Id' => $Client_Id,
+            'branch_id' => $this->Branch_Id,
+            'Emp_Id' => $this->Emp_Id,
+            'name' => ucwords(strtolower(trim($item['customer_name']))),
+            'username' => $username,
+            'mobile_no' => trim($item['mobile_no']),
+            'Status' => 'user',
+            'role' => 'user',
+            'email' => "{$username}@example.com",
+            'profile_image' => 'account.png',
+            'password' => Hash::make($username),
+        ]);
+
+        ClientRegister::create([
             'Id' => $Client_Id,
             'Branch_Id' => $this->Branch_Id,
             'Emp_Id' => $this->Emp_Id,
-            'Name' => $item['customer_name'],
+            'Name' => ucwords(strtolower(trim($item['customer_name']))),
             'Relative_Name' => 'Not Available',
             'Gender' => 'Not Declared',
             'DOB' => $item['dob'] == '0000-00-00' ? null : $item['dob'],
@@ -125,39 +140,22 @@ class DataMigration extends Component
             'Profile_Image' => 'account.png',
             'Client_Type' => 'Old Client',
         ]);
-        $client->save();
 
-        $this->usernameGenrator($item['customer_name'], $item['dob'] == '0000-00-00' ? date('Y-m-d') : $item['dob']);
-        User::create([
-            'Client_Id' => $Client_Id,
-            'branch_id' => $this->Branch_Id,
-            'Emp_Id' => $this->Emp_Id,
-            'name' => trim($item['customer_name']),
-            'username' => trim($this->username),
-            'mobile_no' => trim($item['mobile_no']),
-            'Status' => trim('user'),
-            'role' => trim('user'),
-            'email' => trim($this->username . rand(00, 999) . '@gmail.com'),
-            'profile_image' => 'account.png',
-            'password' => Hash::make(trim($this->username)),
-        ]);
         $this->clinetReg++;
         $this->saveApplication($Client_Id, $item);
     }
 
-    // Function to save application for a client
     private function saveApplication($Client_Id, $item)
     {
-        $App_Id = 'DCA' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
-        $data = new Application();
-        $data->fill([
+        $App_Id = 'DCA' . date('Y') . strtoupper(Str::random(3)) . rand(1000, 9999);
+
+        Application::create([
             'Id' => $App_Id,
             'Client_Id' => $Client_Id,
             'Branch_Id' => $this->Branch_Id,
             'Emp_Id' => $this->Emp_Id,
-            $received_date= $item['received_on'] == '0000-00-00' || $item['received_on'] == null ? null : $item['received_on'],
-            'Received_Date' => $received_date,
-            'Name' => $item['customer_name'],
+            'Received_Date' => $item['received_on'] == '0000-00-00' || $item['received_on'] == null ? date('Y-m-d') : $item['received_on'],
+            'Name' => ucwords(strtolower(trim($item['customer_name']))),
             'Gender' => 'Not Declared',
             'Relative_Name' => 'Not Available',
             'Dob' => $item['dob'] == '0000-00-00' || $item['dob'] == null ? null : $item['dob'],
@@ -169,22 +167,13 @@ class DataMigration extends Component
             'Amount_Paid' => $item['amount_paid'],
             'Balance' => $item['balance'],
             'Payment_Mode' => $item['payment_mode'],
-            'Payment_Receipt' => 'Not Available',
-            'Status' => $item['status'] == '' ? 'Received' : $item['status'],
-            'Ack_No' => $item['ack_no'] == '' ? 'Not Available' : $item['ack_no'],
-            'Ack_File' => 'Not Available',
-            'Document_No' => $item['document_no'] == '' ? 'Not Available' : $item['document_no'],
-            'Doc_File' => 'Not Available',
-            'Applicant_Image' => 'account.png',
-            'Delivered_Date' => $item['delivered_on'] == '' || $item['delivered_on'] == '0000-00-00' ? date('Y-m-d') : $item['delivered_on'],
-            'Message' => 'Not Available',
-            'Consent' => 'No',
-            'Recycle_Bin' => 'No',
+            'Status' => $item['status'] ?: 'Received',
+            'Ack_No' => $item['ack_no'] ?: 'Not Available',
             'Registered' => 'Yes',
-            'created_at' => $received_date ? \Carbon\Carbon::parse($received_date) : null,
-
+            'Delivered_Date' => $item['delivered_on'] == '' || $item['delivered_on'] == '0000-00-00' ? date('Y-m-d') : $item['delivered_on'],
+            'created_at' => $item['received_on'] ?: null,
         ]);
-        $data->save();
+
         $this->appReg++;
     }
 
@@ -351,7 +340,6 @@ class DataMigration extends Component
         DB::table('old_debit_source')->where('particular', $this->OldServiceList)->update(['Status' => 'Done']);
     }
 
-    // Helper function to reset registration counters
     private function resetCounters()
     {
         $this->clinetReg = 0;

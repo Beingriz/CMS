@@ -23,6 +23,7 @@ class GlobalSearchBar extends Component
 
     public function Search()
     {
+
         $this->validate();
         return redirect()->route('global_search', $this->Search);
     }

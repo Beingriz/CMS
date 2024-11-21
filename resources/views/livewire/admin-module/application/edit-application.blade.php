@@ -525,6 +525,7 @@
                                                 <div class="mb-3">
                                                     <label>Current Status</label>
                                                     <select class="form-select" wire:model.lazy="Status">
+                                                        <option value="{{ $Status }}" selected>{{ $Status }}</option>
                                                         @foreach ($status as $item)
                                                             <option value="{{ $item->Status }} ">
                                                                 {{ $item->Status }}</option>

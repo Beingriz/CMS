@@ -200,18 +200,24 @@ class GlobalSearch extends Component
 
     public function SearchResults($key)
     {
-        $mobile = (int)$this->search;
+        // $mobile = (int)$this->search; // Cast search to integer for mobile number comparison
         $role = Auth::user()->role;
 
-        $query = function ($query) use ($key, $mobile) {
-            $query->where([['Mobile_No', '=', $mobile]])
-                  ->orWhere([['Name', '=', $this->search]])
-                  ->orWhere([['Id', '=', $this->search]]);
+        // Define the exact match query
+        $query = function ($query) use ($key) {
+            $query->where('Mobile_No', '=', $key)
+                  ->orWhere('Name', '=', $key)
+                  ->orWhere('Id', '=', $key);
         };
-
+        // Filter data based on role
         if ($role == 'branch admin' || $role == 'operator') {
             $this->Registered = ClientRegister::where($query)->where('Branch_Id', '=', $this->Branch_Id)->get();
-            $this->search_data = Application::where($query)->where('Recycle_Bin', '=', $this->no)->where('Branch_Id', '=', $this->Branch_Id)
+
+            $this->search_data = Application::where($query)
+                ->orWhere('Ack_No', '=', $key)
+                ->orWhere('Document_No', '=', $key)
+                ->where('Recycle_Bin', '=', $this->no)
+                ->where('Branch_Id', '=', $this->Branch_Id)
                 ->filter(trim($this->filterby))
                 ->when($this->Status, function ($query, $status) {
                     return $query->where('Status', '=', $status);
@@ -220,7 +226,11 @@ class GlobalSearch extends Component
                 ->paginate($this->paginate);
         } else {
             $this->Registered = ClientRegister::where($query)->get();
-            $this->search_data = Application::where($query)->where('Recycle_Bin', '=', $this->no)
+
+            $this->search_data = Application::where($query)
+                ->orWhere('Ack_No', '=', $key)
+                ->orWhere('Document_No', '=', $key)
+                ->where('Recycle_Bin', '=', $this->no)
                 ->filter(trim($this->filterby))
                 ->when($this->Status, function ($query, $status) {
                     return $query->where('Status', '=', $status);
@@ -229,19 +239,27 @@ class GlobalSearch extends Component
                 ->paginate($this->paginate);
         }
 
-        $this->Registered_Count = count($this->Registered);
-        $this->Search_Count = count($this->search_data);
+        // Count results
+        $this->Registered_Count = $this->Registered->count();
+        $this->Search_Count = count($this->search_data); // Use paginator's total count
     }
 
     public function render()
     {
-        if ($this->search != '') {
+        // Trigger search if input is provided
+        if (!empty($this->search)) {
             $this->SearchResults($this->search);
+
+            // Handle "No Results Found" case
+            if ($this->Search_Count === 0) {
+                session()->flash('message', 'No Results Found.');
+            }
         } else {
             $role = Auth::user()->role;
             if ($role == 'branch admin' || $role == 'operator') {
                 $this->Registered = ClientRegister::where('Branch_Id', '=', $this->Branch_Id)->paginate($this->paginate);
-                $this->search_data = Application::where('Recycle_Bin', '=', $this->no)->where('Branch_Id', '=', $this->Branch_Id)
+                $this->search_data = Application::where('Recycle_Bin', '=', $this->no)
+                    ->where('Branch_Id', '=', $this->Branch_Id)
                     ->filter(trim($this->filterby))
                     ->when($this->Status, function ($query, $status) {
                         return $query->where('Status', '=', $status);
@@ -259,11 +277,10 @@ class GlobalSearch extends Component
                     ->paginate($this->paginate);
             }
 
-            $this->Registered_Count = count($this->Registered);
+            $this->Registered_Count = $this->Registered->count();
             $this->Search_Count = count($this->search_data);
         }
 
-        $this->Search_Count = count($this->search_data);
         $status_list = Status::all();
 
         return view('livewire.admin-module.application.global-search', [
@@ -273,9 +290,10 @@ class GlobalSearch extends Component
             'Registered' => $this->Registered,
             'Registered_Count' => $this->Registered_Count,
             'Balance' => $this->Balance_Collection,
-            'status_list' => $status_list
+            'status_list' => $status_list,
         ]);
     }
+
 }
 
 
