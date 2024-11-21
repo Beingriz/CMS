@@ -72,7 +72,7 @@
                                         <td>{{ $data->Amount_Paid }}</td>
                                         <td>{{ $data->Balance }}</td>
                                         <td>{{ $data->Status }}</td>
-                                        {{-- <td>
+                                        <td>
                                             <select name="ChangeStatus" id="ChangeStatus"
                                                 class="form-control-sm form-control"
                                                 wire:change="updateStatus('{{ $data->Id }}','{{ $data->Status }}',$event.target.value,'{{ $data->Application_Type }}')">
@@ -81,7 +81,7 @@
                                                     <option value="{{ $item->Status }}">{{ $item->Status }}</option>
                                                 @endforeach
                                             </select>
-                                        </td> --}}
+                                        </td>
                                         <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
 
                                         <td>
