@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 use Livewire\WithPagination;
 
 class EmpRegister extends Component
@@ -63,10 +64,16 @@ class EmpRegister extends Component
         'Experience.required' => 'Please enter the experience.',
     ];
 
-    public function mount() {
+    public function mount($EditId, $DeleteId) {
         $this->Id = 'EMP' . time();
         $this->Branch_Id = Auth::user()->branch_id;
         $this->Emp_Id = Auth::user()->Emp_Id;
+        if(!empty($EditId)) {
+            $this->Edit($EditId);
+        }
+        if(!empty($DeleteId)) {
+            $this->deleteEmployee($DeleteId);
+        }
     }
 
     public function updated($propertyName)
@@ -76,56 +83,77 @@ class EmpRegister extends Component
 
     protected function handleFileUpload($fieldName, $oldFilePath)
     {
-        if ($this->{$fieldName} instanceof \Illuminate\Http\UploadedFile) {
-            $file = $this->{$fieldName};
-            $path = 'Digital_Cyber/Employees/' . $this->Name . ' ' . $this->Emp_Id . '/' . trim($this->Role) . '/' . trim($this->Name);
-            $filename = $fieldName . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $this->{$fieldName . '_Path'} = $file->storePubliclyAs($path, $filename, 'public');
+        try {
+            if ($this->{$fieldName} instanceof \Illuminate\Http\UploadedFile) {
+                $file = $this->{$fieldName};
+                $path = 'Digital_Cyber/Employees/' . $this->Name . ' ' . $this->Emp_Id . '/' . trim($this->Role) . '/' . trim($this->Name);
+                $filename = $fieldName . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $this->{$fieldName} = $file->storePubliclyAs($path, $filename, 'public');
 
-            // Delete old file if exists
-            if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
-                Storage::disk('public')->delete($oldFilePath);
+
+                // Delete old file if exists
+                if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
+
+                }
+            } else {
+                $this->{$fieldName} = $oldFilePath;
             }
-        } else {
-            $this->{$fieldName . '_Path'} = $oldFilePath;
+        } catch (\Exception $e) {
+            session()->flash('error', 'File upload failed. Please try again.');
         }
+        DD($this->{$fieldName});
     }
 
-    // Function to Generate Random Username
-    public function usernameGenrator($name, $dob)
+    private function capitalize()
     {
-        // randomly creating username for new client registration,
-        // it is the combinamtion of full name without space being first letter capital
-        // ending with 2 letter of seconds of current time stamp and 2 letter of applicant date of birth.
-        $username = strtolower($name); // to small case/
-        $username = ucfirst($username); // first letter capital.
-        $currentTimestamp = time(); // Get the current timestamp
-        $timeString = date("His", $currentTimestamp); // Format timestamp as HHMMSS
-        $sec = substr($timeString, -2); // Get the last two letters
-        $dob = substr($dob, -2); // Get the last two letters
-        $username = str_replace(' ', '', $username);
-        $this->username = $username . $sec . $dob;
+        $this->Name = ucwords(strtolower(trim($this->Name)));
+        $this->Father_Name = ucwords(strtolower(trim($this->Father_Name)));
+        $this->Address = ucwords(strtolower(trim($this->Address)));
+        $this->Email_Id = strtolower(trim($this->Email_Id));
+    }
+
+    // Function to generate a random unique username
+    private function generateUsername($name, $dob)
+    {
+        $username = ucfirst(Str::slug($name));
+        $uniqueIdentifier = substr(time(), -4) . substr($dob ?? '0000', -2);
+        $generatedUsername = $username . $uniqueIdentifier;
+
+        // Ensure uniqueness by appending a random number if needed
+        while (User::where('username', $generatedUsername)->exists()) {
+            $generatedUsername = $username . rand(10, 99);
+        }
+
+        return $generatedUsername;
     }
 
     public function Save()
     {
         $this->validate();
-        $this->usernameGenrator($this->Name,$this->DOB);
+        $this->username = $this->generateUsername(trim($this->Name),$this->DOB);
 
         // Saving Employee
+
+        // Handle file uploads
+        $this->handleFileUpload('Profile_Img', $this->Old_Profile_Img);
+        $this->handleFileUpload('Qualification_Doc', null);
+        $this->handleFileUpload('Resume_Doc', null);
+
+        dd($this->Profile_Img);
         $empReg = new EmployeeRegister();
         $empReg->Id = trim($this->Id);
         $empReg->Emp_Id = trim($this->Emp_Id);
         $empReg->Branch_Id = trim($this->Branch_Id);
         $empReg->Username = trim($this->username);
         $empReg->Password = Hash::make(trim($this->username));
-        $empReg->Name = trim($this->Name);
-        $empReg->Father_Name = trim($this->Father_Name);
+        $empReg->Name = ucwords(strtolower(trim($this->Name)));
+        $empReg->Father_Name = ucwords(strtolower(trim($this->Father_Name)));
         $empReg->DOB = trim($this->DOB);
         $empReg->Mobile_No = trim($this->Mobile_No);
         $empReg->Email_Id = trim($this->Email_Id);
         $empReg->Gender = trim($this->Gender);
-        $empReg->Address = trim($this->Address);
+        $empReg->Address = ucwords(strtolower(trim($this->Address)));
         $empReg->Role = trim($this->Role);
         $empReg->Branch = trim($this->Branch);
         $empReg->Qualification = trim($this->Qualification);
@@ -135,16 +163,7 @@ class EmpRegister extends Component
         $empReg->Qualification_Doc = $this->Qualification_Doc;
         $empReg->save();
 
-        // Handle file uploads
-        $this->handleFileUpload('Profile_Img', $this->Old_Profile_Img);
-        $this->handleFileUpload('Qualification_Doc', null);
-        $this->handleFileUpload('Resume_Doc', null);
-
-        $empReg->Profile_Img = $this->Profile_Img_Path ?? null;
-        $empReg->Qualification_Doc = $this->Qualification_Doc_Path ?? null;
-        $empReg->Resume_Doc = $this->Resume_Doc_Path ?? null;
-
-        $empReg->save();
+        // Saving User
         $user = User::create([
             'Client_Id' => $this->Id,
             'branch_id' => trim($this->Branch),
@@ -153,7 +172,7 @@ class EmpRegister extends Component
             'gender' => trim($this->Gender),
             'address' => trim($this->Address),
             'dob' => trim($this->DOB),
-            'status' => trim('Employee'),
+            'status' => 'Employee',
             'role' => trim($this->Role),
             'mobile_no' => trim($this->Mobile_No),
             'email' => trim($this->Email_Id),
@@ -173,9 +192,79 @@ class EmpRegister extends Component
         $this->iteration++;
         return redirect()->route('emp.register');
     }
+    public function Edit($Edit_Id)
+    {
+        // Fetch employee details based on the given ID
+        $employee = EmployeeRegister::where('Id', $Edit_Id)->first();
+        if (!$employee) {
+            session()->flash('ErrorMsg', 'Employee not found.');
+            return;
+        }
+
+        // Populate form fields with the employee's details
+        $this->Id = $employee->Id;
+        $this->Name = $employee->Name;
+        $this->Father_Name = $employee->Father_Name;
+        $this->DOB = $employee->DOB;
+        $this->Mobile_No = $employee->Mobile_No;
+        $this->Email_Id = $employee->Email_Id;
+        $this->Gender = $employee->Gender;
+        $this->Address = $employee->Address;
+        $this->Role = $employee->Role;
+        $this->Branch = $employee->Branch;
+        $this->Qualification = $employee->Qualification;
+        $this->Experience = $employee->Experience;
+        $this->Old_Profile_Img = $employee->Profile_Img;
+        // Indicate that the form is in update mode
+        $this->update = 1;
+    }
+
+
+    public function deleteEmployee($empId)
+    {
+        try {
+            // Fetch the employee record
+            $employee = EmployeeRegister::where('Id', $empId)->first();
+
+            if (!$employee) {
+                session()->flash('Error', 'Employee not found.');
+                return;
+            }
+
+            // Delete associated files if they exist
+            $this->deleteFile($employee->Profile_Img);
+            $this->deleteFile($employee->Qualification_Doc);
+            $this->deleteFile($employee->Resume_Doc);
+
+            // Delete the employee record
+            $employee->delete();
+
+            // Delete associated user record
+            $user = User::where('Id', $empId)->first();
+            if ($user) {
+                $user->delete();
+            }
+
+            // Provide success feedback
+            session()->flash('SuccessMsg', 'Employee successfully deleted.');
+
+        } catch (\Exception $e) {
+            // Handle errors
+            session()->flash('Error', 'An error occurred while deleting the employee: ' . $e->getMessage());
+        }
+    }
+    private function deleteFile($filePath)
+    {
+        if ($filePath && file_exists(storage_path('app/' . $filePath))) {
+            unlink(storage_path('app/' . $filePath));
+        }
+    }
+
+
 
     public function render()
     {
+        $this->capitalize();
         $Branches = Branches::all();
           // Fetch employee data with branch name
         $employeeData = EmployeeRegister::with('branch') // Assuming you have a branch relationship

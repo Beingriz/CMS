@@ -338,7 +338,19 @@ class AdminController extends Controller
 // -----------------------------------------------Employee Module Functions ------------------------------------
 
     public function EmployeeRegistration(){
-        return view('admin-module.employee.employee_register');
+        $editid='';
+        $deleteid='';
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'DeleteId'=>$deleteid]);
+    }
+    public function editEmployee($id){
+        $editid=$id;
+        $deleteid='';
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'DeleteId'=>$deleteid]);
+    }
+    public function deleteEmployee($id){
+        $editid='';
+        $deleteid=$id;
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'DeleteId'=>$deleteid]);
     }
 
 // Document advisor

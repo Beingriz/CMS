@@ -227,22 +227,32 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{-- Preview --}}
+                      {{-- Preview --}}
                         <div wire:loading wire:target="Profile_Img">Uploading...</div>
-                        @if (!is_null($Profile_Img))
+
+                        @if ($Profile_Img)
+                            {{-- Display the newly uploaded profile image --}}
                             <div class="row">
                                 <div class="col-45">
-                                    <img class="col-75" src="{{ $Profile_Img->temporaryUrl() }}" alt="profile image" />
+                                    <img class="col-75" src="{{ $Profile_Img->temporaryUrl() }}" alt="New profile image" />
                                 </div>
                             </div>
-                        @elseif(!is_null($Old_Profile_Img))
+                        @elseif ($Old_Profile_Img)
+                            {{-- Display the existing profile image from storage --}}
                             <div class="row">
                                 <div class="col-45">
-                                    <img class="col-75" src="{{ url('storage/' . $Old_Profile_Img) }}" alt="existing image" />
+                                    <img class="col-75" src="{{ asset('storage/' . $Old_Profile_Img) }}" alt="Existing profile image" />
+                                </div>
+                            </div>
+                        @else
+                            {{-- Fallback in case no image is available --}}
+                            <div class="row">
+                                <div class="col-45">
+                                    <p>No profile image available.</p>
                                 </div>
                             </div>
                         @endif
+
 
                         <div class="form-data-buttons">{{-- Buttons --}}
                             <div class="row">
@@ -252,7 +262,7 @@
                                         <a href="{{ route('emp.register') }}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @elseif($update == 1)
                                         <a href="#" class="btn btn-success btn-rounded btn-sm"
-                                            wire:click.prevent="Update('{{ $transaction_id }}')">Update</a>
+                                            wire:click.prevent="Update('{{ $Id }}')">Update</a>
                                         <a href="{{ route('emp.register') }}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @endif
                                     <a href="{{ route('admin.home') }}" class="btn btn-warning btn-rounded btn-sm">Cancel</a>

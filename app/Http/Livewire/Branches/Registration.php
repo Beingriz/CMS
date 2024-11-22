@@ -103,7 +103,7 @@ class Registration extends Component
 
 
             } else {
-                session()->flash('Error', 'Unable to Delete Bookmark');
+                session()->flash('Error', 'Unable to Delete Branch, Please try again later!');
             }
         }
     }
