@@ -337,20 +337,29 @@ class AdminController extends Controller
 
 // -----------------------------------------------Employee Module Functions ------------------------------------
 
-    public function EmployeeRegistration(){
+    public function employeeRegistration(){
         $editid='';
+        $updateid='';
         $deleteid='';
-        return view('admin-module.employee.employee_register',['EditId'=>$editid,'DeleteId'=>$deleteid]);
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'UpdateId'=>$updateid,'DeleteId'=>$deleteid]);
     }
     public function editEmployee($id){
         $editid=$id;
+        $updateid='';
         $deleteid='';
-        return view('admin-module.employee.employee_register',['EditId'=>$editid,'DeleteId'=>$deleteid]);
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'UpdateId'=>$updateid,'DeleteId'=>$deleteid]);
+    }
+    public function employeeUpdate($id){
+        $editid='';
+        $deleteid='';
+        $updateid=$id;
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'UpdateId'=>$updateid,'DeleteId'=>$deleteid]);
     }
     public function deleteEmployee($id){
         $editid='';
+        $updateid='';
         $deleteid=$id;
-        return view('admin-module.employee.employee_register',['EditId'=>$editid,'DeleteId'=>$deleteid]);
+        return view('admin-module.employee.employee_register',['EditId'=>$editid,'UpdateId'=>$updateid,'DeleteId'=>$deleteid]);
     }
 
 // Document advisor

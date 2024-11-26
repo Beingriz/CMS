@@ -262,7 +262,7 @@
                                         <a href="{{ route('emp.register') }}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @elseif($update == 1)
                                         <a href="#" class="btn btn-success btn-rounded btn-sm"
-                                            wire:click.prevent="Update('{{ $Id }}')">Update</a>
+                                             wire:click.prevent="Update('{{ $Id }}')">Update {{ $Id }}</a>
                                         <a href="{{ route('emp.register') }}" class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @endif
                                     <a href="{{ route('admin.home') }}" class="btn btn-warning btn-rounded btn-sm">Cancel</a>
@@ -281,18 +281,6 @@
                     <h5>Employee Register</h5>
                 </div>
                 <div class="card-body">
-                    @if (session('SuccessMsg'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('SuccessMsg') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                    @if (session('Error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('Error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
 
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         <div class="row">

@@ -54,6 +54,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('/data/migration', 'DataMigration')->name('data.migration');
     //Employee
         Route::get('/employee/register', 'employeeRegistration')->name('emp.register');
+        Route::get('/employee/update/{id}', 'employeeUpdate')->name('emp.update');
         Route::get('edit/employee/{id}', 'editEmployee')->name('edit.employee');
         Route::get('delete/employee/{id}', 'deleteEmployee')->name('delete.employee');
     //Dcoument Advisore

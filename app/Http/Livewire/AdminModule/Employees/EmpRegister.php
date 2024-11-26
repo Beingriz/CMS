@@ -64,7 +64,7 @@ class EmpRegister extends Component
         'Experience.required' => 'Please enter the experience.',
     ];
 
-    public function mount($EditId, $DeleteId) {
+    public function mount($EditId, $DeleteId, $UpdateId) {
         $this->Id = 'EMP' . time();
         $this->Branch_Id = Auth::user()->branch_id;
         $this->Emp_Id = Auth::user()->Emp_Id;
@@ -74,6 +74,9 @@ class EmpRegister extends Component
         if(!empty($DeleteId)) {
             $this->deleteEmployee($DeleteId);
         }
+        // if(!empty($UpdateId)) {
+        //     $this->Update($UpdateId);
+        // }
     }
 
     public function updated($propertyName)
@@ -102,7 +105,7 @@ class EmpRegister extends Component
         } catch (\Exception $e) {
             session()->flash('error', 'File upload failed. Please try again.');
         }
-        DD($this->{$fieldName});
+
     }
 
     private function capitalize()
@@ -136,11 +139,10 @@ class EmpRegister extends Component
         // Saving Employee
 
         // Handle file uploads
-        $this->handleFileUpload('Profile_Img', $this->Old_Profile_Img);
+        $this->handleFileUpload('Profile_Img', $this->Profile_Img);
         $this->handleFileUpload('Qualification_Doc', null);
-        $this->handleFileUpload('Resume_Doc', null);
+        $this->handleFileUpload('Resume_Doc',null);
 
-        dd($this->Profile_Img);
         $empReg = new EmployeeRegister();
         $empReg->Id = trim($this->Id);
         $empReg->Emp_Id = trim($this->Emp_Id);
@@ -172,7 +174,7 @@ class EmpRegister extends Component
             'gender' => trim($this->Gender),
             'address' => trim($this->Address),
             'dob' => trim($this->DOB),
-            'status' => 'Employee',
+            'Status' => 'Employee',
             'role' => trim($this->Role),
             'mobile_no' => trim($this->Mobile_No),
             'email' => trim($this->Email_Id),
@@ -180,9 +182,9 @@ class EmpRegister extends Component
             'username' => trim($this->username),
             'password' => Hash::make(trim($this->username)),
         ]);
-        event(new Registered($user)); // User Registration to Portal with Login Credentials
+        // event(new Registered($user)); // User Registration to Portal with Login Credentials
         //Send Whatsapp Alert.
-        $this->EmployeeRegisterAlert($this->Name, $this->Mobile_No, $this->username);
+        // $this->EmployeeRegisterAlert($this->Name, $this->Mobile_No, $this->username);
 
 
         session()->flash('SuccessMsg', 'Employee successfully registered.');
@@ -218,6 +220,68 @@ class EmpRegister extends Component
         // Indicate that the form is in update mode
         $this->update = 1;
     }
+    public function Update($UpdateId)
+    {
+        // Fetch the employee record
+        $employee = EmployeeRegister::where('Id',$UpdateId)->first();
+
+        if (!$employee) {
+            session()->flash('ErrorMsg', 'Employee not found.');
+            return;
+        }
+
+        // Handle file uploads
+        if ($this->Profile_Img instanceof \Illuminate\Http\UploadedFile) {
+            $this->Old_Profile_Img = $employee->Profile_Img;
+            $this->handleFileUpload('Profile_Img', $this->Old_Profile_Img);
+        }if ($this->Qualification_Doc instanceof \Illuminate\Http\UploadedFile) {
+            $this->Qualification_Doc = $employee->Qualification_Doc;
+            $this->handleFileUpload('Qualification_Doc', $employee->Qualification_Doc);
+        }if ($this->Resume_Doc instanceof \Illuminate\Http\UploadedFile) {
+            $this->Resume_Doc = $employee->Resume_Doc;
+            $this->handleFileUpload('Resume_Doc', $employee->Resume_Doc);
+        }
+        $employee->update([
+            'Name' => ucwords(strtolower(trim($this->Name))),
+            'Father_Name' => ucwords(strtolower(trim($this->Father_Name))),
+            'DOB' => trim($this->DOB),
+            'Mobile_No' => trim($this->Mobile_No),
+            'Email_Id' => trim($this->Email_Id),
+            'Gender' => trim($this->Gender),
+            'Address' => ucwords(strtolower(trim($this->Address))),
+            'Role' => trim($this->Role),
+            'Branch' => trim($this->Branch),
+            'Qualification' => trim($this->Qualification),
+            'Experience' => trim($this->Experience),
+            'Profile_Img' => $this->Profile_Img,
+            'Resume_Doc' => $this->Resume_Doc,
+            'Qualification_Doc' => $this->Qualification_Doc,
+        ]);
+
+
+        // Update associated user record
+        $user = User::where('Client_Id', $this->Id)->first();
+        if ($user) {
+            $user->update([
+                'name' => trim($this->Name),
+                'gender' => trim($this->Gender),
+                'address' => trim($this->Address),
+                'dob' => trim($this->DOB),
+                'role' => trim($this->Role),
+                'mobile_no' => trim($this->Mobile_No),
+                'email' => trim($this->Email_Id),
+                'profile_image' => $this->Profile_Img,
+            ]);
+        }
+
+        // Provide success feedback
+        session()->flash('SuccessMsg', 'Employee successfully updated.');
+
+        // Reset form fields
+        $this->update = 0; // Reset update mode
+        return redirect()->route('emp.register');
+    }
+
 
 
     public function deleteEmployee($empId)
