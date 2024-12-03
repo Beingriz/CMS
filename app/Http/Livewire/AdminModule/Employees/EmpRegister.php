@@ -292,7 +292,7 @@ class EmpRegister extends Component
 
             if (!$employee) {
                 session()->flash('Error', 'Employee not found.');
-                return;
+                return redirect()->route('emp.register');
             }
 
             // Delete associated files if they exist
@@ -311,10 +311,13 @@ class EmpRegister extends Component
 
             // Provide success feedback
             session()->flash('SuccessMsg', 'Employee successfully deleted.');
+            return redirect()->route('emp.register');
 
         } catch (\Exception $e) {
             // Handle errors
             session()->flash('Error', 'An error occurred while deleting the employee: ' . $e->getMessage());
+            return redirect()->route('emp.register');
+
         }
     }
     private function deleteFile($filePath)
