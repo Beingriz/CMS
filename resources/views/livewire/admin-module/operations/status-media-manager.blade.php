@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Bookmark</h4>
+                <h4 class="mb-sm-0">Status Media Manager</h4>
 
                 @if (session('SuccessMsg'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -27,7 +27,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
-                        <li class="breadcrumb-item active">Bookmarks</li>
+                        <li class="breadcrumb-item active">Status Media</li>
                     </ol>
                 </div>
 
@@ -45,109 +45,82 @@
 
     {{-- ---------------------------------------------------------------------------------------------------- --}}
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title"> Favourite Bookmark</h4>
-                    <p class="card-title-desc">Add New Bookmarks</p>
+                    <h4 class="card-title"> Manager Status Media Files</h4>
+                    <p class="card-title-desc">Add New Media</p>
                     <div class="row mb-3">
-                        <label for="example-text-input" class="col-sm-3 col-form-label">Bookmark Id</label>
-                        <label for="example-text-input" class="col-sm-3 col-form-label">{{ $Bm_Id }}</label>
+                        <label for="example-text-input" class="col-sm-4 col-form-label">Media Id</label>
+                        <label for="example-text-input" class="col-sm-8 col-form-label">{{ $media_id }}</label>
 
                     </div>
                     <!-- end row -->
                     <form wire:submit.prevent="Save">
                         @csrf
                         <div class="row mb-3">
-                            <label for="example-search-input" class="col-sm-2 col-form-label">Bookmark for</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="Main_Services" wire:model="Relation" name="Relation"
-                                    wire:change="Change(event.target.value)">
+                            <label for="Service" class="col-sm-4 col-form-label">Service</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="Service" wire:model="Service" name="Service" {{ $disabled }}>>
                                     <option value="">---Select---</option>
-                                    <option value="General">General</option>
-                                    @foreach ($MainServices as $item)
-                                        <option value="{{ $item->Name }}">{{ $item->Name }}</option>
+                                    @foreach ($Services as $Service)
+                                        <option value="{{ $Service->Id }}">{{ $Service->Name }}</option>
                                     @endforeach
 
                                 </select>
-                                <span class="error">@error('Relation'){{ $message }}@enderror</span>
+                                <span class="error">@error('Service'){{ $message }}@enderror</span>
                             </div>
                         </div>
                         <!-- end row -->
 
-                        @if ($Update == 1)
-                            <div class="row mb-3"> {{-- Change Relation --}}
-                                <label for="example-email-input" class="col-sm-2 col-form-label">Change Relation</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" id="ChangeRelation" wire:model="ChangeRelation"
-                                        name="ChangeRelation">
-                                        <option value="">---Select---</option>
-                                        <option value="General">General</option>
-                                        @foreach ($MainServices as $item)
-                                            <option value="{{ $item->Name }}">{{ $item->Name }}</option>
-                                        @endforeach
+                        <div class="row mb-3">
+                            <label for="Service_Type" class="col-sm-4 col-form-label">Service Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="Service_Type" wire:model="Service_Type" name="Service_Type" {{ $disabled }}>
+                                    <option value="">---Select---</option>
+                                    @foreach ($sub_service as $service)
+                                    <option value="{{ $service->Name }}">{{ $service->Name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="error">@error('Service_Type'){{ $message }}@enderror</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="Status" class="col-sm-4 col-form-label">Status</label>
+                            <div class="col-sm-8">
+                                <select class="form-control"  wire:model="Status" name="" id=""  {{ $disabled }}>
+                                    <option value="">--Select Status--</option>
+                                    @foreach ($status as $status)
+                                        <option value="{{ $status->Status }}">{{ $status->Status }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="error">@error('Status'){{ $message }}@enderror</span>
+                            </div>
+                        </div>
 
-                                    </select>
-                                    <span class="error">
-                                        @error('ChangeRelation')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                </div>
-                            </div>
-                        @endif
-                        <div class="row mb-3">
-                            <label for="Name" class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" placeholder="Bookmark Name" wire:model="Name"
-                                    id="Name">
-                                <span class="error">
-                                    @error('Name')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                        </div>
                         <!-- end row -->
+
                         <div class="row mb-3">
-                            <label for="example-url-input" class="col-sm-2 col-form-label">URL</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" wire:model="Hyperlink"
-                                    placeholder="https:/cyberpe.epizy.com" id="example-url-input">
-                                <span class="error">
-                                    @error('Hyperlink')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                        </div>
-                        <!-- end row -->
-                        <div class="row mb-3">
-                            <label for="example-tel-input" class="col-sm-2 col-form-label">Thumbnail</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="file" wire:model="Thumbnail"
-                                    id="Thumbnail{{ $iteration }}">
-                                <span class="error">
-                                    @error('Thumbnail')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                            <label for="Media" class="col-sm-4 col-form-label">Media</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="file" wire:model="Media" name="Media" id="Media{{ $iteration }}">
+                                <span class="error">@error('Media'){{ $message }}@enderror</span>
                             </div>
                         </div>
                         <!-- end row -->
 
-                        <div wire:loading wire:target="Thumbnail">Uploading...</div>
-                        @if (!is_Null($Thumbnail))
+                        <div wire:loading wire:target="Media">Uploading...</div>
+                        @if (!is_Null($Media))
                             <div class="row">
                                 <div class="col-45">
-                                    <img class="col-75" src="{{ $Thumbnail->temporaryUrl() }}"" alt="Thumbnail" />
+                                    <img class="col-75" src="{{ $Media->temporaryUrl() }}"" alt="Thumbnail" />
                                 </div>
                             </div>
-                        @elseif(!is_Null($Old_Thumbnail))
+                        @elseif(!is_Null($Old_Media))
                             <div class="row">
                                 <div class="col-45">
-                                    <img class="col-75" src="{{ url('storage/' . $Old_Thumbnail) }}""
-                                        alt="Existing Thumbnail" />
+                                    <img class="col-75" src="{{ url('storage/' . $Old_Media) }}""
+                                        alt="Existing Media" />
                                 </div>
                             </div>
                         @endif
@@ -177,12 +150,10 @@
         </div> <!-- end col -->
 
 
-        @if (count($Existing_Bm) > 0)
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">#{{ $Existing_Bm->total() }} Bookmarks for {{ $Relation }}
-                            Category</h5>
+                        <h5 class="card-title">#{{ $Existing_Media }} Existing Media</h5>
                     </div>
 
                     <div class="row">
@@ -193,51 +164,61 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Thumnnail</th>
+                                        <th>Service</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Media</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($Existing_Bm as $key)
+                                    @forelse ($Existing_Media as $key)
                                         <tr>
-                                            <td>{{ $Existing_Bm->firstItem() + $loop->index }}</td>
-                                            <td>{{ $key->Name }}</td>
+                                            <td>{{ $Existing_Media->firstItem() + $loop->index }}</td>
+                                            <td>{{ $key->service }}</td>
+                                            <td>{{ $key->service_type }}</td>
+                                            <td>{{ $key->status }}</td>
                                             <td>
-                                                <img class="avatar-sm" src="{{ url('storage/' . $key->Thumbnail) }}"
-                                                    alt="Bookmark">
+                                                <img class="avatar-sm" src="{{ url('storage/' . $key->media) }}"
+                                                    alt="media">
                                             </td>
                                             <td>
-                                                <a href="{{ route('edit.bookmark', $key->BM_Id) }}"
+                                                <a href="{{ route('edit.status.media', $key->id) }}"
                                                     class="btn btn-sm btn-primary font-size-15" id="editData"><i
                                                         class="mdi mdi-circle-edit-outline"></i></a>
 
-                                                <a href ="{{ route('delete.bookmark', $key->BM_Id) }}"class="btn btn-sm btn-danger font-size-15"
+                                                <a href ="{{ route('delete.status.media', $key->id) }}"class="btn btn-sm btn-danger font-size-15"
                                                     id="delete"><i class="mdi mdi-delete-alert-outline"></i></a>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                        @empty
+                                        <tr>
+                                            <td colspan="11" class="text-center">
+                                                <img class="avatar-xl" alt="No Result" src="{{ asset('storage/no_result.png') }}">
+                                                <p>No Result Found</p>
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($Existing_Bm) }} of
-                                        {{ $Existing_Bm->total() }} entries</p>
+                                    <p class="text-muted">Showing {{ count($Existing_Media) }} of
+                                        {{ $Existing_Media->total() }} entries</p>
                                 </div>
                                 <div class="col-md-4">
                                     <span class=" pagination pagination-rounded float-end">
-                                        {{ $Existing_Bm->links() }}
+                                        {{ $Existing_Media->links() }}
                                     </span>
 
 
                                 </div>
-                                <p class="card-text"><small class="text-muted">Last Bookmarked
+                                <p class="card-text"><small class="text-muted">Last media added on
                                         {{ $created }}</small></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
     </div>
 </div>

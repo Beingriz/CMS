@@ -79,6 +79,10 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('whatsapp/template/delete/{sid}', 'deleteTemplate')->name('whatsapp.template.delete');
         // Route::post('/twilio/webhook', [TwilioWebhookController::class, 'handle']);
 
+    //Status Media Managr
+        Route::get('status/media', 'statusMediaManager')->name('status.media');
+        Route::get('status/media/edit/{id}', 'editStatusMediaManager')->name('edit.status.media');
+        Route::get('status/media/delete/{id}', 'deleteStatusMediaManager')->name('delete.status.media');
 
     });
 });

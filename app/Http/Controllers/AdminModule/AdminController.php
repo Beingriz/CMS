@@ -410,6 +410,26 @@ class AdminController extends Controller
         return view('whats-app.whatsapp_blocklisted_contacts');
     }
 
+     // Status Media Manager
+     public function statusMediaManager()
+     {
+         $editId = '';
+         $deleteId = '';
+         return view('admin-module.status.status_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
+     }
+     public function editStatusMediaManager($id)
+     {
+         $editId = $id;
+         $deleteId = '';
+         return view('admin-module.status.status_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
+     }
+     public function deleteStatusMediaManager($id)
+     {
+         $editId = '';
+         $deleteId = $id;
+         return view('admin-module.status.status_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
+     }
+
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
