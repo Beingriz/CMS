@@ -84,6 +84,11 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('status/media/edit/{id}', 'editStatusMediaManager')->name('edit.status.media');
         Route::get('status/media/delete/{id}', 'deleteStatusMediaManager')->name('delete.status.media');
 
+    //Template Media Managr
+        Route::get('template/media', 'templateMediaManager')->name('template.media');
+        Route::get('template/media/edit/{id}', 'editTemplateMediaManager')->name('edit.template.media');
+        Route::get('template/media/delete/{id}', 'deleteTemplateMediaManager')->name('delete.template.media');
+
     });
 });
 //whatsapp

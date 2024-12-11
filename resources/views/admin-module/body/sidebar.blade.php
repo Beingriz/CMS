@@ -115,9 +115,11 @@
                         <li><a href="{{ route('marketing.dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('whatsapp.marketing') }}">Marketing</a></li>
                         <li><a href="{{ route('whatsapp.templates') }}">Templates</a></li>
+                        <li><a href="{{ route('template.media') }}">Template Media</a></li>
                         <li><a href="{{ route('whatsapp.chat') }}">WhatsApp Chat</a></li>
                         <li><a href="{{ route('whatsapp.blocklist') }}">Blocklist</a></li>
                         <li><a href="{{ route('status.media') }}">Status Media</a></li>
+
                     </ul>
                 </li>
                 @endif

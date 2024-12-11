@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Status Media Manager</h4>
+                <h4 class="mb-sm-0">Template Media Manager</h4>
 
                 @if (session('SuccessMsg'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -27,7 +27,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Digital Cyber</a></li>
-                        <li class="breadcrumb-item active">Status Media</li>
+                        <li class="breadcrumb-item active">Template Media</li>
                     </ol>
                 </div>
 
@@ -48,8 +48,8 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title"> Manager Status Media Files</h4>
-                    <p class="card-title-desc">Add New Media</p>
+                    <h4 class="card-title"> Template Status Media Files</h4>
+                    <p class="card-title-desc">Adding media files to marketing and utility media templates. </p>
                     <div class="row mb-3">
                         <label for="example-text-input" class="col-sm-4 col-form-label">Media Id</label>
                         <label for="example-text-input" class="col-sm-8 col-form-label">{{ $media_id }}</label>
@@ -59,47 +59,29 @@
                     <form wire:submit.prevent="Save">
                         @csrf
                         <div class="row mb-3">
-                            <label for="Service" class="col-sm-4 col-form-label">Service</label>
+                            <label for="Template" class="col-sm-4 col-form-label">Template</label>
                             <div class="col-sm-8">
-                                <select class="form-control" id="Service" wire:model="Service" name="Service" {{ $disabled }}>>
+                                <select class="form-control" id="Template" wire:model="Template" name="Template" {{ $disabled }}>
                                     <option value="">---Select---</option>
-                                    @foreach ($Services as $Service)
-                                        <option value="{{ $Service->Id }}">{{ $Service->Name }}</option>
+                                    @foreach ($templates as $template)
+                                        <option value="{{ $template->id }}"> {{ ucwords(str_replace('_', ' ', $template->template_name))  }}</option>
                                     @endforeach
 
                                 </select>
-                                <span class="error">@error('Service'){{ $message }}@enderror</span>
+                                <span class="error">@error('Template'){{ $message }}@enderror</span>
                             </div>
                         </div>
                         <!-- end row -->
 
-                        <div class="row mb-3">
-                            <label for="Service_Type" class="col-sm-4 col-form-label">Service Type</label>
-                            <div class="col-sm-8">
-                                <select class="form-control" id="Service_Type" wire:model="Service_Type" name="Service_Type" {{ $disabled }}>
-                                    <option value="">---Select---</option>
-                                    @foreach ($sub_service as $service)
-                                    <option value="{{ $service->Name }}">{{ $service->Name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="error">@error('Service_Type'){{ $message }}@enderror</span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="Status" class="col-sm-4 col-form-label">Status</label>
-                            <div class="col-sm-8">
-                                <select class="form-control"  wire:model="Status" name="" id=""  {{ $disabled }}>
-                                    <option value="">--Select Status--</option>
-                                    @foreach ($status as $status)
-                                        <option value="{{ $status->Status }}">{{ $status->Status }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="error">@error('Status'){{ $message }}@enderror</span>
-                            </div>
-                        </div>
 
+                        <div class="row mb-3">
+                            <label for="Temp_Body" class="col-sm-4 col-form-label">Temp_Body</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" wire:model="Temp_Body" name="Temp_Body" rows="12"  readonly></textarea>
+                                <span class="error">@error('Temp_Body'){{ $message }}@enderror</span>
+                            </div>
+                        </div>
                         <!-- end row -->
-
                         <div class="row mb-3">
                             <label for="Media" class="col-sm-4 col-form-label">Media</label>
                             <div class="col-sm-8">
@@ -128,8 +110,9 @@
                             <div class="row">
                                 <div class="col-100">
                                     @if ($Update == 0)
-                                        <button type="submit" value="submit" name="submit"
+                                       @if(count($Existing_Media)==0) <button type="submit" value="submit" name="submit"
                                             class="btn btn-primary btn-rounded btn-sm">Save</button>
+                                            @endif
                                         <a href="#" wire:click.prevent="ResetFields()"
                                             class="btn btn-info btn-rounded btn-sm">Reset</a>
                                     @elseif($Update == 1)
@@ -153,7 +136,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">{{ $Existing_Media->total() }} Existing Status Media</h5>
+                        <h5 class="card-title">{{ ($Existing_Media->total()) }} Existing Template Media</h5>
                     </div>
 
                     <div class="row">
@@ -164,9 +147,8 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Service</th>
-                                        <th>Type</th>
-                                        <th>Status</th>
+                                        <th>Name</th>
+                                        <th>Body</th>
                                         <th>Media</th>
                                         <th>Action</th>
                                     </tr>
@@ -175,19 +157,18 @@
                                     @forelse ($Existing_Media as $key)
                                         <tr>
                                             <td>{{ $Existing_Media->firstItem() + $loop->index }}</td>
-                                            <td>{{ $key->service }}</td>
-                                            <td>{{ $key->service_type }}</td>
-                                            <td>{{ $key->status }}</td>
+                                            <td class="text-wrap w-25"">{{ ucwords(str_replace('_', ' ', $key->template_name))}}</td>
+                                            <td class="text-wrap">{{ $key->body }}</td>
                                             <td>
                                                 <img class="avatar-sm" src="{{ url('storage/' . $key->media) }}"
                                                     alt="media">
                                             </td>
                                             <td>
-                                                <a href="{{ route('edit.status.media', $key->id) }}"
+                                                <a href="{{ route('edit.template.media', $key->id) }}"
                                                     class="btn btn-sm btn-primary font-size-15" id="editData"><i
                                                         class="mdi mdi-circle-edit-outline"></i></a>
 
-                                                <a href ="{{ route('delete.status.media', $key->id) }}"class="btn btn-sm btn-danger font-size-15"
+                                                <a href ="{{ route('delete.template.media', $key->id) }}"class="btn btn-sm btn-danger font-size-15"
                                                     id="delete"><i class="mdi mdi-delete-alert-outline"></i></a>
                                             </td>
                                         </tr>

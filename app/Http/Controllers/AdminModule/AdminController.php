@@ -430,6 +430,27 @@ class AdminController extends Controller
          return view('admin-module.status.status_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
      }
 
+
+     // Template Media Manager
+     public function templateMediaManager()
+     {
+         $editId = '';
+         $deleteId = '';
+         return view('admin-module.marketing.template_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
+     }
+     public function editTemplateMediaManager($id)
+     {
+         $editId = $id;
+         $deleteId = '';
+         return view('admin-module.marketing.template_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
+     }
+     public function deleteTemplateMediaManager($id)
+     {
+         $editId = '';
+         $deleteId = $id;
+         return view('admin-module.marketing.template_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
+     }
+
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
