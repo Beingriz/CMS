@@ -317,19 +317,19 @@ class ApplicationForm extends Component
     public function Capitalize()
     {
         if (!is_null($this->Name)) {
-            $this->Name = ucwords($this->Name);
+            $this->Name = ucwords(strtolower(trim($this->Name)));
         }
 
         if (!is_null($this->RelativeName)) {
-            $this->RelativeName = ucwords($this->RelativeName);
+            $this->RelativeName = ucwords(strtolower(trim($this->RelativeName)));
         }
 
         if (!is_null($this->Ack_No)) {
-            $this->Ack_No = ucwords($this->Ack_No);
+            $this->Ack_No = ucwords(strtolower(trim($this->Ack_No)));
         }
 
         if (!is_null($this->Document_No)) {
-            $this->Document_No = ucwords($this->Document_No);
+            $this->Document_No = ucwords(strtolower(trim($this->Document_No)));
         }
     }
 

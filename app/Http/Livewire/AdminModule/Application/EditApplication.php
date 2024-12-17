@@ -13,6 +13,7 @@ use App\Models\SubServices;
 use App\Traits\RightInsightTrait;
 use App\Traits\WhatsappTrait;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -302,6 +303,10 @@ class EditApplication extends Component
             'updated_at' => Carbon::now()
         ]);
 
+        // Manually trigger the logTransaction
+        $application = Application::find($Id);
+        Application::logTransaction($application, 'Update');
+
         // Handle additional documents
         if ($this->Doc_Yes == 1) {
             $this->handleAdditionalDocuments($Id, $branchId, $empId);
@@ -368,50 +373,82 @@ class EditApplication extends Component
      * Handle additional documents.
      */
     protected function handleAdditionalDocuments($Id, $branchId, $empId)
-    {
-        if (count($this->Document_Files) > 0) {
-            if (empty($this->Doc_Names)) {
-                $this->Doc_Names = [$this->Name . ' Document'];
-            }
-            foreach ($this->Document_Files as $Docs => $Path) {
-                $this->n++;
+{
+    if (count($this->Document_Files) > 0) {
+        if (empty($this->Doc_Names)) {
+            $this->Doc_Names = [$this->Name . ' Document'];
+        }
+
+        foreach ($this->Document_Files as $index => $Path) {
+            try {
+                // Validate file extension
                 $extension = $Path->getClientOriginalExtension();
+                if (!in_array($extension, ['jpg', 'jpeg', 'png', 'pdf', 'docx'])) {
+                    throw new Exception('Invalid file type. Allowed types are: jpg, jpeg, png, pdf, docx.');
+                }
+
+                // Generate file path and name
                 $directory = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
-                $filename = $this->Name . ' ' . $this->Doc_Names[$Docs] . '_' . time() . '.' . $extension;
+                if (!is_dir(storage_path('app/public/' . $directory))) {
+                    mkdir(storage_path('app/public/' . $directory), 0777, true);
+                }
+
+                $filename = $this->Name . ' ' . $this->Doc_Names[$index] . '_' . time() . '.' . $extension;
                 $url = $Path->storePubliclyAs($directory, $filename, 'public');
 
+                // Insert document record into the database
                 DocumentFiles::create([
-                    'Id' => 'DOC' . mt_rand(0, 9999),
+                    'Id' => 'DOC' . mt_rand(1000, 9999),
                     'App_Id' => $Id,
                     'Client_Id' => $this->Client_Id,
-                    'Document_Name' => $this->Doc_Names[$Docs],
+                    'Document_Name' => $this->Doc_Names[$index],
                     'Document_Path' => $url,
                     'Branch_Id' => $branchId,
                     'Emp_Id' => $empId
                 ]);
-            }
-
-            // Handle single document
-            if (!empty($this->Document_Name)) {
-                $extension = $this->Document_Name->getClientOriginalExtension();
-                $path = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
-                $filename = $this->Name . ' ' . $this->Doc_Name . '_' . time() . '.' . $extension;
-                $url = $this->Document_Name->storePubliclyAs($path, $filename, 'public');
-
-                DocumentFiles::create([
-                    'Id' => 'DOC' . mt_rand(0, 9999),
-                    'App_Id' => $Id,
-                    'Client_Id' => $this->Client_Id,
-                    'Document_Name' => $this->Doc_Name,
-                    'Document_Path' => $url,
-                    'Branch_Id' => $branchId,
-                    'Emp_Id' => $empId
-                ]);
-
-                session()->flash('SuccessMsg', 'Document Uploaded Successfully!');
+            } catch (Exception $e) {
+                session()->flash('ErrorMsg', 'Error uploading document: ' . $e->getMessage());
+                return; // Stop further processing if an error occurs
             }
         }
     }
+
+    // Handle single document upload
+    if (!empty($this->Document_Name)) {
+        try {
+            // Validate file extension
+            $extension = $this->Document_Name->getClientOriginalExtension();
+            if (!in_array($extension, ['jpg', 'jpeg', 'png', 'pdf', 'docx'])) {
+                throw new Exception('Invalid file type. Allowed types are: jpg, jpeg, png, pdf, docx.');
+            }
+
+            // Generate file path and name
+            $path = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
+            if (!is_dir(storage_path('app/public/' . $path))) {
+                mkdir(storage_path('app/public/' . $path), 0777, true);
+            }
+
+            $filename = $this->Name . ' ' . $this->Doc_Name . '_' . time() . '.' . $extension;
+            $url = $this->Document_Name->storePubliclyAs($path, $filename, 'public');
+
+            // Insert document record into the database
+            DocumentFiles::create([
+                'Id' => 'DOC' . mt_rand(1000, 9999),
+                'App_Id' => $Id,
+                'Client_Id' => $this->Client_Id,
+                'Document_Name' => $this->Doc_Name,
+                'Document_Path' => $url,
+                'Branch_Id' => $branchId,
+                'Emp_Id' => $empId
+            ]);
+
+            session()->flash('SuccessMsg', 'Document Uploaded Successfully!');
+        } catch (Exception $e) {
+            session()->flash('ErrorMsg', 'Error uploading document: ' . $e->getMessage());
+        }
+    }
+}
+
 
 
 

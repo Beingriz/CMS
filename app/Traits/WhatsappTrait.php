@@ -76,7 +76,7 @@ trait WhatsappTrait
     public function ApplicationRegisterAlert($app_id,$profileName)
     {
 
-        $contentSid = 'HXf915685887d78e2aa3e8c9276b8fd8d2'; // Replace with your actual ContentSid
+        $contentSid = 'HX9b1a41eba71b6a27b8df5e1e0f287288'; // Replace with your actual ContentSid
 
         // Get the template from the database
         $template = Templates::where('template_sid', $contentSid)->first();
