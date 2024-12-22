@@ -450,6 +450,12 @@ class AdminController extends Controller
          $deleteId = $id;
          return view('admin-module.marketing.template_media_manager', ['EditId' => $editId, 'DeleteId' => $deleteId]);
      }
+     // --------------Telegram Chatbot----------------
+     public function telegramBotStatusCheck()
+     {
+
+         return view('admin-module.schedules.telegrambot');
+     }
 
     public function destroy(Request $request)
     {

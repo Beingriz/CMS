@@ -9,6 +9,7 @@
         "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.9",
         "intervention/image": "^2.7",
+        "irazasyed/telegram-bot-sdk": "^3.14",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",

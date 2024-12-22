@@ -89,6 +89,10 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('template/media/edit/{id}', 'editTemplateMediaManager')->name('edit.template.media');
         Route::get('template/media/delete/{id}', 'deleteTemplateMediaManager')->name('delete.template.media');
 
+
+    //Telegram bot
+        Route::get('telegram/bot', 'telegramBotStatusCheck')->name('telegram.bot');
+
     });
 });
 //whatsapp
