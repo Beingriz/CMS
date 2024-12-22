@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Livewire\AdminModule\Schedules\LinkChecker;
 use Illuminate\Console\Command;
-use App\Http\Livewire\LinkChecker;
 
 class CheckLinkStatus extends Command
 {

@@ -20,7 +20,7 @@
         <p>{{ $statusMessage }}</p>
     </div>
 
-    <div class="mt-3">
+    {{-- <div class="mt-3">
         <label for="subscriber">Add Subscriber (Telegram ID):</label>
         <input type="text" id="subscriber" wire:model="newSubscriber" class="form-control" />
         <button wire:click="addSubscriber" class="btn btn-success mt-2">Add Subscriber</button>
@@ -31,5 +31,5 @@
                 <li>{{ $subscriber }}</li>
             @endforeach
         </ul>
-    </div>
+    </div> --}}
 </div>
