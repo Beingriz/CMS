@@ -14,8 +14,12 @@ trait WhatsappTrait
 
     public function __construct()
     {
-        $this->twilio = new Client(getenv("TWILIO_SID"), getenv("TWILIO_AUTH_TOKEN"));
-        $this->fromNo = "whatsapp:".getenv("TWILIO_PHONE_NUMBER");
+        $sid = config('services.twilio.sid');
+        $token = config('services.twilio.token');
+        $fromNo = "whatsapp:" . config('services.twilio.from');
+
+        $this->twilio = new Client($sid, $token);
+        $this->fromNo = "whatsapp:".config('services.twilio.from');
     }
 
     // Send a WhatsApp message using the Twilio API

@@ -20,10 +20,9 @@ class ApplyServiceForm extends Model
         'Relative_Name',
         'Mobile_No',
         'Status',
-        'Reason',
         'Profile_Image',
         'Branch_Id',
-        'Emp_Id'
+
     ];
     // protected $connection ='mysql';
     public function scopeForBranch($query, $branchId)

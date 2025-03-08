@@ -19,9 +19,15 @@ class UserApplyNowForm extends Component
     use WhatsappTrait;
 
     public $App_Id, $Category_Type, $Service_Type, $Name, $PhoneNo, $FatherName, $Dob, $Description, $File, $ServiceId, $ServiceName, $subServices, $Read_Consent, $signature, $Address, $mobile;
-    public $Update = 0, $mainServiceId, $mainServiceName, $Signed = true, $Recived, $disabled, $DigitallySigned, $New_File, $Amount, $Branch, $branches;
+    public $Update = 0, $mainServiceId, $mainServiceName, $Signed = false, $Recived, $disabled, $DigitalSignature, $New_File, $Amount, $Branch, $branches;
+    public $isProcessing = false; // Track form submission state
+    protected $listeners = ['clearFile'];
     protected $rules = [
-        'Name' => 'required',
+        'Branch' => 'required',
+        'Name' => 'required|string|max:255',
+        'FatherName' => 'required|string|max:255',
+        'Dob' => 'required|date',
+        'File' => 'nullable|mimes:jpg,png,pdf,docx|max:2048', // Allow more formats
 
     ];
 
@@ -44,92 +50,126 @@ class UserApplyNowForm extends Component
 
     public function Sign()
     {
-        $this->Signed = false;
+        $this->Signed = true;
         $this->signature = Carbon::now();
         $this->Recived = 'Consent Received';
         $this->Read_Consent = 1;
-        $this->DigitallySigned = 1;
+        $this->DigitalSignature = 1;
         $this->disabled = 'disabled';
     }
+    public function SignDigitally()
+    {
+        $this->DigitalSignature = Carbon::now();
+        $this->Signed = true;
+        $this->Read_Consent = 1;
+        $this->Recived = 'Consent Received';
+        $this->disabled = 'disabled';
+        $this->prepareConsent(); // Generate consent content
+
+    }
+    public function clearFile()
+{
+    $this->File = null;
+}
 
     public function ApplyNow()
     {
-        if ($this->File != Null) {
-            $this->validate([
-                'Read_Consent' => 'required',
-                'DigitallySigned' => 'required'
-            ], [
-                'Read_Consent.required' => 'The :attribute must Accept.',
-                'DigitallySigned.required' => 'Please Sign this consent :attribute.',
-            ], [
-                'Read_Consent' => 'Consent',
-                'DigitallySigned' => 'Digitally'
-            ]);
-            $extension = $this->File->getClientOriginalExtension();
-            $path = 'Client_DB/' . $this->Name . ' ' . Auth::user()->Client_Id . '/' . $this->Name . '/Direct Application/Documents';
-            $filename = 'Doc ' . $this->Name . ' ' . time() . '.' . $extension;
-            $url = $this->File->storePubliclyAs($path, $filename, 'public');
-            $this->New_File = $url;
-        }
-
+        // Enhanced Validation Rules
         $this->validate();
 
-        $consent = "";
-        if ($this->Read_Consent == 1) {
-            $consent = 'Dear Sir I am ' . $this->Name . ' C/o ' . $this->FatherName . ' Phone No ' . $this->PhoneNo . ' hereby give my explicit consent for sharing my Document for the following purpose ' . $this->mainServiceName . ',  ' . $this->ServiceName . ' I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely , this is Digitally Signed on ' . $this->signature;
+        try {
+            // Handle File Upload
+            if ($this->File) {
+                $rules['Read_Consent'] = 'accepted'; // Consent must be read
+                $this->New_File = $this->uploadFile();
+            }
+
+            // Store in ApplyServiceForm
+            $apply = new ApplyServiceForm();
+            $apply->Id  = $this->App_Id;
+                $apply->Client_Id       = Auth::id();
+                $apply->Application     = $this->mainServiceName;
+                $apply->Application_Type= $this->ServiceName;
+                $apply->Name            = trim($this->Name);
+                $apply->App_MobileNo    = trim($this->PhoneNo);
+                $apply->Mobile_No       = trim($this->mobile);
+                $apply->Relative_Name   = trim($this->FatherName);
+                $apply->Dob             = trim($this->Dob);
+                $apply->Message         = trim($this->Description) ?? 'No Description';
+                $apply->File            = $this->New_File ?? 'No Document Shared';
+                $apply->Profile_Image   = Auth::user()->profile_image;
+                $apply->Branch_Id       = $this->Branch;
+                $apply->Status          = 'Received';
+                $apply->Amount          = $this->Amount;
+            $apply->save();
+            dd('saved');
+            // Store in Application Table
+            $app_field = new Application();
+            $app_field->fill([
+                'Id'              => $this->App_Id,
+                'Client_Id'       => Auth::id(),
+                'Received_Date'   => now(),
+                'Application'     => $this->mainServiceName,
+                'Application_Type'=> $this->ServiceName,
+                'Name'            => trim($this->Name),
+                'Relative_Name'   => trim($this->FatherName),
+                'Gender'          => Auth::user()->gender,
+                'Mobile_No'       => trim($this->mobile),
+                'DOB'             => trim($this->Dob),
+                'Total_Amount'    => $this->Amount,
+                'Status'          => 'Received',
+                'Consent'         => $this->ConsentMatter ?? 'No Document Shared',
+                'Doc_File'        => $this->New_File ?? 'Not Available',
+                'Applicant_Image' => Auth::user()->profile_image,
+            ]);
+            $app_field->save();
+            dd('saved');
+           // Redirect with Success Notification
+            session()->flash('success', 'Application submitted successfully.');
+            return redirect()->route('acknowledgment', $this->App_Id);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Something went wrong: ' . $e->getMessage());
+        } finally {
+            $this->isProcessing = false; // Unlock for new submission
         }
-
-        $apply = new ApplyServiceForm();
-        $apply->Id = $this->App_Id;
-        $apply->Client_Id = Auth::user()->Client_Id;
-        $apply->Application = $this->mainServiceName;
-        $apply->Application_Type = $this->ServiceName;
-        $apply->Name = trim($this->Name);
-        $apply->App_MobileNo = trim($this->PhoneNo);
-        $apply->Mobile_No = trim($this->mobile);
-        $apply->Relative_Name = trim($this->FatherName);
-        $apply->Dob = trim($this->Dob);
-        $apply->Message = trim($this->Description);
-        $apply->File = $this->New_File;
-        $apply->Consent = $consent;
-        $apply->Profile_Image = Auth::user()->profile_image;
-        $apply->Branch_Id = $this->Branch; // Saving the selected branch
-        $apply->save();
-
-        $app_field = new Application();
-        $app_field->Id = $this->App_Id;
-        $app_field->Client_Id = Auth::user()->Client_Id;
-        $app_field->Received_Date = date('Y-m-d');
-        $app_field->Application = $this->mainServiceName;
-        $app_field->Application_Type = $this->ServiceName;
-        $app_field->Name = trim($this->Name);
-        $app_field->Relative_Name = trim($this->FatherName);
-        $app_field->Gender = Auth::user()->gender;
-        $app_field->Mobile_No = trim($this->mobile);
-        $app_field->DOB = trim($this->Dob);
-        $app_field->Applied_Date = NULL;
-        $app_field->Total_Amount = $this->Amount;
-        $app_field->Amount_Paid = 0;
-        $app_field->Balance = 0;
-        $app_field->Payment_Mode = 'Not Available';
-        $app_field->Payment_Receipt = 'Not Available';
-        $app_field->Status = 'Received';
-        $app_field->Ack_No = 'Not Available';
-        $app_field->Ack_File = 'Not Available';
-        $app_field->Document_No = 'Not Available';
-        $app_field->Message = trim($this->Description);
-        $app_field->Consent = $consent;
-        $app_field->Doc_File = $this->New_File != Null ? $this->New_File : 'Not Available';
-        $app_field->Delivered_Date = NULL;
-        $app_field->Applicant_Image = Auth::user()->profile_image;
-        $app_field->save();
-
-        $notification = array(
-            'message' => 'Application Submitted Successfully',
-            'info-type' => 'success'
-        );
-        return redirect()->route('acknowledgment', $this->App_Id)->with($notification);
     }
+
+    // Helper: File Upload Handling
+    private function uploadFile()
+    {
+        $extension = $this->File->getClientOriginalExtension();
+        $path = 'Client_DB/' . Auth::user()->Client_Id . '/' . $this->Name . '/Documents';
+        $filename = 'Doc_' . time() . '.' . $extension;
+        return $this->File->storePubliclyAs($path, $filename, 'public');
+    }
+    // ✅ Add the missing method
+    public function CompleteApplication()
+    {
+        $this->Signed = true;  // Mark application as completed
+        session()->flash('SuccessMsg', 'Document Concent Signed!');
+    }
+    // Helper: Dynamic Consent Generation
+    public function prepareConsent()
+    {
+        $this->ConsentMatter = "I, {$this->Name} (C/o {$this->FatherName}),
+        residing at {$this->Address}, and reachable via phone number {$this->PhoneNo},
+        hereby provide my explicit and voluntary consent for sharing my personal information
+        for the purpose of availing the '{$this->mainServiceName}' service, specifically under
+        the '{$this->ServiceName}' category.
+
+        I acknowledge that:
+        1. My personal information will be used solely for the requested service.
+        2. I have the right to withdraw my consent at any time by written request.
+        3. The information will be handled in accordance with data protection laws.
+        4. This consent is digitally signed and recorded.
+
+        Signed on {$this->DigitalSignature}.
+
+        Sincerely,
+        {$this->Name}";
+    }
+
+
 
     public function ResetFields()
     {
@@ -138,6 +178,13 @@ class UserApplyNowForm extends Component
         $this->Dob = Null;
         $this->Description = Null;
         $this->Read_Consent = Null;
+        $this->disabled = Null;
+        $this->DigitalSignature = Null;
+        $this->Signed = false;
+        $this->Recived = Null;
+        $this->Branch = Null;
+        $this->New_File = Null;
+        $this->File = Null;
     }
 
     public function Profile()
@@ -158,7 +205,7 @@ class UserApplyNowForm extends Component
     public function render()
     {
         $this->Capitalize();
-
+        $this->dispatchBrowserEvent('close-modal');
         $fetch = SubServices::where('Id', $this->ServiceId)->get();
         foreach ($fetch as $key) {
             $this->ServiceName = $key['Name'];
@@ -171,11 +218,10 @@ class UserApplyNowForm extends Component
             $this->mainServiceName = $key['Name'];
         }
 
-        $this->ConsentMatter = 'Dear Sir I am ' . $this->Name . ' hereby give my explicit consent for sharing my Documents for the following purpose ' . $this->mainServiceName . ',  ' . $this->ServiceName . ' I understand that the information shared will be used only for the purpose mentioned above and will not be shared with any other party without my explicit permission I also understand that I have the right to withdraw my consent at any time and that the withdrawal process will be similar to the consent process Thank you for your assistance Sincerely';
+
 
         // Fetching branch details to populate dropdown
         $this->branches = Branches::all();
-
         $services = MainServices::where('Service_Type', 'Public')->get();
         $applied = ApplyServiceForm::where('Client_Id', Auth::user()->Client_Id)->paginate(10);
         $service_count = $applied->total();
