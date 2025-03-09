@@ -201,6 +201,7 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
         Route::get('/user/home/{id}', 'UserHome')->name('user.home');
         Route::get('/view/profile', 'ViewProfile')->name('view.profile');
         Route::get('/service/history/{mobile_no}', 'MyServiceHistory')->name('history');
+        Route::get('/service/orders/{mobile_no}', 'MyOrderHistory')->name('orders');
         Route::get('/eidt/profile', 'EditProfile')->name('edit.profile');
         Route::get('/about/company', 'About')->name('about.us');
         Route::get('/serivce/list', 'ServiceList')->name('service.list');
@@ -219,6 +220,7 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
 Route::middleware('auth', 'auth.role:user', 'prevent.back')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('/applyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
+        Route::get('/services', 'Services')->name('services');
     });
 });
 Route::controller(UserController::class)->group(function () {
@@ -226,7 +228,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/', 'HomeIndex')->name('home');
     Route::get('/contact_us', 'ContactUs')->name('contact_us');
     Route::get('/about_us', 'AboutUS')->name('aboutus');
-    Route::get('/services', 'Services')->name('services');
+
     Route::get('/teams', 'Teams')->name('teams');
     Route::get('/testimonials', 'Testimonials')->name('testimonials');
     Route::get('/features', 'Feature')->name('features');

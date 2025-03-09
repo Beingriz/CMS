@@ -7,7 +7,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ route('services') }}">Services</a></li>
+                        <li class="breadcrumb-item active"><a href="{{ route('service.list') }}">Services</a></li>
                         <li class="breadcrumb-item active"><a href="{{ route('history', Auth::user()->mobile_no) }}">My
                                 History</a></li>
                     </ol>
@@ -39,11 +39,10 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
-
-                            <thead class="table-light text-center">
+                        <table class="table table-hover table-striped table-bordered align-middle">
+                            <thead class="table-dark text-center">
                                 <tr>
-                                    <th>SlNo</th>
+                                    <th>#</th>
                                     <th>Applied</th>
                                     <th>Name</th>
                                     <th>Mobile</th>
@@ -54,69 +53,58 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center">
                                 @forelse($Services as $data)
                                     <tr>
                                         <td>{{ $Services->firstItem() + $loop->index }}</td>
-                                        <td class="text-wrap">
-                                            {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
                                         <td>{{ $data->Name }}</td>
                                         <td>{{ $data->Mobile_No }}</td>
                                         <td>{{ $data->Application }}</td>
-                                        <td>{{ $data->Application_Type }}</td>
-                                        <td>{{ $data->Message }}</td>
-                                        <td>{{ !empty($data->Consent) ? 'Yes' : 'No' }}</td>
+                                        <td><span class="badge bg-info">{{ $data->Application_Type }}</span></td>
+                                        <td class="text-truncate" style="max-width: 150px;" title="{{ $data->Message }}">
+                                            {{ Str::limit($data->Message, 30) }}
+                                        </td>
                                         <td>
-                                            <div class="btn-group-vertical" role="group"
-                                                aria-label="Vertical button group">
-                                                <div class="btn-group" role="group">
-                                                    <button id="btnGroupVerticalDrop1" type="button"
-                                                        class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
-                                                        Action <i class="mdi mdi-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1"
-                                                        style="">
-                                                        <a class="dropdown-item" title="Open Applicatin"
-                                                            href="{{ route('view.user.application', $data->Id) }}"id="editData">Open</a>
-                                                        @if (!empty($data->Consent))
-                                                            <a class="dropdown-item" title="Open Applicatin"
-                                                                href="{{ route('view.document', $data->Id) }}"id="open">View
-                                                                Document</a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-
+                                            <span class="badge {{ !empty($data->Consent) ? 'bg-success' : 'bg-danger' }}">
+                                                {{ !empty($data->Consent) ? 'Yes' : 'No' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('view.user.application', $data->Id) }}">
+                                                            <i class="fas fa-folder-open"></i> Open Application
+                                                        </a>
+                                                    </li>
+                                                    @if (!empty($data->Consent))
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('view.document', $data->Id) }}">
+                                                                <i class="fas fa-file-alt"></i> View Document
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                </ul>
                                             </div>
                                         </td>
-
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="11">
-                                            <img class=" avatar-xl" alt="No Result"
-                                                src="{{ asset('storage/no_result.png') }}">
-                                            <p>No Result Found</p>
+                                        <td colspan="9" class="text-center">
+                                            <img class="img-fluid" width="200" alt="No Result" src="{{ asset('storage/no_result.png') }}">
+                                            <p class="mt-2 text-muted">No Results Found</p>
                                         </td>
                                     </tr>
-                                @endforelse()
+                                @endforelse
                             </tbody>
-
                         </table>
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-md-8">
-                                <p class="text-muted">Showing {{ count($Services) }} of {{ $Services->total() }}
-                                    entries</p>
-                            </div>
-                            {{-- <span>{{$services->links()}}</span> --}}
-                            <div class="col-md-4">
-                                <span class="pagination pagination-rounded float-end">
-                                    {{ $Services->links() }}
-                                </span>
-                            </div>
-                        </div>
-
                     </div>
+
 
                 </div>
             </div>

@@ -30,9 +30,15 @@
 
 
                 <li>
-                    <a href="{{ route('history', Auth::user()->mobile_no) }}">
+                    <a href="{{ route('orders', Auth::user()->mobile_no) }}">
                         <i class="ri-lock-unlock-line align-middle me-1"></i>
                         <span>My Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('history', Auth::user()->mobile_no) }}">
+                        <i class="ri-lock-unlock-line align-middle me-1"></i>
+                        <span>Service History</span>
                     </a>
                 </li>
                 <li>

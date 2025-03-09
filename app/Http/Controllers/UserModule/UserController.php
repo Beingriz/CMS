@@ -11,6 +11,7 @@ use App\Models\Carousel_DB;
 use App\Models\Feedback;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
+use App\Models\QuickApply;
 use App\Models\User;
 use App\Models\UserTopBar;
 use App\Traits\RightInsightTrait;
@@ -177,6 +178,10 @@ class UserController extends Controller
     {
         return view('user.user_account.pages.user_service_history', ['id' => $id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
+    public function MyOrderHistory($id)
+    {
+        return view('user.user_account.pages.user_order_history', ['id' => $id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
+    }
 
     public function ServiceList()
     {
@@ -238,13 +243,13 @@ class UserController extends Controller
     {
         return view('user.user_account.pages.feedback_form', ['Id' => $Id], ['services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
-    public function Track($Id)
+    public function Track($id)
     {
-        $records = ApplyServiceForm::where('Id', $Id)->get();
-        $applied_on = ApplyServiceForm::where('id', $Id)->latest('created_at')->first();
+        $records = QuickApply::where('id', $id)->get();
+        $applied_on = QuickApply::where('id', $id)->latest('created_at')->first();
         $time =  Carbon::parse($applied_on['created_at'])->diffForHumans();
 
-        return view('user.user_account.pages.track_application', ['time' => $time, 'records' => $records, 'Id' => $Id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
+        return view('user.user_account.pages.track_application', ['time' => $time, 'records' => $records, 'Id' => $id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
     public function viewApplication($Id)
     {

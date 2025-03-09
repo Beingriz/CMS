@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 class ServiceHistory extends Component
 {
     use WithPagination;
-    protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme = 'bootstrap';  
     public $Id, $service_count, $available;
     public function mount($id)
     {
