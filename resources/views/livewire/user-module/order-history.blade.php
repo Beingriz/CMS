@@ -48,7 +48,7 @@
                                     <th>Category</th>
                                     <th>Status</th>
                                     <th>Consent</th>
-                                    {{-- <th>Action</th> --}}
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,22 +67,26 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-{{ !empty($data->user_consent) ? 'info' : 'secondary' }}">
-                                                {{ !empty($data->user_consent) ? 'Yes' : 'No' }}
+                                                {{ ($data->user_consent != 'No Document Shared') ? 'Yes' : 'No' }}
                                             </span>
                                         </td>
-                                        {{-- <td>
+                                        <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                     Actions <i class="mdi mdi-chevron-down"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="{{ route('view.user.application', $data->id) }}">📂 Open</a></li>
-                                                    @if (!empty($data->Consent))
+                                                    <li><a class="dropdown-item" href="{{ route('track', $data->id) }}">📂 Track</a></li>
+                                                    @if ($data->user_consent != 'No Document Shared')
                                                         <li><a class="dropdown-item" href="{{ route('view.document', $data->id) }}">📄 View Document</a></li>
                                                     @endif
+                                                    <li>
+                                                        <a href="{{route('delete.order', $data->id)}}" class="dropdown-item text-danger" id="delete"> <i class="bi bi-trash"></i> Delete
+                                                        </a>
+                                                    </li>
                                                 </ul>
                                             </div>
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>

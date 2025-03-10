@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\AdminModule\Dashboard;
 
 use App\Models\Application;
-use App\Models\ApplyServiceForm;
 use App\Models\Callback_Db;
 use App\Models\CreditLedger;
 use App\Models\Debit;
 use App\Models\Feedback;
+use App\Models\QuickApply;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -255,8 +255,8 @@ class DashboardInsight extends Component
             ->select(DB::raw('COUNT(*) as officeApp'))
             ->value('officeApp');
 
-            $this->directApp = ApplyServiceForm::when($this->isBranchAdminOrOperator, function ($query) {
-                $query->where('Branch_Id', $this->Branch_Id);
+            $this->directApp = QuickApply::when($this->isBranchAdminOrOperator, function ($query) {
+                $query->where('branch_id', $this->Branch_Id);
             })
             ->select(DB::raw('COUNT(*) as directApp'))
             ->value('directApp');
@@ -299,8 +299,8 @@ class DashboardInsight extends Component
         ->whereDate('created_at',  today())
         ->paginate(10);
 
-        $lead = ApplyServiceForm::when($this->isBranchAdminOrOperator, function ($query) {
-            $query->where('Branch_Id', $this->Branch_Id);
+        $lead = QuickApply::when($this->isBranchAdminOrOperator, function ($query) {
+            $query->where('branch_id', $this->Branch_Id);
         })
         ->whereDate('created_at',  today())
         ->paginate(10);

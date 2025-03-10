@@ -178,9 +178,15 @@ class UserController extends Controller
     {
         return view('user.user_account.pages.user_service_history', ['id' => $id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
-    public function MyOrderHistory($id)
+    public function MyOrderHistory($client_id)
     {
-        return view('user.user_account.pages.user_order_history', ['id' => $id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
+        $deleteId ='';
+        return view('user.user_account.pages.user_order_history', ['deleteId'=>$deleteId,'client_id' => $client_id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
+    }
+    public function deleteUserOrder($client_id)
+    {
+        $deleteId = $client_id;
+        return view('user.user_account.pages.user_order_history', ['deleteId'=>$deleteId,'client_id' => $client_id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
 
     public function ServiceList()
@@ -243,6 +249,10 @@ class UserController extends Controller
     {
         return view('user.user_account.pages.feedback_form', ['Id' => $Id], ['services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
+    public function Follow()
+    {
+        return view('user.user_account.pages.follow_us', ['services_count' => $this->services_count, 'service_list' => $this->services_list]);
+    }
     public function Track($id)
     {
         $records = QuickApply::where('id', $id)->get();
@@ -251,6 +261,7 @@ class UserController extends Controller
 
         return view('user.user_account.pages.track_application', ['time' => $time, 'records' => $records, 'Id' => $id, 'services_count' => $this->services_count, 'service_list' => $this->services_list]);
     }
+
     public function viewApplication($Id)
     {
         $records = Application::where('Id', $Id)->get();
@@ -261,7 +272,7 @@ class UserController extends Controller
     }
     public function viewDocument($Id)
     {
-        $record = ApplyServiceForm::where('Id', $Id)->get();
+        $record = QuickApply::where('id', $Id)->get();
         $file = '';
         foreach ($record as $item) {
             if (!empty($item->Consent)) {

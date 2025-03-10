@@ -56,7 +56,7 @@
                                     <p class="m-b-20 text-muted font-14">The provided document and application will undergo a validation process.</p>
                                     <a href="{{route('track',$App_Id)}}" class="btn btn-primary btn-rounded waves-effect waves-light m-t-5">Track Application</a>
 
-                                    <span class="cd-date">{{$date->addDays(2)->format('d-M-Y')}}</span>
+                                    <span class="cd-date text-primary">{{$date->addDays(1)->format('d-M-Y')}}</span>
                                 </div> <!-- cd-timeline-content -->
                             </div> <!-- cd-timeline-block -->
 
@@ -68,7 +68,7 @@
                                 <div class="cd-timeline-content">
                                     <h3>Processing.</h3>
                                     <p class="mb-0 text-muted font-14">After succesfull Validation of Payment and Documents the applied services will be processed and Delivered within the timeline.</a></p>
-                                    <span class="cd-date">{{$date->addDays(4)->format('d-M-Y')}}</span>
+                                    <span class="cd-date text-success">{{$date->addDays(1)->format('d-M-Y')}}</span>
                                 </div> <!-- cd-timeline-content -->
                             </div> <!-- cd-timeline-block -->
 
@@ -82,7 +82,7 @@
                                     <p class="m-b-20 text-muted font-14">On Successfull Completion of applied service from the concern department our team will contact you back on the Registered Mobile Number for the Delivery. </p>
                                     <img src="assets/images/small/img-1.jpg" alt="" class="rounded" style="width: 120px;">
                                     <img src="assets/images/small/img-2.jpg" alt="" class="rounded" style="width: 120px;">
-                                    <span class="cd-date">Updated soon...</span>
+                                    <span class="cd-date text-warning">Date will Confirm soon...</span>
                                 </div> <!-- cd-timeline-content -->
                             </div> <!-- cd-timeline-block -->
 
@@ -97,8 +97,8 @@
 
 
 
-                                    <button type="button" class="btn btn-primary btn-rounded waves-effect waves-light">Feedback</button>
-                                    <span class="cd-date">Updated Soon..</span>
+                                    <a href="{{ route('feedback', $App_Id) }}" class="btn btn-success btn-rounded waves-effect waves-light">Feedback</a>
+                                    <span class="cd-date text-danger">Date will confirm Soon..</span>
                                 </div> <!-- cd-timeline-content -->
                             </div> <!-- cd-timeline-block -->
                         </section> <!-- cd-timeline -->
@@ -110,3 +110,4 @@
 </div>
 
 @endsection
+

@@ -200,8 +200,8 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
         Route::get('/user/dashboard', 'UserDashboard')->name('user.dashboard');
         Route::get('/user/home/{id}', 'UserHome')->name('user.home');
         Route::get('/view/profile', 'ViewProfile')->name('view.profile');
-        Route::get('/service/history/{mobile_no}', 'MyServiceHistory')->name('history');
-        Route::get('/service/orders/{mobile_no}', 'MyOrderHistory')->name('orders');
+        Route::get('/service/history/{client_id}', 'MyServiceHistory')->name('history');
+        Route::get('/service/orders/{client_id}', 'MyOrderHistory')->name('orders');
         Route::get('/eidt/profile', 'EditProfile')->name('edit.profile');
         Route::get('/about/company', 'About')->name('about.us');
         Route::get('/serivce/list', 'ServiceList')->name('service.list');
@@ -209,9 +209,11 @@ Route::middleware('auth', 'auth.role:user')->group(function () {
         Route::get('/applyNow/{id}/{price}', 'ApplyNow')->name('apply.now');
         Route::get('/acknowledgment/{id}', 'Acknowledgment')->name('acknowledgment');
         Route::get('/track/{id}', 'Track')->name('track');
+        Route::get('/delete/order/{id}', 'deleteUserOrder')->name('delete.order');
         Route::get('/view/application{id}', 'viewApplication')->name('view.user.application');
         Route::get('/view/document/{id}', 'viewDocument')->name('view.document');
         Route::get('/feedback/{id}', 'Feedback')->name('feedback');
+        Route::get('/follow', 'Follow')->name('follow');
         Route::get('/callback/{id}/{service}/{service_type}', 'CallBack')->name('callback');
         Route::get('/user/logout', 'destroy')->name('user.logout');
 

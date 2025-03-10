@@ -105,7 +105,6 @@
                             <!-- Display Selected File -->
                             @if ($File)
                                 <div class="col-md-12">
-                                    <strong>Selected File:</strong> {{ $File->getClientOriginalName() }}
                                     @if (in_array($File->getClientOriginalExtension(), ['jpg', 'png']))
                                         <img src="{{ $File->temporaryUrl() }}" alt="Preview" width="100" class="mt-2 rounded shadow">
                                     @endif

@@ -45,67 +45,50 @@
 
 
     {{-- Care about people's approval and you will be their prisoner. --}}
-    <div class="row">
+    <div class="row ">
         <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Feedback Form</h4>
-                    <p class="card-title-desc"></p>
-                    <div class="row mb-3">
-                        <label for="example-text-input" class="col-sm-2 col-form-label">Application Id</label>
-                        <div class="col-sm-10">
-                            <label for="example-text-input" class="col-sm-10 col-form-label">{{ $FB_Id }}</label>
-                        </div>
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-center fw-bold text-primary">Feedback Form</h4>
+                    <p class="text-center text-muted">We value your feedback! 🚀</p>
+
+                    {{-- Application ID --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Application ID</label>
+                        <div class="form-control bg-light">{{ $FB_Id }}</div>
                     </div>
-                    <!-- end row -->
+
+                    {{-- Feedback Form --}}
                     <form wire:submit.prevent="Feedback">
                         @csrf
 
-
-                        <div class="row mb-3">
-                            <label for="Name" class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" placeholder="Your Name" wire:model="Name"
-                                    id="Name">
-                                <span class="error">
-                                    @error('Name')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
+                        {{-- Name --}}
+                        <div class="mb-3">
+                            <label for="Name" class="form-label fw-semibold">Your Name</label>
+                            <input type="text" id="Name" class="form-control"
+                                placeholder="Enter your name" wire:model="Name">
+                            @error('Name') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- end row -->
-                        <div class="row mb-3">
-                            <label for="Description" class="col-sm-2 col-form-label">Message</label>
-                            <div class="col-sm-10">
-                                <textarea id="Description" wire:model="Message" name="Description" class="form-control"
-                                    placeholder="Hey! {{ $Name }}!, Feedback is the gift that keeps on giving, helping us to grow and thrive in all aspects of life."
-                                    rows="7" id="Description"></textarea>
-                                <span class="error">
-                                    @error('Message')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
+                        {{-- Message --}}
+                        <div class="mb-3">
+                            <label for="Description" class="form-label fw-semibold">Your Feedback</label>
+                            <textarea id="Description" wire:model="Message" name="Description"
+                                class="form-control" placeholder="Share your thoughts with us..."
+                                rows="5"></textarea>
+                            @error('Message') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
 
-                        <div class="form-data-buttons"> {{-- Buttons --}}
-                            <div class="row">
-                                <div class="col-100 text-align-center">
-                                    <button type="submit" value="submit" name="submit"
-                                        class="btn btn-primary btn-rounded btn-sm">Submit</button>
-
-                                </div>
-                            </div>
+                        {{-- Submit Button --}}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-send"></i> Submit Feedback
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div> <!-- end col -->
-
-
-        {{-- Consent Details End --}}
-
+        </div>
     </div>
+
 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\AdminModule\Operations;
 
 use App\Models\ApplyServiceForm;
 use App\Models\EnquiryDB;
+use App\Models\QuickApply;
 use Livewire\Component;
 
 class HeaderNotification extends Component
@@ -33,8 +34,8 @@ class HeaderNotification extends Component
             ->where('created_at', '>=', $twoDaysAgo) // Only include records created in the last 2 days
             ->count();
 
-        $this->applyNowCount = ApplyServiceForm::where('Branch_Id', $branchId)
-            ->where('Status', 'Submitted')
+        $this->applyNowCount = QuickApply::where('branch_id', $branchId)
+            ->where('status', 'Received')
             ->where('created_at', '>=', $twoDaysAgo) // Only include records created in the last 2 days
             ->count();
 
@@ -48,8 +49,8 @@ class HeaderNotification extends Component
                 ->get()
                 ->toArray(),
 
-            ApplyServiceForm::where('Branch_Id', $branchId)
-                ->where('Status', 'Submitted')
+            QuickApply::where('branch_id', $branchId)
+                ->where('status', 'Received')
                 ->where('created_at', '>=', $twoDaysAgo) // Filter by created_at
                 ->latest()
                 ->take(5)

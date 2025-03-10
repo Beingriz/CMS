@@ -173,7 +173,34 @@
 
     <!-- Template Javascript -->
     <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+    <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+    window.addEventListener('swal:success', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            confirmButtonText: event.detail.confirmButtonText,
+        }).then(() => {
+            // ✅ Redirect ONLY after user clicks OK
+            window.location.href = event.detail.redirectUrl;
+        });
+    });
+    window.addEventListener('swal:delete', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            confirmButtonText: event.detail.confirmButtonText,
+        }).then(() => {
+            // ✅ Redirect ONLY after user clicks OK
+            window.location.href = event.detail.redirectUrl;
+        });
+    });
+
+    </script>
 
 </body>
 

@@ -30,13 +30,13 @@
 
 
                 <li>
-                    <a href="{{ route('orders', Auth::user()->mobile_no) }}">
+                    <a href="{{ route('orders', Auth::user()->Client_Id) }}">
                         <i class="ri-lock-unlock-line align-middle me-1"></i>
                         <span>My Orders</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('history', Auth::user()->mobile_no) }}">
+                    <a href="{{ route('history', Auth::user()->Client_Id) }}">
                         <i class="ri-lock-unlock-line align-middle me-1"></i>
                         <span>Service History</span>
                     </a>
@@ -66,6 +66,12 @@
                     <a href="{{ route('feedback', Auth::user()->id) }}">
                         <i class="ri-feedback-fill"></i>
                         <span>Feedback</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('follow') }}">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Follow Us</span>
                     </a>
                 </li>
                 <li>

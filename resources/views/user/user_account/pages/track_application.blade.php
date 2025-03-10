@@ -23,168 +23,67 @@
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-lg-8 col-md-12">
-                    <div class="card">
-                        <div class="card-header d-sm-flex align-items-center justify-content-between">
-                            <h5 class="card-title ">Track Application</h5>
-                            <h5 class="card-title ">Applied {{ $time }}</h5>
-                        </div>
-                        <div class="card-body">
-                            @foreach ($records as $item)
-                                <div class="row ">
-                                    <div class="col-md-6 col-lg-6">
-                                        {{-- ID --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Application Id</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="">{{ $Id }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Name --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Name</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Delivered_Date) ? 'text-success' : 'text-primary' }}">{{ $item->Name }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Mobile Number --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Mobile Number</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="">{{ $item->Mobile_No }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Date of Birth --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Date of Birth</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="">{{ $item->Dob }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Father Name --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Father Name</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="">{{ $item->Relative_Name }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Service --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Service</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="">{{ $item->Application }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Service Type --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Service Type</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Delivered_Date) ? $item->Delivered_Date : 'text-info' }}">{{ $item->Application_Type }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Status --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Status</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Status) ? 'text-success' : 'text-danger' }}">{{ $item->Status }}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6 col-lg-6">
-                                        {{-- Acknowledgment --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Acknowledgment No</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Ack_No) ? 'text-success' : 'text-danger' }}">{{ !empty($item->Ack_No) ? strtoupper( $item->Ack_No) : 'Not Available' }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Document --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Document No</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <?php
-                                                    $Doc_No = $item->Document_No;
-                                                    $visiblePart = substr($Doc_No, -4); // Get the last 4 characters
-                                                    $Doc_No  =  strtoupper(str_pad($visiblePart, strlen($Doc_No), 'x', STR_PAD_LEFT));
-                                                ?>
-                                                <label
-                                                    class="{{ !empty($Doc_No) ? 'text-success' : 'text-danger' }}">{{ !empty($Doc_No) ? $Doc_No : 'Not Available' }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Total Amount --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Total Amount</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Total_Amount) ? $item->Total_Amount : 'text-danger' }}">{{ !empty($item->Total_Amount) ? $item->Total_Amount : 'Not Available' }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Amount Paid --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Amount Paid</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Amount_Paid) ? $item->Amount_Paid : 'text-danger' }}">{{ !empty($item->Amount_Paid) ? $item->Amount_Paid : 'Not Available' }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Balance --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Balance</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Balance) ? $item->Balance : 'text-danger' }}">{{ !empty($item->Balance) ? $item->Balance : 'Not Available' }}</label>
-                                            </div>
-                                        </div>
-                                        {{-- Updated on --}}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="">Updated on</label>
-                                            </div>
-                                            <div class="col-6">
-                                                <label
-                                                    class="{{ !empty($item->Delivered_Date) ? 'text-info bg-light' : 'text-danger' }}">{{ !empty($item->Delivered_Date) ? \Carbon\Carbon::parse($item->Delivered_Date)->diffForHumans().' on '. \Carbon\Carbon::parse($item->Delivered_Date)->format('d-m-Y') : 'Not Available' }}</label>
-                                            </div>
-                                        </div>
+                <div class="card border-0 shadow-lg rounded-4">
+                    <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0"><i class="bi bi-search"></i> Track Application</h5>
+                        <h6 class="mb-0 text-warning"><i class="bi bi-clock-history"></i> Applied {{ $time }}</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        @foreach ($records as $item)
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded bg-light shadow-sm">
+                                        <h6 class="fw-bold text-primary"><i class="bi bi-person"></i> Personal Details</h6>
+                                        <hr>
+                                        <p><strong>🆔 Application ID:</strong> <span class="badge bg-info">{{ $Id }}</span></p>
+                                        <p><strong>👤 Name:</strong> <span class="fw-bold text-dark">{{ $item->name }}</span></p>
+                                        <p><strong>📞 Mobile:</strong> <span class="text-muted">{{ $item->mobile_no }}</span></p>
+                                        <p><strong>🎂 Date of Birth:</strong> <span class="text-muted">{{ $item->dob }}</span></p>
+                                        <p><strong>👨‍👩‍👦 Father Name:</strong> <span class="text-muted">{{ $item->relative_name }}</span></p>
                                     </div>
                                 </div>
-                                Applied {{ $time }}
-                                <a class="btn btn-sn btn-info btn-rounded" href='{{route('history', Auth::user()->mobile_no)}}'>Goto My Orders</a>
-                            @endforeach
 
-                        </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded bg-light shadow-sm">
+                                        <h6 class="fw-bold text-primary"><i class="bi bi-gear"></i> Application Details</h6>
+                                        <hr>
+                                        <p><strong>📌 Service:</strong> <span class="fw-bold">{{ $item->application }}</span></p>
+                                        <p><strong>🔖 Type:</strong> <span class="text-success ">{{ $item->application_type }}</span></p>
+                                        <p><strong>🔖 Document shared:</strong>
+                                            @if (!empty($item->file) && file_exists(public_path('storage/' . $item->file)))
+                                                <a href="{{ route('view.document', $item->id) }}" class="text-success text-decoration-none">
+                                                    📂 View Document
+                                                </a>
+                                            @else
+                                                <span class="badge bg-danger">No Document Available</span>
+                                            @endif
+                                        </p>
+                                        <p><strong>📆 Updated On:</strong>
+                                            <span class="text-danger">
+                                                {{ !empty($item->updated_at) ? \Carbon\Carbon::parse($item->updated_at)->diffForHumans().' on '. \Carbon\Carbon::parse($item->Delivered_Date)->format('d-m-Y') : 'Not Available' }}
+                                            </span>
+                                        </p>
+                                        <p><strong>📋 Status:</strong>
+                                            <span class="badge {{ $item->status == 'Completed' ? 'bg-success' : 'bg-danger' }}">
+                                                {{ $item->status }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a class="btn btn-warning btn-lg px-4 shadow" href="{{ route('history', Auth::user()->Client_Id) }}">
+                                    📜 Service History
+                                </a>
+                                <a class="btn btn-success btn-lg px-4 shadow" href="{{ route('orders', Auth::user()->Client_Id) }}">
+                                    📜 orders
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
