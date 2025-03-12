@@ -6,9 +6,12 @@ use App\Models\About_Us;
 use App\Models\Application;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
+
 
 class AboutUsForm extends Component
 {
@@ -27,6 +30,7 @@ class AboutUsForm extends Component
         'Description' => 'Description should be less than 50 characters',
         'Image' => 'Image  Cannot be empty',
     ];
+    protected $listeners = ['delete' => 'delete', 'edit' => 'edit', 'select' => 'select'];
 
     public function updated($propertyName)
     {
@@ -40,14 +44,7 @@ class AboutUsForm extends Component
         $this->Clients = Application::all()->count();
         $this->Delivered = Application::where('Status', '=', 'Delivered to Client')->get()->count();
 
-        //Edit Id from Controller to Make Edit on Livewire
-        if (!empty($EditData)) {
-            $this->Edit($EditData);
-        }
-        //Select ID From Controller
-        if (!empty($SelectId)) {
-            $this->Select($SelectId);
-        }
+
     }
     public function ResetFields()
     {
@@ -58,34 +55,62 @@ class AboutUsForm extends Component
         $this->Iteration++;
         $this->Update = 0;
     }
+
     public function Save()
     {
-        # code...
         $this->validate();
-        $save = new About_Us();
-        $save->Id = $this->Id;
-        $save->Tittle = $this->Tittle;
-        $save->Description = $this->Description;
-        $save->Total_Clients = $this->Clients;
-        $save->Delivered = $this->Delivered;
-        if (!empty($this->Image)) {
-            $extension = $this->Image->getClientOriginalExtension();
-            $path = 'About Us/';
-            $filename = 'AboutUs ' . $this->Tittle . '_' . time() . '.' . $extension;
-            $url = $this->Image->storePubliclyAs($path, $filename, 'public');
-            $this->New_Image = $url;
+
+        try {
+            // Process Image Upload
+            $imagePath = null;
+            if (!empty($this->Image)) {
+                $filename = 'AboutUs_' . Str::slug($this->Tittle) . '_' . time() . '.' . $this->Image->getClientOriginalExtension();
+                $imagePath = $this->Image->storePubliclyAs('About Us/', $filename, 'public');
+            }
+
+            // Save Data to Database
+            $data =  new About_Us();
+            $data->Id = $this->Id;
+            $data->Tittle = $this->Tittle;
+            $data->Description = $this->Description;
+            $data->Total_Clients = $this->Clients;
+            $data->Delivered = $this->Delivered;
+            $data->Image = $imagePath;
+            $data->save();
+
+
+            // Reset Form Fields
+            $this->ResetFields();
+            $this->Update = 0;
+
+            // Show success message without page refresh
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Success!',
+                'text' => 'New About Us Added Successfully.',
+                'icon' => 'success',
+                'timer' => 3000,
+                'redirect_url' => route('new.about_us'),
+
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Save Error: " . $e->getMessage());
+
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Something went wrong while saving. Please try again.',
+                'icon' => 'error',
+                'timer' => 3000,
+                'redirect_url' => route('new.about_us'),
+            ]);
         }
-        $save->Image = $this->New_Image;
-        $save->save();
-        $this->ResetFields();
-        $this->Update = 0;
-        $notification = array(
-            'message' => 'New About Us Added Succesfully!',
-            'alert-type' => 'success',
-        );
-        return redirect()->route('new.about_us')->with($notification);
     }
-    public function Edit($Id)
+    public function autoCapitalize()
+    {
+        $this->Tittle = ucwords($this->Tittle);
+        $this->Description = ucwords($this->Description);
+
+    }
+    public function edit($Id)
     {
         $fetch = About_Us::find($Id);
         $this->Id = $Id;
@@ -158,27 +183,90 @@ class AboutUsForm extends Component
         $this->ResetFields();
         $this->Update = 0;
     }
-    public function Select($Id)
+    public function select($Id)
     {
-        $data = array();
-        $data['Selected'] = 'No';
-        DB::table('about_us')->Update($data);
-        $data['Selected'] = 'Yes';
-        $Update = DB::table('about_us')->where('Id', '=', $Id)->Update($data);
-    }
-    public function Delete($Id)
-    {
-        $fetch = About_Us::find($Id);
-        $image = $fetch['Image'];
-        if (Storage::disk('public')->exists($image)) // Check for existing File
-        {
-            unlink(storage_path('app/public/' . $image)); // Deleting Existing File
+        try {
+            // Unselect all records first
+            About_Us::query()->update(['Selected' => 'No']);
+
+            // Select the new record
+            $update = About_Us::where('Id', $Id)->update(['Selected' => 'Yes']);
+
+            if ($update) {
+                $this->dispatchBrowserEvent('swal:success', [
+                    'title' => 'Selection Updated!',
+                    'text' => 'The selected About Us record has been updated.',
+                    'icon' => 'success',
+                    'redirect_url' => route('new.about_us'),
+
+                ]);
+
+                // Refresh the Livewire component to reflect changes
+                $this->emit('refreshComponent');
+            }
+        } catch (\Exception $e) {
+            \Log::error("Select Error: " . $e->getMessage());
+
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Something went wrong. Please try again.',
+                'icon' => 'error',
+                'redirect_url' => route('new.about_us'),
+
+            ]);
         }
-        About_Us::Where('Id', '=', $Id)->delete();
-        session()->flash('SuccessMsg', 'Record Deleted Successfully!');
     }
+
+
+    public function delete($Id)
+    {
+        try {
+            $fetch = About_Us::find($Id);
+
+            if (!$fetch) {
+                $this->dispatchBrowserEvent('swal:error', [
+                    'title' => 'Not Found!',
+                    'text' => 'The record does not exist.',
+                    'icon' => 'error',
+                ]);
+                return;
+            }
+
+            // Delete Image if Exists
+            if ($fetch->Image && Storage::disk('public')->exists($fetch->Image)) {
+                Storage::disk('public')->delete($fetch->Image);
+            }
+
+            // Delete Record
+            $delete = About_Us::where('Id', $Id)->delete();
+
+            // Success Message
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Deleted!',
+                'text' => 'Record deleted successfully.',
+                'icon' => 'success',
+                'redirect_url' => route('new.about_us'),
+                'timer' => 3000,
+            ]);
+
+            // Refresh Livewire Component
+            $this->emit('refreshComponent');
+        } catch (\Exception $e) {
+            \Log::error("Delete Error: " . $e->getMessage());
+
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Something went wrong. Please try again.',
+                'icon' => 'error',
+                'redirect_url' => route('new.about_us'),
+                'timer' => 3000,
+            ]);
+        }
+    }
+
     public function render()
     {
+        $this->autoCapitalize();
         $Records = About_Us::all();
         return view('livewire.admin-module.home-page.about-us-form', compact('Records'));
     }

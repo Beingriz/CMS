@@ -38,7 +38,7 @@
 
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="{{ url('admin.home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('new.application') }}">New Application</a></li>
             <li class="breadcrumb-item"><a href="{{ route('new.about_us') }}">New About-Us</a></li>
         </ol>
@@ -46,184 +46,146 @@
 
 
     <div class="row">
+        <!-- About Us Form Section -->
         <div class="col-lg-5">
-            <div class="card">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="fas fa-info-circle me-2"></i> <h5 class="mb-0">About Us</h5>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">About Us</h4>
-                    <p class="card-title-desc">Short Description about Company</p>
-                    <div class="row mb-2">
-                        <div class="col-sm-10">
-                            <label for="example-text-input" class="col-sm-6 col-form-label">{{ $Id }}</label>
-                        </div>
+                    <p class="text-muted">Provide a short description about the company.</p>
+
+                    <div class="mb-3">
+                        <label class="text-muted"><strong>ID:</strong> {{ $Id }}</label>
                     </div>
-                    <!-- end row -->
+
                     <form wire:submit.prevent="Save">
-
-                        <div class="row mb-3">
-                            <label for="Tittle" class="col-sm-3 col-form-label">Tittle </label>
-                            <div class="col-sm-9">
-                                <input class="form-control" type="text" placeholder="Tittle Name" wire:model="Tittle"
-                                    id="Tittle">
-                                <span class="error">
-                                    @error('Tittle')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="Tittle" class="form-label fw-bold">Title</label>
+                            <input class="form-control " type="text" placeholder="Enter Title" wire:model.lazy="Tittle" id="Tittle">
+                            @error('Tittle') <span class="text-danger fw-bold">{{ $message }}</span> @enderror
                         </div>
-                        <!-- end row -->
-                        <div class="row mb-3">
-                            <label for="Description" class="col-sm-3 col-form-label">Description</label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" rows="10" placeholder="Description" wire:model="Description" id="Description"></textarea>
-                                <span class="error">
-                                    @error('Description')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="Description" class="form-label fw-bold">Description</label>
+                            <textarea class="form-control " rows="4" placeholder="Enter description..." wire:model.lazy="Description" id="Description"></textarea>
+                            @error('Description') <span class="text-danger fw-bold">{{ $message }}</span> @enderror
                         </div>
-                        <!-- end row -->
 
-                        {{-- Profile Image --}}
-                        <div class="row mb-3">
-                            <label for="Image" class="col-sm-3 col-form-label">Image</label>
-                            <div class="col-sm-9">
-                                <input class="form-control" type="file" id="Image{$Iteration}"
-                                    accept="image/jpeg, image/png" wire:model="Image" id="Image">
-                                <span class="error">
-                                    @error('Image')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-
-                            </div>
+                        <!-- Image Upload -->
+                        <div class="mb-3">
+                            <label for="Image" class="form-label fw-bold">Upload Image</label>
+                            <input class="form-control " type="file" id="ImageUpload" accept="image/jpeg, image/png" wire:model="Image">
+                            @error('Image') <span class="text-danger fw-bold">{{ $message }}</span> @enderror
                         </div>
-                        {{-- Preview Profile Image --}}
-                        @if (!is_Null($Image))
-                            <div class="row mb-3">
-                                <label for="Image" class="col-sm-3 col-form-label"></label>
-                                <div class="col-lg-8">
-                                    <div wire:loading wire:target="Image">Uploading...</div>
-                                    <img class=" rounded avatar-lg" id="Image{$Iteration}"
-                                        src="{{ $Image->temporaryUrl() }}" alt="Image" />
-                                </div>
-                            </div>
-                        @elseif(!is_Null($Old_Image))
-                            <div class="row mb-3">
-                                <label for="Image" class="col-sm-3 col-form-label"></label>
-                                <div class="col-sm-9">
-                                    <img class=" rounded avatar-lg" src="{{ asset('storage/' . $Old_Image) }}"
-                                        alt="" />
-                                </div>
-                            </div>
-                        @endif
 
-                        <div class="form-data-buttons"> {{-- Buttons --}}
-                            <div class="row">
-                                <div class="col-100">
-                                    @if ($Update == 0)
-                                        <button type="submit" value="submit" name="submit"
-                                            class="btn btn-primary btn-rounded btn-sm">Save</button>
-                                        <a href="#" wire:click.prevent="ResetFields()"
-                                            class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    @elseif($Update == 1)
-                                        <a href="#" wire:click.prevent="Update()"
-                                            class="btn btn-success btn-rounded btn-sm">Update</button>
-                                            <a href="#" wire:click.prevent="ResetFields()"
-                                                class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    @endif
-                                    <a href="" class="btn btn-rounded btn-sm">Cancel</a>
+                        <!-- Image Preview -->
+                        <div class="mb-3 text-center">
+                            @if ($Image)
+                                <div wire:loading wire:target="Image" class="text-info fw-bold">
+                                    <i class="fas fa-spinner fa-spin"></i> Uploading...
                                 </div>
-                            </div>
+                                <img class="rounded border border-primary shadow-lg img-fluid mt-2"
+                                    src="{{ $Image->temporaryUrl() }}"
+                                    alt="Uploaded Image" style="max-width: 100%; height: auto;">
+                            @elseif($Old_Image)
+                                <img class="rounded border border-secondary shadow-lg img-fluid mt-2"
+                                    src="{{ asset('storage/' . $Old_Image) }}"
+                                    alt="Existing Image" style="max-width: 100%; height: auto;">
+                            @endif
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-3 justify-content-center">
+                            @if ($Update == 0)
+                                <button type="submit" class="btn btn-primary px-4 shadow">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <a type="button" class="btn btn-warning text-white px-4 shadow" href="{{ route('new.about_us') }}">
+                                    <i class="fas fa-redo"></i>Reset</a>
+                                </button>
+                            @elseif($Update == 1)
+                                <button type="button" class="btn btn-success px-4 shadow" wire:click.prevent="Update()">
+                                    <i class="fas fa-edit"></i> Update
+                                </button>
+                                <button type="button" class="btn btn-warning text-white px-4 shadow" wire:click.prevent="ResetFields()">
+                                    <i class="fas fa-redo"></i> Reset
+                                </button>
+                            @endif
+                            <a href="{{ route('admin.home') }}" class="btn btn-secondary px-4 shadow">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>
             </div>
         </div> <!-- end col -->
 
+        <!-- About Us Table Section -->
         <div class="col-lg-7">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">About Us</h5>
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white d-flex align-items-center">
+                    <i class="fas fa-table me-2"></i> <h5 class="mb-0">About Us Records</h5>
                 </div>
-                <div class="row">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <p>User Display Slidebar Images for Advertising puropose</p>
-                            <table class="table mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Sl_No</th>
-                                        <th>Tittle</th>
-                                        <th>Description</th>
-                                        <th>Image</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($Records as $key)
-                                        <tr @if ($key->Selected == 'Yes') class="table-success" @endif>
-                                            <td>{{ $Sl++ }}</td>
-                                            <td>{{ $key['Tittle'] }}</td>
-                                            <td>{{ $key['Description'] }}</td>
-                                            <td>
-                                                <img class="avatar-sm" src="{{ url('storage/' . $key->Image) }}"
-                                                    alt="Banner">
-                                            </td>
-                                            </td>
-
-                                            <td>
-                                                <div class="btn-group-vertical" role="group"
-                                                    aria-label="Vertical button group">
-                                                    <div class="btn-group" role="group">
-                                                        <button id="btnGroupVerticalDrop1" type="button"
-                                                            class="btn btn-light dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                            Action <i class="mdi mdi-chevron-down"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu"
-                                                            aria-labelledby="btnGroupVerticalDrop1" style="">
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('edit.aboutus', $key->Id) }}"
-                                                                title="Edit Application" id="editData">Edit</a>
-
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('select.aboutus', $key->Id) }}"
-                                                                id="SelectData" title="Select Record">Select</a>
-
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('delete.aboutus', $key->Id) }}"
-                                                                title="Delete Application" id="delete">Delete</a>
-                                                        </div>
-                                                    </div>
-
+                <div class="card-body">
+                    <p class="text-muted">Manage about us details.</p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($Records as $index => $key)
+                                    <tr class="{{ $key->Selected == 'Yes' ? 'table-success' : '' }}">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $key->Tittle ?? 'N/A' }}</td>
+                                        <td>{{ Str::limit($key->Description, 50) }}</td>
+                                        <td>
+                                            <img class="avatar-sm rounded border border-secondary shadow-sm"
+                                                 src="{{ url('storage/' . $key->Image) }}" alt="Image">
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-cogs"></i> Actions
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item text-primary" funName="edit" recId="{{ $key->Id }}" id="editRecord" >
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a class="dropdown-item text-success" funName="select" recId="{{ $key->Id }}" id="selectRecord" >
+                                                        <i class="fas fa-check"></i> Select
+                                                    </a>
+                                                    <a class="dropdown-item text-danger" funName="delete" recId="{{ $key->Id }}" id="deleteRecord" >
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </a>
                                                 </div>
-
-                                            </td>
-
-
-
-
-
-
-
-
-
-
-
-                                            {{-- <a  class="btn btn-primary btn-rounded btn-sm" href="#" onclick="confirm('Do you want to Edit {{$key->Company_Name}} ?') || event.stopImmediatePropagation()" wire:click.prevent="Edit('{{$key->Id}}')">Edit</a></td> --}}
-                                        </tr>
-                                </tbody>
-                                @endforeach
-                            </table>
-                        </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">
+                                            <strong>No Records Available</strong>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
 
 </div>
 </div>

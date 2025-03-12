@@ -49,6 +49,7 @@ Route::middleware('auth', 'auth.role:admin,branch admin,operator',)->group(funct
         Route::get('/delete/about/us/{id}', 'DeleteAboutUs')->name('delete.aboutus');
         Route::get('/select/about/us/{id}', 'SelectAbout')->name('select.aboutus');
         Route::get('/edit/header/{id}', 'EditHeader')->name('edit.header');
+        Route::get('/select/header/{id}', 'selectHeader')->name('select.header');
         Route::get('/delete/carousel/{id}', 'DeleteCarousel')->name('delete.carousel');
         Route::get('/marketing/dashboard/', 'MarketingDashboard')->name('marketing.dashboard');
         Route::get('/data/migration', 'DataMigration')->name('data.migration');

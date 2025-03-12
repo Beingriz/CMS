@@ -33,6 +33,8 @@
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
+
+
     {{-- My old Website CSS  --}}
     <link href="{{ asset('Bootstrap/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('Bootstrap/css/600.css') }}" rel="stylesheet">
@@ -165,6 +167,8 @@
             }
         @endif
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="{{ asset('backend/assets/js/custome.js') }}"></script>
 
     <script src="{{ asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -178,8 +182,22 @@
     <!-- form wizard init -->
     <script src="{{ asset('backend/assets/js/pages/form-wizard.init.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.addEventListener('swal:success', event => {
+                Swal.fire({
+                    title: event.detail.title,
+                    text: event.detail.text,
+                    icon: event.detail.icon,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        window.location.href = event.detail.redirect_url; // Redirect after alert
+                    }
+                });
+            });
+        });
+    </script>
 
 
 </body>

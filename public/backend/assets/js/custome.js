@@ -8,7 +8,88 @@ function hideLoading() {
 }
 
 // Generic SweetAlert Confirmation Functions
-function confirmAction(link, title, text, icon, confirmText) {
+function confirmAction(link = null, title, text, icon, confirmText, functionName = null, id = null) {
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: confirmText
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading();
+            if (link) {
+                window.location.href = link;
+            } else if (functionName) {
+                Livewire.emit(functionName, id);
+                hideLoading();
+            }
+        }
+    });
+}
+
+// Delete Confirmation
+$(function() {
+    $(document).on('click', '#deleteRecord', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        var funName = $(this).attr("funName");
+        var id = $(this).attr("recId");
+        confirmAction(
+            link || null,
+            "Are you sure?",
+            "Delete this data?".id,
+            "warning",
+            "Yes, delete it!",
+            funName,
+            id
+        );
+    });
+});
+// Edit Confirmation
+$(function() {
+    $(document).on('click', '#editRecord', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        var funName = $(this).attr("funName");
+        var id = $(this).attr("recId");
+        confirmAction(
+            link || null,
+            "Are you sure?",
+            "you want to edit this data?".id,
+            "info",
+            "Yes, Edit Record!",
+            funName,
+            id
+        );
+    });
+});
+// Select Record Confirmation
+$(function() {
+    $(document).on('click', '#selectRecord', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        var funName = $(this).attr("funName");
+        var id = $(this).attr("recId");
+        confirmAction(
+            link || null,
+            "Are you sure?",
+            "you want to Select this Record?",
+            "info",
+            "Yes, Select!",
+            funName,
+            id
+        );
+    });
+});
+
+
+//=========================================================================================================
+
+// Generic SweetAlert Confirmation Functions
+function confirmAction2(link, title, text, icon, confirmText) {
     Swal.fire({
         title: title,
         text: text,
@@ -25,21 +106,13 @@ function confirmAction(link, title, text, icon, confirmText) {
     });
 }
 
-// Delete Confirmation
-$(function() {
-    $(document).on('click', '#delete', function(e) {
-        e.preventDefault();
-        var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'Delete This Data?', 'warning', 'Yes, delete it!');
-    });
-});
 
 // Delete File Confirmation
 $(function() {
     $(document).on('click', '#deletefile', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'Delete This File?', 'warning', 'Delete');
+        confirmAction2(link, 'Are you sure?', 'Delete This File?', 'warning', 'Delete');
     });
 });
 
@@ -48,7 +121,7 @@ $(function() {
     $(document).on('click', '#logout', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'You will be logged out.', 'warning', 'Logout');
+        confirmAction2(link, 'Are you sure?', 'You will be logged out.', 'warning', 'Logout');
     });
 });
 
@@ -57,7 +130,7 @@ $(function() {
     $(document).on('click', '#deleteData', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'Delete This Carousel?', 'warning', 'Delete');
+        confirmAction2(link, 'Are you sure?', 'Delete This Carousel?', 'warning', 'Delete');
     });
 });
 
@@ -66,7 +139,7 @@ $(function() {
     $(document).on('click', '#download', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'You want to download this?', 'info', 'Download');
+        confirmAction2(link, 'Are you sure?', 'You want to download this?', 'info', 'Download');
     });
 });
 
@@ -75,7 +148,7 @@ $(function() {
     $(document).on('click', '#open', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'You want to View this Record?', 'info', 'Yes, Open Record!');
+        confirmAction2(link, 'Are you sure?', 'You want to View this Record?', 'info', 'Yes, Open Record!');
     });
 });
 
@@ -84,7 +157,7 @@ $(function() {
     $(document).on('click', '#update', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'You want to Edit This Record?', 'success', 'Yes');
+        confirmAction2(link, 'Are you sure?', 'You want to Edit This Record?', 'success', 'Yes');
     });
 });
 
@@ -93,7 +166,7 @@ $(function() {
     $(document).on('click', '#editData', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'You want to Edit This Record?', 'info', 'Yes');
+        confirmAction2(link, 'Are you sure?', 'You want to Edit This Record?', 'info', 'Yes');
     });
 });
 
@@ -102,7 +175,7 @@ $(function() {
     $(document).on('click', '#SelectData', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction(link, 'Are you sure?', 'You want to Select This Info?', 'primary', 'Yes');
+        confirmAction2(link, 'Are you sure?', 'You want to Select This Info?', 'primary', 'Yes');
     });
 });
 
@@ -148,5 +221,47 @@ $(document).ready(function() {
     // Hide spinner on page load (if overlay is shown initially)
     $(window).on('load', function() {
         $('#loading-overlay').addClass('d-none');
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('swal:success', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            confirmButtonText: 'OK'
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('swal:error', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            confirmButtonText: 'OK'
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('swal:warning', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            confirmButtonText: 'OK'
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('swal:info', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            confirmButtonText: 'OK'
+        });
     });
 });

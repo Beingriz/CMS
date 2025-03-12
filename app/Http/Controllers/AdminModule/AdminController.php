@@ -545,8 +545,22 @@ class AdminController extends Controller
     public function UserTopBar()
     {
         $editId = "";
-        return view('user.admin_forms.header_footer_form', ['EditData' => $editId]);
+        $selectId = "";
+        return view('user.admin_forms.header_footer_form', ['editData' => $editId, 'selectId' => $selectId]);
     }
+    public function EditHeader($id)
+    {
+        $editId = $id;
+        $selectId = "";
+        return view('user.admin_forms.header_footer_form', ['editData' => $editId, 'selectId' => $selectId]);
+    } //End Function
+    public function selectHeader($id)
+    {
+        $editId = "";
+        $selectId = $id;
+        return view('user.admin_forms.header_footer_form', ['editData' => $editId, 'selectId' => $selectId]);
+    } //End Function
+
     public function Carousel()
     {
         # code...
@@ -612,11 +626,6 @@ class AdminController extends Controller
         );
         return redirect()->route('new.about_us')->with($notification);
     }
-    public function EditHeader($Id)
-    {
-        $editId = "";
-        return view('user.admin_forms.header_footer_form', ['EditData' => $editId,]);
-    } //End Function
 
     public function DataMigration()
     {
