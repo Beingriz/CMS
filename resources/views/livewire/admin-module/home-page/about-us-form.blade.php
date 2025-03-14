@@ -99,21 +99,22 @@
 
                         <!-- Buttons -->
                         <div class="d-flex gap-3 justify-content-center">
-                            @if ($Update == 0)
+                            @if (!$editMode)
                                 <button type="submit" class="btn btn-primary px-4 shadow">
                                     <i class="fas fa-save"></i> Save
                                 </button>
-                                <a type="button" class="btn btn-warning text-white px-4 shadow" href="{{ route('new.about_us') }}">
-                                    <i class="fas fa-redo"></i>Reset</a>
-                                </button>
-                            @elseif($Update == 1)
-                                <button type="button" class="btn btn-success px-4 shadow" wire:click.prevent="Update()">
-                                    <i class="fas fa-edit"></i> Update
-                                </button>
-                                <button type="button" class="btn btn-warning text-white px-4 shadow" wire:click.prevent="ResetFields()">
-                                    <i class="fas fa-redo"></i> Reset
-                                </button>
+
+                            @elseif($editMode)
+                            <br>
+                            <br>
+                               <button type="button" class="btn btn-success text-white px-4 shadow" wire:click.prevent="updateAboutus">
+                                    <i class="fas fa-save"></i> Update
+                            </button>
+
                             @endif
+                            <button type="button" class="btn btn-warning text-white px-4 shadow" wire:click.prevent="ResetFields()">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
                             <a href="{{ route('admin.home') }}" class="btn btn-secondary px-4 shadow">
                                 <i class="fas fa-times"></i> Cancel
                             </a>

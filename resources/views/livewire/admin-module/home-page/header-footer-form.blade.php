@@ -114,6 +114,7 @@
                                     <i class="fas fa-redo"></i> Reset
                                 </button>
                             @elseif($Update == 1)
+                            <br><br>
                                 <button type="button" class="btn btn-success px-4 shadow" wire:click.prevent="Update()">
                                     <i class="fas fa-edit"></i> Update
                                 </button>

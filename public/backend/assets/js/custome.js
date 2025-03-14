@@ -1,8 +1,9 @@
-// Loading Overlay Functions
+// Function to Show Loading
 function showLoading() {
     document.getElementById('loading-overlay').classList.remove('d-none');
 }
 
+// Function to Hide Loading
 function hideLoading() {
     document.getElementById('loading-overlay').classList.add('d-none');
 }
@@ -264,4 +265,26 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmButtonText: 'OK'
         });
     });
+});
+
+// Show Alert Message
+document.addEventListener("DOMContentLoaded", function() {
+    showLoading(); // Show loading overlay
+
+    setTimeout(() => {
+        hideLoading(); // Hide loading before Swal appears
+
+        if (session('swal'))
+            Swal.fire({
+                title: "{{ session('swal.title') }}",
+                text: "{{ session('swal.text') }}",
+                icon: "{{ session('swal.icon') }}",
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Optional: Perform an action after Swal is closed
+                console.log("Swal closed");
+            });
+        endif
+    }, 2500); // Hide loading & show Swal after 1.5s
 });

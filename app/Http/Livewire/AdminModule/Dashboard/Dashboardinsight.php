@@ -28,9 +28,20 @@ class DashboardInsight extends Component
 
     public function mount()
     {
+
+
+         // Check if there's a session event and emit it to Livewire
+         if (session()->has('emit_livewire_event')) {
+            $eventData = session('emit_livewire_event');
+            $this->emit($eventData['event'], $eventData);
+        }
         $this->Branch_Id = Auth::user()->branch_id;
         $this->Emp_Id = Auth::user()->Emp_Id;
         $this->isBranchAdminOrOperator = in_array(Auth::user()->role, ['branch admin', 'operator']);
+    }
+    public function showSweetAlert($data)
+    {
+        $this->dispatchBrowserEvent('swal:success', $data);
     }
 
     private function queryWithRole($table, $dateColumn = 'created_at')

@@ -31,6 +31,7 @@
     <!-- App Css-->
     @livewireStyles
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('backend/assets/css/loadingoverlay.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
 
@@ -40,46 +41,83 @@
     <link href="{{ asset('Bootstrap/css/600.css') }}" rel="stylesheet">
 
 </head>
+
+<!-- Bootstrap & Custom CSS -->
 <style>
-    /* Overlay styles */
+    /* Fullscreen Overlay */
     .loading-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.9);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 9999;
     }
 
-    .category-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #61b8ff; /* Attractive coral color */
-    text-transform: uppercase;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-}
+    /* DC Animated Letters */
+    .dc-text {
+        font-size: 60px;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+        color: #007bff; /* Bootstrap primary blue */
+        text-transform: uppercase;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
 
-.category-title:hover {
-    color: #b7a3ff; /* Slightly darker shade on hover */
-    border-color: #1c155a;
-    transition: color 0.3s, border-color 0.3s;
-}
+    .dc-letter {
+        display: inline-block;
+        animation: bounce 1.5s infinite alternate ease-in-out;
+    }
 
+    .dc-letter:nth-child(1) { animation-delay: 0s; }
+    .dc-letter:nth-child(2) { animation-delay: 0.2s; }
+
+    /* Animated Progress Bar */
+    .progress {
+        width: 250px;
+        height: 6px;
+        background: #f0f0f0;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        transition: width 1s ease-in-out;
+    }
+
+    /* Loading Text */
+    .loading-text {
+        font-size: 18px;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+        animation: fade-in 2s infinite alternate ease-in-out;
+    }
+
+    /* Keyframes */
+    @keyframes bounce {
+        0% { transform: translateY(0); opacity: 0.8; }
+        100% { transform: translateY(-8px); opacity: 1; }
+    }
+
+    @keyframes fade-in {
+        0% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
 </style>
+
 
 <body data-topbar="dark">
 
-    <!-- Loading Spinner Overlay -->
-    <div id="loading-overlay" wire:loading.class="d-block" wire:loading.class.remove="d-none" class="loading-overlay d-none">
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+    <!-- Loading Overlay -->
+    @include('template.overlay-loader.overlay-loader')
 
 
     <!-- Begin page -->
@@ -144,6 +182,10 @@
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
     <script src="{{ asset('backend/assets/js/custom.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- JavaScript to Control Loading Screen -->
+<script>
+
+</script>
 
     <script>
         @if (Session::has('message'))

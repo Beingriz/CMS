@@ -18,7 +18,7 @@ class AboutUsForm extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $Tittle, $Description, $Image, $Update, $Count, $Sl = 1, $Id, $Old_Image, $New_Image, $Selected, $Delivered, $Iteration = 0;
+    public $Tittle, $Description, $Image, $editMode = false, $Count, $Sl = 1, $Id, $Old_Image, $New_Image, $Selected, $Delivered, $Iteration = 0;
     public $Clients;
     protected $rules = [
         'Tittle' => 'Required|max:30',
@@ -53,7 +53,7 @@ class AboutUsForm extends Component
         $this->Description = "";
         $this->Image = NULL;
         $this->Iteration++;
-        $this->Update = 0;
+        $this->editMode = false;
     }
 
     public function Save()
@@ -81,7 +81,7 @@ class AboutUsForm extends Component
 
             // Reset Form Fields
             $this->ResetFields();
-            $this->Update = 0;
+            $this->editMode= false;
 
             // Show success message without page refresh
             $this->dispatchBrowserEvent('swal:success', [
@@ -117,7 +117,7 @@ class AboutUsForm extends Component
         $this->Tittle = $fetch['Tittle'];
         $this->Description = $fetch['Description'];
         $this->Old_Image = $fetch['Image'];
-        $this->Update = 1;
+        $this->editMode = true;
     }
     public function Image()
     {
@@ -163,26 +163,38 @@ class AboutUsForm extends Component
             $this->New_Image = $this->Old_Image;
         }
     }
-    public function Update()
+    public function updateAboutus()
     {
+
         if (!empty($this->Old_Image)) {
             $this->validate([
-                'Tittle' => 'Required|max:30',
-                'Description' => 'Required |min:10|max:500',
+                'Tittle' => 'required|max:30',
+                'Description' => 'required|min:10|max:500',
             ]);
         }
-        $data = array();
+
+        $data = [];
         $data['Tittle'] = $this->Tittle;
         $data['Description'] = $this->Description;
         $data['Total_Clients'] = $this->Clients;
         $data['Delivered'] = $this->Delivered;
-        $this->Image();
+        $this->Image(); // Process the new image
         $data['Image'] = $this->New_Image;
-        DB::table('about_us')->where([['Id', '=', $this->Id]])->update($data);
-        session()->flash('SuccessMsg', 'About Us Details Updated Successfully!');
+
+        DB::table('about_us')->where('Id', $this->Id)->update($data);
+
+        // Emit event for SweetAlert in Livewire
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Updated!',
+            'text' => 'About Us Details Updated Successfully!',
+            'icon' => 'success',
+            'redirect_url' => route('new.about_us') // Optional: Redirect after confirmation
+        ]);
+
         $this->ResetFields();
-        $this->Update = 0;
+        $this->editMode = false;
     }
+
     public function select($Id)
     {
         try {

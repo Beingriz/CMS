@@ -121,3 +121,25 @@
 
     </div>
 @endsection
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+    showLoading(); // Show loading overlay
+
+    setTimeout(() => {
+        hideLoading(); // Hide loading before Swal appears
+
+        @if(session('swal'))
+            Swal.fire({
+                title: "{{ session('swal.title') }}",
+                text: "{{ session('swal.text') }}",
+                icon: "{{ session('swal.icon') }}",
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Optional: Perform an action after Swal is closed
+                console.log("Swal closed");
+            });
+        @endif
+    }, 1000); // Hide loading & show Swal after 1.5s
+});
+</script>

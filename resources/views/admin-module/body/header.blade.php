@@ -68,7 +68,7 @@
                     <a class="dropdown-item" href="{{ route('change_password') }}"><i
                             class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i
+                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}" id="logout"><i
                             class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>

@@ -31,27 +31,28 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-
         $request->session()->regenerate();
-        $url ='';
-        if($request->user()->role === 'user' ){
-            $url = '/';
-        }elseif($request->user()->role === 'admin'){
-            $url = '/admin/dashboard';
-        }elseif($request->user()->role === 'branch admin'){
-            $url = '/admin/dashboard';
-        }elseif($request->user()->role === 'operator'){
-            $url = '/admin/dashboard';
-        }
+
+        // Define Admin Roles
+        $adminRoles = ['admin', 'branch admin', 'operator'];
+
+        // Determine Redirect URL
+        $url = in_array($request->user()->role, $adminRoles) ? '/admin/dashboard' : '/';
+
+        // Get User Name for SweetAlert
         $name = $request->user()->name;
 
-        $notification = array(
-            'message'=>$name.' Welcome back',
-            'alert-type' =>'success'
-        );
+        // Set SweetAlert Notification
+        session()->flash('swal', [
+            'title' => 'Welcome Back!',
+            'text' => "Hello, $name! You have successfully logged in.",
+            'icon' => 'success',
+            'timer' => 1000 // Redirect delay for smooth transition
+        ]);
 
-        return redirect()->intended($url)->with($notification);
+        return redirect()->intended($url);
     }
+
 
     /**
      * Destroy an authenticated session.
