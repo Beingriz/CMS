@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\AdminModule\Application;
 
+use App\Http\Livewire\UserModule\QuickApply;
 use App\Models\Application;
 use App\Models\ApplyServiceForm;
 use App\Models\CreditLedger;
@@ -64,7 +65,7 @@ class EditApplication extends Component
     public $label = [];
     public $old_status, $old_service, $old_service_type;
 
-
+    protected $listeners = ['delete' => 'deleteDocFile'];
 
     protected $rules = [
         'Name' => 'required',
@@ -251,6 +252,23 @@ class EditApplication extends Component
         $this->Doc_File = $this->Doc_File ?? $oldFiles['Doc_File'];
         $this->Payment_File = $this->Payment_File ?? $oldFiles['Payment_Receipt'];
 
+
+         // Trim all string inputs
+        $this->Name = trim($this->Name);
+        $this->RelativeName = trim($this->RelativeName);
+        $this->Gender = trim($this->Gender);
+        $this->Mobile_No = trim($this->Mobile_No);
+        $this->ServiceName = trim($this->ServiceName);
+        $this->SubSelected = trim($this->SubSelected);
+        $this->Dob = trim($this->Dob);
+        $this->Ack_No = trim($this->Ack_No);
+        $this->Document_No = trim($this->Document_No);
+        $this->Applied_Date = trim($this->Applied_Date);
+        $this->Status = trim($this->Status);
+        $this->Reason = trim($this->Reason);
+        $this->PaymentMode = trim($this->PaymentMode);
+        $this->Updated_Date = trim($this->Updated_Date);
+
         // Update Application record
         $updateData = [
             'Name' => $this->Name,
@@ -281,27 +299,12 @@ class EditApplication extends Component
 
         Application::where('Id', $Id)->update($updateData);
 
-        // Update Credit Ledger if Amount Paid changes
-        if ((intval($this->Amount_Paid) > 0) &&
-            (intval($this->previous_paid) + intval($this->Amount_Paid) <= intval($this->Total_Amount))) {
-                $this->updateCreditLedger($Id, $branchId, $empId);
-        }
+        // Calculate the new amount to be credited
+        $new_credit_entry = intval($this->Amount_Paid) - intval($this->previous_paid);
 
-        // Update ApplyServiceForm
-        ApplyServiceForm::where('Id', $Id)->update([
-            'Name' => $this->Name,
-            'Application' => $this->ServiceName,
-            'Application_Type' => $this->SubSelected,
-            'Dob' => $this->Dob,
-            'Relative_Name' => $this->RelativeName,
-            'Mobile_No' => $this->Mobile_No,
-            'Status' => $this->Status,
-            'Reason' => $this->Reason,
-            'Profile_Image' => $this->Applicant_Image,
-            'Branch_Id' => $branchId,
-            'Emp_Id' => $empId,
-            'updated_at' => Carbon::now()
-        ]);
+        if ($new_credit_entry > 0 && (intval($this->previous_paid) + intval($this->Amount_Paid) <= intval($this->Total_Amount))) {
+            $this->updateCreditLedger($Id, $branchId, $empId, $new_credit_entry);
+        }
 
         // Manually trigger the logTransaction
         $application = Application::find($Id);
@@ -312,16 +315,18 @@ class EditApplication extends Component
             $this->handleAdditionalDocuments($Id, $branchId, $empId);
         }
 
-
-
         if ($this->old_status != $this->Status) {
             if(!$this->whatsAppNotificatin){
-                $this->applicationUpdateAlert($Id, $this->Name);
             }
         }
-        // Flash success message and redirect
-        session()->flash('SuccessUpdate', 'Application Details for ' . $this->Name . ' Updated Successfully');
-        return redirect()->route('view.application', $Id);
+         // Dispatch a browser event for SweetAlert
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Updated Successfully!',
+            'text' => 'Application Details for ' . $this->Name . ' have been updated successfully.',
+            'icon' => 'success',
+            'redirect-url' => route('view.application', $Id)
+        ]);
+
     }
 
     /**
@@ -348,9 +353,9 @@ class EditApplication extends Component
     /**
      * Update : New Credit Entry for balance update in Credit Ledger.
      */
-    protected function updateCreditLedger($Id, $branchId, $empId)
+    protected function updateCreditLedger($Id, $branchId, $empId, $new_credit_entry)
     {
-        $desc  = "Update :  Rs. " . intval($this->Amount_Paid). "/- Received from  " . $this->Name . " bearing Client ID: " . $this->Client_Id . " & Mobile No: " . $this->Mobile_No . " for " . $this->ServiceName . " " . $this->SubSelected . ", on " . $this->Updated_Date . " by  " . $this->PaymentMode . ", Total: " . $this->Total_Amount . "| Previous Paid: " . $this->previous_paid . "| Received : " . intval($this->Amount_Paid) . " | Balance: " . (intval($this->Total_Amount) - (intval($this->Amount_Paid)+ intval($this->previous_paid)));
+        $desc  = "Update :  Rs. " . intval($new_credit_entry). "/- Received from  " . $this->Name . " bearing Client ID: " . $this->Client_Id . " & Mobile No: " . $this->Mobile_No . " for " . $this->ServiceName . " " . $this->SubSelected . ", on " . $this->Updated_Date . " by  " . $this->PaymentMode . ", Total: " . $this->Total_Amount . "| Previous Paid: " . $this->previous_paid . "| Received : " . intval($this->Amount_Paid) . " | Balance: " . (intval($this->Total_Amount) - (intval($this->Amount_Paid)+ intval($this->previous_paid)));
 
         $save_credit = new CreditLedger();
         $save_credit->Id = 'DC' . time();
@@ -359,7 +364,7 @@ class EditApplication extends Component
         $save_credit->Sub_Category = $this->SubSelected;
         $save_credit->Date = $this->Received_Date;
         $save_credit->Total_Amount = $this->Total_Amount;
-        $save_credit->Amount_Paid = intval($this->Amount_Paid);
+        $save_credit->Amount_Paid = intval($new_credit_entry);
         $save_credit->Balance = $this->Balance;
         $save_credit->Description = $desc;
         $save_credit->Payment_Mode = $this->PaymentMode;
@@ -373,81 +378,85 @@ class EditApplication extends Component
      * Handle additional documents.
      */
     protected function handleAdditionalDocuments($Id, $branchId, $empId)
-{
-    if (count($this->Document_Files) > 0) {
-        if (empty($this->Doc_Names)) {
-            $this->Doc_Names = [$this->Name . ' Document'];
+    {
+        if (count($this->Document_Files) > 0) {
+            if (empty($this->Doc_Names)) {
+                $this->Doc_Names = [$this->Name . ' Document'];
+            }
+
+            foreach ($this->Document_Files as $index => $Path) {
+                try {
+                    // Validate file extension
+                    $extension = $Path->getClientOriginalExtension();
+                    if (!in_array($extension, ['jpg', 'jpeg', 'png', 'pdf', 'docx'])) {
+                        throw new Exception('Invalid file type. Allowed types are: jpg, jpeg, png, pdf, docx.');
+                    }
+
+                    // Generate file path and name
+                    $directory = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
+                    if (!is_dir(storage_path('app/public/' . $directory))) {
+                        mkdir(storage_path('app/public/' . $directory), 0777, true);
+                    }
+
+                    $filename = $this->Name . ' ' . $this->Doc_Names[$index] . '_' . time() . '.' . $extension;
+                    $url = $Path->storePubliclyAs($directory, $filename, 'public');
+
+                    // Insert document record into the database
+                    DocumentFiles::create([
+                        'Id' => 'DOC' . mt_rand(1000, 9999),
+                        'App_Id' => $Id,
+                        'Client_Id' => $this->Client_Id,
+                        'Document_Name' => ucfirst($this->Doc_Names[$index]),
+                        'Document_Path' => $url,
+                        'Branch_Id' => $branchId,
+                        'Emp_Id' => $empId
+                    ]);
+                } catch (Exception $e) {
+                    $this->dispatchBrowserEvent('swal:error', [
+                        'title' => 'Error!',
+                        'text' => 'Error uploading document: ' . $e->getMessage()
+                    ]);
+                    return; // Stop further processing if an error occurs
+
+                }
+            }
         }
 
-        foreach ($this->Document_Files as $index => $Path) {
+        // Handle single document upload
+        if (!empty($this->Document_Name)) {
             try {
                 // Validate file extension
-                $extension = $Path->getClientOriginalExtension();
+                $extension = $this->Document_Name->getClientOriginalExtension();
                 if (!in_array($extension, ['jpg', 'jpeg', 'png', 'pdf', 'docx'])) {
                     throw new Exception('Invalid file type. Allowed types are: jpg, jpeg, png, pdf, docx.');
                 }
 
                 // Generate file path and name
-                $directory = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
-                if (!is_dir(storage_path('app/public/' . $directory))) {
-                    mkdir(storage_path('app/public/' . $directory), 0777, true);
+                $path = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
+                if (!is_dir(storage_path('app/public/' . $path))) {
+                    mkdir(storage_path('app/public/' . $path), 0777, true);
                 }
 
-                $filename = $this->Name . ' ' . $this->Doc_Names[$index] . '_' . time() . '.' . $extension;
-                $url = $Path->storePubliclyAs($directory, $filename, 'public');
+                $filename = $this->Name . ' ' . $this->Doc_Name . '_' . time() . '.' . $extension;
+                $url = $this->Document_Name->storePubliclyAs($path, $filename, 'public');
 
                 // Insert document record into the database
                 DocumentFiles::create([
                     'Id' => 'DOC' . mt_rand(1000, 9999),
                     'App_Id' => $Id,
                     'Client_Id' => $this->Client_Id,
-                    'Document_Name' => $this->Doc_Names[$index],
+                    'Document_Name' => $this->Doc_Name,
                     'Document_Path' => $url,
                     'Branch_Id' => $branchId,
                     'Emp_Id' => $empId
                 ]);
+
+                session()->flash('SuccessMsg', 'Document Uploaded Successfully!');
             } catch (Exception $e) {
                 session()->flash('ErrorMsg', 'Error uploading document: ' . $e->getMessage());
-                return; // Stop further processing if an error occurs
             }
         }
     }
-
-    // Handle single document upload
-    if (!empty($this->Document_Name)) {
-        try {
-            // Validate file extension
-            $extension = $this->Document_Name->getClientOriginalExtension();
-            if (!in_array($extension, ['jpg', 'jpeg', 'png', 'pdf', 'docx'])) {
-                throw new Exception('Invalid file type. Allowed types are: jpg, jpeg, png, pdf, docx.');
-            }
-
-            // Generate file path and name
-            $path = 'Digital_Cyber/' . $this->Name . ' ' . $this->Client_Id . '/' . trim($this->Name) . '/' . trim($this->ServiceName) . '/' . trim($this->SubSelected);
-            if (!is_dir(storage_path('app/public/' . $path))) {
-                mkdir(storage_path('app/public/' . $path), 0777, true);
-            }
-
-            $filename = $this->Name . ' ' . $this->Doc_Name . '_' . time() . '.' . $extension;
-            $url = $this->Document_Name->storePubliclyAs($path, $filename, 'public');
-
-            // Insert document record into the database
-            DocumentFiles::create([
-                'Id' => 'DOC' . mt_rand(1000, 9999),
-                'App_Id' => $Id,
-                'Client_Id' => $this->Client_Id,
-                'Document_Name' => $this->Doc_Name,
-                'Document_Path' => $url,
-                'Branch_Id' => $branchId,
-                'Emp_Id' => $empId
-            ]);
-
-            session()->flash('SuccessMsg', 'Document Uploaded Successfully!');
-        } catch (Exception $e) {
-            session()->flash('ErrorMsg', 'Error uploading document: ' . $e->getMessage());
-        }
-    }
-}
 
 
 
@@ -460,35 +469,42 @@ class EditApplication extends Component
 
 
     // Delete Document -- Working
-    public function Delete_Doc($Id)
+    public function deleteDocFile($Id)
     {
         // Fetch the document record
         $document = DocumentFiles::find($Id);
 
         // Check if document exists
         if (!$document) {
-            session()->flash('Error', 'Document not found.');
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Not Found!',
+                'text' => 'The selected document does not exist.',
+                'icon' => 'error',
+                'redirect-url' => route('edit_application', $this->Id)
+            ]);
             return;
         }
-
         // Get the document path and name
         $path = $document->Document_Path;
         $name = $document->Document_Name;
-
         // Delete the file from storage
-        if (Storage::exists($path)) {
-            if (Storage::delete($path)) {
-                // Delete the document record from the database
-                if ($document->delete()) {
-                    session()->flash('SuccessMsg', $name . ' Deleted Successfully!');
-                } else {
-                    session()->flash('Error', 'Unable to delete document record.');
-                }
-            } else {
-                session()->flash('Error', 'Unable to delete file from storage.');
-            }
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+            DocumentFiles::where('Id', $Id)->delete();
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Deleted Successfully!',
+                'text' => $name . ' has been deleted successfully.',
+                'icon' => 'success',
+                'redirect-url' => route('edit_application', $this->Id)
+            ]);
         } else {
-            session()->flash('Error', 'File not available.');
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error!',
+                'text' => 'File not found.',
+                'icon' => 'error',
+                'redirect-url' => route('edit_application', $this->Id)
+
+            ]);
         }
     }
 

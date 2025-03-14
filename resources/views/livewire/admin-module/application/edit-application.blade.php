@@ -274,21 +274,15 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="mb-3">
-
                                                 <label class="form-label" for="Applicant_Image_View">Photo</label>
-                                                <div wire:loading wire:target="Applicant_Image">Uploading Profile
-                                                    Image...</div>
-                                                @if (!is_null($Applicant_Image))
-                                                    <img class="rounded avatar-md"
-                                                        src="{{ $Applicant_Image->temporaryUrl() }}"
-                                                        alt="Applicant_Image" />
-                                                @elseif($old_Applicant_Image != 'Not Available')
-                                                    <img class="rounded avatar-md"
-                                                        src="{{ asset('storage/' . $old_Applicant_Image) }}"
-                                                        alt="no_image" />
+                                                <div wire:loading wire:target="Applicant_Image">Uploading Profile Image...</div>
+
+                                                @if ($Applicant_Image instanceof \Livewire\TemporaryUploadedFile)
+                                                    <img class="rounded avatar-md" src="{{ $Applicant_Image->temporaryUrl() }}" alt="Applicant Image" />
+                                                @elseif(!empty($old_Applicant_Image) && $old_Applicant_Image != 'Not Available')
+                                                    <img class="rounded avatar-md" src="{{ asset('storage/' . $old_Applicant_Image) }}" alt="Old Applicant Image" />
                                                 @else
-                                                    <img class="rounded avatar-md"
-                                                        src="{{ asset('storage/no_image.jpg') }}" alt="no_image" />
+                                                    <img class="rounded avatar-md" src="{{ asset('storage/no_image.jpg') }}" alt="No Image" />
                                                 @endif
                                             </div>
                                         </div>
@@ -731,17 +725,12 @@
 
 
                                             <div class="col-55">
-                                                @if (!is_null($Applicant_Image))
-                                                <img class="rounded avatar-md"
-                                                    src="{{ $Applicant_Image->temporaryUrl() }}"
-                                                    alt="Applicant_Image" />
-                                            @elseif($old_Applicant_Image != 'Not Available')
-                                                <img class="rounded avatar-md"
-                                                    src="{{ asset('storage/' . $old_Applicant_Image) }}"
-                                                    alt="no_image" />
+                                                @if ($Applicant_Image instanceof \Livewire\TemporaryUploadedFile)
+                                                <img class="rounded avatar-md" src="{{ $Applicant_Image->temporaryUrl() }}" alt="Applicant Image" />
+                                            @elseif(!empty($old_Applicant_Image) && $old_Applicant_Image != 'Not Available')
+                                                <img class="rounded avatar-md" src="{{ asset('storage/' . $old_Applicant_Image) }}" alt="Old Applicant Image" />
                                             @else
-                                                <img class="rounded avatar-md"
-                                                    src="{{ asset('storage/no_image.jpg') }}" alt="no_image" />
+                                                <img class="rounded avatar-md" src="{{ asset('storage/no_image.jpg') }}" alt="No Image" />
                                             @endif
                                             </div>
                                         </div>
@@ -955,85 +944,63 @@
         </div>
 
         {{-- ---------------------------------------------------------------------------------------------------- --}}
-        @if (count($docFiles) > 0) {{-- Document List Table  --}}
-            <div class="col-lg-5">
-                <div class="card">
-                    <h5 class="card-header">Available Documents </h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="d-flex flex-wrap gap-2">
-                                @if ($Checked)
-                                    <div class="btn-group-vertical" role="group"
-                                        aria-label="Vertical button group">
-                                        <div class="btn-group" role="group">
-                                            <button id="btnGroupVerticalDrop2" type="button"
-                                                class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                Cheched ({{ count($Checked) }}) <i class="mdi mdi-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2"
-                                                style="">
-                                                <a class="dropdown-item" title="Multiple Delete"
-                                                    onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()"
-                                                    wire:click="MultipleDelete()">Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Sl.No</th>
-                                        <th>Select</th>
-                                        <th>Name</th>
-                                        <th>Download</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($docFiles as $File)
-                                        <tr>
-                                            <td>{{ $docFiles->firstItem() + $loop->index }}</td>
-                                            <td><input type="checkbox" id="checkbox" name="checkbox"
-                                                    value="{{ $File->Id }}" wire:model="Checked"></td>
+       @if (count($docFiles) > 0) {{-- Document List Table --}}
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0">
+            <h5 class="card-header bg-primary text-white">Available Documents</h5>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Document Name</th>
+                                <th>Uploaded on</th>
+                                <th>Actions</th> {{-- Merged Download & Delete --}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($docFiles as $index => $File)
+                                <tr>
+                                    <td>{{ $docFiles->firstItem() + $index }}</td>
+                                    <td>{{ Str::title($File->Document_Name) }}</td>
+                                    <td>{{ $File->created_at->diffForHumans()}} | {{ $File->created_at->format('F d, Y')}}</td>
 
-                                            <td>{{ $File->Document_Name }}</td>
-                                            <td>
-                                                <a class="btn btn-light font-size-20" id="download"
-                                                    href="{{ route('download_documents', $File->Id) }}"><i
-                                                        class="mdi mdi-download"></i></a>
+                                    <td>
+                                        <a class="btn btn-outline-primary btn-sm mx-1" id="download"
+                                            href="{{ route('download_documents', $File->Id) }}"
+                                           title="Download" >
+                                            <i class="mdi mdi-download"></i>
+                                        </a>
 
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-danger font-size-15" id="deletefile"
-                                                    href="{{ route('delete_document', $File->Id) }}"><i
-                                                        class=" ri-delete-bin-6-line"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($docFiles) }} of
-                                        {{ $docFiles->total() }} entries</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class=" pagination pagination-rounded float-end">
-                                        {{ $docFiles->links() }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="card-text"><small class="text-muted">Last File Uploaded
-                                {{ $created }}</small></p>
+                                        <a class="btn btn-outline-danger btn-sm mx-1" id="deleteFile" funName="delete" recId = "{{ $File->Id }}"
+                                           title="Delete" >
+                                            <i class="ri-delete-bin-6-line"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    {{-- Pagination & Entries Info --}}
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <p class="text-muted mb-0">Showing {{ count($docFiles) }} of {{ $docFiles->total() }} entries</p>
+                        <span class="pagination pagination-rounded">
+                            {{ $docFiles->links() }}
+                        </span>
                     </div>
                 </div>
+
+                {{-- Last Uploaded File Info --}}
+                <p class="card-text text-end mt-2">
+                    <small class="text-muted">Last File Uploaded: {{ $created }}</small>
+                </p>
             </div>
-        @endif {{-- End of Table --}}
+        </div>
+    </div>
+@endif {{-- End of Table --}}
+
     </div>
     {{-- ---------------------------------------------------------------------------------------------------- --}}
 

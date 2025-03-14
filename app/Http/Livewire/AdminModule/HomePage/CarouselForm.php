@@ -84,7 +84,7 @@ class CarouselForm extends Component
                 'title' => 'Success!',
                 'text' => 'Carousel added successfully.',
                 'icon' => 'success',
-                'redirect_url' => route('new.carousel'),
+                'redirect-url' => route('new.carousel'),
                 'timer' => 3000,
             ]);
         } catch (\Exception $e) {
@@ -148,7 +148,7 @@ class CarouselForm extends Component
                 'title' => 'Deleted Successfully!',
                 'text' => 'The carousel data has been deleted.',
                 'icon' => 'success',
-                'redirect_url' => route('new.carousel'),
+                'redirect-url' => route('new.carousel'),
                 'timer' => 1000,
             ]);
         } catch (\Exception $e) {
@@ -159,7 +159,7 @@ class CarouselForm extends Component
                 'text' => 'Something went wrong. Please try again.',
                 'icon' => 'error',
                 'timer' => 1000,
-                'redirect_url' => route('new.carousel'),
+                'redirect-url' => route('new.carousel'),
 
             ]);
         }
@@ -209,7 +209,7 @@ class CarouselForm extends Component
                 'title' => 'Updated Successfully!',
                 'text' => 'The carousel data has been updated.',
                 'icon' => 'success',
-                'redirect_url' => route('new.carousel'),
+                'redirect-url' => route('new.carousel'),
             ]);
         } catch (\Exception $e) {
             \Log::error("Update Error: " . $e->getMessage());

@@ -67,6 +67,7 @@ $(function() {
         );
     });
 });
+
 // Select Record Confirmation
 $(function() {
     $(document).on('click', '#selectRecord', function(e) {
@@ -80,6 +81,24 @@ $(function() {
             "you want to Select this Record?",
             "info",
             "Yes, Select!",
+            funName,
+            id
+        );
+    });
+});
+// Delete File Confirmation
+$(function() {
+    $(document).on('click', '#deleteFile', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        var funName = $(this).attr("funName");
+        var id = $(this).attr("recId");
+        confirmAction(
+            link || null,
+            "Are you sure?",
+            "you want to delete this file permanantly?",
+            "warning",
+            "Yes, Delete!",
             funName,
             id
         );
@@ -113,7 +132,7 @@ $(function() {
     $(document).on('click', '#deletefile', function(e) {
         e.preventDefault();
         var link = $(this).attr("href");
-        confirmAction2(link, 'Are you sure?', 'Delete This File?', 'warning', 'Delete');
+        confirmAction2(link, 'Are you sure?', 'you want to Delete This File?', 'warning', 'Delete');
     });
 });
 
@@ -144,6 +163,31 @@ $(function() {
     });
 });
 
+$(function() {
+    $(document).on('click', '#download', function(e) {
+        e.preventDefault(); // Prevent default click action
+        var link = $(this).attr("href");
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to download this file?',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Download',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                showLoading(); // Show loading overlay
+
+                setTimeout(() => {
+                    hideLoading(); // Hide loading after delay
+                    window.location.href = link; // Start download
+                }, 1500); // 1.5-second delay before downloading
+            }
+        });
+    });
+});
+
 // Open/View Record Confirmation
 $(function() {
     $(document).on('click', '#open', function(e) {
@@ -168,6 +212,14 @@ $(function() {
         e.preventDefault();
         var link = $(this).attr("href");
         confirmAction2(link, 'Are you sure?', 'You want to Edit This Record?', 'info', 'Yes');
+    });
+});
+// Edit Data Confirmation
+$(function() {
+    $(document).on('click', '#editProfile', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        confirmAction2(link, 'Are you sure?', 'You want to edit Profile details?', 'info', 'Yes');
     });
 });
 

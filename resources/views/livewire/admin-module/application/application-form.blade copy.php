@@ -835,32 +835,33 @@
         @if ($Profile_Show == 1)
             <div class="col-lg-5">
                 <div class="card">
-                    <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between rounded-top">
-                        <h5 class="mb-0 fw-bold text-warning">
-                            <i class="fas fa-user-circle me-2"></i> {{ $C_Name }} Profile
-                        </h5>
-                        <a href="{{ route('edit_profile', $C_Id) }}" class="btn btn-primary rounded-pill" id="editData">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
+                    <div class="card-header">
+                        <h5 class="card-title"><strong class="text-info">{{ $C_Name }}</strong> Profile
+                            </h4>
                     </div>
                     {{-- Profile Section  --}}
-                    <!-- Profile Info & Image Section -->
-            <div class="row align-items-center p-3">
-                <div class="col-md-8">
-                    <p class="mb-1"><strong class="text-primary">{{ $C_Name }}</strong> Registered: <span class="text-muted">{{ $profileCreated }}</span></p>
-                    <p class="mb-0"><small class="text-muted">Last Updated: {{ $lastProfUpdate }}</small></p>
-                </div>
-                <div class="col-md-4 text-center">
-                    @if (!empty($Client_Image))
-                        <img class="rounded-circle border border-3 border-primary shadow-lg"
-                             src="{{ $Client_Image->temporaryUrl() }}" width="100" height="100" alt="Profile Image">
-                    @else
-                        <img class="rounded-circle border border-3 border-secondary shadow-lg"
-                             src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }}"
-                             width="100" height="100" alt="Profile Image">
-                    @endif
-                </div>
-            </div>
+                    <div class="row no-gutters align-items-center">
+                        {{-- Profile Creation Time --}}
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <p class="card-text">{{ $C_Name }} Registered {{ $profileCreated }}</p>
+                                <p class="card-text"><small class="text-muted">Profile Last updated
+                                        {{ $lastProfUpdate }}</small></p>
+                            </div>
+                        </div>
+                        {{-- Profile Section --}}
+                        <div class="col-md-4">
+                            @if (!empty($Client_Image))
+                                <img class="rounded-circle avatar-lg" src="{{ $Client_Image->temporaryUrl() }}"
+                                    alt="Client Profile">
+                            @else
+                                <img class="rounded-circle avatar-lg"
+                                    src="{{ !empty($Old_Profile_Image) ? url('storage/' . $Old_Profile_Image) : url('storage/no_image.jpg') }} "
+                                    alt="Card image cap">
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="row ">
                         {{-- First Half Data Display --}}
                         <div class="col-md-6 col-lg-12">
@@ -944,17 +945,13 @@
                                         class="text-primary font-size-18">{{ $C_Address != '' ? $C_Address : 'Not Available' }}</span>
                                 </div>
                             </div>
-
-                        <!-- Profile Footer -->
-
+                            <a href={{ route('edit_profile', $C_Id) }}
+                                class="btn btn-primary waves-effect waves-light" id="update">Update
+                                Profile</a>
 
                         </div>
                     </div>
-                    <div class="card-footer text-center">
-                        <a href="{{ route('edit_profile', $C_Id) }}" class="btn btn-primary w-100 fw-bold rounded-pill" id="editProfile">
-                            <i class="fas fa-user-edit"></i> Update Profile
-                        </a>
-                    </div>
+
 
                 </div>
             </div>

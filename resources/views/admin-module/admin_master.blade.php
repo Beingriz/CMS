@@ -234,7 +234,7 @@
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed || result.isDismissed) {
-                        window.location.href = event.detail.redirect_url; // Redirect after alert
+                        window.location.href = event.detail['redirect-url']; // Correct key reference
                     }
                 });
             });
@@ -242,6 +242,5 @@
     </script>
 
 
-</body>
 
 </html>

@@ -241,23 +241,22 @@ private function getStatusData()
 
     public function Download_Ack($Id)
     {
-        $fetch = Application::wherekey($Id)->get();
-        if ($fetch != NULL) {
-            foreach ($fetch as $key) {
-                $file = $key['Ack_File'];
-            }
+        $fetch = Application::whereKey($Id)->first(); // Use first() instead of get() for a single record
+
+        if ($fetch) {
+            $file = $fetch->Ack_File; // Directly access the file column
 
             if (Storage::disk('public')->exists($file)) {
-                return response()->download(public_path('storage/' . $file));
-            } else {
-                session()->flash('Error', 'Acknowledgment File Not Available!');
-                return redirect()->back();
+                session()->flash('success', 'Acknowledgment Downloaded!'); // Flash success message
+                return response()->download(public_path('storage/' . $file)); // Download the file
+              } else {
+                return redirect()->back()->with('error', 'Acknowledgment File Not Available!');
             }
         } else {
-            session()->flash('Error', 'Acknowledgment File Not Available!');
-            return redirect()->back();
+            return redirect()->back()->with('error', 'Acknowledgment File Not Available!');
         }
     }
+
     public function Download_Doc($Id)
     {
         $fetch = Application::wherekey($Id)->get();
@@ -322,9 +321,14 @@ private function getStatusData()
             // dd('found file');
             unlink('storage/' . $file);
             DocumentFiles::wherekey($Id)->delete();
-            session()->flash('SuccessMsg', $name . ' File Deleted Successfully');
-            return redirect()->back();
+            session()->flash('swal', [
+                'title' => 'Deleted!',
+                'text' => "$name has been deleted successfully.",
+                'icon' => 'success',
+                'redirect-url' =>route('edit_application', $Id)
+            ]);
         } else {
+            DocumentFiles::wherekey($Id)->delete();
             session()->flash('Error', $name . ' File Not Exist');
             return redirect()->back();
         }
