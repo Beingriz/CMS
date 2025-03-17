@@ -239,6 +239,17 @@
                 });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            window.addEventListener('swal:success-non-redirect', event => {
+                Swal.fire({
+                    title: event.detail.title,
+                    text: event.detail.text,
+                    icon: event.detail.icon,
+                    confirmButtonText: 'OK'
+                })
+            });
+        });
     </script>
 
 

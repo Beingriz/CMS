@@ -1,5 +1,5 @@
 @extends('admin-module.admin_master')
-<title>Status</title>
+<title>Status Manager</title>
 
 @section('admin')
 

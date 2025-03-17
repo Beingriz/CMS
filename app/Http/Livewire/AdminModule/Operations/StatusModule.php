@@ -21,7 +21,7 @@ class StatusModule extends Component
     protected $paginationTheme = 'Bootstrap';
     public $Name, $Thumbnail, $Id, $Old_Thumbnail, $Relation, $Update, $n = 1, $iteration, $ChangeRelation, $New_Thumbnail, $Order, $created, $updated, $New_Image;
 
-
+    protected $listeners = ['edit'=>'Edit','delete'=>'Delete','change'=>'Change','view'=>'ViewStatus','update'=>'UpdateStatus'];
     protected $rules = [
         'Name' => 'required ',
         'Relation' => 'required',
@@ -41,15 +41,10 @@ class StatusModule extends Component
     public function mount($Id, $DelId, $ViewStatus)
     {
         $this->Id = 'ST' . time();
-        if (!empty($Id)) {
-            $this->Edit($Id);
-        }
-        if (!empty($DelId)) {
-            $this->Delete($DelId);
-        }
-        if (!empty($ViewStatus)) {
-            $this->ViewStatus($ViewStatus);
-        }
+        $this->Relation = '---Select---';
+        $this->iteration = 0;
+        $this->Update = 0;
+
     }
     public function ResetFields()
     {
@@ -138,13 +133,19 @@ class StatusModule extends Component
         $save_st->Orderby = $this->Order;
         $save_st->Thumbnail =  $this->Thumbnail;
         $save_st->save();
-        session()->flash('SuccessMsg', $this->Name . '  is saved In ' . $this->Relation . ' Category');
+        $this->dispatchBrowserEvent('swal:success-non-redirect', [
+            'title' => 'Updated Successfully!',
+            'text' => "New status {$this->Name} has been created successfully!",
+            'icon' => 'success',
+        ]);
         $relation = $this->Relation;
         $this->ResetFields();
         $this->Relation = $relation;
     }
+
     public function Edit($Id)
     {
+
         $fetch = Status::Where('Id', $Id)->get();
         foreach ($fetch as $item) {
             $this->Id = $item['Id'];
@@ -157,7 +158,9 @@ class StatusModule extends Component
         $this->ChangeRelation = Null;
         $this->iteration++;
     }
+
     public $list = false, $status;
+
     public function ViewStatus($status)
     {
         $this->list = true;
@@ -165,157 +168,129 @@ class StatusModule extends Component
     }
     public function UpdateStatus($Id, $Status)
     {
+        $oldStatus = Application::where('Id', $Id)->value('Status');
+        // Trim and update status
+        Application::where('Id', $Id)->update(['Status' => trim($Status)]);
 
-        $data = array();
-        $data['Status'] = trim($Status);
-        Application::Where('Id', $Id)->update($data);
-        $status = Status::all();
-        foreach ($status as $item) {
-            $name = $item['Status'];
-            $amount = DB::table('digital_cyber_db')->Where('Status', $name)->SUM('Total_Amount');
+        // Fetch all unique status names from the status table
+        $statuses = Status::pluck('Status');
+
+        // Loop through and update the total amount & count
+        foreach ($statuses as $name) {
+            $amount = DB::table('digital_cyber_db')->where('Status', $name)->sum('Total_Amount');
             $count = DB::table('digital_cyber_db')->where('Status', $name)->count();
-            $data = array();
-            $data['Total_Amount'] = $amount;
-            $data['Total_Count'] = $count;
-            DB::table('status')->where('Status', $name)->update($data);
+
+            DB::table('status')->where('Status', $name)->update([
+                'Total_Amount' => $amount,
+                'Total_Count' => $count
+            ]);
         }
-        $notification = array(
-            'message' => 'Status Updated Successfully',
-            'alert-type' => 'info'
-        );
-        return redirect()->back()->with($notification);
+        $this->ViewStatus($oldStatus);
+        // Flash SweetAlert notification to session
+        $this->dispatchBrowserEvent('swal:success-non-redirect', [
+            'title' => 'Updated!',
+            'text' => 'Status from '.$oldStatus.' to '.$Status.' has been updated successfully.',
+            'icon' => 'success',
+        ]);
+
+        return redirect()->back();
     }
+
 
     public function Update()
     {
         $relation = $this->Relation;
-        if (!is_Null($this->Thumbnail)) // Check if new image is selected
-        {
-            if (!is_Null($this->Old_Thumbnail)) {
-                if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-                    unlink(storage_path('app/public/' . $this->Old_Thumbnail));
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Thumbnails/Status/' . $this->Name;
-                    $filename = 'St_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Thumbnail = $url;
-                } else {
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Thumbnails/Status/' . $this->Name;
-                    $filename = 'St_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Thumbnail = $url;
-                }
-            } else {
-                $this->validate([
-                    'Thumbnail' => 'required|image',
-                ]);
-                $extension = $this->Thumbnail->getClientOriginalExtension();
-                $path = 'Thumbnails/Status/' . $this->Name;
-                $filename = 'St_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                $this->New_Thumbnail = $url;
-            }
-        } else // check old is exist
-        {
-            if (!is_Null($this->Old_Thumbnail)) {
-                if (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-                    $this->New_Thumbnail = $this->Old_Thumbnail;
-                } else {
-                    session()->flash('Error', 'File Does not Exist. Please Select New Thumbnail');
-                    $this->validate([
-                        'Thumbnail' => 'required|image',
-                    ]);
-                    $extension = $this->Thumbnail->getClientOriginalExtension();
-                    $path = 'Thumbnails/Status/' . $this->Name;
-                    $filename = 'St_' . $this->Name . '_' . time() . '.' . $extension;
-                    $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                    $this->New_Thumbnail = $url;
-                }
-            } else {
-                $this->validate([
-                    'Thumbnail' => 'required|image',
-                ]);
-                $extension = $this->Thumbnail->getClientOriginalExtension();
-                $path = 'Thumbnails/Status/' . $this->Name;
-                $filename = 'St_' . $this->Name . '_' . time() . '.' . $extension;
-                $url = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
-                $this->New_Thumbnail = $url;
-            }
-        }
-        $fetch = Status::Where('Id', $this->Id)->get();
-        foreach ($fetch as $item) {
 
-            $oldName = $item['Status'];
+        // Handle Thumbnail Upload
+        if (!is_null($this->Thumbnail)) {
+            $this->validate([
+                'Thumbnail' => 'required|image',
+            ]);
+
+            $extension = $this->Thumbnail->getClientOriginalExtension();
+            $path = 'Thumbnails/Status/' . $this->Name;
+            $filename = 'St_' . $this->Name . '_' . time() . '.' . $extension;
+            $this->New_Thumbnail = $this->Thumbnail->storePubliclyAs($path, $filename, 'public');
+
+            // Delete old file if exists
+            if (!is_null($this->Old_Thumbnail) && Storage::disk('public')->exists($this->Old_Thumbnail)) {
+                Storage::disk('public')->delete($this->Old_Thumbnail);
+            }
+        } else {
+            // Use existing thumbnail if available
+            if (!is_null($this->Old_Thumbnail) && Storage::disk('public')->exists($this->Old_Thumbnail)) {
+                $this->New_Thumbnail = $this->Old_Thumbnail;
+            } else {
+                session()->flash('Error', 'File does not exist. Please select a new thumbnail.');
+                return;
+            }
         }
-        $data = array();
-        $data['Status'] = $this->Name;
-        $getApp =  Application::where('Status', $oldName)->update($data);
-        if (!empty($this->ChangeRelation)) {
-            $this->Relation = $this->ChangeRelation;
-        }
-        $data = array();
-        $data['Status'] = $this->Name;
-        $data['Relation'] = $this->Relation;
-        $data['Thumbnail'] = $this->New_Thumbnail;
-        $Update = DB::table('status')->where('Id', '=', $this->Id)->Update($data);
-        if ($Update) {
-            session()->flash('SuccessMsg', 'Status ' . $this->Name . ' Updated in ' . $getApp . ' Apps, for ' . $this->Relation);
+
+        // Fetch Old Status Name
+        $oldStatus = Status::where('Id', $this->Id)->value('Status');
+
+        // Update Applications linked with this status
+        $updatedApps = Application::where('Status', $oldStatus)->update(['Status' => $this->Name]);
+
+        // Update Status Record
+        $updateData = [
+            'Status' => $this->Name,
+            'Relation' => !empty($this->ChangeRelation) ? $this->ChangeRelation : $this->Relation,
+            'Thumbnail' => $this->New_Thumbnail,
+        ];
+        $update = DB::table('status')->where('Id', $this->Id)->update($updateData);
+
+        if ($update) {
+            // Dispatch SweetAlert event
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'title' => 'Updated Successfully!',
+                'text' => "Status '{$this->Name}' updated in {$updatedApps} applications.",
+                'icon' => 'success',
+            ]);
+
+            // Reset Fields
             $this->ResetFields();
-            $this->Thumbnail = Null;
+            $this->Thumbnail = null;
             $this->iteration++;
             $this->Update = 0;
-            $this->Relation  = $relation;
+            $this->Relation = $relation;
         }
     }
     public function Delete($Id)
     {
-        $fetch = Status::Where('Id', $Id)->get();
-        foreach ($fetch as $item) {
-            $this->Old_Thumbnail = $item['Thumbnail'];
-            $this->Name = $item['Name'];
-            $this->Relation = $item['Relation'];
-        }
-        if ($this->Old_Thumbnail == NULL) {
-            $delete = Status::Where('Id', $Id)->delete();
-            if ($delete) {
-                session()->flash('SuccessMsg', $this->Name . '  is Deleted From' . $this->Relation);
-                $this->Relation = $this->Relation;
-            } else {
-                session()->flash('Error', 'Unable to Delete Bookmark');
-                $this->Relation = $this->Relation;
-            }
-        } elseif (Storage::disk('public')->exists($this->Old_Thumbnail)) {
-            unlink(storage_path('app/public/' . $this->Old_Thumbnail));
-            $delete = Status::Where('Id', $Id)->delete();
-            if ($delete) {
-                // session()->flash('SuccessMsg',$this->Name.' is Deleted from '.$this->Relation);
-                $this->Relation = $this->Relation;
-                $notification = array(
-                    'message' => $this->Name . ' is Deleted from ' . $this->Relation,
-                    'alert-type' => 'info'
-                );
-                return redirect()->back()->with($notification);
-            } else {
-                $delete = Status::Where('Id', $Id)->delete();
-                session()->flash('Error', 'Unable to Delete Icon / Not Available Bookmark');
-            }
-        } else {
-            $delete = Status::Where('Id', $Id)->delete();
-            if ($delete) {
+        $status = Status::where('Id', $Id)->first(); // Fetch single record
 
-                $this->Relation = $this->Relation;
-                $notification = array(
-                    'message' => $this->Name . ' is Deleted from ' . $this->Relation,
-                    'alert-type' => 'info'
-                );
-                return redirect()->back()->with($notification);
-            } else {
-                $this->Relation = $this->Relation;
-                session()->flash('Error', 'Unable to Delete Bookmark');
-            }
+        if (!$status) {
+            session()->flash('Error', 'Record not found.');
+            return;
         }
+
+        $this->Old_Thumbnail = $status->Thumbnail;
+        $this->Name = $status->Name;
+        $relation = $status->Relation;
+
+        // Delete Thumbnail if it exists
+        if (!is_null($this->Old_Thumbnail) && Storage::disk('public')->exists($this->Old_Thumbnail)) {
+            Storage::disk('public')->delete($this->Old_Thumbnail);
+        }
+
+        // Delete Status Record
+        $delete = Status::where('Id', $Id)->delete();
+
+        if ($delete) {
+            // Dispatch SweetAlert Event for Livewire
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'title' => 'Deleted Successfully!',
+                'text' => "{$this->Name} has been deleted from {$this->Relation} Category.",
+                'icon' => 'success',
+            ]);
+        } else {
+            session()->flash('Error', 'Unable to delete record.');
+        }
+        $this->ResetFields();
+        $this->Relation = $relation;
     }
+
     public function LastUpdate()
     {
         $latest = Bookmark::latest('created_at')->first();

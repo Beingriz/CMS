@@ -32,6 +32,7 @@ class EmpRegister extends Component
     public $bal_id = null;
     public $update = 0, $Show_Insight = false;
 
+    protected $listeners = ['edit'=>'Edit','delete'=>'deleteEmployee','update'=>'Update'];
     protected $rules = [
         'Name' => 'required|string|max:255',
         'DOB' => 'required|date',
@@ -186,16 +187,19 @@ class EmpRegister extends Component
         //Send Whatsapp Alert.
         // $this->EmployeeRegisterAlert($this->Name, $this->Mobile_No, $this->username);
 
-
-        session()->flash('SuccessMsg', 'Employee successfully registered.');
-
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Employee Registered',
+            'text' => 'Employee successfully registered.',
+            'icon' => 'success',
+            'redirect-url' => route('emp.register'),
+        ]);
         // Reset form fields after saving
         $this->reset(['Name', 'DOB', 'Father_Name', 'Mobile_No', 'Address', 'Gender', 'Email_Id', 'Experience', 'Qualification', 'Branch', 'Role', 'Profile_Img', 'Qualification_Doc', 'Resume_Doc', 'Old_Profile_Img']);
         $this->iteration++;
-        return redirect()->route('emp.register');
     }
     public function Edit($Edit_Id)
     {
+
         // Fetch employee details based on the given ID
         $employee = EmployeeRegister::where('Id', $Edit_Id)->first();
         if (!$employee) {
@@ -223,24 +227,26 @@ class EmpRegister extends Component
     public function Update($UpdateId)
     {
         // Fetch the employee record
-        $employee = EmployeeRegister::where('Id',$UpdateId)->first();
+        $employee = EmployeeRegister::where('Id', $UpdateId)->first();
 
         if (!$employee) {
             session()->flash('ErrorMsg', 'Employee not found.');
             return;
         }
 
-        // Handle file uploads
-        if ($this->Profile_Img instanceof \Illuminate\Http\UploadedFile) {
-            $this->Old_Profile_Img = $employee->Profile_Img;
-            $this->handleFileUpload('Profile_Img', $this->Old_Profile_Img);
-        }if ($this->Qualification_Doc instanceof \Illuminate\Http\UploadedFile) {
-            $this->Qualification_Doc = $employee->Qualification_Doc;
-            $this->handleFileUpload('Qualification_Doc', $employee->Qualification_Doc);
-        }if ($this->Resume_Doc instanceof \Illuminate\Http\UploadedFile) {
-            $this->Resume_Doc = $employee->Resume_Doc;
-            $this->handleFileUpload('Resume_Doc', $employee->Resume_Doc);
-        }
+        // Preserve old files if no new files are uploaded
+        $profileImage = $this->Profile_Img instanceof \Illuminate\Http\UploadedFile
+            ? $this->handleFileUpload('Profile_Img', $employee->Profile_Img)
+            : $employee->Profile_Img;
+
+        $qualificationDoc = $this->Qualification_Doc instanceof \Illuminate\Http\UploadedFile
+            ? $this->handleFileUpload('Qualification_Doc', $employee->Qualification_Doc)
+            : $employee->Qualification_Doc;
+
+        $resumeDoc = $this->Resume_Doc instanceof \Illuminate\Http\UploadedFile
+            ? $this->handleFileUpload('Resume_Doc', $employee->Resume_Doc)
+            : $employee->Resume_Doc;
+        // Update employee details
         $employee->update([
             'Name' => ucwords(strtolower(trim($this->Name))),
             'Father_Name' => ucwords(strtolower(trim($this->Father_Name))),
@@ -253,11 +259,10 @@ class EmpRegister extends Component
             'Branch' => trim($this->Branch),
             'Qualification' => trim($this->Qualification),
             'Experience' => trim($this->Experience),
-            'Profile_Img' => $this->Profile_Img,
-            'Resume_Doc' => $this->Resume_Doc,
-            'Qualification_Doc' => $this->Qualification_Doc,
+            'Profile_Img' => $profileImage,
+            'Resume_Doc' => $resumeDoc,
+            'Qualification_Doc' => $qualificationDoc,
         ]);
-
 
         // Update associated user record
         $user = User::where('Client_Id', $this->Id)->first();
@@ -270,22 +275,27 @@ class EmpRegister extends Component
                 'role' => trim($this->Role),
                 'mobile_no' => trim($this->Mobile_No),
                 'email' => trim($this->Email_Id),
-                'profile_image' => $this->Profile_Img,
+                'profile_image' => $profileImage,
             ]);
         }
 
-        // Provide success feedback
-        session()->flash('SuccessMsg', 'Employee successfully updated.');
+        // Provide success feedback using SweetAlert
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Employee Updated',
+            'text' => 'Employee details successfully updated.',
+            'icon' => 'success',
+            'redirect-url' => route('emp.register'),
+        ]);
 
-        // Reset form fields
-        $this->update = 0; // Reset update mode
-        return redirect()->route('emp.register');
+        // Reset update mode
+        $this->update = 0;
     }
 
 
 
     public function deleteEmployee($empId)
     {
+        dd($empId);
         try {
             // Fetch the employee record
             $employee = EmployeeRegister::where('Id', $empId)->first();

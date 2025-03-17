@@ -89,7 +89,7 @@ class AboutUsForm extends Component
                 'text' => 'New About Us Added Successfully.',
                 'icon' => 'success',
                 'timer' => 3000,
-                'redirect_url' => route('new.about_us'),
+                'redirect-url' => route('new.about_us'),
 
             ]);
         } catch (\Exception $e) {
@@ -100,7 +100,7 @@ class AboutUsForm extends Component
                 'text' => 'Something went wrong while saving. Please try again.',
                 'icon' => 'error',
                 'timer' => 3000,
-                'redirect_url' => route('new.about_us'),
+                'redirect-url' => route('new.about_us'),
             ]);
         }
     }
@@ -188,7 +188,7 @@ class AboutUsForm extends Component
             'title' => 'Updated!',
             'text' => 'About Us Details Updated Successfully!',
             'icon' => 'success',
-            'redirect_url' => route('new.about_us') // Optional: Redirect after confirmation
+            'redirect-url' => route('new.about_us') // Optional: Redirect after confirmation
         ]);
 
         $this->ResetFields();
@@ -209,7 +209,7 @@ class AboutUsForm extends Component
                     'title' => 'Selection Updated!',
                     'text' => 'The selected About Us record has been updated.',
                     'icon' => 'success',
-                    'redirect_url' => route('new.about_us'),
+                    'redirect-url' => route('new.about_us'),
 
                 ]);
 
@@ -223,7 +223,7 @@ class AboutUsForm extends Component
                 'title' => 'Error!',
                 'text' => 'Something went wrong. Please try again.',
                 'icon' => 'error',
-                'redirect_url' => route('new.about_us'),
+                'redirect-url' => route('new.about_us'),
 
             ]);
         }
@@ -257,7 +257,7 @@ class AboutUsForm extends Component
                 'title' => 'Deleted!',
                 'text' => 'Record deleted successfully.',
                 'icon' => 'success',
-                'redirect_url' => route('new.about_us'),
+                'redirect-url' => route('new.about_us'),
                 'timer' => 3000,
             ]);
 
@@ -270,7 +270,7 @@ class AboutUsForm extends Component
                 'title' => 'Error!',
                 'text' => 'Something went wrong. Please try again.',
                 'icon' => 'error',
-                'redirect_url' => route('new.about_us'),
+                'redirect-url' => route('new.about_us'),
                 'timer' => 3000,
             ]);
         }

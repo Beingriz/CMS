@@ -1,5 +1,5 @@
 @extends('admin-module.admin_master')
-<title>Branch Registration</title>
+<title>Branch Manager</title>
 @section('admin')
 
     <div class="page-content" style="margin-top: 5px">

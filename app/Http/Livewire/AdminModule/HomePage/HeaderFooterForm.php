@@ -104,7 +104,7 @@ class HeaderFooterForm extends Component
                 'title' => 'Selection Updated!',
                 'text' => 'Company details have been selected successfully.',
                 'icon' => 'success',
-                'redirect_url' => route('user_top_bar'), // Laravel route helper
+                'redirect-url' => route('user_top_bar'), // Laravel route helper
             ]);
 
             $this->ResetFields();
@@ -149,7 +149,7 @@ class HeaderFooterForm extends Component
                     'title' => 'Success!',
                     'text' => 'Company details have been updated successfully.',
                     'icon' => 'success',
-                    'redirect_url' => route('user_top_bar'), // Redirect URL
+                    'redirect-url' => route('user_top_bar'), // Redirect URL
                 ]);
             } else {
                 // Handle case where no rows were updated
@@ -184,7 +184,7 @@ class HeaderFooterForm extends Component
                 'title' => 'Deleted!',
                 'text' => $Company_Name. ' has been deleted successfully.',
                 'icon' => 'success',
-                'redirect_url' => route('user_top_bar'), // Laravel route helper
+                'redirect-url' => route('user_top_bar'), // Laravel route helper
             ]);
         }else{
             $this->dispatchBrowserEvent('swal:error', [

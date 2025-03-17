@@ -41,7 +41,7 @@ $(function() {
         confirmAction(
             link || null,
             "Are you sure?",
-            "Delete this data?".id,
+            "you want to Delete this record permanantly?",
             "warning",
             "Yes, delete it!",
             funName,
@@ -59,7 +59,7 @@ $(function() {
         confirmAction(
             link || null,
             "Are you sure?",
-            "you want to edit this data?".id,
+            "you want to edit this record?",
             "info",
             "Yes, Edit Record!",
             funName,
@@ -81,6 +81,24 @@ $(function() {
             "you want to Select this Record?",
             "info",
             "Yes, Select!",
+            funName,
+            id
+        );
+    });
+});
+// view Record Confirmation
+$(function() {
+    $(document).on('click', '#viewRecord', function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        var funName = $(this).attr("funName");
+        var id = $(this).attr("recId");
+        confirmAction(
+            link || null,
+            "Are you sure?",
+            "you want to list all Records?",
+            "info",
+            "Yes, Show All!",
             funName,
             id
         );

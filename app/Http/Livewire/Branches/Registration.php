@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Branches;
 
+use App\Models\Application;
 use App\Models\Branches;
+use App\Models\EmployeeRegister;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -12,16 +14,13 @@ class Registration extends Component
 
     public $Name, $Address, $Update, $Br_Id, $MapLink,$created,$updated;
     public $user_count, $employee_count;
+    protected $listeners = ['edit' => 'Edit', 'delete' => 'Delete'];
+
 
     public function mount($EditId, $DeleteId)
     {
         $this->Br_Id = 'BR' . time();
-        if (!empty($EditId)) {
-            $this->Edit($EditId);
-        }
-        if (!empty($DeleteId)) {
-            $this->Delete($DeleteId);
-        }
+
     }
     protected $rules = [
         'Name' => 'required ',
@@ -65,7 +64,13 @@ class Registration extends Component
         $save_bm->address = $this->Address;
         $save_bm->google_map_link = $this->MapLink;
         $save_bm->save();
-        session()->flash('SuccessMsg', 'Congratulations!, New Branch with name : '.$this->Name . '  is Created Successfully!');
+        $this->dispatchBrowserEvent('swal:success', [
+            'type' => 'success',
+            'title' => 'Branch Registered Successfully',
+            'text' => 'Branch with name : '.$this->Name . '  is Registered Successfully!',
+            'icon' => 'success',
+            'redirect-url' => route('branch_register')  // Redirect to Branch Registration Page
+        ]);
         $this->ResetFields();
     }
 
@@ -80,36 +85,78 @@ class Registration extends Component
         }
         $this->Update = 1;
     }
+
+    public function updateBranch($id){
+        $this->validate();
+        $update = Branches::Where('branch_id', $id)->update([
+            'name' => $this->Name,
+            'address' => $this->Address,
+            'google_map_link' => $this->MapLink,
+        ]);
+        if ($update) {
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'type' => 'success',
+                'title' => 'Branch Updated Successfully',
+                'text' => 'Branch with name : '.$this->Name . '  is Updated Successfully!',
+                'icon' => 'success',
+            ]);
+            $this->ResetFields();
+        } else {
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'type' => 'error',
+                'title' => 'Branch Update Failed',
+                'text' => 'Unable to Update Branch, Please try again later!',
+                'icon' => 'error',
+            ]);
+        }
+    }
     public function Delete($br_Id)
     {
-        $fetch = Branches::Where('branch_id', $br_Id)->get();
-        foreach ($fetch as $item) {
-            $this->user_count = $item['user_count'];
-            $this->employee_count = $item['employee_count'];
-            $this->Name = $item['name'];
-            $this->Address = $item['address'];
+        $branch = Branches::where('branch_id', $br_Id)->first(); // Fetch single record
+
+        if (!$branch) {
+            session()->flash('error', 'Branch not found!');
+            return redirect()->back();
         }
-        if ($this->employee_count > 0 ||  $this->user_count >0) {
-            session()->flash('Error', 'Sorry!, you cannot Delete this Branch, Kindly use Edit option. Thank you!');
+
+         // Check if branch is associated with Applications or Employees
+    $isUsedInApplications = Application::where('Branch_Id', $br_Id)->exists();
+    $isUsedInEmployees = EmployeeRegister::where('Branch_Id', $br_Id)->exists();
+
+    if ($isUsedInApplications || $isUsedInEmployees) {
+        $this->dispatchBrowserEvent('swal:success-non-redirect', [
+            'title' => 'Cannot Delete Branch!',
+            'text' => "Branch '{$branch->name}' at '{$branch->address}' is associated with applications or employees.",
+            'icon' => 'warning'
+        ]);
+        return;
+    }
+        // Delete branch
+        if ($branch->delete()) {
+            // Dispatch SweetAlert
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Deleted Successfully!',
+                'text' => "Branch '{$branch->name}' at '{$branch->address}' has been deleted.",
+                'icon' => 'success',
+                'redirect-url' => route('branch_register') // Redirect to branch list after deletion
+            ]);
         } else {
-            $delete = Branches::Where('branch_id', $br_Id)->delete();
-            if ($delete) {
-                $notification = array(
-                    'message' => 'Branch is Deleted successfully!',
-                    'alert-type' => 'info'
-                );
-                session()->flash('Success', $this->Name . 'of '.$this->Address.'Branch is Deleted from');
-                return redirect()->back()->with($notification);
-
-
-            } else {
-                session()->flash('Error', 'Unable to Delete Branch, Please try again later!');
-            }
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'title' => 'Failed to Delete!',
+                'text' => "Branch '{$branch->name}' at '{$branch->address}' could not be deleted.",
+                'icon' => 'error'
+            ]);
         }
     }
 
+    public function autoCapitalize()
+    {
+        $this->Name = ucwords($this->Name);
+        $this->Address = ucwords($this->Address);
+    }
     public function render()
     {
+        $this->autoCapitalize();
         $this->LastUpdate();
         $Existing_Branches = DB::table('branches')->paginate(5);
 

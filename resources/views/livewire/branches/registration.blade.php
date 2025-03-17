@@ -45,140 +45,120 @@
 
     {{-- ---------------------------------------------------------------------------------------------------- --}}
     <div class="row">
+        <!-- Branch Registration Form -->
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header d-sm-flex align-items-center justify-content-between"">
-                    <h5>New Branch</h5>
-                    <h5><a href="{{ route('branch_register') }}" title="Click here for New Transaction">Create New</a></h5>
+            <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <h5 class="mb-0">New Branch</h5>
+                    <a href="{{ route('branch_register') }}" class="btn btn-light btn-sm">Create New</a>
                 </div>
                 <div class="card-body">
+                    <p class="card-title-desc text-muted">Welcome to Branch Registration</p>
 
-                    <p class="card-title-desc">Welcome to Branch Registration</p>
-                    <div class="row mb-3">
-                        <label for="example-text-input" class="col-sm-4 col-form-label">Branch Id</label>
-                        <label for="example-text-input" class="col-sm-7 col-form-label">{{ $Br_Id }}</label>
-
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Branch ID:</label>
+                        <span class="text-primary">{{ $Br_Id }}</span>
                     </div>
-                    <!-- end row -->
+
                     <form wire:submit.prevent="Save">
                         @csrf
 
-                        <div class="row mb-3">
-                            <label for="Name" class="col-sm-4 col-form-label">Name</label>
-                            <div class="col-sm-8">
-                                <input class="form-control" type="text" placeholder="Branch Name" wire:model="Name"
-                                    id="Name">
-                                <span class="error"> @error('Name') {{ $message }} @enderror </span>
-                            </div>
+                        <div class="mb-3">
+                            <label for="Name" class="form-label">Branch Name</label>
+                            <input class="form-control" type="text" placeholder="Enter Branch Name" wire:model.lazy="Name" id="Name">
+                            @error('Name') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <!-- end row -->
-                        <div class="row mb-3">
-                            <label for="example-url-input" class="col-sm-4 col-form-label">Address</label>
-                            <div class="col-sm-8">
-                                <textarea class="form-control" type="text" wire:model="Address"
-                                    placeholder="Address" rows="3" cols="5" id="example-url-input"></textarea>
-                                <span class="error"> @error('Address') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <!-- end row -->
-                        <div class="row mb-3">
-                            <label for="googlemap" class="col-sm-4 col-form-label">Google Map Link</label>
-                            <div class="col-sm-8">
-                                <input class="form-control" type="text" placeholder="Google Map Link" wire:model="MapLink"
-                                    id="MapLink">
-                                <span class="error"> @error('MapLink') {{ $message }} @enderror </span>
-                            </div>
-                        </div>
-                        <!-- end row -->
 
-                        <div class="form-data-buttons"> {{-- Buttons --}}
-                            <div class="row">
-                                <div class="col-100">
-                                    @if ($Update == 0)
-                                        <button type="submit" value="submit" name="submit"
-                                            class="btn btn-primary btn-rounded btn-sm">Save</button>
-                                        <a href="#" wire:click.prevent="ResetFields()"
-                                            class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    @elseif($Update == 1)
-                                        <a href="#" wire:click.prevent="Update()"
-                                            class="btn btn-success btn-rounded btn-sm">Update</button>
-                                            <a href="#" wire:click.prevent="ResetFields()"
-                                                class="btn btn-info btn-rounded btn-sm">Reset</a>
-                                    @endif
+                        <div class="mb-3">
+                            <label for="Address" class="form-label">Address</label>
+                            <textarea class="form-control" placeholder="Enter Address" rows="3" wire:model.lazy="Address"></textarea>
+                            @error('Address') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                    <a href='{{ route('admin.home') }}'
-                                        class="btn  btn-warning btn-rounded btn-sm ">Cancel</a>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="MapLink" class="form-label">Google Map Link</label>
+                            <input class="form-control" type="text" placeholder="Enter Google Map Link" wire:model="MapLink">
+                            @error('MapLink') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            @if ($Update == 0)
+                                <button type="submit" class="btn btn-primary w-100">Save</button>
+                            @else
+                            <br>
+                            <button type="button" wire:click.prevent="updateBranch('{{ $Br_Id }}')" class="btn btn-success w-100">
+                                Update
+                            </button>
+                            @endif
+                            <button type="button" wire:click.prevent="ResetFields()" class="btn btn-secondary w-100">Reset</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div> <!-- end col -->
+        </div>
+        <!-- End Branch Registration Form -->
 
-    @if (count($Existing_branches) > 0)
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">#{{ $Existing_branches->total() }} Branches Available</h5>
-            </div>
+        @if ($Existing_branches->count() > 0)
+            <!-- Existing Branches Table -->
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Total Branches: {{ $Existing_branches->total() }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Map</th>
+                                        <th>Applicants</th>
+                                        <th>Employees</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Existing_branches as $key)
+                                        <tr>
+                                            <td>{{ $Existing_branches->firstItem() + $loop->index }}</td>
+                                            <td class="fw-bold">{{ ucfirst($key->name) }}</td>
+                                            <td class="text-truncate" style="max-width: 150px;">{{ $key->address }}</td>
+                                            <td>
+                                                <a href="{{ $key->google_map_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="mdi mdi-map-marker"></i> View Map
+                                                </a>
+                                            </td>
+                                            <td class="text-center">{{ $key->user_count }}</td>
+                                            <td class="text-center">{{ $key->employee_count }}</td>
+                                            <td>
+                                                <a id="editRecord" funName="edit" recId="{{ $key->branch_id }}" class="btn btn-sm btn-primary">
+                                                    <i class="mdi mdi-pencil"></i>Edit
+                                                </a>
+                                                <button class="btn btn-sm btn-danger" id="deleteRecord" funName="delete" recId="{{ $key->branch_id }}" ">
+                                                    <i class="mdi mdi-delete"></i>Delete
+                                                </button>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <table id="datatable"
-                        class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline text-wrap"role="grid"
-                        aria-describedby="datatable_info">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Address</th>
-                                <th>Link</th>
-                                <th>Applicants</th>
-                                <th>Employess</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($Existing_branches as $key)
-                                <tr>
-                                    <td>{{ $Existing_branches->firstItem() + $loop->index }}</td>
-                                    <td>{{ $key->name }}</td>
-                                    <td class="text-wrap">{{ $key->address }}</td>
-                                    <td class="text-wrap">{{ $key->google_map_link }}</td>
-                                    <td>{{ $key->user_count }}</td>
-                                    <td>{{ $key->employee_count }}</td>
-
-                                    <td>
-                                        <a href="{{ route('edit.branch', $key->branch_id) }}"
-                                            class="btn btn-sm btn-primary font-size-15" id="editData"><i
-                                                class="mdi mdi-circle-edit-outline"></i></a>
-
-                                        <a href ="{{ route('delete.branch', $key->branch_id) }}"class="btn btn-sm btn-danger font-size-15"
-                                            id="delete"><i class="mdi mdi-delete-alert-outline"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-md-8">
-                            <p class="text-muted">Showing {{ count($Existing_branches) }} of
-                                {{ $Existing_branches->total() }} entries</p>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-md-4">
-                            <span class=" pagination pagination-rounded float-end">
-                                {{ $Existing_branches->links() }}
-                            </span>
 
-
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <p class="text-muted mb-0">Showing {{ $Existing_branches->count() }} of {{ $Existing_branches->total() }} entries</p>
+                            <nav>
+                                {{ $Existing_branches->links('pagination::bootstrap-4') }}
+                            </nav>
                         </div>
-                        <p class="card-text"><small class="text-muted">Last Bookmarked
-                                {{ $created }}</small></p>
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- End Existing Branches Table -->
+        @endif
     </div>
-@endif
+
 </div>
