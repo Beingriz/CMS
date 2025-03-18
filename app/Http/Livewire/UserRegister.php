@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 class UserRegister extends Component
 {
     use WhatsappTrait;
-    public $name, $email, $username, $mobile_no, $password, $password_confirmation,$Branch_Id,$Emp_Id,$Branch;
+    public $name, $email, $username, $mobile_no, $password, $password_confirmation,$Branch_Id,$Emp_Id,$Branch,$usernameAvailable=null;
 
     protected $rules = [
         'name' => 'required',
@@ -42,7 +42,9 @@ class UserRegister extends Component
     public function Register()
     {
         $this->validate();
-        $client_Id = 'DC' . date('Y') . strtoupper(Str::random(3)) . rand(000, 9999);
+        // Generate Unique Client ID
+        $client_Id = 'DC' . date('Y') . Str::upper(Str::random(3)) . rand(100, 9999);
+
         $user = User::create([
             'Client_Id' => trim($client_Id),
             'name' => trim($this->name),
@@ -71,17 +73,32 @@ class UserRegister extends Component
         $user_data->Profile_Image = 'account.png';
         $user_data->Client_Type = "New Client";
         $user_data->save(); // Client Registered
-        event(new Registered($user));
+        // event(new Registered($user));
         Auth::login($user);
-        $notification = array(
-            'message' => $this->name . ' Login Successfull',
-            'alert-type' => 'info'
-        );
-        $this->userRegisterationAlert(trim($this->mobile_no),trim($this->name),trim($this->username),trim($this->password));
-        return redirect()->route('home')->with($notification);
+        $this->dispatchBrowserEvent('swal:success', [
+            'type' => 'success',
+            'title' => 'Registration Successfull',
+            'text' => 'You have successfully registered',
+            'icon' => 'success',
+            'redirect-url' => route('home'),
+        ]);
+
+        // $this->userRegisterationAlert(trim($this->mobile_no),trim($this->name),trim($this->username),trim($this->password));
+    }
+    public function updatedUsername()
+    {
+        $this->username = preg_replace('/\s+/', '', $this->username);
+        if ($this->username) {
+            // Check if the username exists in the database
+            $exists = User::where('username', $this->username)->exists();
+            $this->usernameAvailable = $exists ? false : true;
+        } else {
+            $this->usernameAvailable = null;
+        }
     }
     public function render()
     {
+        $this->updatedUsername();
         $Branches = Branches::all();
         return view('livewire.user-register',['Branches'=>$Branches]);
     }

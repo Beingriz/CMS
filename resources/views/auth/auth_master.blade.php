@@ -15,7 +15,10 @@
     <!-- MDB -->
     <link rel="stylesheet" href="{{asset('frontend/assets/mdb/css/mdb.min.css')}}" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
+    <link rel="stylesheet" href="{{asset('frontend/assets/mdb/css/mdb.min.css')}}" />
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     @livewireStyles()
   </head>
   <style>
@@ -33,8 +36,29 @@
         z-index: 9999;
     }
 </style>
+<style>
+    body {
+        background-color: #f3f4f6;
+    }
+    .form-container {
+        max-width: 600px;
+        margin: auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .info-icon {
+        font-size: 18px;
+        color: #007bff;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+</style>
   <body>
-
+ <!-- Scripts -->
+ <script src="{{asset('frontend/assets/mdb/js/mdb.min.js')}}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Loading Spinner Overlay -->
     <div id="loading-overlay" wire:loading.class="d-block" wire:loading.class.remove="d-none" class="loading-overlay d-none">
         <div class="spinner-border text-primary" role="status">
@@ -74,5 +98,38 @@
             }
             @endif
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
+            <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    window.addEventListener('swal:success', event => {
+                        Swal.fire({
+                            title: event.detail.title,
+                            text: event.detail.text,
+                            icon: event.detail.icon,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed || result.isDismissed) {
+                                window.location.href = event.detail['redirect-url']; // Correct key reference
+                            }
+                        });
+                    });
+                });
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    window.addEventListener('swal:success-non-redirect', event => {
+                        Swal.fire({
+                            title: event.detail.title,
+                            text: event.detail.text,
+                            icon: event.detail.icon,
+                            confirmButtonText: 'OK'
+                        })
+                    });
+                });
+            </script>
+
   </body>
 </html>

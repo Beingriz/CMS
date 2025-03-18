@@ -59,7 +59,7 @@
                         <div class="dropdown-menu fade-up m-0">
                             {{-- <a href="{{route('features')}}" class="dropdown-item">Feature</a> --}}
                             <a href="{{route('user.home',Auth::user()->id)}}" class="dropdown-item">My Account</a>
-                            <a href="{{route('user.logout')}}" id="logout" class="dropdown-item">Logout</a>
+                            <a  id="logout" href="{{route('user.logout')}}"class="dropdown-item">Logout</a>
 
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                         <div class="dropdown-menu fade-up m-0">
                             {{-- <a href="{{route('features')}}" class="dropdown-item">Feature</a> --}}
                             <a href="{{route('register')}}" class="dropdown-item">Register</a>
-                            <a href="{{route('login')}}" class="dropdown-item">Login</a>
+                            <a id="logout" href="{{route('login')}}" class="dropdown-item">Login</a>
                         </div>
                     </div>
                     @endif

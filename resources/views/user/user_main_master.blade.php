@@ -12,13 +12,13 @@
     <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.ico') }}">
 
     <!-- jquery.vectormap css -->
-    {{-- <link href="{{asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css')}}" rel="stylesheet" type="text/css" /> --}}
+    <link href="{{asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- DataTables -->
-    {{-- <link href="{{asset('backend/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" /> --}}
+    <link href="{{asset('backend/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Responsive datatable examples -->
-    {{-- <link href="{{asset('backend/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" /> --}}
+    <link href="{{asset('backend/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Bootstrap Css -->
     <link href="{{ asset('backend/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet"
@@ -94,16 +94,13 @@
     @include('user.body.footer')
     <!-- Footer-area-end -->
 
-
-
-
-
-
-
-
     <!-- JavaScript Libraries -->
     @livewireScripts
     {{-- Toaset Script  --}}
+     <!-- Template Javascript -->
+     <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
@@ -128,18 +125,8 @@
             }
         @endif
     </script>
-    {{-- <script src="{{asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script> --}}
-    {{-- <script src="{{asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script> --}}
-    {{-- <script src="{{asset('backend/assets/js/pages/datatables.init.js')}}"></script> --}}
-    <!-- twitter-bootstrap-wizard js -->
-    {{-- <script src="{{asset('backend/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js')}}"></script> --}}
 
-    {{-- <script src="{{asset('backend/assets/libs/twitter-bootstrap-wizard/prettify.js')}}"></script> --}}
-    {{-- <script src="{{asset('backend/assets/js/pages/materialdesign.init.js')}}"></script> --}}
-    <!-- form wizard init -->
-    {{-- <script src="{{asset('backend/assets/js/pages/form-wizard.init.js')}}"></script> --}}
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('backend/assets/js/code.js') }}"></script>
 
     {{-- ------------------------------------------------------------------- --}}
@@ -155,7 +142,7 @@
 
     <!-- Template Javascript -->
     <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
-   
+
 
 </body>
 

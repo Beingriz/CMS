@@ -98,6 +98,11 @@
 
     <!-- JAVASCRIPT -->{{-- {{asset('backend/')}} --}}
     @livewireScripts
+      <!-- Template Javascript -->
+      <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
+
     <script src="{{ asset('backend/assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/metismenu/metisMenu.min.js') }}"></script>
@@ -145,6 +150,7 @@
             }
         @endif
     </script>
+
     <script src="{{ asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('backend/assets/js/pages/datatables.init.js') }}"></script>
@@ -155,9 +161,6 @@
     <script src="{{ asset('backend/assets/js/pages/materialdesign.init.js') }}"></script>
     <!-- form wizard init -->
     <script src="{{ asset('backend/assets/js/pages/form-wizard.init.js') }}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <script src="{{ asset('backend/assets/js/code.js') }}"></script>
 
     {{-- ------------------------------------------------------------------- --}}
@@ -171,10 +174,7 @@
     <script src="{{ asset('frontend/assets/lib/isotope/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/lib/lightbox/js/lightbox.min.js') }}"></script>
 
-    <!-- Template Javascript -->
-    <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
-    <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <script>
     window.addEventListener('swal:success', event => {

@@ -22,7 +22,7 @@
             {{-- Full Screen Button End --}}
 
             {{-- Notification Button Start --}}
-            {{-- <div class="dropdown d-inline-block">
+            <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                       data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ri-notification-3-line"></i>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
             {{-- Notification Button End --}}
 
             {{-- Profile Button Start --}}
@@ -141,7 +141,7 @@
                     <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i>Change
                         Password</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{{ route('user.logout') }}" id="logout"><i
+                    <a class="dropdown-item text-danger"  id="logout" href="{{ route('user.logout') }}"><i
                             class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>
