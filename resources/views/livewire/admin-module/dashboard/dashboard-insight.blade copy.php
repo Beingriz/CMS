@@ -1,121 +1,116 @@
 <div>
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
     <div class="row">
-        {{-- Revenue Card Start--}}
-        <div class="col-xl-7">
-            <div class="card shadow-lg border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="card-title text-primary">Revenue Insight</h4>
-                        <div class="dropdown">
-                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                Report <i class="mdi mdi-chevron-down"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#" wire:click.prevent="Today">Credit</a></li>
-                                <li><a class="dropdown-item" href="#" wire:click.prevent="Debit">Debit</a></li>
-                            </ul>
-                        </div>
-                    </div>
+        <div class="col-xl-8">
 
-                    <!-- Revenue Overview -->
-                    <div class="text-center mt-4">
-                        <div class="row g-3">
-                            @foreach([
-                                ['label' => 'Monthly', 'amount' => $totalSales, 'icon' => 'ri-calendar-fill'],
-                                ['label' => $Caption, 'amount' => $totalRevenue, 'icon' => 'ri-bar-chart-fill'],
-                                ['label' => 'Last Week', 'amount' => $lastWeekAmount[0]->lastWeekamount, 'icon' => 'ri-time-line'],
-                                ['label' => 'Last Month', 'amount' => $lastMonthAmount, 'icon' => 'ri-calendar-2-fill']
-                            ] as $item)
-                                <div class="col-sm-3">
-                                    <div class="card text-center p-3 shadow-sm border-0">
-                                        <i class="{{ $item['icon'] }} display-6 text-primary mb-2"></i>
-                                        <h5 class="mb-1">&#x20B9;{{ number_format($item['amount'], 2) }}</h5>
-                                        <p class="text-muted mb-0">{{ $item['label'] }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Revenue Chart -->
-                    <div class="mt-4">
-                        <div id="revenue-chart" style="height: 250px;"></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        {{-- end of Revenue Card --}}
-        {{-- Service Card Start --}}
-
-        <div class="col-xl-5">
-            <div class="card shadow-lg border-0">
+            <div class="card">
                 <div class="card-body pb-0">
-                    <!-- Dropdown Menu -->
                     <div class="float-end d-none d-md-inline-block">
-                        <div class="dropdown">
-                            <a class="text-reset fw-semibold" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                        <div class="dropdown card-header-dropdown">
+                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
-                                <span class="text-muted">
-                                    <i class="mdi mdi-calendar-clock"></i> {{ $ServCaption ?? 'This Year' }}
-                                    <i class="mdi mdi-chevron-down ms-1"></i>
-                                </span>
+                                <span class="text-muted">Report<i class="mdi mdi-chevron-down ms-1"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#" wire:click.prevent="ServToday"><i class="mdi mdi-calendar-today"></i> Today</a>
-                                <a class="dropdown-item" href="#" wire:click.prevent="ServLastWeek"><i class="mdi mdi-calendar-week"></i> Last Week</a>
-                                <a class="dropdown-item" href="#" wire:click.prevent="ServLastMonth"><i class="mdi mdi-calendar-month"></i> Last Month</a>
-                                <a class="dropdown-item" href="#" wire:click.prevent="ServThisYear"><i class="mdi mdi-calendar-range"></i> This Year</a>
-                                <a class="dropdown-item" href="#" wire:click.prevent="ServLastYear"><i class="mdi mdi-calendar"></i> Last Year</a>
+                                <a class="dropdown-item" href="#" wire:click.prevent="Today">Credit </a>
+                                <a class="dropdown-item" href="#" wire:click.prevent="Debit">Debit</a>
                             </div>
                         </div>
                     </div>
+                    <h4 class="card-title mb-4">Revenue Insight</h4>
 
-                    <!-- Title -->
-                    <h4 class="card-title mb-4 text-dark fw-bold">
-                        <i class="mdi mdi-chart-bar"></i> {{ $ServCaption ?? 'Service Insights' }}
-                    </h4>
+                    <div class="text-center pt-4">
+                        <div class="row">
+                            <div class="col-sm-3 mb-3 mb-sm-0">
+                                <div class="d-inline-flex">
+                                    <h5 class="me-2">&#x20B9;{{ $totalSales }}</h5>
+                                    <div class="text-success font-size-12">
+                                        {{-- <i class="mdi mdi-menu-up font-size-14"> </i>2.2 % --}}
+                                    </div>
+                                </div>
+                                <p class="text-muted text-truncate mb-0">Monthly</p>
+                            </div><!-- end col -->
+                            <div class="col-sm-3 mb-3 mb-sm-0">
+                                <div class="d-inline-flex">
+                                    <h5 class="me-2">&#x20B9;{{ $totalRevenue }}</h5>
+                                    <div class="text-success font-size-12">
+                                        {{-- <i class="mdi mdi-menu-up font-size-14"> </i>2.2 % --}}
+                                    </div>
+                                </div>
+                                <p class="text-muted text-truncate mb-0">{{ $Caption }}</p>
+                            </div><!-- end col -->
+                            <div class="col-sm-3 mb-3 mb-sm-0">
+                                <div class="d-inline-flex">
+                                    <h5 class="me-2"> &#x20B9; {{ $lastWeekAmount[0]->lastWeekamount }}</h5>
+                                    <div class="text-success font-size-12">
+                                        {{-- <i class="mdi mdi-menu-up font-size-14"> </i>1.2 % --}}
+                                    </div>
+                                </div>
+                                <p class="text-muted text-truncate mb-0">Last Week</p>
+                            </div><!-- end col -->
+                            <div class="col-sm-3">
+                                <div class="d-inline-flex">
+                                    <h5 class="me-2"> &#x20B9;{{ $lastMonthAmount }}</h5>
+                                    <div class="text-success font-size-12">
+                                        {{-- <i class="mdi mdi-menu-up font-size-14"> </i>1.7 % --}}
+                                    </div>
+                                </div>
+                                <p class="text-muted text-truncate mb-0">Last Month</p>
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div>
+                </div>
 
-                    <!-- Statistics Row -->
+            </div><!-- end card -->
+        </div>
+        <!-- end col -->
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body pb-0">
+                    <div class="float-end d-none d-md-inline-block">
+                        <div class="dropdown">
+                            <a class="text-reset" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span class="text-muted">This Years<i class="mdi mdi-chevron-down ms-1"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#" wire:click.prevent="ServToday">Today</a>
+                                <a class="dropdown-item" href="#" wire:click.prevent="ServLastWeek">Last Week</a>
+                                <a class="dropdown-item" href="#" wire:click.prevent="ServLastMonth">Last
+                                    Month</a>
+                                <a class="dropdown-item" href="#" wire:click.prevent="ServThisYear">This Year</a>
+                                <a class="dropdown-item" href="#" wire:click.prevent="ServLastYear">Last Year</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="card-title mb-4">{{ $ServCaption }}</h4>
+
                     <div class="text-center pt-3">
                         <div class="row">
                             <div class="col-sm-4 mb-3 mb-sm-0">
-                                <div class="p-2 rounded bg-light">
-                                    <h5 class="text-primary fw-bold">
-                                        <i class="mdi mdi-office-building"></i> {{ $officeApp ?? 0 }}
-                                    </h5>
+                                <div>
+                                    <h5>{{ $officeApp }}</h5>
                                     <p class="text-muted text-truncate mb-0">Office Applications</p>
                                 </div>
                             </div><!-- end col -->
-
                             <div class="col-sm-4 mb-3 mb-sm-0">
-                                <div class="p-2 rounded bg-light">
-                                    <h5 class="text-success fw-bold">
-                                        <i class="mdi mdi-account-check"></i> {{ $directApp ?? 0 }}
-                                    </h5>
+                                <div>
+                                    <h5>{{ $directApp }}</h5>
                                     <p class="text-muted text-truncate mb-0">Direct Apply</p>
                                 </div>
                             </div><!-- end col -->
-
                             <div class="col-sm-4">
-                                <div class="p-2 rounded bg-light">
-                                    <h5 class="text-warning fw-bold">
-                                        <i class="mdi mdi-phone-incoming"></i> {{ $callBackApp ?? 0 }}
-                                    </h5>
+                                <div>
+                                    <h5>{{ $callBackApp }}</h5>
                                     <p class="text-muted text-truncate mb-0">Call Back</p>
                                 </div>
                             </div><!-- end col -->
                         </div><!-- end row -->
                     </div>
-
-                    <!-- Chart Container -->
-                    <div id="serviceChart" class="mt-4" style="height: 280px;"></div>
                 </div>
+
             </div><!-- end card -->
         </div>
-
-
         <!-- end col -->
     </div>
 

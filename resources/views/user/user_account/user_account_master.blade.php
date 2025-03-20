@@ -101,7 +101,7 @@
       <!-- Template Javascript -->
       <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
+      <script src="{{ asset('backend/assets/js/custome.js') }}"></script>
 
     <script src="{{ asset('backend/assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

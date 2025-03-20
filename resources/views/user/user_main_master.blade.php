@@ -100,7 +100,7 @@
      <!-- Template Javascript -->
      <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-     <script src="{{ asset('frontend/assets/js/custome.js') }}"></script>
+     <script src="{{ asset('backend/assets/js/custome.js') }}"></script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>

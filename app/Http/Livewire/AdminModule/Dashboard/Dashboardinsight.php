@@ -46,9 +46,13 @@ class DashboardInsight extends Component
 
     private function queryWithRole($table, $dateColumn = 'created_at')
     {
+        $branchId = 'Branch_Id';
+        if($table == 'quick_apply'){
+            $branchId = 'branch_id';
+        }
         $query = DB::table($table)->whereDate($dateColumn, '=', now()->toDateString());
         if ($this->isBranchAdminOrOperator) {
-            $query->where('Branch_Id', $this->Branch_Id);
+            $query->where($branchId, $this->Branch_Id);
         }
         return $query;
     }
@@ -72,7 +76,7 @@ class DashboardInsight extends Component
         $this->ServReport = true;
         $this->ServCaption = "Today";
         $this->officeApp = $this->queryWithRole('digital_cyber_db')->count();
-        $this->directApp = $this->queryWithRole('applynow')->count();
+        $this->directApp = $this->queryWithRole('quick_apply')->count();
         $this->callBackApp = $this->queryWithRole('callback')->count();
     }
 
@@ -85,7 +89,7 @@ class DashboardInsight extends Component
         $endOfWeek = now()->endOfDay();
 
         $this->officeApp = $this->queryWithRoleBetweenDates('digital_cyber_db', $startOfWeek, $endOfWeek)->count();
-        $this->directApp = $this->queryWithRoleBetweenDates('applynow', $startOfWeek, $endOfWeek)->count();
+        $this->directApp = $this->queryWithRoleBetweenDates('quick_apply', $startOfWeek, $endOfWeek)->count();
         $this->callBackApp = $this->queryWithRoleBetweenDates('callback', $startOfWeek, $endOfWeek)->count();
     }
 
@@ -98,7 +102,7 @@ class DashboardInsight extends Component
         $endOfLastMonth = now()->subMonth()->endOfMonth();
 
         $this->officeApp = $this->queryWithRoleBetweenDates('digital_cyber_db', $startOfLastMonth, $endOfLastMonth)->count();
-        $this->directApp = $this->queryWithRoleBetweenDates('applynow', $startOfLastMonth, $endOfLastMonth)->count();
+        $this->directApp = $this->queryWithRoleBetweenDates('quick_apply', $startOfLastMonth, $endOfLastMonth)->count();
         $this->callBackApp = $this->queryWithRoleBetweenDates('callback', $startOfLastMonth, $endOfLastMonth)->count();
     }
 
@@ -111,7 +115,7 @@ class DashboardInsight extends Component
         $endOfYear = now()->endOfYear();
 
         $this->officeApp = $this->queryWithRoleBetweenDates('digital_cyber_db', $startOfYear, $endOfYear)->count();
-        $this->directApp = $this->queryWithRoleBetweenDates('applynow', $startOfYear, $endOfYear)->count();
+        $this->directApp = $this->queryWithRoleBetweenDates('quick_apply', $startOfYear, $endOfYear)->count();
         $this->callBackApp = $this->queryWithRoleBetweenDates('callback', $startOfYear, $endOfYear)->count();
     }
 
@@ -124,7 +128,7 @@ class DashboardInsight extends Component
         $endOfLastYear = now()->subYear()->endOfYear();
 
         $this->officeApp = $this->queryWithRoleBetweenDates('digital_cyber_db', $startOfLastYear, $endOfLastYear)->count();
-        $this->directApp = $this->queryWithRoleBetweenDates('applynow', $startOfLastYear, $endOfLastYear)->count();
+        $this->directApp = $this->queryWithRoleBetweenDates('quick_apply', $startOfLastYear, $endOfLastYear)->count();
         $this->callBackApp = $this->queryWithRoleBetweenDates('callback', $startOfLastYear, $endOfLastYear)->count();
     }
 
