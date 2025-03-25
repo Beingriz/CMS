@@ -36,9 +36,6 @@
 
 
 
-    {{-- My old Website CSS  --}}
-    <link href="{{ asset('Bootstrap/css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('Bootstrap/css/600.css') }}" rel="stylesheet">
 
 </head>
 
@@ -249,6 +246,15 @@
                 })
             });
         });
+
+        window.addEventListener('statusChanged', event => {
+        Swal.fire({
+            title: "Status Updated!",
+            html: `The status has been changed from <b>${event.detail.pstatus}</b> to <b>${event.detail.ustatus}</b> successfully.`,
+            icon: "success",
+            confirmButtonText: "OK"
+        });
+    });
     </script>
 
 

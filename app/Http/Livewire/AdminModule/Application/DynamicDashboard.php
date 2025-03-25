@@ -126,8 +126,12 @@ class DynamicDashboard extends Component
     // Helper function to flash success message
     private function flashSuccessMessage(string $pstatus, string $ustatus): void
     {
-        session()->flash('SuccessMsg', 'The Status has been Changed From ' . $pstatus . ' to ' . $ustatus . ' Successfully');
+        $this->dispatchBrowserEvent('statusChanged', [
+            'pstatus' => $pstatus,
+            'ustatus' => $ustatus
+        ]);
     }
+
 
     // Update service notifications
     private function updateServiceNotifications(): void

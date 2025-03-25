@@ -138,226 +138,92 @@
 
     {{-- Data View Container --}}
     <div class="row">
-        <div class="col-lg-8 col-md-12">
-                <div class="card">
-                    <div class="card-header d-sm-flex align-items-center justify-content-between">
-                        <h2 class="card-title mb-4">Application Details of <span>{{ $Name }}</h2>
-                        <h3 class="card-title mb-4"><a href="{{ route('edit_application', $Id) }}"><i
-                                    class="ri-refresh-line"></i> Edit Applicaiton</a>
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row ">
-                            {{-- First Half Data Display --}}
-                            <div class="col-md-6 col-lg-6">
-                                <!-- Client Id  -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18 ">Client ID</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="imp-label font-size-18">{{ $Client_Id }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Application Id  -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Application ID</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span
-                                            class="text-primary font-weight-bolder font-size-18">{{ $Id }}</span>
-                                    </div>
-                                </div>
-
-
-
-                                <!-- Applied Date -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Applied Date</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            {{ \Carbon\Carbon::parse($Applied_Date)->diffForHumans() }} on
-                                            {{ \Carbon\Carbon::parse($Applied_Date)->format('d-m-Y') }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Mobile No -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Phone Number</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span
-                                            class="text-primary font-weight-bolder font-size-18">{{ $Mobile_No }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- DOB -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Date of Birth</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span
-                                            class="text-primary font-weight-bolder  font-size-18">{{ \Carbon\Carbon::parse($Dob)->format('d-m-Y') }}</span>
-                                    </div>
-                                </div>
-                                <!-- Ack No -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Ack..</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18"><a
-                                                href="{{ route('download_ack', $Id) }}" id="download"
-                                                class="label">{{ $Ack_No }}</a></span>
-                                    </div>
-                                </div>
-                                <!-- Document No -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Document No</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18"> <a
-                                                href="{{ route('download_doc', $Id) }}" id="download"
-                                                class="label">{{ $Document_No }}</a></span>
-                                    </div>
-                                </div>
-
-                                <!-- Status -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Status</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            {{ $Status }}</span>
-                                    </div>
-                                </div>
-                                <!-- Reason -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Reason</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            {{ $Reason }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- End --}}
-
-                            {{-- Second Half Data Display --}}
-                            <div class="col-md-6 col-lg-6">
-
-                                <!-- Application Type -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Service</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span
-                                            class="text-primary font-weight-bolder  font-size-18">{{ $Application }}</span>
-                                    </div>
-                                </div>
-                                <!-- Service Type -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Service Type</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            {{ $Application_Type }}</span>
-                                    </div>
-                                </div>
-                                <!-- Received_Date -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Received Date</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            {{ \Carbon\Carbon::parse($Received_Date)->diffForHumans() }} on
-                                            {{ \Carbon\Carbon::parse($Received_Date)->format('d-m-Y') }} </span>
-                                    </div>
-                                </div>
-
-                                <!-- Total_Amount -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Total Amount</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            &#x20B9;{{ $Total_Amount }}.00/-</span>
-                                    </div>
-                                </div>
-                                <!-- Amount_Paid -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Amount Paid</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            &#x20B9;{{ $Amount_Paid }}.00/-</span>
-                                    </div>
-                                </div>
-                                <!-- Balance -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Balance</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="imp-label font-weight-bolder font-size-18">
-                                            &#x20B9;{{ $Balance }}.00/-</span>
-                                    </div>
-                                </div>
-                                <!-- PaymentMode -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">PaymentMode</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span class="text-primary font-weight-bolder font-size-18">
-                                            {{ $PaymentMode }}</span>
-                                    </div>
-                                </div>
-                                <!-- Updated -->
-                                <div class="row">
-                                    <div class="col-45">
-                                        <span class="font-size-18">Updated On</span>
-                                    </div>
-                                    <div class="col-55">
-                                        <span
-                                            class="text-primary font-weight-bolder font-size-18">{{ \Carbon\Carbon::parse($updated_at)->diffForHumans() }}
-                                            on {{ \Carbon\Carbon::parse($updated_at)->format('d-m-Y') }}</span>
-                                        <p>Delivered in
-                                            {{ \Carbon\Carbon::parse($Received_Date)->diffInDays(\Carbon\Carbon::parse($Delivered_Date)) }}
-                                            Days</p>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                            {{-- End --}}
-                        </div>
-                        <div class="row ">
-                            <div class="col-md-6 col-lg-12 justify-center">
-                                <a href="{{ route('edit_application', $Id) }}"
-                                    class="btn btn-success btn-sm btn-rounded">Edit</a>
-                                <a href="{{ route('download_doc', $Id) }}" id="download"
-                                    class="btn btn-warning btn-sm btn-rounded">Download</a>
-                                <a href="{{ route('new.application') }}" class="btn btn-sm btn-rounded">New</a>
-                            </div>
-                        </div>
-                    </div>
-
+        <div class="col-lg-9 col-md-12">
+            <div class="card">
+                <div class="card-header d-sm-flex align-items-center justify-content-between">
+                    <h2 class="card-title mb-4 fs-4">Application Details of <span>{{ $Name }}</span></h2>
+                    <h3 class="card-title mb-4">
+                        <a href="{{ route('edit_application', $Id) }}">
+                            <i class="ri-refresh-line"></i> Edit Application
+                        </a>
+                    </h3>
                 </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- First Column for Labels -->
+                        <div class="col-md-3">
+                            <p class="fw-bold fs-4">Client ID</p>
+                            <p class="fw-bold fs-4">Application ID</p>
+                            <p class="fw-bold fs-4">Applied Date</p>
+                            <p class="fw-bold fs-4">Phone Number</p>
+                            <p class="fw-bold fs-4">Date of Birth</p>
+                            <p class="fw-bold fs-4">Ack. No</p>
+                            <p class="fw-bold fs-4">Document No</p>
+                            <p class="fw-bold fs-4">Status</p>
+                            <p class="fw-bold fs-4">Reason</p>
+                        </div>
+
+                        <!-- Second Column for Values -->
+                        <div class="col-md-3 text-primary fs-4">
+                            <p>{{ $Client_Id }}</p>
+                            <p class="fw-bold">{{ $Id }}</p>
+                            <p class="text-info">
+                                {{ \Carbon\Carbon::parse($Applied_Date)->diffForHumans() }}
+                                <small>{{ \Carbon\Carbon::parse($Applied_Date)->format('d-m-Y') }}</small>
+                            </p>
+                            <p>{{ $Mobile_No }}</p>
+                            <p>{{ \Carbon\Carbon::parse($Dob)->format('d-m-Y') }}</p>
+                            <p><a href="{{ route('download_ack', $Id) }}">{{ $Ack_No }}</a></p>
+                            <p><a href="{{ route('download_doc', $Id) }}">{{ $Document_No }}</a></p>
+                            <p class="fw-bolder">{{ $Status }}</p>
+                            <p>{{ $Reason }}</p>
+                        </div>
+
+                        <!-- Third Column for Labels -->
+                        <div class="col-md-3">
+                            <p class="fw-bold fs-4">Service</p>
+                            <p class="fw-bold fs-4">Service Type</p>
+                            <p class="fw-bold fs-4">Received Date</p>
+                            <p class="fw-bold fs-4">Total Amount</p>
+                            <p class="fw-bold fs-4">Amount Paid</p>
+                            <p class="fw-bold fs-4">Balance</p>
+                            <p class="fw-bold fs-4">Payment Mode</p>
+                            <p class="fw-bold fs-4">Updated On</p>
+                            <p class="fw-bold fs-4">Delivered In</p>
+                        </div>
+
+                        <!-- Fourth Column for Values -->
+                        <div class="col-md-3 text-primary fs-4">
+                            <p class="text-success">{{ $Application }}</p>
+                            <p class="text-danger">{{ $Application_Type }}</p>
+                            <p>
+                                {{ \Carbon\Carbon::parse($Received_Date)->diffForHumans() }}
+                                <small>{{ \Carbon\Carbon::parse($Received_Date)->format('d-m-Y') }}</small>
+                            </p>
+                            <p>&#x20B9;{{ $Total_Amount }}.00/-</p>
+                            <p>&#x20B9;{{ $Amount_Paid }}.00/-</p>
+                            <p class="fw-bolder text-danger">&#x20B9;{{ $Balance }}.00/-</p>
+                            <p>{{ $PaymentMode }}</p>
+                            <p>
+                                {{ \Carbon\Carbon::parse($updated_at)->diffForHumans() }}
+                                <small>{{ \Carbon\Carbon::parse($updated_at)->format('d-m-Y') }}</small>
+                            </p>
+                            <p class="text-success">{{ \Carbon\Carbon::parse($Received_Date)->diffInDays(\Carbon\Carbon::parse($Delivered_Date)) }} Days</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row mt-4 text-center">
+                        <div class="col-lg-12">
+                            <a href="{{ route('edit_application', $Id) }}" class="btn btn-success  btn-rounded">Edit</a>
+                            <a href="{{ route('download_doc', $Id) }}" class="btn btn-warning  btn-rounded">Download</a>
+                            <a href="{{ route('new.application') }}" class="btn btn-info  btn-rounded">New</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
                 {{-- End --}}
                 <div class="row"></div>
                 {{-- End --}}
