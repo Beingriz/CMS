@@ -43,4 +43,20 @@ class ApplicationLogs extends Model
         'total_doc_uploaded',
     ];
     protected $table = 'app_transaction_logs';
+
+     /**
+     * Get the employee that owns the application log.
+     */
+    public function employee()
+    {
+        return $this->belongsTo(EmployeeRegister::class, 'emp_id', 'Emp_Id');
+    }
+
+    /**
+     * Get the branch that owns the application log.
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branches::class, 'branch_id', 'branch_id');
+    }
 }

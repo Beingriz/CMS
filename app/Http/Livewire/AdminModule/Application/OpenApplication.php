@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Models\Application;
+use App\Models\ApplicationLogs;
 use App\Models\DocumentFiles;
 use App\Models\Status;
 use App\Traits\RightInsightTrait;
@@ -140,7 +141,12 @@ class OpenApplication extends Component
         }
         $Doc_Files = DocumentFiles::Where([['App_Id', $this->Id], ['Client_Id', $this->Client_Id]])->paginate(5);
         $status_list = Status::all();
+        $History = ApplicationLogs::where('application_id', $this->Id)
+            ->whereNull('recycle_Bin')  // Checking for NULL
+            ->paginate();
 
-        return view('livewire.admin-module.application.open-application', ['show_app' => $this->show_app,'status_list' => $status_list], compact('Doc_Files'));
+        return view('livewire.admin-module.application.open-application', ['show_app' => $this->show_app,'status_list' => $status_list, 'History'=>$History], compact('Doc_Files'))
+            ->extends('layouts.admin')
+            ->section('content');
     }
 }

@@ -138,7 +138,7 @@
 
     {{-- Data View Container --}}
     <div class="row">
-        <div class="col-lg-9 col-md-12">
+        <div class="col-lg-7 col-md-12">
             <div class="card">
                 <div class="card-header d-sm-flex align-items-center justify-content-between">
                     <h2 class="card-title mb-4 fs-4">Application Details of <span>{{ $Name }}</span></h2>
@@ -232,83 +232,124 @@
         {{-- ------------------------------------------------ --}}
         {{-- Document List Table  --}}
         @if (count($Doc_Files) > 0)
-            <div class="col-lg-4">
-                <div class="card">
-                    <h5 class="card-header">Available Documents </h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="d-flex flex-wrap gap-2">
-                                @if ($Checked)
-                                    <div class="btn-group-vertical" role="group"
-                                        aria-label="Vertical button group">
-                                        <div class="btn-group" role="group">
-                                            <button id="btnGroupVerticalDrop2" type="button"
-                                                class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                Cheched ({{ count($Checked) }}) <i class="mdi mdi-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2"
-                                                style="">
-                                                <a class="dropdown-item" title="Multiple Delete"
-                                                    onclick="confirm('Are you sure you want to Delete these records Permanently!!') || event.stopImmediatePropagation()"
-                                                    wire:click="MultipleDelete()">Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
+        <div class="col-lg-5 col-md-12">
+            <div class="card shadow-sm border-0">
+                <h5 class="card-header bg-primary text-white">Available Documents</h5>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Document Name</th>
+                                    <th>Uploaded on</th>
+                                    <th>Actions</th> {{-- Merged Download & Delete --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($Doc_Files as $index => $File)
                                     <tr>
-                                        <th>Sl.No</th>
-                                        <th>Select</th>
-                                        <th>Name</th>
-                                        <th>Download</th>
-                                        <th>Delete</th>
+                                        <td>{{ $Doc_Files->firstItem() + $index }}</td>
+                                        <td>{{ Str::title($File->Document_Name) }}</td>
+                                        <td>{{ $File->created_at->diffForHumans()}} | {{ $File->created_at->format('F d, Y')}}</td>
+
+                                        <td>
+                                            <a class="btn btn-outline-primary btn-sm mx-1" id="download"
+                                                href="{{ route('download_documents', $File->Id) }}"
+                                            title="Download" >
+                                                <i class="mdi mdi-download"></i>
+                                            </a>
+
+                                            <a class="btn btn-outline-danger btn-sm mx-1" id="deleteFile" funName="delete" recId = "{{ $File->Id }}"
+                                            title="Delete" >
+                                                <i class="ri-delete-bin-6-line"></i>
+                                            </a>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($Doc_Files as $File)
-                                        <tr>
-                                            <td>{{ $Doc_Files->firstItem() + $loop->index }}</td>
-                                            <td><input type="checkbox" id="checkbox" name="checkbox"
-                                                    value="{{ $File->Id }}" wire:model="Checked"></td>
+                                @endforeach
+                            </tbody>
+                        </table>
 
-                                            <td>{{ $File->Document_Name }}</td>
-                                            <td>
-                                                <a class="btn btn-light font-size-20" id="download"
-                                                    href="{{ route('download_documents', $File->Id) }}"><i
-                                                        class="mdi mdi-download"></i></a>
-
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-danger font-size-15" id="deletefile"
-                                                    href="{{ route('delete_document', $File->Id) }}"><i
-                                                        class=" ri-delete-bin-6-line"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-md-8">
-                                    <p class="text-muted">Showing {{ count($Doc_Files) }} of
-                                        {{ $Doc_Files->total() }} entries</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class=" pagination pagination-rounded float-end">
-                                        {{ $Doc_Files->links() }}
-                                    </span>
-                                </div>
-                            </div>
+                        {{-- Pagination & Entries Info --}}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <p class="text-muted mb-0">Showing {{ count($Doc_Files) }} of {{ $Doc_Files->total() }} entries</p>
+                            <span class="pagination pagination-rounded">
+                                {{ $Doc_Files->links() }}
+                            </span>
                         </div>
-                        <p class="card-text"><small class="text-muted">Last File Uploaded
-                                {{ $created }}</small></p>
+                    </div>
+
+                    {{-- Last Uploaded File Info --}}
+                    <p class="card-text text-end mt-2">
+                        <small class="text-muted">Last File Uploaded: {{ $created }}</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        @endif {{-- End of Table --}}
+    </div>
+    {{-- End of Row --}}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <h5 class="card-header bg-primary text-white">Application History</h5>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover mb-0">
+                            <thead class="table-dark text-white">
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Branch</th>
+                                    <th>Operator</th>
+                                    <th>Service</th>
+                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Reason</th>
+                                    <th>Updated On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($History as $File)
+                                    <tr>
+                                        <td>{{ $History->firstItem() + $loop->index }}</td>
+                                        <td>{{ $File->branch->name }}</td>
+                                        <td>{{ $File->employee->Name }}</td>
+                                        <td>{{ $File->application }}</td>
+                                        <td>{{ $File->application_type }}</td>
+                                        <td>
+                                            <span class="badge
+                                                @if($File->status == 'Approved') bg-success
+                                                @elseif($File->status == 'Pending') bg-warning
+                                                @else bg-danger @endif">
+                                                {{ $File->status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="text-truncate d-inline-block" style="max-width: 150px;" title="{{ $File->reason }}">
+                                                {{ Str::limit($File->reason, 30) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span data-bs-toggle="tooltip" title="{{ $File->updated_at }}">
+                                                {{ \Carbon\Carbon::parse($File->updated_at)->diffForHumans() }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted">{{ \Carbon\Carbon::parse($File->updated_at)->format('d-m-Y') }}</small>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- Pagination --}}
+                        <div class="mt-3 d-flex justify-content-center">
+                            {{ $History->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
-        @endif {{-- End of Table --}}
+        </div>
     </div>
+
 </div>

@@ -945,61 +945,61 @@
 
         {{-- ---------------------------------------------------------------------------------------------------- --}}
        @if (count($docFiles) > 0) {{-- Document List Table --}}
-    <div class="col-lg-5">
-        <div class="card shadow-sm border-0">
-            <h5 class="card-header bg-primary text-white">Available Documents</h5>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered align-middle text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Document Name</th>
-                                <th>Uploaded on</th>
-                                <th>Actions</th> {{-- Merged Download & Delete --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($docFiles as $index => $File)
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <h5 class="card-header bg-primary text-white">Available Documents</h5>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle text-center">
+                            <thead class="table-light">
                                 <tr>
-                                    <td>{{ $docFiles->firstItem() + $index }}</td>
-                                    <td>{{ Str::title($File->Document_Name) }}</td>
-                                    <td>{{ $File->created_at->diffForHumans()}} | {{ $File->created_at->format('F d, Y')}}</td>
-
-                                    <td>
-                                        <a class="btn btn-outline-primary btn-sm mx-1" id="download"
-                                            href="{{ route('download_documents', $File->Id) }}"
-                                           title="Download" >
-                                            <i class="mdi mdi-download"></i>
-                                        </a>
-
-                                        <a class="btn btn-outline-danger btn-sm mx-1" id="deleteFile" funName="delete" recId = "{{ $File->Id }}"
-                                           title="Delete" >
-                                            <i class="ri-delete-bin-6-line"></i>
-                                        </a>
-                                    </td>
+                                    <th>#</th>
+                                    <th>Document Name</th>
+                                    <th>Uploaded on</th>
+                                    <th>Actions</th> {{-- Merged Download & Delete --}}
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($docFiles as $index => $File)
+                                    <tr>
+                                        <td>{{ $docFiles->firstItem() + $index }}</td>
+                                        <td>{{ Str::title($File->Document_Name) }}</td>
+                                        <td>{{ $File->created_at->diffForHumans()}} | {{ $File->created_at->format('F d, Y')}}</td>
 
-                    {{-- Pagination & Entries Info --}}
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <p class="text-muted mb-0">Showing {{ count($docFiles) }} of {{ $docFiles->total() }} entries</p>
-                        <span class="pagination pagination-rounded">
-                            {{ $docFiles->links() }}
-                        </span>
+                                        <td>
+                                            <a class="btn btn-outline-primary btn-sm mx-1" id="download"
+                                                href="{{ route('download_documents', $File->Id) }}"
+                                            title="Download" >
+                                                <i class="mdi mdi-download"></i>
+                                            </a>
+
+                                            <a class="btn btn-outline-danger btn-sm mx-1" id="deleteFile" funName="delete" recId = "{{ $File->Id }}"
+                                            title="Delete" >
+                                                <i class="ri-delete-bin-6-line"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- Pagination & Entries Info --}}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <p class="text-muted mb-0">Showing {{ count($docFiles) }} of {{ $docFiles->total() }} entries</p>
+                            <span class="pagination pagination-rounded">
+                                {{ $docFiles->links() }}
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-                {{-- Last Uploaded File Info --}}
-                <p class="card-text text-end mt-2">
-                    <small class="text-muted">Last File Uploaded: {{ $created }}</small>
-                </p>
+                    {{-- Last Uploaded File Info --}}
+                    <p class="card-text text-end mt-2">
+                        <small class="text-muted">Last File Uploaded: {{ $created }}</small>
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-@endif {{-- End of Table --}}
+        @endif {{-- End of Table --}}
 
     </div>
     {{-- ---------------------------------------------------------------------------------------------------- --}}
