@@ -98,6 +98,9 @@ trait WhatsappTrait
         foreach ($contentVariables as $key => $value) {
             $contentVariables[$key] = !empty(trim($application->{$value})) ? trim($application->{$value}) : trim($profileName);
         }
+        $application = (object) [
+            'mobile_no' => $application->Mobile_No
+        ];
 
         return $this->sendMessage($contentSid, $application, $contentVariables);
     }

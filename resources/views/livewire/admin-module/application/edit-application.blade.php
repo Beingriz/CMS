@@ -697,20 +697,20 @@
 
                                         <!-- Client Id  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-16 ">Client ID</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Client_Id) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Client_Id) ? $Client_Id : 'Field is Empty' }}</span>
                                             </div>
                                         </div>
                                         <!-- Name  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Name</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Name) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Name) ? $Name : 'Field is Empty' }}</span>
                                             </div>
@@ -718,13 +718,13 @@
 
                                         <!-- Applicant Image  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Applicant Image</span>
                                             </div>
 
 
 
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 @if ($Applicant_Image instanceof \Livewire\TemporaryUploadedFile)
                                                 <img class="rounded avatar-md" src="{{ $Applicant_Image->temporaryUrl() }}" alt="Applicant Image" />
                                             @elseif(!empty($old_Applicant_Image) && $old_Applicant_Image != 'Not Available')
@@ -737,10 +737,10 @@
 
                                         <!-- Relative Name  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Relative Name</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($RelativeName) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($RelativeName) ? $RelativeName : 'Field is Empty' }}</span>
                                             </div>
@@ -748,20 +748,20 @@
 
                                         <!-- Gender  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Gender</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Gender) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Gender) ? $Gender : 'Field is Empty' }}</span>
                                             </div>
                                         </div>
                                         <!-- Mobile Number  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Mobile Number</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Mobile_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Mobile_No) ? $Mobile_No : 'Field is Empty' }}</span>
                                             </div>
@@ -769,10 +769,10 @@
 
                                         <!-- Date of Birth -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Date of Birth</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Dob) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Dob) ? $Dob : 'Field is Empty' }}</span>
                                             </div>
@@ -786,10 +786,10 @@
                                     <div class="col-md-6 col-lg-6">
                                         <!-- ServiceName  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Service</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($ServiceName) ? 'text-info font-weight-bolder' : '' }}">{{ !empty($ServiceName) ? $ServiceName : $Application }}</span>
                                             </div>
@@ -797,10 +797,10 @@
 
                                         <!-- Sub Service  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Service Type</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($SubService) ? 'text-info font-weight-bolder' : '' }}">{{ !empty($SubService) ? $SubService : $Application_Type }}</span>
                                             </div>
@@ -808,10 +808,10 @@
 
                                         <!-- Ack_No  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Ack No.</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Ack_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Ack_No) ? $Ack_No : 'Field is Empty' }}</span>
                                             </div>
@@ -819,10 +819,10 @@
 
                                         <!-- Client Id  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Doc No</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Document_No) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Document_No) ? $Document_No : 'Field is Empty' }}</span>
                                             </div>
@@ -831,10 +831,10 @@
 
                                         <!-- Total_Amount   -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Total Amount</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-success font-size-20 {{ empty($Total_Amount) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Total_Amount) ? $Total_Amount : 'Field is Empty' }}</span>
                                             </div>
@@ -842,10 +842,10 @@
 
                                         <!-- Amount_Paid -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Amount Paid</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-danger font-size-16 {{ empty($Amount_Paid) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Amount_Paid) ? $Amount_Paid : 'Field is Empty' }}</span>
                                             </div>
@@ -853,10 +853,10 @@
 
                                         <!-- Balance  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Balance</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ $Balance == 0 ? 'text-sucess font-weight-bolder' : '' }}">{{ $Balance == 0 ? 'No Due' : '$Balance' }}</span>
                                             </div>
@@ -864,20 +864,20 @@
 
                                         <!-- Statusd  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Status</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($Status) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($Status) ? $Status : 'Field is Empty' }}</span>
                                             </div>
                                         </div>
                                         <!-- PaymentMode  -->
                                         <div class="row">
-                                            <div class="col-45">
+                                            <div class="col-6">
                                                 <span class="font-size-18 ">Payment Mode</span>
                                             </div>
-                                            <div class="col-55">
+                                            <div class="col-6">
                                                 <span
                                                     class="text-primary font-size-16 {{ empty($PaymentMode) ? 'text-danger font-weight-bolder' : '' }}">{{ !empty($PaymentMode) ? $PaymentMode : 'Field is Empty' }}</span>
                                             </div>
@@ -1012,5 +1012,69 @@
     </div>
     {{-- List of Applicaiton  End --}}
 
+    {{-- Application History --}}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <h5 class="card-header bg-primary text-white">Application History</h5>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover mb-0">
+                            <thead class="table-dark text-white">
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Action</th>
+                                    <th>Branch</th>
+                                    <th>Operator</th>
+                                    <th>Service</th>
+                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Reason</th>
+                                    <th>Updated On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($History as $File)
+                                    <tr>
+                                        <td>{{ $History->firstItem() + $loop->index }}</td>
+                                        <td>{{ $File->action }}</td>
+                                        <td>{{ $File->branch->name }}</td>
+                                        <td>{{ $File->employee->Name }}</td>
+                                        <td>{{ $File->application }}</td>
+                                        <td>{{ $File->application_type }}</td>
+                                        <td>
+                                            <span class="badge
+                                                @if($File->status == 'Approved') bg-success
+                                                @elseif($File->status == 'Pending') bg-warning
+                                                @else bg-danger @endif">
+                                                {{ $File->status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="text-truncate d-inline-block" style="max-width: 150px;" title="{{ $File->reason }}">
+                                                {{ Str::limit($File->reason, 30) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span data-bs-toggle="tooltip" title="{{ $File->updated_at }}">
+                                                {{ \Carbon\Carbon::parse($File->updated_at)->diffForHumans() }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted">{{ \Carbon\Carbon::parse($File->updated_at)->format('d-m-Y') }}</small>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- Pagination --}}
+                        <div class="mt-3 d-flex justify-content-center">
+                            {{ $History->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div> {{-- End of Livewire   --}}

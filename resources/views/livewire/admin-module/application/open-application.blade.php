@@ -143,7 +143,7 @@
                 <div class="card-header d-sm-flex align-items-center justify-content-between">
                     <h2 class="card-title mb-4 fs-4">Application Details of <span>{{ $Name }}</span></h2>
                     <h3 class="card-title mb-4">
-                        <a href="{{ route('edit_application', $Id) }}">
+                        <a id="editData" href="{{ route('edit_application', $Id) }}">
                             <i class="ri-refresh-line"></i> Edit Application
                         </a>
                     </h3>
@@ -216,9 +216,9 @@
                     <!-- Action Buttons -->
                     <div class="row mt-4 text-center">
                         <div class="col-lg-12">
-                            <a href="{{ route('edit_application', $Id) }}" class="btn btn-success  btn-rounded">Edit</a>
+                            <a href="{{ route('edit_application', $Id) }}" class="btn btn-success  btn-rounded"> Edit Application</a>
                             <a href="{{ route('download_doc', $Id) }}" class="btn btn-warning  btn-rounded">Download</a>
-                            <a href="{{ route('new.application') }}" class="btn btn-info  btn-rounded">New</a>
+                            <a href="{{ route('new.application') }}" class="btn btn-info  btn-rounded">New Application</a>
                         </div>
                     </div>
                 </div>
@@ -300,6 +300,7 @@
                             <thead class="table-dark text-white">
                                 <tr>
                                     <th>Sl.No</th>
+                                    <th>Action</th>
                                     <th>Branch</th>
                                     <th>Operator</th>
                                     <th>Service</th>
@@ -313,6 +314,7 @@
                                 @foreach ($History as $File)
                                     <tr>
                                         <td>{{ $History->firstItem() + $loop->index }}</td>
+                                        <td>{{ $File->action }}</td>
                                         <td>{{ $File->branch->name }}</td>
                                         <td>{{ $File->employee->Name }}</td>
                                         <td>{{ $File->application }}</td>

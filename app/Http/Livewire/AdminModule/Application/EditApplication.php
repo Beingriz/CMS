@@ -4,6 +4,7 @@ namespace App\Http\Livewire\AdminModule\Application;
 
 use App\Http\Livewire\UserModule\QuickApply;
 use App\Models\Application;
+use App\Models\ApplicationLogs;
 use App\Models\ApplyServiceForm;
 use App\Models\CreditLedger;
 use App\Models\DocumentFiles;
@@ -635,7 +636,10 @@ class EditApplication extends Component
             ->orderBy('Received_Date', 'desc')
             ->paginate($this->paginate);
 
-        return view('livewire.admin-module.application.edit-application', compact('paymentModes', 'status', 'docFiles', 'statusDetails'));
+        $History = ApplicationLogs::where('application_id', $this->Id)
+            ->whereNull('recycle_Bin')  // Checking for NULL
+            ->paginate();
+        return view('livewire.admin-module.application.edit-application', compact('paymentModes', 'status', 'docFiles', 'statusDetails' ,'History'));
     }
 
 }
