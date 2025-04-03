@@ -30,7 +30,11 @@ class AddDebitSource extends Component
     protected $exist_categories = [];
     public $fName;
     public $edit, $NewImage;
-    protected $listeners = ['refreshProducts'];
+    protected $listeners = ['refreshProducts',
+    'editMain' => 'EditMain',
+    'editSub' => 'EditSub',
+    'deleteMain' => 'DeleteMain',
+    'deleteSub' => 'DeleteSub',];
 
     protected $paginationTheme = 'bootstrap';
 
@@ -117,12 +121,14 @@ class AddDebitSource extends Component
             $save_DS->Thumbnail = $this->NewImage;
             $save_DS->save(); // Category Created
 
-            $notification = array(
-                'message' => 'Debit Source ' . $this->Name . ' Added!.',
-                'alert-type' => 'success'
-            );
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Debit Source ' . $this->Name . ' Added!.',
+                'text' => '',
+                'icon' => 'success',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
 
-            return redirect()->route('DebitSource')->with($notification);
         } elseif ($this->Type == 'Sub Category') {
             $this->validate([
                 'CategoryList' => 'required',
@@ -155,8 +161,13 @@ class AddDebitSource extends Component
 
             $save_DS->save(); // Sub Category Created
 
-            session()->flash('SuccessMsg', 'Sub Category Name: ' . $this->SubCategoryName . ' & ID: ' . $dsId . ', for ' . $Name . ' Created Successfully!!');
-
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Debit Source ' . $this->SubCategoryName . ' Added!.',
+                'text' => '',
+                'icon' => 'success',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
             $this->ResetSubFields();
             $this->CategoryList = $this->SubCategoryName;
         }
@@ -251,13 +262,38 @@ class AddDebitSource extends Component
 
         // Set session flash messages based on updates
         if ($update_source && $update_CL && $update_sources) {
-            session()->flash('SuccessMsg', $this->Name . ' Details Updated Successfully!');
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Debit Source ' . $this->Name . ' Updated!.',
+                'text' => '',
+                'icon' => 'success',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
         } elseif ($update_source) {
-            session()->flash('SuccessMsg', $this->Name . ' Record Updated Successfully!');
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Debit Source ' . $this->Name . ' Updated!.',
+                'text' => 'Record Updated Successfully!',
+                'icon' => 'success',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
         } elseif ($update_CL) {
-            session()->flash('SuccessMsg', $this->Name . ' Ledger Updated Successfully!');
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Debit Source ' . $this->Name . ' Updated!.',
+                'text' => 'Ledger Updated Successfully!',
+                'icon' => 'success',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
         } else {
             session()->flash('Error', 'Sorry! Unable to Update ' . $this->Name . ' Source in Record.');
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Unable to Update ' . $this->Name . ' Source in Record.',
+                'text' => '',
+                'icon' => 'error',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
         }
     }
 
@@ -278,14 +314,26 @@ class AddDebitSource extends Component
         // Check if the category has sub-categories
         $subCategories = DebitSources::where([['DS_Name', '=', $Name], ['DS_Id', '=', $Id]])->count();
         if ($subCategories > 0) {
-            session()->flash('Error', $Name . ' This Category Contains ' . $subCategories . ' Sub Categories. Please Delete Sub Categories first.');
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => $Name . ' This Category Contains ' . $subCategories . ' Sub Categories. Please Delete Sub Categories first.',
+                'text' => '',
+                'icon' => 'error',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
             return;
         }
 
         // Check if the category is used in any debit records
         $debits = Debit::where('Category', $Name)->count();
         if ($debits > 0) {
-            session()->flash('Error', $Name . ' This Source Field is Served, Cannot Delete.');
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => $Name . ' This Source Field is Served, Cannot Delete.',
+                'text' => '',
+                'icon' => 'error',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
             return;
         }
 
@@ -300,9 +348,21 @@ class AddDebitSource extends Component
         // Delete the main category record
         $delete = DebitSource::destroy($Id);
         if ($delete) {
-            session()->flash('SuccessMsg', $Name . ' Deleted Permanently.');
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => $Name . ' Deleted Permanently.',
+                'text' => '',
+                'icon' => 'success',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
         } else {
-            session()->flash('Error', 'Unable to Delete ' . $Name . ' sorry.');
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Unable to Delete ' . $Name . ' sorry.',
+                'text' => '',
+                'icon' => 'error',
+                'rediredect-url' => route('DebitSource'),
+                'timer' => 2000,
+            ]);
         }
 
         // Reset fields

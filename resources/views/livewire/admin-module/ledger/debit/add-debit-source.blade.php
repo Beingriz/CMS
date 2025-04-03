@@ -301,11 +301,11 @@
                                             </td>
                                             </td>
                                             <td>
-                                                <a href="{{ route('edit.mainsource', $key->Id) }}" title="Edit"
-                                                    class="btn btn-sm btn-primary font-size-15" id="editData"><i
+                                                <a id="editRecord" funName="editMain" recId="{{ $key->Id }}" title="Edit"
+                                                    class="btn btn-sm btn-primary font-size-15" ><i
                                                         class="mdi mdi-circle-edit-outline"></i></a>
-                                                <a href="{{ route('delete.mainsource', $key->Id) }}" title="Delete"
-                                                    class="btn btn-sm btn-danger font-size-15" id="delete"><i
+                                                <a id="deleteRecord" funName="deleteMain" recId="{{ $key->Id }}" title="Delete"
+                                                    class="btn btn-sm btn-danger font-size-15"><i
                                                         class=" mdi mdi-trash-can"></i></a>
 
                                             </td>
@@ -348,11 +348,11 @@
                                                 <td>{{ $key->Remaining }}</td>
                                             @endif
                                             <td>
-                                                <a href="{{ route('edit.subsource', $key->Id) }}" title="Edit"
-                                                    class="btn btn-sm btn-primary font-size-15" id="editData"><i
+                                                <a id="editRecord" funName="editSub" recId="{{ $key->Id }}" title="Edit"
+                                                    class="btn btn-sm btn-primary font-size-15" ><i
                                                         class="mdi mdi-circle-edit-outline"></i></a>
-                                                <a href="{{ route('delete.subsource', $key->Id) }}" title="Delete"
-                                                    class="btn btn-sm btn-danger font-size-15" id="delete"><i
+                                                <a id="deleteRecord" funName="deleteSub" recId="{{ $key->Id }}" title="Delete"
+                                                    class="btn btn-sm btn-danger font-size-15" ><i
                                                         class=" mdi mdi-trash-can"></i></a>
 
                                             </td>
