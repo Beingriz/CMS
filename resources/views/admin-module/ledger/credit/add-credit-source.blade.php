@@ -1,10 +1,10 @@
 @extends('admin-module.admin_master')
-<title>Credit Source</title>
+<title>Credit Source Management</title>
 
 @section('admin')
     ;
 
-    <div class="page-content" style="margin-top: -45px">
+    <div class="page-content" style="margin-top: 0px">
         <div class="container=fluid">
             @livewire('admin-module.ledger.credit.add-credit-source', ['EditData' => $EditData, 'DeleteData' => $DeleteData, 'editid' => $editid, 'deleteid' => $deleteid])
         </div>

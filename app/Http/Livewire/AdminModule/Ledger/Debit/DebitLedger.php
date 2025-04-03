@@ -51,7 +51,13 @@ class DebitLedger extends Component
     public $clearButton = false, $lastRecTime;
     public $Branch_Id, $Emp_Id;
 
-
+    protected $listeners = [
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+        'update' => 'UpdateLedger',
+        'deleteImage' => 'deleteImage',
+        'UpdateBalance' => 'UpdateBalance',
+    ];
 
 
 
@@ -271,13 +277,15 @@ class DebitLedger extends Component
             $debitentry->Attachment = $this->New_Attachment;
             $debitentry->save(); // Debit Ledger Entry
 
-            $notification = [
-                'message' => 'Transaction Saved!',
-                'alert-type' => 'success'
-            ];
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Transaction Saved!',
+                'text' => 'Transaction saved successfully.',
+                'icon' => 'success',
+                'redirect-url' => route('Debit'),
+                'confirmButtonText' => 'OK',
+            ]);
         }
 
-        return redirect()->route('Debit')->with($notification);
     }
 
 
@@ -378,11 +386,13 @@ class DebitLedger extends Component
         }
 
         // Redirect with notification
-        $notification = [
-            'message' => $message,
-            'alert-type' => 'info'
-        ];
-        return redirect()->route('Debit')->with($notification);
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => $message,
+            'text' => 'Transaction updated successfully.',
+            'icon' => 'success',
+            'redirect-url' => route('Debit'),
+            'confirmButtonText' => 'OK',
+        ]);
     }
 
 
@@ -397,40 +407,45 @@ class DebitLedger extends Component
             $this->balId = $Id;
             $this->balamount = $getbal;
 
-            $notification = [
-                'message' => 'The selected entry has a balance due. Please clear the due of ' . $getbal . ' for ID ' . $Id,
-                'alert-type' => 'error'
-            ];
-            return redirect()->back()->with($notification);
-        } else {
-            // Proceed to delete the debit and balance records
-            $this->deleteImage($Id);
+            $this->dispatchBrowserEvent('swal:warning-non-redirect', [
+                'title' => 'Balance Due',
+                'text' => 'Please clear the due before deleting.',
+                'icon' => 'warning',
+                'confirmButtonText' => 'OK',
+            ]);
+            return; // Prevent redirect
+        }
 
-            // Attempt to delete records
+        // Proceed to delete the debit and balance records
+        $debit = Debit::find($Id);
+        if ($debit && $debit->Attachment) {
+            Storage::delete($debit->Attachment); // Delete file
+        }
+
+        DB::beginTransaction();
+        try {
             $debitDeleted = Debit::where('Id', $Id)->delete();
             $balanceDeleted = BalanceLedger::where('Id', $Id)->delete();
+            DB::commit();
 
-            // Determine the notification message based on what was deleted
-            if ($debitDeleted && $balanceDeleted) {
-                $notification = [
-                    'message' => 'Debit and balance ledger entries deleted successfully!',
-                    'alert-type' => 'info'
-                ];
-            } elseif ($debitDeleted) {
-                $notification = [
-                    'message' => 'Debit transaction deleted successfully!',
-                    'alert-type' => 'info'
-                ];
-            } else {
-                $notification = [
-                    'message' => 'Unable to delete. Please try again.',
-                    'alert-type' => 'error'
-                ];
-            }
-
-            return redirect()->back()->with($notification);
+            // Trigger SweetAlert instead of redirecting
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Deleted!',
+                'text' => 'Transaction deleted successfully.',
+                'icon' => 'success',
+                'redirect-url' => route('Debit'),
+                'confirmButtonText' => 'OK',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Error deleting transaction: ' . $e->getMessage(),
+                'icon' => 'error',
+            ]);
         }
     }
+
 
     public function UpdateBalance($Id)
     {

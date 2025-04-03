@@ -246,7 +246,31 @@
                 })
             });
         });
-
+        document.addEventListener('DOMContentLoaded', function () {
+            window.addEventListener('swal:warning-non-redirect', event => {
+                Swal.fire({
+                    title: event.detail.title,
+                    text: event.detail.text,
+                    icon: event.detail.icon,
+                    confirmButtonText: 'OK'
+                })
+            });
+        });
+        window.addEventListener('swal:confirm', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            showCancelButton: true,
+            confirmButtonText: event.detail.confirmButtonText,
+            cancelButtonText: event.detail.cancelButtonText,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // You can trigger the due clearance process here
+                Livewire.emit('clearDue', event.detail.id);
+            }
+        });
+    });
         window.addEventListener('statusChanged', event => {
         Swal.fire({
             title: "Status Updated!",

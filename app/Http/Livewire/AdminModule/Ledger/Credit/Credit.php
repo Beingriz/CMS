@@ -66,6 +66,10 @@ class Credit extends Component
         'Payment_Mode.required' => 'Please SelectPayment Method. ',
     ];
 
+    protected $listeners = [
+        'delete' => 'Delete',
+        'edit' => 'Edit',
+    ];
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -135,32 +139,37 @@ class Credit extends Component
         $transId = 'CE' . time();
         $clientId = 'C' . time();
         $this->Balance = intval($this->Total_Amount) - intval($this->Amount_Paid);
-        $CategoryName = CreditSource::Wherekey($this->SourceSelected)->get();
-        foreach ($CategoryName as $key) {
-            $CategoryName = $key['Name'];
-        }
-        $this->ImageUpload();
-        if ($this->Balance > 0) {
-            $Desc = "Received Rs. " . $this->Amount_Paid . "/- From  " . $this->Description . " for " . $CategoryName . ',' . $this->SelectedSources . " , on " . $this->Date . " by  " . $this->Payment_Mode . ", Total: " . $this->Total_Amount . ", Paid: " . $this->Amount_Paid . ", Balance: " . $this->Balance;
-            $creditentry  = new CreditLedger;
-            $creditentry->Id = $transId;
-            $creditentry->Client_Id = $clientId;
-            $creditentry->Branch_Id =$this->Branch_Id ;
-            $creditentry->Emp_Id = $this->Emp_Id ;
-            $creditentry->Date = $this->Date;
-            $creditentry->Category = $CategoryName;
-            $creditentry->Sub_Category = $this->SelectedSources;
-            $creditentry->Unit_Price = $this->Unit_Price;
-            $creditentry->Quantity = $this->Quantity;
-            $creditentry->Total_Amount = $this->Total_Amount;
-            $creditentry->Amount_Paid = $this->Amount_Paid;
-            $creditentry->Balance = $this->Balance;
-            $creditentry->Description = $Desc;
-            $creditentry->Payment_Mode = $this->Payment_Mode;
-            $creditentry->Attachment = $this->New_Attachment;
-            $creditentry->save(); //Credit Ledger Entry
+        $CategoryName = CreditSource::Wherekey($this->SourceSelected)->first()->Name ?? 'Unknown';
 
-            $save_balance = new BalanceLedger;
+        $this->ImageUpload();
+
+        $Desc = "Received Rs. " . $this->Amount_Paid . "/- From " . $this->Description .
+            " for " . $CategoryName . ',' . $this->SelectedSources . " on " . $this->Date .
+            " by " . $this->Payment_Mode . ", Total: " . $this->Total_Amount .
+            ", Paid: " . $this->Amount_Paid . ", Balance: " . $this->Balance;
+
+        // Save Credit Ledger Entry
+        $creditentry = new CreditLedger();
+        $creditentry->Id = $transId;
+        $creditentry->Client_Id = $clientId;
+        $creditentry->Branch_Id = $this->Branch_Id;
+        $creditentry->Emp_Id = $this->Emp_Id;
+        $creditentry->Date = $this->Date;
+        $creditentry->Category = $CategoryName;
+        $creditentry->Sub_Category = $this->SelectedSources;
+        $creditentry->Unit_Price = $this->Unit_Price;
+        $creditentry->Quantity = $this->Quantity;
+        $creditentry->Total_Amount = $this->Total_Amount;
+        $creditentry->Amount_Paid = $this->Amount_Paid;
+        $creditentry->Balance = $this->Balance;
+        $creditentry->Description = $Desc;
+        $creditentry->Payment_Mode = $this->Payment_Mode;
+        $creditentry->Attachment = $this->New_Attachment;
+        $creditentry->save();
+
+        // Save Balance Ledger Entry (only if balance exists)
+        if ($this->Balance > 0) {
+            $save_balance = new BalanceLedger();
             $save_balance->Id = $transId;
             $save_balance->Client_Id = $clientId;
             $save_balance->Branch_Id = $this->Branch_Id;
@@ -176,39 +185,19 @@ class Credit extends Component
             $save_balance->Payment_Mode = $this->Payment_Mode;
             $save_balance->Attachment = $this->New_Attachment;
             $save_balance->Description = $this->Description;
-            $save_balance->save(); // Balance Ledger Entry Saved
-
-            $notification = array(
-                'message' => 'Transaction Saved, Balance Updated!',
-                'alert-type' => 'success'
-            );
-            return redirect()->route('Credit')->with($notification);
-        } else {
-            $Desc = "Received Rs. " . $this->Amount_Paid . "/- From  " . $this->Description . " for " . $CategoryName . ',' . $this->SelectedSources . " , on " . $this->Date . " by  " . $this->Payment_Mode . ", Total: " . $this->Total_Amount . ", Paid: " . $this->Amount_Paid . ", Balance: " . $this->Balance;
-            $creditentry  = new CreditLedger;
-            $creditentry->Id = $transId;
-            $creditentry->Client_Id = $clientId;
-            $creditentry->Branch_Id =$this->Branch_Id ;
-            $creditentry->Emp_Id = $this->Emp_Id ;
-            $creditentry->Date = $this->Date;
-            $creditentry->Category = $CategoryName;
-            $creditentry->Sub_Category = $this->SelectedSources;
-            $creditentry->Unit_Price = $this->Unit_Price;
-            $creditentry->Quantity = $this->Quantity;
-            $creditentry->Total_Amount = $this->Total_Amount;
-            $creditentry->Amount_Paid = $this->Amount_Paid;
-            $creditentry->Balance = $this->Balance;
-            $creditentry->Description = $Desc;
-            $creditentry->Payment_Mode = $this->Payment_Mode;
-            $creditentry->Attachment = $this->New_Attachment;
-            $creditentry->save(); //Credit Ledger Entry
-            $notification = array(
-                'message' => 'Transaction Saved!',
-                'alert-type' => 'success'
-            );
-            return redirect()->route('Credit')->with($notification);
+            $save_balance->save();
         }
+
+        // Dispatch a browser event to trigger SweetAlert
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Success!',
+            'text' => 'Transaction saved successfully.',
+            'icon' => 'success',
+            'redirect-url' => route('Credit'),
+        ]);
+
     }
+
     public function Edit($Id)
     {
         $this->update = 1;
@@ -274,11 +263,13 @@ class Credit extends Component
         $Update = DB::table('credit_ledger')->where('Id', '=', $Id)->Update($data);
         $this->clerBalDue($Id, $this->Amount_Paid);
         if ($Update > 0) {
-            $notification = array(
-                'message' => 'Credit Ledger Update!',
-                'alert-type' => 'sucess'
-            );
-            return redirect()->route('Credit')->with($notification);
+             // Dispatch a browser event to trigger SweetAlert
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Success!',
+                'text' => 'Transaction Updated successfully.',
+                'icon' => 'success',
+                'redirect-url' => route('Credit'),
+            ]);
             $this->ResetFields();
             $this->Attachment = Null;
             $this->itteration++;
@@ -308,42 +299,51 @@ class Credit extends Component
     }
     public function Delete($Id)
     {
-        $getbal =  DB::table('Balance_ledger')->Where('Id', $Id)->SUM('Balance');
+        // Fetch balance for the entry
+        $getbal = DB::table('Balance_ledger')->where('Id', $Id)->value('Balance');
+
         if ($getbal > 0) {
+            // If balance exists, show warning and ask for due clearance
             $this->clearButton = true;
             $this->balId = $Id;
             $this->balamount = $getbal;
 
-            $notification = array(
-                'message' => 'The Selected Entery has balance Due Please Clear Due of ' . $getbal . ' For Id ' . $Id,
-                'alert-type' => 'error'
-            );
-            return redirect()->back()->with($notification);
-        } else {
-            $this->deleteImage($Id);
-            $credit = CreditLedger::wherekey($Id)->delete();
-            $balance = BalanceLedger::wherekey($Id)->delete();
-            if ($credit > 0) {
-                $notification = array(
-                    'message' => 'Credit Transaction Deleted!',
-                    'alert-type' => 'info'
-                );
-                return redirect()->back()->with($notification);
-            } elseif ($balance > 0 && $credit > 0) {
-                $notification = array(
-                    'message' => 'Credit & Balance Ledger Entry Deleted!',
-                    'alert-type' => 'info'
-                );
-                return redirect()->back()->with($notification);
-            } else {
-                $notification = array(
-                    'message' => 'Unable to Delete!. retry',
-                    'alert-type' => 'error'
-                );
-                return redirect()->back()->with($notification);
-            }
+            $this->dispatchBrowserEvent('swal:confirm', [
+                'title' => 'Outstanding Balance!',
+                'text' => "The selected entry has a due balance of Rs. {$getbal}. Please clear the due amount for ID {$Id}.",
+                'icon' => 'warning',
+                'confirmButtonText' => 'Clear Due',
+                'cancelButtonText' => 'Cancel',
+            ]);
+            return; // Stop execution if balance exists
         }
+
+        // If no balance, proceed with deletion
+        $this->deleteImage($Id);
+
+        // Delete from both ledgers
+        $creditDeleted = CreditLedger::whereKey($Id)->delete();
+        $balanceDeleted = BalanceLedger::whereKey($Id)->delete();
+
+        // Success message handling
+        if ($creditDeleted || $balanceDeleted) {
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Success!',
+                'text' => 'Entry deleted successfully from ledger.',
+                'icon' => 'success',
+                'redirect-url' => route('Credit'),
+            ]);
+        } else {
+            // Error handling in case deletion fails
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Failed to delete the entry. Please try again.',
+                'icon' => 'error',
+            ]);
+        }
+
     }
+
     public function MultipleDelete()
     {
 

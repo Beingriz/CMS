@@ -12,6 +12,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
+
 use function PHPUnit\Framework\isNull;
 
 class AddCreditSource extends Component
@@ -31,7 +32,10 @@ class AddCreditSource extends Component
     protected $exist_categories = [];
     public $fName;
     public $edit, $NewImage;
-    protected $listeners = ['refreshProducts'];
+    protected $listeners = ['refreshProducts','editMain' => 'EditMain',
+        'editSub' => 'EditSub',
+        'deleteMain' => 'DeleteMain',
+        'deleteSub' => 'DeleteSub',];
 
     protected $paginationTheme = 'bootstrap';
 
@@ -92,55 +96,86 @@ class AddCreditSource extends Component
         $this->Unit_Price = Null;
         $this->Update = 0;
     }
-    public function Save() #Funciton to Save Categories
+    public function Save() # Function to Save Categories
     {
-        if ($this->Type == 'Main Category') {
+        if ($this->Type === 'Main Category') {
+            // Validate main category
             $this->validate([
-                'Name' => 'required|unique:credit_source',
+                'Name'  => 'required|unique:credit_source',
                 'Image' => 'required|image',
             ]);
+
+            // Create new main category
             $save_CS = new CreditSource();
             $save_CS->Id = $this->CS_Id;
             $save_CS->Name = $this->Name;
+
+            // Upload image
             $this->ImageUpload();
             $save_CS->Thumbnail = $this->NewImage;
-            $save_CS->save(); //Category Created
-            $notification = array(
-                'message' => 'Credit Sournce' . $this->Name . ' Added!.',
-                'alert-type' => 'success'
-            );
-            return redirect()->route('CreditSource')->with($notification);
-            $this->Type == 'Main Category';
-        } elseif ($this->Type == 'Sub Category') {
-            $this->validate([
-                'CategoryList' => 'required',
-                'SubCategoryName' => 'required',
-                'Unit_Price' => 'required',
+            $save_CS->save(); // Save Main Category
+
+            // Show success message using SweetAlert
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Main Category Created!',
+                'text'  => "Credit Source '{$this->Name}' added successfully!",
+                'icon'  => 'success',
+                'redirect-url' => route('CreditSource'),
+                'redirect-delay' => 2000, // Delay before redirecting
             ]);
 
-            if (!is_null($this->CategoryList)) {
-                $exists  = CreditSource::Where('Name', '=', $this->CategoryList)->get();
-                foreach ($exists as $key) {
-                    $Id = $key['Id'];
-                    $Name = $key['Name'];
-                }
-                $this->CS_Id = $Id;
+
+        }
+
+        if ($this->Type === 'Sub Category') {
+            // Validate subcategory
+            $this->validate([
+                'CategoryList'   => 'required',
+                'SubCategoryName'=> 'required|unique:credit_sources,Source',
+                'Unit_Price'     => 'required|numeric|min:0',
+            ]);
+
+            // Check if main category exists
+            $exists = CreditSource::where('Name', $this->CategoryList)->first();
+
+            if (!$exists) {
+                $this->dispatchBrowserEvent('swal:error', [
+                    'title' => 'Error',
+                    'text'  => "Main Category '{$this->CategoryList}' not found!",
+                    'icon'  => 'error',
+                ]);
+                return;
             }
+
+            // Generate unique ID for subcategory
             $time = substr(time(), 6, 8);
-            $csId = $this->CS_Id . $time;
+            $csId = $exists->Id . $time;
+
+            // Create new subcategory
             $save_CS = new CreditSources();
             $save_CS->Id = $csId;
-            $save_CS->CS_Id = $this->CS_Id;
-            $save_CS->CS_Name = $Name;
+            $save_CS->CS_Id = $exists->Id;
+            $save_CS->CS_Name = $exists->Name;
             $save_CS->Source = $this->SubCategoryName;
             $save_CS->Unit_Price = $this->Unit_Price;
             $save_CS->Total_Revenue = 0;
-            $save_CS->save(); //Sub Category  Created
-            session()->flash('SuccessMsg', 'Sub Category Name: ' . $this->SubCategoryName . ' & ID: ' . $Id . ', for ' . $Name . ' Created Successfully!!');
+            $save_CS->save(); // Save Sub Category
+
+            // Show success message using SweetAlert
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Sub Category Created!',
+                'text'  => "Sub Category '{$this->SubCategoryName}' under '{$exists->Name}' created successfully!",
+                'icon'  => 'success',
+                'redirect-url' => route('CreditSource'),
+                'redirect-delay' => 2000, // Delay before redirecting
+            ]);
+
+            // Reset fields
             $this->ResetSubFields();
-            $this->CategoryList = $this->SubCategoryName;;
+            $this->CategoryList = $this->SubCategoryName;
         }
     }
+
     public function Change($val) # Function to Reset Field when Category Changes
     {
         $this->Update = 0;
@@ -219,71 +254,118 @@ class AddCreditSource extends Component
             }
         }
     }
-    public function UpdateMain($Id) # Function to Update Main Category Fields in Record
+
+
+    public function UpdateMain($Id)
     {
-        $fetch = CreditSource::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $oldname = $key['Name'];
-        }
-        $this->ImageUpload();
-        $update_source = DB::update('update credit_source set Name = ?, Thumbnail=? where Id = ?', [$this->Name, $this->NewImage, $Id]);
-        $update_sources = DB::update('update credit_sources set CS_Name = ?  where CS_Id = ?', [$this->Name, $Id]);
-        $update_CL = DB::update('update credit_ledger set Category = ? where Category = ?', [$this->Name, $oldname]);
-        $this->ResetMainFields();
-        if ($update_source && $update_CL && $update_sources) {
-            session()->flash('SuccessMsg', $this->Name . ' Details Updated Successfully!');
-        } elseif ($update_source) {
-            session()->flash('SuccessMsg', $this->Name . ' Record Updated Successfully!');
-        } elseif ($update_CL) {
-            session()->flash('SuccessMsg', $this->Name . ' Ledger Updated Successfully!');
-        } else {
-            session()->flash('Error', 'Sorry!. Unable to Update ' . $this->Name . ' Source in Record');
+        try {
+            DB::beginTransaction(); // Start transaction
+
+            // Fetch old name
+            $fetch = CreditSource::find($Id);
+            if (!$fetch) {
+                session()->flash('Error', 'Record not found!');
+                return;
+            }
+            $oldname = $fetch->Name;
+
+            // Upload Image
+            $this->ImageUpload();
+
+            // Update Main Category
+            CreditSource::where('Id', $Id)->update([
+                'Name' => $this->Name,
+                'Thumbnail' => $this->NewImage
+            ]);
+
+            // Update Credit Sources Table
+            DB::table('credit_sources')->where('CS_Id', $Id)->update([
+                'CS_Name' => $this->Name
+            ]);
+
+            // Update Credit Ledger
+            DB::table('credit_ledger')->where('Category', $oldname)->update([
+                'Category' => $this->Name
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            $this->ResetMainFields();
+
+            // Show Success Message
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'title' => $this->Name . ' Record Updated Successfully!',
+                'text' => 'Credit Source Updated Successfully',
+                'icon' => 'success',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback transaction if anything fails
+            session()->flash('Error', 'Failed to update record: ' . $e->getMessage());
         }
     }
 
 
-    public function DeleteMain($Id) # Function to Delete Main Category Record
-    {
-        $fetch = CreditSource::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $Id = $key['Id'];
-            $Name = $key['Name'];
-            $Image = $key['Thumbnail'];
-        }
-        $find = CreditLedger::Where('Category', $Name)->get();
-        $findsub = CreditSources::Where([['CS_Name', '=', $Name], ['CS_Id', '=', $Id]])->get();
 
-        if (count($findsub) > 0) {
-            $val = count($findsub);
-            session()->flash('Error', $Name . ' This Category Contains ' . $val . ' Sub Categories. Please Delete Sub Categories first.');
-        } elseif (count($find) > 0) {
-            session()->flash('Error', $Name . ' This Source Field is Served, Cannot Delete ');
-        } else {
-            $Image = str_replace('storage/app/', '', $Image);
-            if (Storage::exists($Image)) {
-                unlink(storage_path('app/' . $Image));
-                $delete = CreditSource::Wherekey($Id)->delete();
-                if ($delete) {
-                    session()->flash('SuccessMsg', $Name . ' Deleted Permanently.. ');
-                    $this->Name = NUll;
-                    $this->Image = NUll;
-                    $this->OldImage = NUll;
-                    $this->Update = 0;
-                } else {
-                    session()->flash('Error', 'Unable to Delete' . $Name . 'sorry..');
-                }
-            } else {
-                $delete = CreditSource::Wherekey($Id)->delete();
-                if ($delete) {
-                    session()->flash('SuccessMsg', $Name . ' Deleted Permanently.. No Thumbnail File Found!');
-                    $this->Name = NUll;
-                    $this->Image = NUll;
-                    $this->OldImage = NUll;
-                    $this->Update = 0;
-                } else {
-                    session()->flash('Error', 'Unable to Delete' . $Name . 'sorry..');
-                }
+    public function DeleteMain($Id)
+    {
+        try {
+            // Fetch the main category
+            $category = CreditSource::find($Id);
+
+            if (!$category) {
+                session()->flash('Error', 'Category not found.');
+                return;
             }
+
+            $Name = $category->Name;
+            $Image = $category->Thumbnail;
+
+            // Check if there are subcategories or related ledger entries
+            if (CreditSources::where('CS_Name', $Name)->exists()) {
+                $this->dispatchBrowserEvent('swal:warning-non-redirect', [
+                    'title' => 'Subcategories exist',
+                    'text' => "$Name has subcategories. Delete them first.",
+                    'icon' => 'warning',
+                ]);
+                return;
+            }
+
+            if (CreditLedger::where('Category', $Name)->exists()) {
+                $this->dispatchBrowserEvent('swal:warning-non-redirect', [
+                    'title' => 'Ledger records exist',
+                    'text' => "$Name is used in ledger records. Delete them first.",
+                    'icon' => 'warning',
+                ]);
+                return;
+            }
+
+            // Begin transaction
+            DB::beginTransaction();
+
+            // Delete image if exists
+            if ($Image && Storage::exists($Image)) {
+                Storage::delete($Image);
+            }
+
+            // Delete category
+            $category = CreditSource::where('Id', $Id)->delete();
+
+            // Commit transaction
+            DB::commit();
+
+            $this->dispatchBrowserEvent('swal:success-non-redirect', [
+                'title' => "$Name deleted successfully!",
+                'text' => 'Category deleted successfully',
+                'icon' => 'success',
+            ]);
+            $this->ResetMainFields(); // Reset form fields
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Error',
+                'text' => 'Failed to delete category: ' . $e->getMessage(),
+                'icon' => 'error',
+            ]);
         }
     }
     public function EditSub($id) # Function to Fetch Sub Category Fields
@@ -303,75 +385,123 @@ class AddCreditSource extends Component
         $this->Name = ucwords($this->Name);
         $this->SubCategoryName = ucwords($this->SubCategoryName);
     }
-    public function UpdateSub($Id) # Function to Update Sub Category Record
+    public function UpdateSub($Id)
     {
-        $fetch = CreditSources::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $CS_Name = $key['CS_Name'];
-            $Source = $key['Source'];
-            $Unit_Price = $key['Unit_Price'];
-        }
-        $check_record = DB::table('credit_ledger')->where([['Sub_Category', '=', $Source],])->get();
-        $count = count($check_record);
-        if (count($check_record)) {
-            foreach ($check_record as $key) {
-                $key = get_object_vars($key);
-                $category = $key['Category'];
-                $subcategory = $key['Sub_Category'];
-            }
-        }
-        $data = array();
-        $data['Category'] = $this->CategoryList;
-        $data['Sub_Category'] = $this->SubCategoryName;
-        $update_CL = DB::table('credit_ledger')->where('Sub_Category', $Source)->update($data);
-        $revenue = DB::table('credit_ledger')->where('Sub_Category', $this->SubCategoryName)->SUM('Total_Amount');
-        $data = array();
-        $data['Source'] = $this->SubCategoryName;
-        $data['Unit_Price'] = $this->Unit_Price;
-        $data['Total_Revenue'] = $revenue;
-        $update = DB::table('credit_sources')->where('Id', $Id)->update($data);
+        // Fetch the existing subcategory record
+        $fetch = CreditSources::whereKey($Id)->first();
 
-        $data = array();
-        $data['Category'] = $this->CategoryList;
-        $data['Sub_Category'] = $this->SubCategoryName;
-        $update_CL = DB::table('credit_ledger')->where('Sub_Category', $Source)->update($data);
+        if (!$fetch) {
+            session()->flash('Error', 'Sub Category not found!');
+            return;
+        }
 
-        if ($update && $update_CL) {
-            session()->flash('SuccessMsg', $this->SubCategoryName . ' Details Updated Successfully..');
-            $this->ResetSubFields();
-            $this->CategoryList = $CS_Name;
-        } elseif ($update) {
-            session()->flash('SuccessMsg', $this->SubCategoryName . ' Record Updated Successfully ..');
-            $this->ResetSubFields();
-            $this->CategoryList = $CS_Name;
-        } elseif ($update_CL) {
-            session()->flash('SuccessMsg', $this->SubCategoryName . ' Ledger Updated Successfully..');
-            $this->ResetSubFields();
-            $this->CategoryList = $CS_Name;
+        // Extract values
+        $CS_Name = $fetch->CS_Name;
+        $Source = $fetch->Source;
+        $Unit_Price = $fetch->Unit_Price;
+
+        // Check if the subcategory exists in the credit ledger
+        $existsInLedger = DB::table('credit_ledger')->where('Sub_Category', $Source)->exists();
+
+        // Calculate total revenue for the updated subcategory
+        $revenue = DB::table('credit_ledger')
+            ->where('Sub_Category', $this->SubCategoryName)
+            ->sum('Total_Amount');
+
+        // Data to update in `credit_sources`
+        $updateData = [
+            'Source' => $this->SubCategoryName,
+            'Unit_Price' => $this->Unit_Price,
+            'Total_Revenue' => $revenue,
+        ];
+
+        // Update `credit_sources`
+        $updateSource = DB::table('credit_sources')->where('Id', $Id)->update($updateData);
+
+        // Update `credit_ledger` only if the subcategory exists there
+        if ($existsInLedger) {
+            DB::table('credit_ledger')->where('Sub_Category', $Source)->update([
+                'Category' => $this->CategoryList,
+                'Sub_Category' => $this->SubCategoryName,
+            ]);
+        }
+
+        // Set success messages
+        if ($updateSource && $existsInLedger) {
+            $message = 'Sub Category & Ledger Updated Successfully!';
+        } elseif ($updateSource) {
+            $message = 'Sub Category Record Updated Successfully!';
+        } elseif ($existsInLedger) {
+            $message = 'Ledger Updated Successfully!';
         } else {
-            session()->flash('Error', ' No Changes Foud for in ' . $this->SubCategoryName . ' Field for Update ..');
+            session()->flash('Error', 'No changes found for ' . $this->SubCategoryName . '.');
+            return;
         }
+
+        // Reset fields after update
+        $this->ResetSubFields();
+        $this->CategoryList = $CS_Name;
+
+        // Show success message using SweetAlert
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Update Successful!',
+            'text' => $message,
+            'icon' => 'success',
+            'redirect-url' => route('CreditSource'),
+            'redirect-delay' => 2000, // Delay before redirecting
+        ]);
     }
+
 
     public function DeleteSub($Id)
     {
-        $fetch = CreditSources::Wherekey($Id)->get();
-        foreach ($fetch as $key) {
-            $main = $key['CS_Name'];
-            $sub = $key['Source'];
+        // Fetch the subcategory record
+        $fetch = CreditSources::whereKey($Id)->first();
+
+        if (!$fetch) {
+            session()->flash('Error', 'Sub Category not found!');
+            return;
         }
-        $find_CL = DB::table('credit_ledger')->where([['Category', '=', $main], ['Sub_Category', '=', $sub],])->get();
-        if (count($find_CL) > 0) {
-            session()->flash('Error', $sub . ' for ' . $main . ' is already served  ' . count($find_CL) . ' times,  Unable to Delete');
+
+        // Extract values
+        $main = $fetch->CS_Name;
+        $sub = $fetch->Source;
+        // Check if this subcategory is used in credit_ledger
+        $existsInLedger = DB::table('credit_ledger')
+            ->where('Category', $main)
+            ->where('Sub_Category', $sub)
+            ->exists();
+
+        if ($existsInLedger) {
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Deletion Failed!',
+                'text' => "❌ '$sub' under '$main' is already used in the ledger.",
+                'icon' => 'error',
+            ]);
+        }
+
+        // Delete the subcategory
+        $delete = CreditSources::whereKey($Id)->delete();
+
+        if ($delete) {
+            // Trigger a SweetAlert success notification
+            $this->dispatchBrowserEvent('swal:success', [
+                'title' => 'Deletion Successful!',
+                'text' => "'$sub' under '$main' deleted permanently.",
+                'icon' => 'success',
+                'redirect-url' => route('CreditSource'),
+                'redirect-delay' => 2000, // Delay before redirecting
+            ]);
         } else {
-            $delete = CreditSources::wherekey($Id)->delete();
-            if ($delete) {
-                session()->flash('SuccessMsg', $sub . ' for ' . $main . ' Deleted Permanently.. ');
-            } else {
-                session()->flash('Error', $sub . ' for ' . $main . 'was unable to Delete!');
-            }
+            $this->dispatchBrowserEvent('swal:error', [
+                'title' => 'Deletion Failed!',
+                'text' => "Failed to delete '$sub' under '$main'.",
+                'icon' => 'error',
+
+            ]);
         }
     }
+
 
     public function ResetList($val) # Function to Reset Sub Category Fields When Sub Category Value changes.
     {
