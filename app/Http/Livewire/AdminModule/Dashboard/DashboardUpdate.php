@@ -2,11 +2,13 @@
 
 namespace App\Http\Livewire\AdminModule\Dashboard;
 
+use App\Models\Application as ModelsApplication;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use PharIo\Manifest\Application;
 
 class DashboardUpdate extends Component
 {
@@ -59,6 +61,52 @@ class DashboardUpdate extends Component
         return redirect()->back()->with($notification);
     }
 
+    public function createApplication($Id)
+    {
+
+        $app_Id  = 'DCA' . date('Y') . time();
+        $record = DB::table('quick_apply')->where('Id', $Id)->first();
+        $empId = Auth::user()->Client_Id;
+        $totalamount = DB::table('unit_price')->where('Id', $record->unit_price_id)->first();
+        $app_field = new ModelsApplication();
+        $app_field->fill([
+            'Id' => $app_Id,
+            'Client_Id' => $record->client_id,
+            'Branch_Id' => $this->branch_id,
+            'Emp_Id' => $empId,
+            'Received_Date' => date('Y-m-d'),
+            'Application' => $record->application,
+            'Application_Type' => $record->application_type,
+            'Name' => $record->name,
+            'Gender' => $record->gender,
+            'Relative_Name' => $record->relative_name,
+            'Mobile_No' => $record->mobile_no,
+            'DOB' => $record->dob,
+            'Applied_Date' => date('Y-m-d'),
+            'Total_Amount' => $this->Total_Amount,
+            'Amount_Paid' => $this->Amount_Paid,
+            'Balance' => $this->Balance,
+            'Payment_Mode' => $this->PaymentMode,
+            'Payment_Receipt' => $this->Payment_Receipt,
+            'Status' => $this->Balance > 0 ? 'Pending' : 'Received',
+            'Ack_No' => $this->Ack_No,
+            'Ack_File' => $this->Ack_File,
+            'Document_No' => $this->Document_No,
+            'Doc_File' => $this->Doc_File,
+            'Delivered_Date' => NULL,
+            'Applicant_Image' => $Applicant_Image,
+        ]);
+
+        // Save application form
+        $app_field->save();
+
+        $notification = [
+            'message' => 'Application status updated to Delivered to Client',
+            'alert-type' => 'info',
+        ];
+
+        return redirect()->back()->with($notification);
+    }
     // Render method to fetch and prepare data for rendering the view
     public function render()
     {
@@ -69,7 +117,7 @@ class DashboardUpdate extends Component
                 $this->setState(true, false, false, false);
                 break;
             case 'Orders':
-                $table = 'applynow';
+                $table = 'quick_apply';
                 $this->setState(false, true, false, false);
                 $this->key = 'Delivered to Client';
                 break;

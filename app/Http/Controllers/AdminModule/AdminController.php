@@ -11,8 +11,10 @@ use App\Models\Carousel_DB;
 use App\Models\EnquiryDB;
 use App\Models\HomeSlide;
 use App\Models\MainServices;
+use App\Models\QuickApply;
 use App\Models\User;
 use App\Models\UserTopBar as ModelsUserTopBar;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -221,78 +223,63 @@ class AdminController extends Controller
             return $query->value('total_amount');
         }
 
+
+
         public function DashboardUpdate($name)
         {
             $branchId = Auth::user()->branch_id;
             $userRole = Auth::user()->role;
 
-            $Tittle1 = '';
-            $Tittle2 = '';
-            $Tittle3 = '';
-            $Tittle4 = '';
-            $totalRequests = 0;
-            $delivered = 0;
-            $pending = 0;
-            $new = 0;
-            $percentpending = 0;
-            $percentdelivered = 0;
+            $dashboards = [
+                'User' => [
+                    'model' => User::class,
+                    'titles' => ['Total Users', 'New User', 'Pending', 'Converted'],
+                    'status' => 'Completed',
+                ],
+                'Orders' => [
+                    'model' => QuickApply::class,
+                    'titles' => ['Total Orders', 'New Orders', 'Pending', 'Delivered'],
+                    'status' => 'Delivered to Client',
+                ],
+                'Callback' => [
+                    'model' => Callback_Db::class,
+                    'titles' => ['Total Requests', 'New Requests', 'Converted', 'Pending'],
+                    'status' => 'Completed',
+                ],
+                'Enquiry' => [
+                    'model' => EnquiryDB::class,
+                    'titles' => ['Total Enquiries', 'New Enquiries', 'Hot', 'Completed'],
+                    'status' => 'Completed',
+                    'pending_column' => 'Lead_Status',
+                    'pending_value' => 'Hot',
+                ],
+            ];
 
-            if ($name == 'User') {
-                $Tittle1 = 'Total Users';
-                $Tittle2 = 'New User';
-                $Tittle3 = 'Pending';
-                $Tittle4 = 'Converted';
-
-                $totalRequests = $this->getTotalRequests(User::class, $branchId, $userRole);
-                $delivered = $this->getDelivered(User::class, $branchId, $userRole, 'Completed');
-                $pending = $this->getPending(User::class, $branchId, $userRole, 'Completed');
-                $new = $this->getNewRequests(User::class, $branchId, $userRole);
-
-            } elseif ($name == 'Orders') {
-                $Tittle1 = 'Total Orders';
-                $Tittle2 = 'New Orders';
-                $Tittle3 = 'Pending';
-                $Tittle4 = 'Delivered';
-
-                $totalRequests = $this->getTotalRequests(ApplyServiceForm::class, $branchId, $userRole);
-                $delivered = $this->getDelivered(ApplyServiceForm::class, $branchId, $userRole, 'Delivered to Client');
-                $pending = $this->getPending(ApplyServiceForm::class, $branchId, $userRole, 'Delivered to Client');
-                $new = $this->getNewRequests(ApplyServiceForm::class, $branchId, $userRole);
-
-            } elseif ($name == 'Callback') {
-                $Tittle1 = 'Total Requests';
-                $Tittle2 = 'New Requests';
-                $Tittle3 = 'Converted';
-                $Tittle4 = 'Pending';
-
-                $totalRequests = $this->getTotalRequests(Callback_Db::class, $branchId, $userRole);
-                $delivered = $this->getDelivered(Callback_Db::class, $branchId, $userRole, 'Completed');
-                $pending = $this->getPending(Callback_Db::class, $branchId, $userRole, 'Completed');
-                $new = $this->getNewRequests(Callback_Db::class, $branchId, $userRole);
-
-            } elseif ($name == 'Enquiry') {
-                $Tittle1 = 'Total Enquiries';
-                $Tittle2 = 'New Enquiries';
-                $Tittle3 = 'Hot';
-                $Tittle4 = 'Completed';
-
-                $totalRequests = $this->getTotalRequests(EnquiryDB::class, $branchId, $userRole);
-                $delivered = $this->getDelivered(EnquiryDB::class, $branchId, $userRole, 'Completed');
-                $pending = $this->getPending(EnquiryDB::class, $branchId, $userRole, 'Hot', 'Lead_Status');
-                $new = $this->getNewRequests(EnquiryDB::class, $branchId, $userRole);
+            if (!array_key_exists($name, $dashboards)) {
+                abort(404);
             }
 
-            if ($totalRequests > 0) {
-                $percentpending = number_format(($pending * 100) / $totalRequests, 1, '.', '');
-                $percentdelivered = number_format(($delivered * 100) / $totalRequests, 1, '.', '');
-            }
+            $config = $dashboards[$name];
+            $model = $config['model'];
+            $titles = $config['titles'];
+            $status = $config['status'];
+            $pendingColumn = $config['pending_column'] ?? 'Status';
+            $pendingValue = $config['pending_value'] ?? $status;
+
+            $totalRequests = $this->getTotalRequests($model, $branchId, $userRole);
+            $delivered = $this->getDelivered($model, $branchId, $userRole, $status);
+            $pending = $this->getPending($model, $branchId, $userRole, $pendingValue, $pendingColumn);
+            $new = $this->getNewRequests($model, $branchId, $userRole);
+
+            $percentpending = $totalRequests > 0 ? number_format(($pending * 100) / $totalRequests, 1, '.', '') : 0;
+            $percentdelivered = $totalRequests > 0 ? number_format(($delivered * 100) / $totalRequests, 1, '.', '') : 0;
 
             return view('admin-module.dashboard.dashboard_update', [
                 'Name' => $name,
-                'Tittle1' => $Tittle1,
-                'Tittle2' => $Tittle2,
-                'Tittle3' => $Tittle3,
-                'Tittle4' => $Tittle4,
+                'Tittle1' => $titles[0],
+                'Tittle2' => $titles[1],
+                'Tittle3' => $titles[2],
+                'Tittle4' => $titles[3],
                 'totalRequests' => $totalRequests,
                 'delivered' => $delivered,
                 'pending' => $pending,
@@ -302,38 +289,64 @@ class AdminController extends Controller
             ]);
         }
 
+        private function getModelConfig($model)
+        {
+            $configs = [
+                User::class => ['branch' => 'Branch_Id', 'status' => 'Status'],
+                Callback_Db::class => ['branch' => 'Branch_Id', 'status' => 'Status'],
+                EnquiryDB::class => ['branch' => 'Branch_Id', 'status' => 'Status'],
+                QuickApply::class => ['branch' => 'branch_id', 'status' => 'status'],
+            ];
+
+            return $configs[$model] ?? ['branch' => 'Branch_Id', 'status' => 'Status'];
+        }
+
         private function getTotalRequests($model, $branchId, $role)
         {
+            $config = $this->getModelConfig($model);
+
             if ($role == 'branch admin' || $role == 'operator') {
-                return $model::where('Branch_Id', $branchId)->count();
+                return $model::where($config['branch'], $branchId)->count();
             }
             return $model::count();
         }
 
         private function getDelivered($model, $branchId, $role, $status)
         {
+            $config = $this->getModelConfig($model);
+
             if ($role == 'branch admin' || $role == 'operator') {
-                return $model::where('Branch_Id', $branchId)->where('Status', $status)->count();
+                return $model::where($config['branch'], $branchId)
+                             ->where($config['status'], $status)
+                             ->count();
             }
-            return $model::where('Status', $status)->count();
+            return $model::where($config['status'], $status)->count();
         }
 
         private function getPending($model, $branchId, $role, $status, $column = 'Status')
         {
+            $config = $this->getModelConfig($model);
+
             if ($role == 'branch admin' || $role == 'operator') {
-                return $model::where('Branch_Id', $branchId)->where($column, '!=', $status)->count();
+                return $model::where($config['branch'], $branchId)
+                             ->where($column, '!=', $status)
+                             ->count();
             }
             return $model::where($column, '!=', $status)->count();
         }
 
         private function getNewRequests($model, $branchId, $role)
         {
-            if ($role == 'branch admin' || $role == 'operator') {
-                return $model::where('Branch_Id', $branchId)->whereDate('created_at', DB::raw('CURDATE()'))->count();
-            }
-            return $model::whereDate('created_at', DB::raw('CURDATE()'))->count();
-        }
+            $config = $this->getModelConfig($model);
 
+            if ($role == 'branch admin' || $role == 'operator') {
+                return $model::where($config['branch'], $branchId)
+                             ->whereDate('created_at', Carbon::today())
+                             ->count();
+            }
+
+            return $model::whereDate('created_at', Carbon::today())->count();
+        }
 
 // -----------------------------------------------Employee Module Functions ------------------------------------
 

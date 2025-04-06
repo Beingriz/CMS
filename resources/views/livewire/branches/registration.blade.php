@@ -99,7 +99,7 @@
         <!-- End Branch Registration Form -->
 
         @if ($Existing_branches->count() > 0)
-            <!-- Existing Branches Table -->
+    <!-- Existing Branches Table -->
             <div class="col-lg-8">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white">

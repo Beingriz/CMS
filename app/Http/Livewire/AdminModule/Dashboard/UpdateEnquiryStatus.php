@@ -16,6 +16,8 @@ class UpdateEnquiryStatus extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
+    protected $listeners = ['editStatus'=>'Edit'];
+
     public $Name, $d, $Service, $SubService, $Message, $Status, $ServiceName, $lastRecTime, $Id;
     public $Amount, $LeadStatus, $Feedback, $Conversion, $Mobile_No;
     public function mount($Key, $Id, $EditId)
@@ -57,11 +59,17 @@ class UpdateEnquiryStatus extends Component
         $data['updated_at'] = Carbon::now();
 
         DB::table('enquiry_form')->where('Id', $Id)->Update($data);
-        $notification = array(
-            'message' => 'Status Updated!.',
-            'alert-type' => 'info'
-        );
-        return redirect()->route('update.enquiry.dashboard', $Id)->with($notification);
+
+        $this->dispatchBrowserEvent('swal:success', [
+            'title' => 'Status Updated!',
+            'text' => 'Status Updated Successfully',
+            'icon' => 'success',
+            'timer' => 2000,
+            'showConfirmButton' => false,
+            'redirect-url' => route('update.enquiry.dashboard', $Id),
+            'showCancelButton' => false,
+        ]);
+        // return redirect()->route('update.enquiry.dashboard', $Id)->with($notification);
     }
     public function LastUpdate()
     {

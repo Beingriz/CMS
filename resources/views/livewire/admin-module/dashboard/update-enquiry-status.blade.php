@@ -158,7 +158,7 @@
                                 <div class="col-100">
                                     <a href="#" class="btn btn-success btn-rounded btn-sm"
                                         wire:click.prevent="Update('{{ $Id }}')">Update</button>
-                                        <a href="{{ route('dashboard') }}"
+                                        <a href="{{ route('admin.home') }}"
                                             class="btn btn-warning btn-rounded btn-sm">Cancel</a>
                                 </div>
                             </div>
@@ -171,16 +171,15 @@
         {{-- Old Callback Request by same user  --}}
         <div class="col-lg-8">
             <div class="card">
-                <div class="card-header d-sm-flex align-items-center justify-content-between"">
-                    <h5>Previous {{ $requests->total() }} Requests Found</h5>
-                    <h5>{{ $Name }}</h5>
+                <div class="card-header d-sm-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Previous {{ $requests->total() }} Request{{ $requests->total() > 1 ? 's' : '' }} Found</h5>
+                    <h5 class="mb-0 text-primary">{{ $Name }}</h5>
                 </div>
-                <div class="card-body">
-                    {{-- <h5 class="card-title">Last Request on {{ \Carbon\Carbon::parse($created_at)->format('d-M-Y'); }}</h5> --}}
 
-                    @if (count($requests) > 0)
+                <div class="card-body">
+                    @if ($requests->count())
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table table-hover align-middle text-center mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th>SL.No</th>
@@ -191,52 +190,67 @@
                                         <th>Lead</th>
                                         <th>Conversion</th>
                                         <th>Amount</th>
-                                        <th>created</th>
-                                        <th>updated</th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     @foreach ($requests as $data)
                                         <tr>
                                             <td>{{ $requests->firstItem() + $loop->index }}</td>
-                                            <td>{{ $data->Service }} | {{ $data->Service_Type }}</td>
-                                            <td class="text-wrap">{{ $data->Message }}</td>
-                                            <td>{{ $data->Status }}</td>
-                                            <td class="text-wrap">{{ $data->Feedback }}</td>
-                                            <td
-                                                class="{{ $data->Lead_Status == 'Hot' ? 'text-danger fw-bold font-size-18' : 'text-warning fw-bold font-size-16 me-2' }}">
-                                                {{ $data->Lead_Status }}</td>
-                                            <td>{{ $data->Conversion }}</td>
-                                            <td>{{ $data->Amount }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}</td>
+                                            <td>{{ $data->Service }}<br><small class="text-muted">{{ $data->Service_Type }}</small></td>
+                                            <td class="text-wrap text-start">{{ $data->Message }}</td>
+                                            <td><span class="badge bg-info">{{ $data->Status }}</span></td>
+                                            <td class="text-wrap text-start">{{ $data->Feedback }}</td>
                                             <td>
-                                                <a href="{{ route('edit.status.enquiry', $data->Id) }}" title="Edit"
-                                                    class="btn btn-sm btn-primary font-size-15" id="editData"><i
-                                                        class="mdi mdi-circle-edit-outline"></i></a>
+                                                <span class="badge
+                                                    {{ $data->Lead_Status === 'Hot' ? 'bg-danger' : 'bg-warning text-dark' }}">
+                                                    {{ $data->Lead_Status }}
+                                                </span>
+                                            </td>
+                                            <td>{{ $data->Conversion }}</td>
+                                            <td>&#8377; {{ number_format($data->Amount, 2) }}</td>
+                                            <td><small>{{ $data->created_at->diffForHumans() }}</small></td>
+                                            <td><small>{{ $data->updated_at->diffForHumans() }}</small></td>
+                                            <td>
+                                                <a href="{{ route('edit.status.enquiry', $data->Id) }}"
+                                                   class="btn btn-outline-primary btn-sm"
+                                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Request">
+                                                    <i class="mdi mdi-circle-edit-outline"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        <p class="card-text"><small class="text-bold">Last Entry at {{ $lastRecTime }} </small></p>
+
+                        <p class="card-text mt-3">
+                            <small class="text-muted">
+                                Last entry at: <strong>{{ \Carbon\Carbon::parse($lastRecTime)->format('d M Y, h:i A') }}</strong>
+                            </small>
+                        </p>
+
+                        <div class="row align-items-center mt-3">
+                            <div class="col-md-6 text-start">
+                                <small class="text-muted">
+                                    Showing {{ $requests->count() }} of {{ $requests->total() }} entries
+                                </small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                {{ $requests->links('pagination::bootstrap-5') }}
+                            </div>
+                        </div>
+                    @else
+                        <div class="alert alert-warning mb-0" role="alert">
+                            <strong>No requests found.</strong> Try adjusting your filters or come back later.
+                        </div>
+                    @endif
                 </div>
-                <div class="row no-gutters align-items-center">
-                    <div class="col-md-8">
-                        <p class="text-muted">Showing {{ count($requests) }} of {{ $requests->total() }} entries</p>
-                    </div>
-                    <div class="col-md-4">
-                        <span class=" pagination pagination-rounded float-end">
-                            {{ $requests->links() }}
-                        </span>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
+
 
     </div>
 </div>
